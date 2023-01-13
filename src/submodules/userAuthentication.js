@@ -1,16 +1,19 @@
 "use strict";
 
 const { isJWT, isDashedWord, guardedAccess, resolveTenantArg } = require("../shared/static");
+const { request } = require("../shared/request");
 const { assert } = require("../shared/error");
 const { getUaaTokenFromCredentials } = require("../shared/oauth");
 
 const _uaaOutputBearer = (token) => ["Authorization:", "Bearer " + token].join("\n");
 
-const _uaaOutputDecoded = async (token) => {
-  const [jwtHeader, jwtBody] = token
+const _tokenDecode = (token) =>
+  token
     .split(".")
     .slice(0, 2)
     .map((part) => JSON.parse(Buffer.from(part, "base64").toString()));
+const _uaaOutputDecoded = (token) => {
+  const [jwtHeader, jwtBody] = _tokenDecode(token);
   return ["JWT Header:", JSON.stringify(jwtHeader), "", "JWT Body:", JSON.stringify(jwtBody, null, 2)].join("\n");
 };
 
@@ -24,6 +27,29 @@ const _uaaSaasServiceToken = async (context, tenant, service) => {
   serviceCredentials = guardedAccess(serviceCredentials, "uaa") || serviceCredentials;
   assert(serviceCredentials, "service %s not bound to xsuaa app %s", service, appName);
   return getUaaTokenFromCredentials(serviceCredentials, resolveTenantArg(tenant));
+};
+
+const _uaaUserInfo = async (context, passcode, tenant) => {
+  const {
+    cfService: {
+      credentials: { url },
+    },
+  } = await context.getUaaInfo();
+  const token = await context.getUaaToken({ ...resolveTenantArg(tenant), passcode });
+  const [, jwtBody] = _tokenDecode(token);
+  const zoneId = jwtBody.zid;
+  const uaaResponse = await request({
+    url,
+    pathname: "/userinfo",
+    headers: {
+      Accept: "application/json",
+      "X-Zid": zoneId,
+    },
+    auth: { token },
+    logged: false,
+  });
+  const result = await uaaResponse.json();
+  return JSON.stringify(result, null, 2) + "\n";
 };
 
 const uaaDecode = async ([token]) => {
@@ -43,10 +69,12 @@ const uaaService = async (context, [service, tenant], [doDecode]) =>
   doDecode
     ? _uaaOutputDecoded(await _uaaSaasServiceToken(context, tenant, service))
     : _uaaOutputBearer(await _uaaSaasServiceToken(context, tenant, service));
+const uaaUserInfo = async (context, [passcode, tenant]) => await _uaaUserInfo(context, passcode, tenant);
 
 module.exports = {
   uaaDecode,
   uaaClient,
   uaaPasscode,
   uaaService,
+  uaaUserInfo,
 };
