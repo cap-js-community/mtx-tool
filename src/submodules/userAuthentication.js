@@ -32,21 +32,21 @@ const _uaaSaasServiceToken = async (context, tenant, service) => {
 const _uaaUserInfo = async (context, passcode, tenant) => {
   const {
     cfService: {
-      credentials: { url },
+      credentials: { url: paasUrl, identityzone: paasZoneDomain },
     },
   } = await context.getUaaInfo();
   const token = await context.getUaaToken({ ...resolveTenantArg(tenant), passcode });
   const [, jwtBody] = _tokenDecode(token);
   const zoneId = jwtBody.zid;
+  const zoneDomain = jwtBody.ext_attr && jwtBody.ext_attr.zdn;
   const uaaResponse = await request({
-    url,
+    url: zoneDomain ? paasUrl.replace(paasZoneDomain, zoneDomain) : paasUrl,
     pathname: "/userinfo",
     headers: {
       Accept: "application/json",
       "X-Zid": zoneId,
     },
     auth: { token },
-    logged: false,
   });
   const result = await uaaResponse.json();
   return JSON.stringify(result, null, 2) + "\n";
