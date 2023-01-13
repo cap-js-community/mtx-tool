@@ -36,6 +36,7 @@ Commands for this area are:
 ~  uaac  --uaa-client [TENANT]             obtain token for generic client
 ~  uaap  --uaa-passcode PASSCODE [TENANT]  obtain token for uaa one-time passcode
 ~  uaas  --uaa-service SERVICE [TENANT]    obtain token for uaa trusted service
+~  uaai  --uaa-userinfo PASSCODE [TENANT]  user info for passcode
          ...    [TENANT]                   obtain token for tenant, fallback to paas tenant
          ...    --decode                   decode result token
 
