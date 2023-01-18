@@ -24,7 +24,7 @@ description: >-
   Multitenancy and Extensibility Tool
 
 # Build settings
-baseurl: /pages/cap-js-community/mtx-tool
+# baseurl: /mtx-tool
 markdown: kramdown
 remote_theme: just-the-docs/just-the-docs@main
 
