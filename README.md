@@ -21,6 +21,10 @@ This project is open to feature requests/suggestions, bug reports etc. via [GitH
 
 We as members, contributors, and leaders pledge to make participation in our community a harassment-free experience for everyone. By participating in this project, you agree to abide by its [Code of Conduct](CODE_OF_CONDUCT.md) at all times.
 
+## Documentation
+
+Head over to our [Documentation](https://cap-js-community.github.io/mtx-tool/) to learn more.
+
 ## Licensing
 
 Copyright (20xx-)20xx SAP SE or an SAP affiliate company and mtx-tool contributors. Please see our [LICENSE](LICENSE) for copyright and license information. Detailed information including third-party components and their licensing/copyright information is available [via the REUSE tool](https://api.reuse.software/info/github.com/cap-js-community/mtx-tool).
