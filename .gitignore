@@ -1,0 +1,14 @@
+# IDE
+.idea/
+
+# node
+node_modules/
+
+# temp
+temp/
+
+# mtx
+.mtxcache.json
+
+# npm package
+*.tgz

@@ -1,0 +1,616 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`reg tests reg list and longlist 5`] = `
+"{
+  "subscriptions": [
+    {
+      "url": "http://skyfin-company.dev-afc-sap.cfapps.sap.hana.ondemand.com",
+      "subdomain": "skyfin-company",
+      "appName": "afc-dev",
+      "consumerTenantId": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+      "globalAccountId": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+      "subaccountId": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+      "code": "standard",
+      "amount": 1,
+      "state": "SUBSCRIBED",
+      "dependencies": [
+        {
+          "xsappname": "b4700476-0b63-4eea-add7-2873a2fc4f0b!b5874|portal-cf-service!b119",
+          "appName": "portal",
+          "dependencies": [
+            {
+              "xsappname": "757b82dc-66c9-46ed-b724-9df99fa5a419!b119|ui5-flexibility-personalization!b1506",
+              "appName": "ui5-flexibility-personalization",
+              "dependencies": [],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+            }
+          ],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "afc-dev!b5874|businesslogging-sb-prod!b3598",
+          "appName": "businesslogging-sb-prod",
+          "dependencies": [],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "clone05ed02605f01499ab0772a3cafc5eac3!b5874|destination-xsappname!b433",
+          "appName": "destination",
+          "dependencies": [
+            {
+              "xsappname": "5001ed64-87a0-415c-8041-33406951606e!b433|auditlog!b4",
+              "appName": "auditlog",
+              "dependencies": [],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+            },
+            {
+              "xsappname": "clone845c0d6c34194265aeb6e95ebff4823d!b433|connectivity!b137",
+              "appName": "connectivity",
+              "dependencies": [],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+            },
+            {
+              "xsappname": "clonebd6a3ec261bf48468c5684c414b14d7f!b433|connectivity!b137",
+              "appName": "connectivity",
+              "dependencies": [
+                {
+                  "xsappname": "da0519fb-67db-4809-85ac-a340b5b0b9a5!b137|auditlog!b4",
+                  "appName": "auditlog",
+                  "dependencies": [],
+                  "authProviderState": "SUBSCRIBED",
+                  "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+                }
+              ],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+            }
+          ],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "clone43c89feaa7e14781a446eca57e3748b5!b5874|connectivity!b137",
+          "appName": "connectivity",
+          "dependencies": [],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "4457fe63-ba67-42be-80c6-ce16066c80ca!b5874|html5-apps-repo-uaa!b1129",
+          "appName": "html5-apps-repo",
+          "dependencies": [],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "04d135c3-cde3-4394-9ee5-b90561e5bcf0!b5874|ui5-flexibility-keyuser!b1506",
+          "appName": "8df5f951-acc1-439b-8ba8-b01a3cd60e08",
+          "dependencies": [],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "afb722fb-11ca-4fe2-a434-9a7172de92c3!b5874|na-9ab834c2-bc11-47a1-b8cb-d83d7a5a5774!b8223",
+          "appName": "adae71ae-b728-401a-b372-8003fd9d92bb",
+          "dependencies": [
+            {
+              "xsappname": "clone68c23983c7384400bfb4e69d27f714ea!b8223|connectivity!b137",
+              "appName": "connectivity",
+              "dependencies": [],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+            },
+            {
+              "xsappname": "clone9315356c939b47f5838370443c517336!b8223|destination-xsappname!b433",
+              "appName": "destination",
+              "dependencies": [],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+            }
+          ],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        }
+      ],
+      "createdOn": "Fri Mar 19 09:51:40 GMT 2021",
+      "changedOn": "Wed Dec 14 14:07:41 GMT 2022",
+      "internalSubscriptionId": "afc-dev!t5874_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_afc-dev!t5874",
+      "authProviderState": "SUBSCRIBED",
+      "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+    },
+    {
+      "url": "http://skyfin-debug-company.dev-afc-sap.cfapps.sap.hana.ondemand.com",
+      "subdomain": "skyfin-debug-company",
+      "appName": "afc-dev",
+      "consumerTenantId": "6917dfd6-7590-4033-af2a-140b75263b0d",
+      "globalAccountId": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+      "subaccountId": "6917dfd6-7590-4033-af2a-140b75263b0d",
+      "code": "standard",
+      "amount": 1,
+      "state": "SUBSCRIBED",
+      "dependencies": [
+        {
+          "xsappname": "clone43c89feaa7e14781a446eca57e3748b5!b5874|connectivity!b137",
+          "appName": "connectivity",
+          "dependencies": [],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "04d135c3-cde3-4394-9ee5-b90561e5bcf0!b5874|ui5-flexibility-keyuser!b1506",
+          "appName": "8df5f951-acc1-439b-8ba8-b01a3cd60e08",
+          "dependencies": [],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "afc-dev!b5874|businesslogging-sb-prod!b3598",
+          "appName": "businesslogging-sb-prod",
+          "dependencies": [],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "b4700476-0b63-4eea-add7-2873a2fc4f0b!b5874|portal-cf-service!b119",
+          "appName": "portal",
+          "dependencies": [
+            {
+              "xsappname": "757b82dc-66c9-46ed-b724-9df99fa5a419!b119|ui5-flexibility-personalization!b1506",
+              "appName": "ui5-flexibility-personalization",
+              "dependencies": [],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+            }
+          ],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "4457fe63-ba67-42be-80c6-ce16066c80ca!b5874|html5-apps-repo-uaa!b1129",
+          "appName": "html5-apps-repo",
+          "dependencies": [],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "clone05ed02605f01499ab0772a3cafc5eac3!b5874|destination-xsappname!b433",
+          "appName": "destination",
+          "dependencies": [
+            {
+              "xsappname": "5001ed64-87a0-415c-8041-33406951606e!b433|auditlog!b4",
+              "appName": "auditlog",
+              "dependencies": [],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+            },
+            {
+              "xsappname": "clone845c0d6c34194265aeb6e95ebff4823d!b433|connectivity!b137",
+              "appName": "connectivity",
+              "dependencies": [],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+            },
+            {
+              "xsappname": "clonebd6a3ec261bf48468c5684c414b14d7f!b433|connectivity!b137",
+              "appName": "connectivity",
+              "dependencies": [
+                {
+                  "xsappname": "da0519fb-67db-4809-85ac-a340b5b0b9a5!b137|auditlog!b4",
+                  "appName": "auditlog",
+                  "dependencies": [],
+                  "authProviderState": "SUBSCRIBED",
+                  "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+                }
+              ],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+            }
+          ],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "afb722fb-11ca-4fe2-a434-9a7172de92c3!b5874|na-9ab834c2-bc11-47a1-b8cb-d83d7a5a5774!b8223",
+          "appName": "adae71ae-b728-401a-b372-8003fd9d92bb",
+          "dependencies": [
+            {
+              "xsappname": "clone68c23983c7384400bfb4e69d27f714ea!b8223|connectivity!b137",
+              "appName": "connectivity",
+              "dependencies": [],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+            },
+            {
+              "xsappname": "clone9315356c939b47f5838370443c517336!b8223|destination-xsappname!b433",
+              "appName": "destination",
+              "dependencies": [],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+            }
+          ],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        }
+      ],
+      "createdOn": "Thu Apr 28 07:57:29 GMT 2022",
+      "changedOn": "Wed Dec 14 14:07:51 GMT 2022",
+      "internalSubscriptionId": "afc-dev!t5874_6917dfd6-7590-4033-af2a-140b75263b0d_afc-dev!t5874",
+      "authProviderState": "SUBSCRIBED",
+      "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+    },
+    {
+      "url": "https://skysand.dev-afc-sap.cfapps.sap.hana.ondemand.com",
+      "subdomain": "skysand",
+      "appName": "afc-dev",
+      "consumerTenantId": "cb9158ce-f8fd-441b-b443-17219e8f79fa",
+      "globalAccountId": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+      "subaccountId": "b07cc881-e90b-4c18-82c4-94aad87c2bb9",
+      "state": "SUBSCRIBED",
+      "dependencies": [
+        {
+          "xsappname": "04d135c3-cde3-4394-9ee5-b90561e5bcf0!b5874|ui5-flexibility-keyuser!b1506",
+          "appName": "8df5f951-acc1-439b-8ba8-b01a3cd60e08",
+          "dependencies": [],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "clone43c89feaa7e14781a446eca57e3748b5!b5874|connectivity!b137",
+          "appName": "connectivity",
+          "dependencies": [],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "clone05ed02605f01499ab0772a3cafc5eac3!b5874|destination-xsappname!b433",
+          "appName": "destination",
+          "dependencies": [
+            {
+              "xsappname": "clone845c0d6c34194265aeb6e95ebff4823d!b433|connectivity!b137",
+              "appName": "connectivity",
+              "dependencies": [],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+            },
+            {
+              "xsappname": "5001ed64-87a0-415c-8041-33406951606e!b433|auditlog!b4",
+              "appName": "auditlog",
+              "dependencies": [],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+            },
+            {
+              "xsappname": "clonebd6a3ec261bf48468c5684c414b14d7f!b433|connectivity!b137",
+              "appName": "connectivity",
+              "dependencies": [
+                {
+                  "xsappname": "da0519fb-67db-4809-85ac-a340b5b0b9a5!b137|auditlog!b4",
+                  "appName": "auditlog",
+                  "dependencies": [],
+                  "authProviderState": "SUBSCRIBED",
+                  "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+                }
+              ],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+            }
+          ],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "afb722fb-11ca-4fe2-a434-9a7172de92c3!b5874|na-9ab834c2-bc11-47a1-b8cb-d83d7a5a5774!b8223",
+          "appName": "adae71ae-b728-401a-b372-8003fd9d92bb",
+          "dependencies": [
+            {
+              "xsappname": "clone68c23983c7384400bfb4e69d27f714ea!b8223|connectivity!b137",
+              "appName": "connectivity",
+              "dependencies": [],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+            },
+            {
+              "xsappname": "clone9315356c939b47f5838370443c517336!b8223|destination-xsappname!b433",
+              "appName": "destination",
+              "dependencies": [],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+            }
+          ],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "4457fe63-ba67-42be-80c6-ce16066c80ca!b5874|html5-apps-repo-uaa!b1129",
+          "appName": "html5-apps-repo",
+          "dependencies": [],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "afc-dev!b5874|businesslogging-sb-prod!b3598",
+          "appName": "businesslogging-sb-prod",
+          "dependencies": [],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "b4700476-0b63-4eea-add7-2873a2fc4f0b!b5874|portal-cf-service!b119",
+          "appName": "portal",
+          "dependencies": [
+            {
+              "xsappname": "757b82dc-66c9-46ed-b724-9df99fa5a419!b119|ui5-flexibility-personalization!b1506",
+              "appName": "ui5-flexibility-personalization",
+              "dependencies": [],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+            }
+          ],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        }
+      ],
+      "createdOn": "Mon Sep 05 12:11:10 GMT 2022",
+      "changedOn": "Wed Dec 14 14:08:01 GMT 2022",
+      "internalSubscriptionId": "afc-dev!t5874_cb9158ce-f8fd-441b-b443-17219e8f79fa_afc-dev!t5874",
+      "authProviderState": "SUBSCRIBED",
+      "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+    },
+    {
+      "subdomain": "skyfin-test-3",
+      "appName": "afc-dev",
+      "consumerTenantId": "dde70ec5-983d-4848-b50c-fb2cdac7d359",
+      "globalAccountId": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+      "subaccountId": "dde70ec5-983d-4848-b50c-fb2cdac7d359",
+      "code": "standard",
+      "amount": 1,
+      "state": "SUBSCRIBE_FAILED",
+      "error": "subscriptions-subscriptions-3-error",
+      "dependencies": [
+        {
+          "xsappname": "04d135c3-cde3-4394-9ee5-b90561e5bcf0!b5874|ui5-flexibility-keyuser!b1506",
+          "appName": "8df5f951-acc1-439b-8ba8-b01a3cd60e08",
+          "dependencies": [],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "CREATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "b4700476-0b63-4eea-add7-2873a2fc4f0b!b5874|portal-cf-service!b119",
+          "appName": "portal",
+          "dependencies": [
+            {
+              "xsappname": "757b82dc-66c9-46ed-b724-9df99fa5a419!b119|ui5-flexibility-personalization!b1506",
+              "appName": "ui5-flexibility-personalization",
+              "dependencies": [],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "CREATE_CALLBACK_SUCCEEDED"
+            }
+          ],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "CREATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "afc-dev!b5874|businesslogging-sb-prod!b3598",
+          "appName": "businesslogging-sb-prod",
+          "error": "subscriptions-subscriptions-3-dependencies-2-error",
+          "dependencies": [],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "CREATE_CALLBACK_FAILED"
+        },
+        {
+          "xsappname": "afb722fb-11ca-4fe2-a434-9a7172de92c3!b5874|na-9ab834c2-bc11-47a1-b8cb-d83d7a5a5774!b8223",
+          "appName": "adae71ae-b728-401a-b372-8003fd9d92bb",
+          "dependencies": [
+            {
+              "xsappname": "clone68c23983c7384400bfb4e69d27f714ea!b8223|connectivity!b137",
+              "appName": "connectivity",
+              "dependencies": [],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "CREATE_CALLBACK_SUCCEEDED"
+            },
+            {
+              "xsappname": "clone9315356c939b47f5838370443c517336!b8223|destination-xsappname!b433",
+              "appName": "destination",
+              "dependencies": [
+                {
+                  "xsappname": "clone845c0d6c34194265aeb6e95ebff4823d!b433|connectivity!b137",
+                  "appName": "connectivity",
+                  "dependencies": [],
+                  "authProviderState": "SUBSCRIBED",
+                  "callbackState": "CREATE_CALLBACK_SUCCEEDED"
+                },
+                {
+                  "xsappname": "5001ed64-87a0-415c-8041-33406951606e!b433|auditlog!b4",
+                  "appName": "auditlog",
+                  "dependencies": [],
+                  "authProviderState": "SUBSCRIBED",
+                  "callbackState": "CREATE_CALLBACK_SUCCEEDED"
+                },
+                {
+                  "xsappname": "clonebd6a3ec261bf48468c5684c414b14d7f!b433|connectivity!b137",
+                  "appName": "connectivity",
+                  "dependencies": [],
+                  "authProviderState": "SUBSCRIBED",
+                  "callbackState": "CREATE_CALLBACK_SUCCEEDED"
+                }
+              ],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "CREATE_CALLBACK_SUCCEEDED"
+            }
+          ],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "CREATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "clone05ed02605f01499ab0772a3cafc5eac3!b5874|destination-xsappname!b433",
+          "appName": "destination",
+          "dependencies": [],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "CREATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "4457fe63-ba67-42be-80c6-ce16066c80ca!b5874|html5-apps-repo-uaa!b1129",
+          "appName": "html5-apps-repo",
+          "dependencies": [],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "CREATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "clone43c89feaa7e14781a446eca57e3748b5!b5874|connectivity!b137",
+          "appName": "connectivity",
+          "dependencies": [
+            {
+              "xsappname": "da0519fb-67db-4809-85ac-a340b5b0b9a5!b137|auditlog!b4",
+              "appName": "auditlog",
+              "dependencies": [],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "CREATE_CALLBACK_SUCCEEDED"
+            }
+          ],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "CREATE_CALLBACK_SUCCEEDED"
+        }
+      ],
+      "createdOn": "Mon Nov 28 09:51:43 GMT 2022",
+      "changedOn": "Mon Nov 28 09:51:57 GMT 2022",
+      "internalSubscriptionId": "afc-dev!t5874_dde70ec5-983d-4848-b50c-fb2cdac7d359_afc-dev!t5874",
+      "authProviderState": "NOT_SUBSCRIBED",
+      "callbackState": "PENDING_CREATE_CALLBACK"
+    }
+  ]
+}"
+`;
+
+exports[`reg tests reg list and longlist filtered 5`] = `
+"{
+  "subscriptions": [
+    {
+      "url": "http://skyfin-company.dev-afc-sap.cfapps.sap.hana.ondemand.com",
+      "subdomain": "skyfin-company",
+      "appName": "afc-dev",
+      "consumerTenantId": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+      "globalAccountId": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+      "licenseType": "SAPDEV",
+      "subaccountId": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+      "code": "standard",
+      "amount": 1,
+      "state": "SUBSCRIBED",
+      "dependencies": [
+        {
+          "xsappname": "b4700476-0b63-4eea-add7-2873a2fc4f0b!b5874|portal-cf-service!b119",
+          "appName": "portal",
+          "dependencies": [
+            {
+              "xsappname": "757b82dc-66c9-46ed-b724-9df99fa5a419!b119|ui5-flexibility-personalization!b1506",
+              "appName": "ui5-flexibility-personalization",
+              "dependencies": [],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+            }
+          ],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "afc-dev!b5874|businesslogging-sb-prod!b3598",
+          "appName": "businesslogging-sb-prod",
+          "dependencies": [],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "clone05ed02605f01499ab0772a3cafc5eac3!b5874|destination-xsappname!b433",
+          "appName": "destination",
+          "dependencies": [
+            {
+              "xsappname": "5001ed64-87a0-415c-8041-33406951606e!b433|auditlog!b4",
+              "appName": "auditlog",
+              "dependencies": [],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+            },
+            {
+              "xsappname": "clone845c0d6c34194265aeb6e95ebff4823d!b433|connectivity!b137",
+              "appName": "connectivity",
+              "dependencies": [],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+            },
+            {
+              "xsappname": "clonebd6a3ec261bf48468c5684c414b14d7f!b433|connectivity!b137",
+              "appName": "connectivity",
+              "dependencies": [
+                {
+                  "xsappname": "da0519fb-67db-4809-85ac-a340b5b0b9a5!b137|auditlog!b4",
+                  "appName": "auditlog",
+                  "dependencies": [],
+                  "authProviderState": "SUBSCRIBED",
+                  "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+                }
+              ],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+            }
+          ],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "clone43c89feaa7e14781a446eca57e3748b5!b5874|connectivity!b137",
+          "appName": "connectivity",
+          "dependencies": [],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "4457fe63-ba67-42be-80c6-ce16066c80ca!b5874|html5-apps-repo-uaa!b1129",
+          "appName": "html5-apps-repo",
+          "dependencies": [],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "04d135c3-cde3-4394-9ee5-b90561e5bcf0!b5874|ui5-flexibility-keyuser!b1506",
+          "appName": "8df5f951-acc1-439b-8ba8-b01a3cd60e08",
+          "dependencies": [],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        },
+        {
+          "xsappname": "afb722fb-11ca-4fe2-a434-9a7172de92c3!b5874|na-9ab834c2-bc11-47a1-b8cb-d83d7a5a5774!b8223",
+          "appName": "adae71ae-b728-401a-b372-8003fd9d92bb",
+          "dependencies": [
+            {
+              "xsappname": "clone68c23983c7384400bfb4e69d27f714ea!b8223|connectivity!b137",
+              "appName": "connectivity",
+              "dependencies": [],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+            },
+            {
+              "xsappname": "clone9315356c939b47f5838370443c517336!b8223|destination-xsappname!b433",
+              "appName": "destination",
+              "dependencies": [],
+              "authProviderState": "SUBSCRIBED",
+              "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+            }
+          ],
+          "authProviderState": "SUBSCRIBED",
+          "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+        }
+      ],
+      "createdOn": "Fri Mar 19 09:51:40 GMT 2021",
+      "changedOn": "Wed Dec 14 14:07:41 GMT 2022",
+      "isConsumerTenantActive": true,
+      "internalSubscriptionId": "afc-dev!t5874_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_afc-dev!t5874",
+      "authProviderState": "SUBSCRIBED",
+      "callbackState": "UPDATE_CALLBACK_SUCCEEDED"
+    }
+  ]
+}"
+`;

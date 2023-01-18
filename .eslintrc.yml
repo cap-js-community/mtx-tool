@@ -1,0 +1,16 @@
+---
+root: true
+#  https://eslint.org/docs/rules/
+env:
+  node: true
+  es2019: true
+plugins:
+  - jest
+extends:
+  - "eslint:recommended"
+  - "plugin:jest/recommended"
+  - prettier
+rules:
+  strict: [error]
+  no-console: [off]
+  no-constant-condition: [error, { checkLoops: false }]

@@ -1,0 +1,1075 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`hdi tests hdi list and longlist 5`] = `
+"
+=== container instances ===
+
+[
+  {
+    "id": "d8f03710-f83f-47d0-88ae-34aa3106cfd2",
+    "ready": true,
+    "name": "NJw9Wm1zEOvgEBIbGiVGmvElLF2UYBfXyoP3wIUJAwY=",
+    "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
+    "platform_id": "service-manager",
+    "context": {
+      "crm_customer_id": "",
+      "global_account_id": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+      "instance_annotations": {},
+      "instance_name": "NJw9Wm1zEOvgEBIbGiVGmvElLF2UYBfXyoP3wIUJAwY=",
+      "landscape_label": "cf-eu10-canary",
+      "license_type": "SAPDEV",
+      "organization_annotations": {},
+      "organization_guid": "792854a5-6fa0-456f-bbe7-17a4400fad6c",
+      "organization_name": "skyfin",
+      "origin": "cloudfoundry",
+      "platform": "sapcp",
+      "region": "cf-eu10-canary",
+      "service_instance_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec",
+      "space_annotations": {},
+      "space_guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
+      "space_name": "dev",
+      "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+      "subdomain": "skyfin",
+      "zone_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+      "container_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+    },
+    "usable": true,
+    "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+    "created_at": "2022-04-26T18:05:16.453276Z",
+    "updated_at": "2022-04-26T18:05:16.931279Z",
+    "labels": {
+      "container_id": [
+        "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+      ],
+      "subaccount_id": [
+        "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+      ],
+      "tenant_id": [
+        "__META__"
+      ]
+    }
+  },
+  {
+    "id": "28a6558f-6abf-4530-bc83-c814861ce85e",
+    "ready": true,
+    "name": "Nvau6PxZ8fQcGw4JIm2+3W+gsPQLVbkfozGMpSJ7fJk=",
+    "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
+    "platform_id": "service-manager",
+    "context": {
+      "crm_customer_id": "",
+      "global_account_id": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+      "instance_annotations": {},
+      "instance_name": "Nvau6PxZ8fQcGw4JIm2+3W+gsPQLVbkfozGMpSJ7fJk=",
+      "landscape_label": "cf-eu10-canary",
+      "license_type": "SAPDEV",
+      "organization_annotations": {},
+      "organization_guid": "792854a5-6fa0-456f-bbe7-17a4400fad6c",
+      "organization_name": "skyfin",
+      "origin": "cloudfoundry",
+      "platform": "sapcp",
+      "region": "cf-eu10-canary",
+      "service_instance_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec",
+      "space_annotations": {},
+      "space_guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
+      "space_name": "dev",
+      "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+      "subdomain": "skyfin",
+      "zone_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+      "container_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+    },
+    "usable": true,
+    "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+    "created_at": "2022-04-26T18:05:22.948824Z",
+    "updated_at": "2022-04-26T18:05:23.404089Z",
+    "labels": {
+      "container_id": [
+        "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+      ],
+      "subaccount_id": [
+        "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+      ],
+      "tenant_id": [
+        "TENANT-7b20408e-3fe0-4ade-aa2e-ad97baac72e8-META"
+      ]
+    }
+  },
+  {
+    "id": "e23684c3-fa5e-4b66-baf3-7e30eb6a99bb",
+    "ready": true,
+    "name": "s848WI+q7COGqyLNyFabTuqKS2izywtrUntTymXV0rM=",
+    "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
+    "platform_id": "service-manager",
+    "context": {
+      "crm_customer_id": "",
+      "global_account_id": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+      "instance_annotations": {},
+      "instance_name": "s848WI+q7COGqyLNyFabTuqKS2izywtrUntTymXV0rM=",
+      "landscape_label": "cf-eu10-canary",
+      "license_type": "SAPDEV",
+      "organization_annotations": {},
+      "organization_guid": "792854a5-6fa0-456f-bbe7-17a4400fad6c",
+      "organization_name": "skyfin",
+      "origin": "cloudfoundry",
+      "platform": "sapcp",
+      "region": "cf-eu10-canary",
+      "service_instance_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec",
+      "space_annotations": {},
+      "space_guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
+      "space_name": "dev",
+      "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+      "subdomain": "skyfin",
+      "zone_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+      "container_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+    },
+    "usable": true,
+    "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+    "created_at": "2022-04-26T18:05:24.390886Z",
+    "updated_at": "2022-04-26T18:05:24.854507Z",
+    "labels": {
+      "container_id": [
+        "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+      ],
+      "subaccount_id": [
+        "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+      ],
+      "tenant_id": [
+        "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+      ]
+    }
+  },
+  {
+    "id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
+    "ready": true,
+    "name": "z6w9myXbyLg9u0kguYzwZBVvp4N/yd/LimaWEwuLdEU=",
+    "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
+    "platform_id": "service-manager",
+    "context": {
+      "crm_customer_id": "",
+      "global_account_id": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+      "instance_annotations": {},
+      "instance_name": "z6w9myXbyLg9u0kguYzwZBVvp4N/yd/LimaWEwuLdEU=",
+      "landscape_label": "cf-eu10-canary",
+      "license_type": "SAPDEV",
+      "organization_annotations": {},
+      "organization_guid": "792854a5-6fa0-456f-bbe7-17a4400fad6c",
+      "organization_name": "skyfin",
+      "origin": "cloudfoundry",
+      "platform": "sapcp",
+      "region": "cf-eu10-canary",
+      "service_instance_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec",
+      "space_annotations": {},
+      "space_guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
+      "space_name": "dev",
+      "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+      "subdomain": "skyfin",
+      "zone_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+      "container_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+    },
+    "usable": true,
+    "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+    "created_at": "2022-04-26T18:05:44.931344Z",
+    "updated_at": "2022-04-26T18:05:45.432834Z",
+    "labels": {
+      "container_id": [
+        "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+      ],
+      "subaccount_id": [
+        "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+      ],
+      "tenant_id": [
+        "5ecc7413-2b7e-414a-9496-ad4a61f6cccf"
+      ]
+    }
+  },
+  {
+    "id": "e449c063-63e9-4b9c-82c2-7714f4da5101",
+    "ready": true,
+    "name": "ddW66ClIWejrmMAkE3Qyx9iFePnjwOkWkQt8uE8YeIg=",
+    "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
+    "platform_id": "service-manager",
+    "context": {
+      "crm_customer_id": "",
+      "global_account_id": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+      "instance_annotations": {},
+      "instance_name": "ddW66ClIWejrmMAkE3Qyx9iFePnjwOkWkQt8uE8YeIg=",
+      "landscape_label": "cf-eu10-canary",
+      "license_type": "SAPDEV",
+      "organization_annotations": {},
+      "organization_guid": "792854a5-6fa0-456f-bbe7-17a4400fad6c",
+      "organization_name": "skyfin",
+      "origin": "cloudfoundry",
+      "platform": "sapcp",
+      "region": "cf-eu10-canary",
+      "service_instance_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec",
+      "space_annotations": {},
+      "space_guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
+      "space_name": "dev",
+      "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+      "subdomain": "skyfin",
+      "zone_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+      "container_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+    },
+    "usable": true,
+    "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+    "created_at": "2022-04-26T18:05:46.630268Z",
+    "updated_at": "2022-04-26T18:05:47.103502Z",
+    "labels": {
+      "container_id": [
+        "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+      ],
+      "subaccount_id": [
+        "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+      ],
+      "tenant_id": [
+        "TENANT-5ecc7413-2b7e-414a-9496-ad4a61f6cccf-META"
+      ]
+    }
+  },
+  {
+    "id": "0a017fb4-f4ae-408a-9d79-6e866e51fb00",
+    "ready": true,
+    "name": "kPnZctLNPKAsZO254v9JR6KqYizHke1KuK/7O/QpMv4=",
+    "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
+    "platform_id": "service-manager",
+    "context": {
+      "crm_customer_id": "",
+      "global_account_id": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+      "instance_annotations": {},
+      "instance_name": "kPnZctLNPKAsZO254v9JR6KqYizHke1KuK/7O/QpMv4=",
+      "landscape_label": "cf-eu10-canary",
+      "license_type": "SAPDEV",
+      "organization_annotations": {},
+      "organization_guid": "792854a5-6fa0-456f-bbe7-17a4400fad6c",
+      "organization_name": "skyfin",
+      "origin": "cloudfoundry",
+      "platform": "sapcp",
+      "region": "cf-eu10-canary",
+      "service_instance_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec",
+      "space_annotations": {},
+      "space_guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
+      "space_name": "dev",
+      "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+      "subdomain": "skyfin",
+      "zone_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+      "container_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+    },
+    "usable": true,
+    "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+    "created_at": "2022-04-28T07:57:50.543912Z",
+    "updated_at": "2022-04-28T07:58:00.664992Z",
+    "labels": {
+      "container_id": [
+        "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+      ],
+      "subaccount_id": [
+        "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+      ],
+      "tenant_id": [
+        "6917dfd6-7590-4033-af2a-140b75263b0d"
+      ]
+    }
+  },
+  {
+    "id": "4b868611-bf38-404f-b5f0-2b4b423e2416",
+    "ready": true,
+    "name": "uX4NZfONAUoukSuDwdbsv0OlxRs6clQvdxxPXjnNfjE=",
+    "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
+    "platform_id": "service-manager",
+    "context": {
+      "crm_customer_id": "",
+      "global_account_id": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+      "instance_annotations": {},
+      "instance_name": "uX4NZfONAUoukSuDwdbsv0OlxRs6clQvdxxPXjnNfjE=",
+      "landscape_label": "cf-eu10-canary",
+      "license_type": "SAPDEV",
+      "organization_annotations": {},
+      "organization_guid": "792854a5-6fa0-456f-bbe7-17a4400fad6c",
+      "organization_name": "skyfin",
+      "origin": "cloudfoundry",
+      "platform": "sapcp",
+      "region": "cf-eu10-canary",
+      "service_instance_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec",
+      "space_annotations": {},
+      "space_guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
+      "space_name": "dev",
+      "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+      "subdomain": "skyfin",
+      "zone_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+      "container_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+    },
+    "usable": true,
+    "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+    "created_at": "2022-04-28T07:57:50.66965Z",
+    "updated_at": "2022-04-28T07:58:00.797913Z",
+    "labels": {
+      "container_id": [
+        "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+      ],
+      "subaccount_id": [
+        "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+      ],
+      "tenant_id": [
+        "TENANT-6917dfd6-7590-4033-af2a-140b75263b0d-META"
+      ]
+    }
+  },
+  {
+    "id": "42ff43bd-14a7-41f7-b903-259235c1abcb",
+    "ready": true,
+    "name": "bhKkLJZVBoHWDihD4eO2zjECv8cmQxMVGIut0eovg1I=",
+    "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
+    "platform_id": "service-manager",
+    "context": {
+      "crm_customer_id": "",
+      "global_account_id": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+      "instance_annotations": {},
+      "instance_name": "bhKkLJZVBoHWDihD4eO2zjECv8cmQxMVGIut0eovg1I=",
+      "landscape_label": "cf-eu10-canary",
+      "license_type": "SAPDEV",
+      "organization_annotations": {},
+      "organization_guid": "792854a5-6fa0-456f-bbe7-17a4400fad6c",
+      "organization_name": "skyfin",
+      "origin": "cloudfoundry",
+      "platform": "sapcp",
+      "region": "cf-eu10-canary",
+      "service_instance_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec",
+      "space_annotations": {},
+      "space_guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
+      "space_name": "dev",
+      "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+      "subdomain": "skyfin",
+      "zone_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+      "container_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+    },
+    "usable": true,
+    "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+    "created_at": "2022-09-05T12:11:41.981588Z",
+    "updated_at": "2022-09-05T12:11:52.158068Z",
+    "labels": {
+      "container_id": [
+        "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+      ],
+      "subaccount_id": [
+        "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+      ],
+      "tenant_id": [
+        "cb9158ce-f8fd-441b-b443-17219e8f79fa"
+      ]
+    }
+  },
+  {
+    "id": "308bcd08-5906-462e-bae3-bd125b3efba6",
+    "ready": true,
+    "name": "b6rUbtSfJ3gVq0/WswOooKyKdafU+4c0c3zju7yVHfA=",
+    "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
+    "platform_id": "service-manager",
+    "context": {
+      "crm_customer_id": "",
+      "global_account_id": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+      "instance_annotations": {},
+      "instance_name": "b6rUbtSfJ3gVq0/WswOooKyKdafU+4c0c3zju7yVHfA=",
+      "landscape_label": "cf-eu10-canary",
+      "license_type": "SAPDEV",
+      "organization_annotations": {},
+      "organization_guid": "792854a5-6fa0-456f-bbe7-17a4400fad6c",
+      "organization_name": "skyfin",
+      "origin": "cloudfoundry",
+      "platform": "sapcp",
+      "region": "cf-eu10-canary",
+      "service_instance_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec",
+      "space_annotations": {},
+      "space_guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
+      "space_name": "dev",
+      "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+      "subdomain": "skyfin",
+      "zone_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+      "container_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+    },
+    "usable": true,
+    "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+    "created_at": "2022-09-05T12:11:42.088715Z",
+    "updated_at": "2022-09-05T12:11:52.209877Z",
+    "labels": {
+      "container_id": [
+        "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+      ],
+      "subaccount_id": [
+        "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+      ],
+      "tenant_id": [
+        "TENANT-cb9158ce-f8fd-441b-b443-17219e8f79fa-META"
+      ]
+    }
+  }
+]
+
+=== container bindings ===
+
+[
+  {
+    "id": "75e62233-c8fc-4bb3-a591-19a137c9a949",
+    "ready": true,
+    "name": "2f9f57b5-5d8a-4f78-81d0-f5cb483a4649",
+    "service_instance_id": "e23684c3-fa5e-4b66-baf3-7e30eb6a99bb",
+    "context": {
+      "container_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec",
+      "crm_customer_id": "",
+      "global_account_id": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+      "instance_annotations": {},
+      "instance_name": "s848WI+q7COGqyLNyFabTuqKS2izywtrUntTymXV0rM=",
+      "landscape_label": "cf-eu10-canary",
+      "license_type": "SAPDEV",
+      "organization_annotations": {},
+      "organization_guid": "792854a5-6fa0-456f-bbe7-17a4400fad6c",
+      "organization_name": "skyfin",
+      "origin": "cloudfoundry",
+      "platform": "sapcp",
+      "region": "cf-eu10-canary",
+      "service_instance_id": "e23684c3-fa5e-4b66-baf3-7e30eb6a99bb",
+      "space_annotations": {},
+      "space_guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
+      "space_name": "dev",
+      "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+      "subdomain": "skyfin",
+      "zone_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+    },
+    "credentials": {
+      "certificate": "service-manager-items-0-credentials-certificate",
+      "database_id": "71836508-e02b-4a5b-88a2-4dd482f6de70",
+      "driver": "com.sap.db.jdbc.Driver",
+      "hdi_password": "service-manager-items-0-credentials-hdi_password",
+      "hdi_user": "service-manager-items-0-credentials-hdi_user",
+      "host": "service-manager-items-0-credentials-host",
+      "password": "service-manager-items-0-credentials-password",
+      "port": "443",
+      "schema": "service-manager-items-0-credentials-schema",
+      "url": "jdbc:sap://71836508-e02b-4a5b-88a2-4dd482f6de70.hna0.canary-eu10.hanacloud.ondemand.com:443",
+      "user": "service-manager-items-0-credentials-user"
+    },
+    "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+    "created_at": "2022-10-26T13:53:49.870439Z",
+    "updated_at": "2022-10-26T13:53:51.020443Z",
+    "labels": {
+      "container_id": [
+        "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+      ],
+      "managing_client_lib": [
+        "instance-manager-client-lib"
+      ],
+      "service_plan_id": [
+        "1b702f36-bd66-4fad-b4d8-75cf0a0b8347"
+      ],
+      "subaccount_id": [
+        "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+      ],
+      "tenant_id": [
+        "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+      ]
+    }
+  },
+  {
+    "id": "b5612b77-20f3-45a4-b833-0d2d2b1c4e4c",
+    "ready": true,
+    "name": "310afacf-ef63-4108-9eb0-8ea4c85b4e52",
+    "service_instance_id": "d8f03710-f83f-47d0-88ae-34aa3106cfd2",
+    "context": {
+      "container_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec",
+      "crm_customer_id": "",
+      "global_account_id": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+      "instance_annotations": {},
+      "instance_name": "NJw9Wm1zEOvgEBIbGiVGmvElLF2UYBfXyoP3wIUJAwY=",
+      "landscape_label": "cf-eu10-canary",
+      "license_type": "SAPDEV",
+      "organization_annotations": {},
+      "organization_guid": "792854a5-6fa0-456f-bbe7-17a4400fad6c",
+      "organization_name": "skyfin",
+      "origin": "cloudfoundry",
+      "platform": "sapcp",
+      "region": "cf-eu10-canary",
+      "service_instance_id": "d8f03710-f83f-47d0-88ae-34aa3106cfd2",
+      "space_annotations": {},
+      "space_guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
+      "space_name": "dev",
+      "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+      "subdomain": "skyfin",
+      "zone_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+    },
+    "credentials": {
+      "certificate": "service-manager-items-1-credentials-certificate",
+      "database_id": "71836508-e02b-4a5b-88a2-4dd482f6de70",
+      "driver": "com.sap.db.jdbc.Driver",
+      "hdi_password": "service-manager-items-1-credentials-hdi_password",
+      "hdi_user": "service-manager-items-1-credentials-hdi_user",
+      "host": "service-manager-items-1-credentials-host",
+      "password": "service-manager-items-1-credentials-password",
+      "port": "443",
+      "schema": "service-manager-items-1-credentials-schema",
+      "url": "jdbc:sap://71836508-e02b-4a5b-88a2-4dd482f6de70.hna0.canary-eu10.hanacloud.ondemand.com:443",
+      "user": "service-manager-items-1-credentials-user"
+    },
+    "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+    "created_at": "2022-10-26T13:53:49.907395Z",
+    "updated_at": "2022-10-26T13:53:51.022724Z",
+    "labels": {
+      "container_id": [
+        "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+      ],
+      "managing_client_lib": [
+        "instance-manager-client-lib"
+      ],
+      "service_plan_id": [
+        "1b702f36-bd66-4fad-b4d8-75cf0a0b8347"
+      ],
+      "subaccount_id": [
+        "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+      ],
+      "tenant_id": [
+        "__META__"
+      ]
+    }
+  },
+  {
+    "id": "05e0a1db-77aa-488a-8812-826c6e4f586d",
+    "ready": true,
+    "name": "65afc367-3530-4537-ba9a-ccaf88a382f3",
+    "service_instance_id": "e449c063-63e9-4b9c-82c2-7714f4da5101",
+    "context": {
+      "container_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec",
+      "crm_customer_id": "",
+      "global_account_id": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+      "instance_annotations": {},
+      "instance_name": "ddW66ClIWejrmMAkE3Qyx9iFePnjwOkWkQt8uE8YeIg=",
+      "landscape_label": "cf-eu10-canary",
+      "license_type": "SAPDEV",
+      "organization_annotations": {},
+      "organization_guid": "792854a5-6fa0-456f-bbe7-17a4400fad6c",
+      "organization_name": "skyfin",
+      "origin": "cloudfoundry",
+      "platform": "sapcp",
+      "region": "cf-eu10-canary",
+      "service_instance_id": "e449c063-63e9-4b9c-82c2-7714f4da5101",
+      "space_annotations": {},
+      "space_guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
+      "space_name": "dev",
+      "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+      "subdomain": "skyfin",
+      "zone_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+    },
+    "credentials": {
+      "certificate": "service-manager-items-2-credentials-certificate",
+      "database_id": "71836508-e02b-4a5b-88a2-4dd482f6de70",
+      "driver": "com.sap.db.jdbc.Driver",
+      "hdi_password": "service-manager-items-2-credentials-hdi_password",
+      "hdi_user": "service-manager-items-2-credentials-hdi_user",
+      "host": "service-manager-items-2-credentials-host",
+      "password": "service-manager-items-2-credentials-password",
+      "port": "443",
+      "schema": "service-manager-items-2-credentials-schema",
+      "url": "jdbc:sap://71836508-e02b-4a5b-88a2-4dd482f6de70.hna0.canary-eu10.hanacloud.ondemand.com:443",
+      "user": "service-manager-items-2-credentials-user"
+    },
+    "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+    "created_at": "2022-10-26T13:53:49.893015Z",
+    "updated_at": "2022-10-26T13:53:51.0702Z",
+    "labels": {
+      "container_id": [
+        "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+      ],
+      "managing_client_lib": [
+        "instance-manager-client-lib"
+      ],
+      "service_plan_id": [
+        "1b702f36-bd66-4fad-b4d8-75cf0a0b8347"
+      ],
+      "subaccount_id": [
+        "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+      ],
+      "tenant_id": [
+        "TENANT-5ecc7413-2b7e-414a-9496-ad4a61f6cccf-META"
+      ]
+    }
+  },
+  {
+    "id": "9039f315-8dee-4700-862b-77bb63863bfe",
+    "ready": true,
+    "name": "99c2c4be-c7f2-49e8-a473-81191119d0ed",
+    "service_instance_id": "28a6558f-6abf-4530-bc83-c814861ce85e",
+    "context": {
+      "container_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec",
+      "crm_customer_id": "",
+      "global_account_id": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+      "instance_annotations": {},
+      "instance_name": "Nvau6PxZ8fQcGw4JIm2+3W+gsPQLVbkfozGMpSJ7fJk=",
+      "landscape_label": "cf-eu10-canary",
+      "license_type": "SAPDEV",
+      "organization_annotations": {},
+      "organization_guid": "792854a5-6fa0-456f-bbe7-17a4400fad6c",
+      "organization_name": "skyfin",
+      "origin": "cloudfoundry",
+      "platform": "sapcp",
+      "region": "cf-eu10-canary",
+      "service_instance_id": "28a6558f-6abf-4530-bc83-c814861ce85e",
+      "space_annotations": {},
+      "space_guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
+      "space_name": "dev",
+      "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+      "subdomain": "skyfin",
+      "zone_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+    },
+    "credentials": {
+      "certificate": "service-manager-items-3-credentials-certificate",
+      "database_id": "71836508-e02b-4a5b-88a2-4dd482f6de70",
+      "driver": "com.sap.db.jdbc.Driver",
+      "hdi_password": "service-manager-items-3-credentials-hdi_password",
+      "hdi_user": "service-manager-items-3-credentials-hdi_user",
+      "host": "service-manager-items-3-credentials-host",
+      "password": "service-manager-items-3-credentials-password",
+      "port": "443",
+      "schema": "service-manager-items-3-credentials-schema",
+      "url": "jdbc:sap://71836508-e02b-4a5b-88a2-4dd482f6de70.hna0.canary-eu10.hanacloud.ondemand.com:443",
+      "user": "service-manager-items-3-credentials-user"
+    },
+    "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+    "created_at": "2022-10-26T13:53:49.949101Z",
+    "updated_at": "2022-10-26T13:53:51.161948Z",
+    "labels": {
+      "container_id": [
+        "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+      ],
+      "managing_client_lib": [
+        "instance-manager-client-lib"
+      ],
+      "service_plan_id": [
+        "1b702f36-bd66-4fad-b4d8-75cf0a0b8347"
+      ],
+      "subaccount_id": [
+        "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+      ],
+      "tenant_id": [
+        "TENANT-7b20408e-3fe0-4ade-aa2e-ad97baac72e8-META"
+      ]
+    }
+  },
+  {
+    "id": "e4fcfcb5-7f14-4850-93f2-255bbb78ccb5",
+    "ready": true,
+    "name": "534d00ae-f2d2-4174-b21d-9b56e4040fde",
+    "service_instance_id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
+    "context": {
+      "container_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec",
+      "crm_customer_id": "",
+      "global_account_id": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+      "instance_annotations": {},
+      "instance_name": "z6w9myXbyLg9u0kguYzwZBVvp4N/yd/LimaWEwuLdEU=",
+      "landscape_label": "cf-eu10-canary",
+      "license_type": "SAPDEV",
+      "organization_annotations": {},
+      "organization_guid": "792854a5-6fa0-456f-bbe7-17a4400fad6c",
+      "organization_name": "skyfin",
+      "origin": "cloudfoundry",
+      "platform": "sapcp",
+      "region": "cf-eu10-canary",
+      "service_instance_id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
+      "space_annotations": {},
+      "space_guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
+      "space_name": "dev",
+      "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+      "subdomain": "skyfin",
+      "zone_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+    },
+    "credentials": {
+      "certificate": "service-manager-items-4-credentials-certificate",
+      "database_id": "71836508-e02b-4a5b-88a2-4dd482f6de70",
+      "driver": "com.sap.db.jdbc.Driver",
+      "hdi_password": "service-manager-items-4-credentials-hdi_password",
+      "hdi_user": "service-manager-items-4-credentials-hdi_user",
+      "host": "service-manager-items-4-credentials-host",
+      "password": "service-manager-items-4-credentials-password",
+      "port": "443",
+      "schema": "service-manager-items-4-credentials-schema",
+      "url": "jdbc:sap://71836508-e02b-4a5b-88a2-4dd482f6de70.hna0.canary-eu10.hanacloud.ondemand.com:443",
+      "user": "service-manager-items-4-credentials-user"
+    },
+    "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+    "created_at": "2022-10-26T13:53:49.965027Z",
+    "updated_at": "2022-10-26T13:53:51.179665Z",
+    "labels": {
+      "container_id": [
+        "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+      ],
+      "managing_client_lib": [
+        "instance-manager-client-lib"
+      ],
+      "service_plan_id": [
+        "1b702f36-bd66-4fad-b4d8-75cf0a0b8347"
+      ],
+      "subaccount_id": [
+        "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+      ],
+      "tenant_id": [
+        "5ecc7413-2b7e-414a-9496-ad4a61f6cccf"
+      ]
+    }
+  },
+  {
+    "id": "31b44c43-f32d-4c51-a2d0-75fdc69700ad",
+    "ready": true,
+    "name": "12bce737-6dce-4d41-8617-3ca290c156b5",
+    "service_instance_id": "4b868611-bf38-404f-b5f0-2b4b423e2416",
+    "context": {
+      "container_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec",
+      "crm_customer_id": "",
+      "global_account_id": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+      "instance_annotations": {},
+      "instance_name": "uX4NZfONAUoukSuDwdbsv0OlxRs6clQvdxxPXjnNfjE=",
+      "landscape_label": "cf-eu10-canary",
+      "license_type": "SAPDEV",
+      "organization_annotations": {},
+      "organization_guid": "792854a5-6fa0-456f-bbe7-17a4400fad6c",
+      "organization_name": "skyfin",
+      "origin": "cloudfoundry",
+      "platform": "sapcp",
+      "region": "cf-eu10-canary",
+      "service_instance_id": "4b868611-bf38-404f-b5f0-2b4b423e2416",
+      "space_annotations": {},
+      "space_guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
+      "space_name": "dev",
+      "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+      "subdomain": "skyfin",
+      "zone_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+    },
+    "credentials": {
+      "certificate": "service-manager-items-5-credentials-certificate",
+      "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
+      "driver": "com.sap.db.jdbc.Driver",
+      "hdi_password": "service-manager-items-5-credentials-hdi_password",
+      "hdi_user": "service-manager-items-5-credentials-hdi_user",
+      "host": "service-manager-items-5-credentials-host",
+      "password": "service-manager-items-5-credentials-password",
+      "port": "443",
+      "schema": "service-manager-items-5-credentials-schema",
+      "url": "jdbc:sap://fa8a6cbe-1cdc-4dea-84cf-877c09b0f651.hna0.canary-eu10.hanacloud.ondemand.com:443",
+      "user": "service-manager-items-5-credentials-user"
+    },
+    "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+    "created_at": "2022-10-26T13:53:55.188952Z",
+    "updated_at": "2022-10-26T13:53:56.903363Z",
+    "labels": {
+      "container_id": [
+        "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+      ],
+      "managing_client_lib": [
+        "instance-manager-client-lib"
+      ],
+      "service_plan_id": [
+        "1b702f36-bd66-4fad-b4d8-75cf0a0b8347"
+      ],
+      "subaccount_id": [
+        "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+      ],
+      "tenant_id": [
+        "TENANT-6917dfd6-7590-4033-af2a-140b75263b0d-META"
+      ]
+    }
+  },
+  {
+    "id": "2c7e47c2-4fac-4b49-816b-92560db9bfa1",
+    "ready": true,
+    "name": "63b34bb7-2e44-43d7-883d-145774c9a23e",
+    "service_instance_id": "308bcd08-5906-462e-bae3-bd125b3efba6",
+    "context": {
+      "container_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec",
+      "crm_customer_id": "",
+      "global_account_id": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+      "instance_annotations": {},
+      "instance_name": "b6rUbtSfJ3gVq0/WswOooKyKdafU+4c0c3zju7yVHfA=",
+      "landscape_label": "cf-eu10-canary",
+      "license_type": "SAPDEV",
+      "organization_annotations": {},
+      "organization_guid": "792854a5-6fa0-456f-bbe7-17a4400fad6c",
+      "organization_name": "skyfin",
+      "origin": "cloudfoundry",
+      "platform": "sapcp",
+      "region": "cf-eu10-canary",
+      "service_instance_id": "308bcd08-5906-462e-bae3-bd125b3efba6",
+      "space_annotations": {},
+      "space_guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
+      "space_name": "dev",
+      "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+      "subdomain": "skyfin",
+      "zone_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+    },
+    "credentials": {
+      "certificate": "service-manager-items-6-credentials-certificate",
+      "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
+      "driver": "com.sap.db.jdbc.Driver",
+      "hdi_password": "service-manager-items-6-credentials-hdi_password",
+      "hdi_user": "service-manager-items-6-credentials-hdi_user",
+      "host": "service-manager-items-6-credentials-host",
+      "password": "service-manager-items-6-credentials-password",
+      "port": "443",
+      "schema": "service-manager-items-6-credentials-schema",
+      "url": "jdbc:sap://fa8a6cbe-1cdc-4dea-84cf-877c09b0f651.hna0.canary-eu10.hanacloud.ondemand.com:443",
+      "user": "service-manager-items-6-credentials-user"
+    },
+    "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+    "created_at": "2022-10-26T13:53:55.194903Z",
+    "updated_at": "2022-10-26T13:53:56.925449Z",
+    "labels": {
+      "container_id": [
+        "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+      ],
+      "managing_client_lib": [
+        "instance-manager-client-lib"
+      ],
+      "service_plan_id": [
+        "1b702f36-bd66-4fad-b4d8-75cf0a0b8347"
+      ],
+      "subaccount_id": [
+        "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+      ],
+      "tenant_id": [
+        "TENANT-cb9158ce-f8fd-441b-b443-17219e8f79fa-META"
+      ]
+    }
+  },
+  {
+    "id": "ef121870-4649-4056-8c93-b1475d889f1f",
+    "ready": true,
+    "name": "2cd5840b-55c2-448d-b712-0489f27d2c36",
+    "service_instance_id": "42ff43bd-14a7-41f7-b903-259235c1abcb",
+    "context": {
+      "container_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec",
+      "crm_customer_id": "",
+      "global_account_id": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+      "instance_annotations": {},
+      "instance_name": "bhKkLJZVBoHWDihD4eO2zjECv8cmQxMVGIut0eovg1I=",
+      "landscape_label": "cf-eu10-canary",
+      "license_type": "SAPDEV",
+      "organization_annotations": {},
+      "organization_guid": "792854a5-6fa0-456f-bbe7-17a4400fad6c",
+      "organization_name": "skyfin",
+      "origin": "cloudfoundry",
+      "platform": "sapcp",
+      "region": "cf-eu10-canary",
+      "service_instance_id": "42ff43bd-14a7-41f7-b903-259235c1abcb",
+      "space_annotations": {},
+      "space_guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
+      "space_name": "dev",
+      "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+      "subdomain": "skyfin",
+      "zone_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+    },
+    "credentials": {
+      "certificate": "service-manager-items-7-credentials-certificate",
+      "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
+      "driver": "com.sap.db.jdbc.Driver",
+      "hdi_password": "service-manager-items-7-credentials-hdi_password",
+      "hdi_user": "service-manager-items-7-credentials-hdi_user",
+      "host": "service-manager-items-7-credentials-host",
+      "password": "service-manager-items-7-credentials-password",
+      "port": "443",
+      "schema": "service-manager-items-7-credentials-schema",
+      "url": "jdbc:sap://fa8a6cbe-1cdc-4dea-84cf-877c09b0f651.hna0.canary-eu10.hanacloud.ondemand.com:443",
+      "user": "service-manager-items-7-credentials-user"
+    },
+    "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+    "created_at": "2022-10-26T13:53:55.238927Z",
+    "updated_at": "2022-10-26T13:53:56.976965Z",
+    "labels": {
+      "container_id": [
+        "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+      ],
+      "managing_client_lib": [
+        "instance-manager-client-lib"
+      ],
+      "service_plan_id": [
+        "1b702f36-bd66-4fad-b4d8-75cf0a0b8347"
+      ],
+      "subaccount_id": [
+        "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+      ],
+      "tenant_id": [
+        "cb9158ce-f8fd-441b-b443-17219e8f79fa"
+      ]
+    }
+  },
+  {
+    "id": "93719bcd-8e6c-45cb-8c54-ab2af064aab7",
+    "ready": true,
+    "name": "18a24c2c-1e0b-4e71-8106-87052de7fa80",
+    "service_instance_id": "0a017fb4-f4ae-408a-9d79-6e866e51fb00",
+    "context": {
+      "container_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec",
+      "crm_customer_id": "",
+      "global_account_id": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+      "instance_annotations": {},
+      "instance_name": "kPnZctLNPKAsZO254v9JR6KqYizHke1KuK/7O/QpMv4=",
+      "landscape_label": "cf-eu10-canary",
+      "license_type": "SAPDEV",
+      "organization_annotations": {},
+      "organization_guid": "792854a5-6fa0-456f-bbe7-17a4400fad6c",
+      "organization_name": "skyfin",
+      "origin": "cloudfoundry",
+      "platform": "sapcp",
+      "region": "cf-eu10-canary",
+      "service_instance_id": "0a017fb4-f4ae-408a-9d79-6e866e51fb00",
+      "space_annotations": {},
+      "space_guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
+      "space_name": "dev",
+      "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+      "subdomain": "skyfin",
+      "zone_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+    },
+    "credentials": {
+      "certificate": "service-manager-items-8-credentials-certificate",
+      "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
+      "driver": "com.sap.db.jdbc.Driver",
+      "hdi_password": "service-manager-items-8-credentials-hdi_password",
+      "hdi_user": "service-manager-items-8-credentials-hdi_user",
+      "host": "service-manager-items-8-credentials-host",
+      "password": "service-manager-items-8-credentials-password",
+      "port": "443",
+      "schema": "service-manager-items-8-credentials-schema",
+      "url": "jdbc:sap://fa8a6cbe-1cdc-4dea-84cf-877c09b0f651.hna0.canary-eu10.hanacloud.ondemand.com:443",
+      "user": "service-manager-items-8-credentials-user"
+    },
+    "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+    "created_at": "2022-11-10T10:25:11.501089Z",
+    "updated_at": "2022-11-10T10:25:12.466567Z",
+    "labels": {
+      "container_id": [
+        "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+      ],
+      "managing_client_lib": [
+        "instance-manager-client-lib"
+      ],
+      "service_plan_id": [
+        "1b702f36-bd66-4fad-b4d8-75cf0a0b8347"
+      ],
+      "subaccount_id": [
+        "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+      ],
+      "tenant_id": [
+        "6917dfd6-7590-4033-af2a-140b75263b0d"
+      ]
+    }
+  }
+]
+"
+`;
+
+exports[`hdi tests hdi list and longlist filtered 5`] = `
+"
+=== container instance ===
+
+{
+  "id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
+  "ready": true,
+  "name": "z6w9myXbyLg9u0kguYzwZBVvp4N/yd/LimaWEwuLdEU=",
+  "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
+  "platform_id": "service-manager",
+  "context": {
+    "crm_customer_id": "",
+    "global_account_id": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+    "instance_annotations": {},
+    "instance_name": "z6w9myXbyLg9u0kguYzwZBVvp4N/yd/LimaWEwuLdEU=",
+    "landscape_label": "cf-eu10-canary",
+    "license_type": "SAPDEV",
+    "organization_annotations": {},
+    "organization_guid": "792854a5-6fa0-456f-bbe7-17a4400fad6c",
+    "organization_name": "skyfin",
+    "origin": "cloudfoundry",
+    "platform": "sapcp",
+    "region": "cf-eu10-canary",
+    "service_instance_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec",
+    "space_annotations": {},
+    "space_guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
+    "space_name": "dev",
+    "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+    "subdomain": "skyfin",
+    "zone_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+    "container_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+  },
+  "usable": true,
+  "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+  "created_at": "2022-04-26T18:05:44.931344Z",
+  "updated_at": "2022-04-26T18:05:45.432834Z",
+  "labels": {
+    "container_id": [
+      "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+    ],
+    "subaccount_id": [
+      "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+    ],
+    "tenant_id": [
+      "5ecc7413-2b7e-414a-9496-ad4a61f6cccf"
+    ]
+  }
+}
+
+=== container binding ===
+
+{
+  "id": "e4fcfcb5-7f14-4850-93f2-255bbb78ccb5",
+  "ready": true,
+  "name": "534d00ae-f2d2-4174-b21d-9b56e4040fde",
+  "service_instance_id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
+  "context": {
+    "container_id": "51ddd18b-5a78-418e-8f41-9a4c518650ec",
+    "crm_customer_id": "",
+    "global_account_id": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+    "instance_annotations": {},
+    "instance_name": "z6w9myXbyLg9u0kguYzwZBVvp4N/yd/LimaWEwuLdEU=",
+    "landscape_label": "cf-eu10-canary",
+    "license_type": "SAPDEV",
+    "organization_annotations": {},
+    "organization_guid": "792854a5-6fa0-456f-bbe7-17a4400fad6c",
+    "organization_name": "skyfin",
+    "origin": "cloudfoundry",
+    "platform": "sapcp",
+    "region": "cf-eu10-canary",
+    "service_instance_id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
+    "space_annotations": {},
+    "space_guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
+    "space_name": "dev",
+    "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+    "subdomain": "skyfin",
+    "zone_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+  },
+  "credentials": {
+    "certificate": "service-manager-items-0-credentials-certificate",
+    "database_id": "71836508-e02b-4a5b-88a2-4dd482f6de70",
+    "driver": "com.sap.db.jdbc.Driver",
+    "hdi_password": "service-manager-items-0-credentials-hdi_password",
+    "hdi_user": "service-manager-items-0-credentials-hdi_user",
+    "host": "service-manager-items-0-credentials-host",
+    "password": "service-manager-items-0-credentials-password",
+    "port": "443",
+    "schema": "service-manager-items-0-credentials-schema",
+    "url": "jdbc:sap://71836508-e02b-4a5b-88a2-4dd482f6de70.hna0.canary-eu10.hanacloud.ondemand.com:443",
+    "user": "service-manager-items-0-credentials-user"
+  },
+  "subaccount_id": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+  "created_at": "2022-10-26T13:53:49.965027Z",
+  "updated_at": "2022-10-26T13:53:51.179665Z",
+  "labels": {
+    "container_id": [
+      "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+    ],
+    "managing_client_lib": [
+      "instance-manager-client-lib"
+    ],
+    "service_plan_id": [
+      "1b702f36-bd66-4fad-b4d8-75cf0a0b8347"
+    ],
+    "subaccount_id": [
+      "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+    ],
+    "tenant_id": [
+      "5ecc7413-2b7e-414a-9496-ad4a61f6cccf"
+    ]
+  }
+}
+"
+`;

@@ -1,0 +1,60 @@
+{
+  "uaaAppName": {
+    "name": "uaa app",
+    "envVariable": "MTX_UAA_APP",
+    "question": "cf app bound to xsuaa service (optional)?",
+    "failMessage": "option requires configured app bound to service label:xsuaa plan:application",
+    "requireServices": [
+      {
+        "label": "xsuaa",
+        "plan": "application"
+      },
+      {
+        "label": "xsuaa",
+        "plan": "broker"
+      }
+    ]
+  },
+  "regAppName": {
+    "name": "registry app",
+    "envVariable": "MTX_REG_APP",
+    "question": "cf app bound to saas-registry service (optional)?",
+    "failMessage": "option requires configured app bound to service label:saas-registry plan:application",
+    "requireServices": [
+      {
+        "label": "saas-registry",
+        "plan": "application"
+      }
+    ]
+  },
+  "cdsAppName": {
+    "name": "cds-mtx app",
+    "envVariable": "MTX_CDS_APP",
+    "question": "cf app running @sap/cds-mtx library (optional)?",
+    "failMessage": "option requires configured app running @sap/cds-mtx",
+    "requireRoute": true
+  },
+  "hdiAppName": {
+    "name": "hdi app",
+    "envVariable": "MTX_HDI_APP",
+    "question": "cf app bound to service-manager or managed-hana service (optional)?",
+    "failMessage": "option requires configured app bound to service label:managed-hana plan:hdi-shared OR label:service-manager plan:container",
+    "requireServices": [
+      {
+        "label": "service-manager",
+        "plan": "container"
+      },
+      {
+        "label": "managed-hana",
+        "plan": "hdi-shared"
+      }
+    ]
+  },
+  "srvAppName": {
+    "name": "server app",
+    "envVariable": "MTX_SRV_APP",
+    "question": "cf app with \"/info\" endpoint (optional)?",
+    "failMessage": "option requires configured app with \"/info\" endpoint",
+    "requireRoute": true
+  }
+}
