@@ -3,17 +3,17 @@ https://github.com/asciinema/asciinema
 https://github.com/asciinema/asciicast2gif
 
 # record
-asciinema rec --quiet --overwrite dev/btp-tools-mtx/docs/assets/user-authentication-service.cast
+asciinema rec --quiet --overwrite dev/mtx-tool/docs/assets/user-authentication-service.cast
 
 # cleanup
-sed -i '' 's/file:\/\/C02FLAC2MD6M\/Users\/d057156/file:\/\//g' dev/btp-tools-mtx/docs/assets/*.cast
-sed -i '' 's/d057156@C02FLAC2MD6M ~ %/%/g' dev/btp-tools-mtx/docs/assets/*.cast
+sed -i '' 's/file:\/\/C02FLAC2MD6M\/Users\/d057156/file:\/\//g' dev/mtx-tool/docs/assets/*.cast
+sed -i '' 's/d057156@C02FLAC2MD6M ~ %/%/g' dev/mtx-tool/docs/assets/*.cast
 
 # convert to gif
-asciicast2gif dev/btp-tools-mtx/docs/assets/tool-setup-setup.cast dev/btp-tools-mtx/docs/tool-setup/tool-setup-setup.gif
-asciicast2gif dev/btp-tools-mtx/docs/assets/user-authentication-service.cast dev/btp-tools-mtx/docs/user-authentication/user-authentication-service.gif
-asciicast2gif dev/btp-tools-mtx/docs/assets/tenant-registry-list.cast dev/btp-tools-mtx/docs/tenant-registry/tenant-registry-list.gif
-asciicast2gif dev/btp-tools-mtx/docs/assets/cap-multitenancy-list.cast dev/btp-tools-mtx/docs/cap-multitenancy/cap-multitenancy-list.gif
-asciicast2gif dev/btp-tools-mtx/docs/assets/cap-multitenancy-upgrade-tenant.cast dev/btp-tools-mtx/docs/cap-multitenancy/cap-multitenancy-upgrade-tenant.gif
-asciicast2gif dev/btp-tools-mtx/docs/assets/hana-management-list.cast dev/btp-tools-mtx/docs/hana-management/hana-management-list.gif
-asciicast2gif dev/btp-tools-mtx/docs/assets/hana-management-tunnel.cast dev/btp-tools-mtx/docs/hana-management/hana-management-tunnel.gif
+asciicast2gif dev/mtx-tool/docs/assets/tool-setup-setup.cast dev/mtx-tool/docs/tool-setup/tool-setup-setup.gif
+asciicast2gif dev/mtx-tool/docs/assets/user-authentication-service.cast dev/mtx-tool/docs/user-authentication/user-authentication-service.gif
+asciicast2gif dev/mtx-tool/docs/assets/tenant-registry-list.cast dev/mtx-tool/docs/tenant-registry/tenant-registry-list.gif
+asciicast2gif dev/mtx-tool/docs/assets/cap-multitenancy-list.cast dev/mtx-tool/docs/cap-multitenancy/cap-multitenancy-list.gif
+asciicast2gif dev/mtx-tool/docs/assets/cap-multitenancy-upgrade-tenant.cast dev/mtx-tool/docs/cap-multitenancy/cap-multitenancy-upgrade-tenant.gif
+asciicast2gif dev/mtx-tool/docs/assets/hana-management-list.cast dev/mtx-tool/docs/hana-management/hana-management-list.gif
+asciicast2gif dev/mtx-tool/docs/assets/hana-management-tunnel.cast dev/mtx-tool/docs/hana-management/hana-management-tunnel.gif

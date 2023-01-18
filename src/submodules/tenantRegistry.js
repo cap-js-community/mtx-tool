@@ -1,6 +1,5 @@
 /**
  * This is a wrapper for APIs of the saas-registry
- * - https://wiki.wdf.sap.corp/wiki/display/CPC15N/SaaS+Application+Registration+in+CF
  * - https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/ed08c7dcb35d4082936c045e7d7b3ecd.html
  * - https://int.controlcenter.ondemand.com/index.html#/knowledge_center/articles/f239e5501a534b64ab5f8dde9bd83c53
  * - https://saas-manager.cfapps.sap.hana.ondemand.com/api#/

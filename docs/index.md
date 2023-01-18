@@ -4,32 +4,30 @@ title: Home
 nav_order: 1
 ---
 
-# BTP Tools MTX
+# MTX Tool
 
-BTP Tools MTX is a cli tool to reduce operational overhead for multitenant Cloud Foundry applications, particularly in
-the areas user authentication, tenant registration, CAP multitenancy, and HANA container management.
+Multitenancy and Extensibility Tool is a cli to reduce operational overhead for multitenant Cloud Foundry applications, particularly in the areas user authentication, tenant registration, CAP multitenancy, and HANA container management.
 
 ## Install or Upgrade
 
-Prerequisite is an installed [CF cli](https://github.com/cloudfoundry/cli) v7 or newer. The tool can be installed either
-globally or locally for a specific project.
+Prerequisite is an installed [CF cli](https://github.com/cloudfoundry/cli) v7 or newer. The tool can be installed either globally or locally for a specific project.
 
 ```bash
 # globally
-npm install --global @sap/btp-tools-mtx@latest --@sap:registry=https://int.repositories.cloud.sap/artifactory/api/npm/build-releases-npm
+npm install --global @cap-js-community/mtx-tool@latest
 # project local
-npm install --save-dev @sap/btp-tools-mtx@latest --@sap:registry=https://int.repositories.cloud.sap/artifactory/api/npm/build-releases-npm
+npm install --save-dev @cap-js-community/mtx-tool@latest
 ```
 
 ## Content
 
-| Area                                       | Purpose                                                    | Related                                                                                            |
-| :----------------------------------------- | :--------------------------------------------------------- | :------------------------------------------------------------------------------------------------- |
-| [Tool Setup](tool-setup)                   | initial, project, or ad-hoc setup                          |                                                                                                    |
-| [User Authentication](user-authentication) | obtain and decode access tokens                            | service:&nbsp;[xsuaa](https://github.wdf.sap.corp/CPSecurity/xsuaa)                                |
-| [Tenant Registry](tenant-registry)         | list subscribed subaccounts and service dependencies       | service:&nbsp;[saas-registry](https://github.wdf.sap.corp/CF-PROVISIONING/tenant-onboarding)       |
-| [CAP Multitenancy](cap-multitenancy)       | list, onboard, offboard, and upgrade tenants               | library:&nbsp;[@sap/cds-mtx](https://github.tools.sap/cdx/cds-mtx)                                 |
-| [HANA Management](hana-management)         | list, access, and delete hdi container instances, bindings | service:&nbsp;[service-manager](https://help.sap.com/viewer/product/SERVICEMANAGEMENT/Cloud/en-US) |
+| Area                                       | Purpose                                                    | Related                                                                                                |
+| :----------------------------------------- | :--------------------------------------------------------- | :----------------------------------------------------------------------------------------------------- |
+| [Tool Setup](tool-setup)                   | initial, project, or ad-hoc setup                          |                                                                                                        |
+| [User Authentication](user-authentication) | obtain and decode access tokens                            | service:&nbsp;[xsuaa](https://services.tools.sap/#/perspective/services/service/SERVICE-92)            |
+| [Tenant Registry](tenant-registry)         | list subscribed subaccounts and service dependencies       | service:&nbsp;[saas-registry](https://services.tools.sap/#/perspective/services/service/SERVICE-380)   |
+| [CAP Multitenancy](cap-multitenancy)       | list, onboard, offboard, and upgrade tenants               | library:&nbsp;[@sap/cds-mtx](https://github.tools.sap/cdx/cds-mtx)                                     |
+| [HANA Management](hana-management)         | list, access, and delete hdi container instances, bindings | service:&nbsp;[service-manager](https://services.tools.sap/#/perspective/services/service/SERVICE-324) |
 
 <!--
 | [Server Diagnostic](server-diagnostic)     | debugging runtime server instances                   |                                                                                                    |

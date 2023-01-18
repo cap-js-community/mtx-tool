@@ -1,6 +1,5 @@
 "use strict";
 // https://apidocs.cloudfoundry.org/12.36.0/service_bindings/list_all_service_bindings.html
-// https://github.wdf.sap.corp/pages/cap/guides/extensibility#setup-tenant-landscape
 
 const { parse } = require("path");
 const { sleep, partition, question } = require("./shared/static");

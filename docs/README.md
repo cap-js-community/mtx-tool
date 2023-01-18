@@ -1,4 +1,4 @@
-# BTP Feature Toggles Documentation
+# Documentation
 
 The documentation is based on the excellent package [Just the Docs](https://just-the-docs.github.io/just-the-docs/).
 

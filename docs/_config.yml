@@ -21,10 +21,10 @@
 title: >-
   MTX Tool
 description: >-
-  BTP Tools MTX
+  Multitenancy and Extensibility Tool
 
 # Build settings
-baseurl: /pages/cds-community/btp-tools-mtx
+baseurl: /pages/cap-js-community/mtx-tool
 markdown: kramdown
 remote_theme: just-the-docs/just-the-docs@main
 
@@ -56,7 +56,7 @@ search:
 
 aux_links:
   "MTX Tool on GitHub":
-    - "//github.wdf.sap.corp/cds-community/btp-tools-mtx"
+    - "//github.com/cap-js-community/mtx-tool"
 
 # Back to top link
 back_to_top: true
