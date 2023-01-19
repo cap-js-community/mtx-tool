@@ -5,18 +5,18 @@ name: CI
 
 on:
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   linter:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: linter 
-      uses: actions/setup-node@v3
-      with:
-        node-version: 16
-        cache: 'npm'
-    - run: npm ci --package-lock
-    - run: npm run eslint:check
-    - run: npm run prettier:check
+      - uses: actions/checkout@v3
+      - name: linter
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: "npm"
+      - run: npm ci --package-lock
+      - run: npm run eslint:check
+      - run: npm run prettier:check
