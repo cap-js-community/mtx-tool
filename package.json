@@ -23,7 +23,9 @@
     "lint": "npm run eslint && npm run prettier",
     "pack": "npm pack",
     "eslint": "eslint --fix .",
+    "eslint:check": "eslint .",
     "prettier": "prettier --write --loglevel error .",
+    "prettier:check": "prettier --check --loglevel error .",
     "docs": "cd docs && bundle exec jekyll serve",
     "docs:install": "cd docs && bundle install",
     "upgrade-lock": "npx shx rm -rf package-lock.json node_modules && npm i --package-lock"
