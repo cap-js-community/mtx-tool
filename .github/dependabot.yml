@@ -22,3 +22,9 @@ updates:
       interval: daily
       time: "11:00"
       timezone: "Europe/Berlin"
+
+  # the bundler in /docs is only used locally for validating documentation changes
+  - package-ecosystem: bundler
+    directory: "/docs"
+    ignore:
+      - dependency-name: "*"
