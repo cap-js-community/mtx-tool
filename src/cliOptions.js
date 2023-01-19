@@ -18,7 +18,7 @@ const PASS_ARG = Object.freeze({
   SKIP_APPS: "SKIP_APPS",
   APP_NAME: "APP_NAME",
   APP_INSTANCE: "APP_INSTANCE",
-  PARAMS: "PARAMS",
+  PARAMS: "PARAMS"
 });
 
 const FLAG_ARG = Object.freeze({
