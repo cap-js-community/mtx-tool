@@ -9,7 +9,7 @@ updates:
       time: "11:00"
       timezone: "Europe/Berlin"
     allow:
-      dependency-type: production
+      - dependency-type: production
 
   - package-ecosystem: github-actions
     directory: "/"
