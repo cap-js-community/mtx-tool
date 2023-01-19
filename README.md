@@ -27,4 +27,4 @@ Head over to our [Documentation](https://cap-js-community.github.io/mtx-tool/) t
 
 ## Licensing
 
-Copyright (20xx-)20xx SAP SE or an SAP affiliate company and mtx-tool contributors. Please see our [LICENSE](LICENSE) for copyright and license information. Detailed information including third-party components and their licensing/copyright information is available [via the REUSE tool](https://api.reuse.software/info/github.com/cap-js-community/mtx-tool).
+Copyright 2023 SAP SE or an SAP affiliate company and mtx-tool contributors. Please see our [LICENSE](LICENSE) for copyright and license information. Detailed information including third-party components and their licensing/copyright information is available [via the REUSE tool](https://api.reuse.software/info/github.com/cap-js-community/mtx-tool).
