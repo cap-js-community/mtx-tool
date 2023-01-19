@@ -10,3 +10,10 @@ updates:
       timezone: "Europe/Berlin"
     allow:
       dependency-type: production
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: daily
+      time: "11:00"
+      timezone: "Europe/Berlin"
