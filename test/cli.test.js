@@ -20,6 +20,7 @@ describe("cli tests", () => {
     const readmeUsage = /## Quickstart\n\n```\n([\s\S]*?)```/g.exec(readme)[1];
     const cliUsage = USAGE.replace(/usage: (?:processChild|jest) \[command]/g, "usage: mtx [command]");
     expect(cliUsage).toEqual(readmeUsage);
+   process.exit(-1)
   });
 
   const _validateOptions = (cliOptions, text, expect) => {
