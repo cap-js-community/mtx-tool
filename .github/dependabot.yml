@@ -23,8 +23,10 @@ updates:
       time: "11:00"
       timezone: "Europe/Berlin"
 
+  # NOTE: excluding directories does not work
+  # https://github.com/dependabot/dependabot-core/issues/4364
   # the bundler in /docs is only used locally for validating documentation changes
-  - package-ecosystem: bundler
-    directory: "/docs"
-    ignore:
-      - dependency-name: "*"
+  #  - package-ecosystem: bundler
+  #    directory: "/docs"
+  #    ignore:
+  #      - dependency-name: "*"
