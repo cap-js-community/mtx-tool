@@ -17,7 +17,7 @@ jobs:
           cache: "npm"
       - run: npm ci --package-lock
       - run: npm test
-      - run: npm lint:ci
+      - run: npm run lint:ci
 
   publish-npm:
     needs: pre-publish
