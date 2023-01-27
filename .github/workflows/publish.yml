@@ -20,7 +20,7 @@ jobs:
       - run: npm lint:ci
 
   publish-npm:
-    needs: build
+    needs: pre-publish
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
