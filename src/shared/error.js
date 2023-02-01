@@ -24,7 +24,7 @@ const assertAll =
         .concat(
           Array.from(results.entries())
             .filter(([, { status }]) => status === "rejected")
-            .map(([index, { reason }]) => `error in promise ${index + 1}: ${reason.message}`)
+            .map(([index, { reason }]) => `error in subprocess ${index + 1}: ${reason.message}`)
         )
         .join("\n")
     );
