@@ -174,6 +174,7 @@ const _cdsUpgrade = async (
       if (isMtxs) {
         const tenants = upgradeResponseData.tenants;
         assert(tenants, "no tenants found in response for upgrade\n%j", upgradeResponseData);
+        let allSuccess = true;
         const table = [["tenantId", "status", "message"]].concat(
           await Promise.all(
             Object.entries(tenants).map(async ([tenantId, { ID: taskId }]) => {
@@ -187,12 +188,14 @@ const _cdsUpgrade = async (
                 },
               });
               const pollTaskResponseData = await _safeMaterializeJson(pollTaskResponse, "poll task");
-              const { status, error: message } = pollTaskResponseData || {};
-              return [tenantId, status, message || ""];
+              const { status, error } = pollTaskResponseData || {};
+              allSuccess &= !error;
+              return [tenantId, status, error || ""];
             })
           )
         );
         console.log(tableList(table) + "\n");
+        assert(allSuccess, "upgrade tenant failed");
       } else {
         const { error, result } = pollJobResponseData || {};
         assert(!error, "upgrade tenant failed\n%j", error);
@@ -251,7 +254,9 @@ const cdsUpgradeAll = async (context, _, [doAutoUndeploy]) => {
   console.log();
 
   await assertAll("problems occurred during tenant upgrade")(
-    tenantIdParts.map((tenants, appInstance) => _cdsUpgrade(context, { tenants, doAutoUndeploy, appInstance }))
+    tenantIdParts.map(
+      async (tenants, appInstance) => await _cdsUpgrade(context, { tenants, doAutoUndeploy, appInstance })
+    )
   );
 };
 
