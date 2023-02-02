@@ -11,12 +11,13 @@
  */
 
 const pathlib = require("path");
+const { format } = require("util");
 const nock = require("nock");
 
 const { newContext } = require("../src/context");
 const cds = require("../src/submodules/capMultitenancy");
 const { anonymizeNock } = require("./util/anonymizeNock");
-const { format } = require("util");
+const { partition } = require("../src/shared/static");
 
 // https://github.com/nock/nock#modes
 const NOCK_MODE = {
@@ -46,8 +47,16 @@ let loggerSpy = {
   info: jest.spyOn(console, "log").mockImplementation(),
   error: jest.spyOn(console, "error").mockImplementation(),
 };
-const outputFromLogger = (calls) => calls.map((args) => format(...args)).join("\n");
 const freshContext = async () => await newContext({ usePersistedCache: false, isReadonlyCommand: false });
+
+const outputFromLogger = (calls) => calls.map((args) => format(...args)).join("\n");
+const outputFromLoggerPartitionFetch = (calls) => {
+  const inputLogLines = outputFromLogger(calls).split("\n");
+  const [fetchLogLines, logLines] = partition(inputLogLines, (line) =>
+    /^(?:GET|POST|PATCH|DELETE) https:\/\//i.test(line)
+  );
+  return [...logLines, "", ...fetchLogLines].join("\n");
+};
 
 describe("cds tests", () => {
   beforeAll(async () => {});
@@ -67,9 +76,10 @@ describe("cds tests", () => {
       3  7b20408e-3fe0-4ade-aa2e-ad97baac72e8  skyfin                                     CREATE   
       4  cb9158ce-f8fd-441b-b443-17219e8f79fa  skysand               afc-dev              UPDATE   "
     `);
-    expect(outputFromLogger(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
+    expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
       using legacy cds-mtx apis, consider upgrading to cds-mtxs
+
       GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/provisioning/tenant 200 OK"
     `);
     loggerSpy.info.mockClear();
@@ -134,8 +144,9 @@ describe("cds tests", () => {
         }
       ]"
     `);
-    expect(outputFromLogger(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
+    expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
+
       GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/provisioning/tenant 200 OK"
     `);
 
@@ -150,8 +161,9 @@ describe("cds tests", () => {
       "subscribedTenantId                    subscribedSubdomain  subscriptionAppName  eventType
       5ecc7413-2b7e-414a-9496-ad4a61f6cccf  skyfin-company       afc-dev              UPDATE   "
     `);
-    expect(outputFromLogger(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
+    expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
+
       GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/provisioning/tenant/5ecc7413-2b7e-414a-9496-ad4a61f6cccf 200 OK"
     `);
     loggerSpy.info.mockClear();
@@ -175,8 +187,9 @@ describe("cds tests", () => {
         }
       ]"
     `);
-    expect(outputFromLogger(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
+    expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
+
       GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/provisioning/tenant/5ecc7413-2b7e-414a-9496-ad4a61f6cccf 200 OK"
     `);
 
@@ -188,45 +201,47 @@ describe("cds tests", () => {
     const { nockDone } = await nockBack("cds-upgrade-tenant.json", { afterRecord: anonymizeNock });
 
     expect(await cds.cdsUpgradeTenant(await freshContext(), [testTenantId], [true])).toMatchInlineSnapshot(`undefined`);
-    expect(outputFromLogger(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
+    expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-      POST https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/asyncUpgrade 200 OK
       started upgrade on server with jobId b2dc8918-dc2b-4af2-b866-a42da5e588ae polling interval 15sec
-      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/status/b2dc8918-dc2b-4af2-b866-a42da5e588ae 200 OK
       polled status RUNNING for jobId b2dc8918-dc2b-4af2-b866-a42da5e588ae
-      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/status/b2dc8918-dc2b-4af2-b866-a42da5e588ae 200 OK
       polled status RUNNING for jobId b2dc8918-dc2b-4af2-b866-a42da5e588ae
-      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/status/b2dc8918-dc2b-4af2-b866-a42da5e588ae 200 OK
       polled status RUNNING for jobId b2dc8918-dc2b-4af2-b866-a42da5e588ae
-      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/status/b2dc8918-dc2b-4af2-b866-a42da5e588ae 200 OK
       polled status RUNNING for jobId b2dc8918-dc2b-4af2-b866-a42da5e588ae
-      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/status/b2dc8918-dc2b-4af2-b866-a42da5e588ae 200 OK
       polled status FINISHED for jobId b2dc8918-dc2b-4af2-b866-a42da5e588ae
       #  tenantId                              status   message  logfile                                                      
       1  5ecc7413-2b7e-414a-9496-ad4a61f6cccf  SUCCESS           cds-upgrade-buildlog-5ecc7413-2b7e-414a-9496-ad4a61f6cccf.txt
-      "
+
+
+      POST https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/asyncUpgrade 200 OK
+      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/status/b2dc8918-dc2b-4af2-b866-a42da5e588ae 200 OK
+      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/status/b2dc8918-dc2b-4af2-b866-a42da5e588ae 200 OK
+      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/status/b2dc8918-dc2b-4af2-b866-a42da5e588ae 200 OK
+      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/status/b2dc8918-dc2b-4af2-b866-a42da5e588ae 200 OK
+      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/status/b2dc8918-dc2b-4af2-b866-a42da5e588ae 200 OK"
     `);
     loggerSpy.info.mockClear();
     expect(await cds.cdsUpgradeTenant(await freshContext(), [testTenantId], [false])).toMatchInlineSnapshot(
       `undefined`
     );
-    expect(outputFromLogger(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
+    expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-      POST https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/asyncUpgrade 200 OK
       started upgrade on server with jobId 221692fa-9c7a-4bc3-9b51-5fc262c8c177 polling interval 15sec
-      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/status/221692fa-9c7a-4bc3-9b51-5fc262c8c177 200 OK
       polled status RUNNING for jobId 221692fa-9c7a-4bc3-9b51-5fc262c8c177
-      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/status/221692fa-9c7a-4bc3-9b51-5fc262c8c177 200 OK
       polled status RUNNING for jobId 221692fa-9c7a-4bc3-9b51-5fc262c8c177
-      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/status/221692fa-9c7a-4bc3-9b51-5fc262c8c177 200 OK
       polled status RUNNING for jobId 221692fa-9c7a-4bc3-9b51-5fc262c8c177
-      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/status/221692fa-9c7a-4bc3-9b51-5fc262c8c177 200 OK
       polled status RUNNING for jobId 221692fa-9c7a-4bc3-9b51-5fc262c8c177
-      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/status/221692fa-9c7a-4bc3-9b51-5fc262c8c177 200 OK
       polled status FINISHED for jobId 221692fa-9c7a-4bc3-9b51-5fc262c8c177
       #  tenantId                              status   message  logfile                                                      
       1  5ecc7413-2b7e-414a-9496-ad4a61f6cccf  SUCCESS           cds-upgrade-buildlog-5ecc7413-2b7e-414a-9496-ad4a61f6cccf.txt
-      "
+
+
+      POST https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/asyncUpgrade 200 OK
+      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/status/221692fa-9c7a-4bc3-9b51-5fc262c8c177 200 OK
+      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/status/221692fa-9c7a-4bc3-9b51-5fc262c8c177 200 OK
+      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/status/221692fa-9c7a-4bc3-9b51-5fc262c8c177 200 OK
+      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/status/221692fa-9c7a-4bc3-9b51-5fc262c8c177 200 OK
+      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/status/221692fa-9c7a-4bc3-9b51-5fc262c8c177 200 OK"
     `);
     nockDone();
     expect(loggerSpy.error.mock.calls).toHaveLength(0);
@@ -238,7 +253,7 @@ describe("cds tests", () => {
     expect(await cds.cdsUpgradeAll(await freshContext(), null, [false])).toMatchInlineSnapshot(`undefined`);
     // NOTE: since the upgrades happen in parallel the order of the "status" logs is not predictable
     expect(
-      outputFromLogger(
+      outputFromLoggerPartitionFetch(
         loggerSpy.info.mock.calls.filter(
           ([entry]) =>
             !entry ||
@@ -247,13 +262,10 @@ describe("cds tests", () => {
       )
     ).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/provisioning/tenant 200 OK
       splitting tenants across 2 app instances of 'afc-mtx' as follows:
       instance 1: processing tenants 5ecc7413-2b7e-414a-9496-ad4a61f6cccf, 6917dfd6-7590-4033-af2a-140b75263b0d
       instance 2: processing tenants 7b20408e-3fe0-4ade-aa2e-ad97baac72e8, cb9158ce-f8fd-441b-b443-17219e8f79fa
 
-      POST https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/asyncUpgrade 200 OK
-      POST https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/asyncUpgrade 200 OK
       started upgrade on server with jobId 7ddfb04c-b498-4408-a1f6-582ceae21a39 polling interval 15sec
       started upgrade on server with jobId 16e66c46-602c-48f2-af9c-a53795570fb2 polling interval 15sec
       #  tenantId                              status   message  logfile                                                      
@@ -263,7 +275,11 @@ describe("cds tests", () => {
       #  tenantId                              status   message  logfile                                                      
       1  7b20408e-3fe0-4ade-aa2e-ad97baac72e8  SUCCESS           cds-upgrade-buildlog-7b20408e-3fe0-4ade-aa2e-ad97baac72e8.txt
       2  cb9158ce-f8fd-441b-b443-17219e8f79fa  SUCCESS           cds-upgrade-buildlog-cb9158ce-f8fd-441b-b443-17219e8f79fa.txt
-      "
+
+
+      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/provisioning/tenant 200 OK
+      POST https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/asyncUpgrade 200 OK
+      POST https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/asyncUpgrade 200 OK"
     `);
     nockDone();
     expect(loggerSpy.error.mock.calls).toHaveLength(0);
