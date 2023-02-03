@@ -235,7 +235,7 @@ module.exports = {
   },
   SRV_START_DEBUGGER: {
     commandVariants: ["--server-start-debugger"],
-    optionalPassArgs: [PASS_ARG.APP_NAME],
+    optionalPassArgs: [PASS_ARG.APP_NAME, PASS_ARG.APP_INSTANCE],
     callback: srv.serverStartDebugger,
     danger: true,
   },

@@ -54,7 +54,7 @@ const _serverDebug = async (context, { appName, appInstance = 0 } = {}) => {
     } catch (err) {} // eslint-disable-line no-empty
   }
   const { instance, debugPort } = responseData;
-  const appInstanceIndex = instance || appInstance || 0;
+  appInstance = instance || appInstance || 0;
   const remotePort = debugPort || inferredPort;
   assert(remotePort, `could not determine remote debugPort from /info or infer from buildpack`);
 
@@ -65,9 +65,9 @@ const _serverDebug = async (context, { appName, appInstance = 0 } = {}) => {
     );
   }
   console.log(`connect ${runtime ? runtime + " debugger" : "debugger"} on port ${localPort}`);
-  console.log(`use request header "X-Cf-App-Instance: ${cfAppGuid}:${appInstanceIndex}" to target this app instance`);
+  console.log(`use request header "X-Cf-App-Instance: ${cfAppGuid}:${appInstance}" to target this app instance`);
   console.log();
-  return cfSsh({ localPort, remotePort, appInstanceIndex });
+  return cfSsh({ localPort, remotePort, appInstance });
 };
 
 const serverDebug = async (context, [appName, appInstance]) => _serverDebug(context, { appName, appInstance });
@@ -83,9 +83,9 @@ const serverEnvironment = async (context, [appName]) => {
   console.log(`saved system environment to ${DEFAULT_ENV_FILENAME}`);
 };
 
-const serverStartDebugger = async (context, [appName]) => {
+const serverStartDebugger = async (context, [appName, appInstance]) => {
   const { cfSsh } = appName ? await context.getAppNameInfoCached(appName) : await context.getSrvInfo();
-  return cfSsh({ command: "pkill --signal SIGUSR1 node" });
+  return cfSsh({ command: "pkill --signal SIGUSR1 node", appInstance });
 };
 
 module.exports = {
