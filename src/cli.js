@@ -71,12 +71,12 @@ commands:
           ...    --time                           list includes timestamps
 
    === server diagnostic (srv) ===
-~  srv     --server-info                               call server /info
-~  srvd    --server-debug [APP_NAME] [APP_INSTANCE]    open ssh tunnel to port /info {debugPort}
-~  srvenv  --server-env [APP_NAME]                     dump system environment
-*          --server-start-debugger [APP_NAME]          start debugger on server node process
-           ...    [APP_NAME]                           run server commands for a specific app
-           ...    [APP_INSTANCE]                       tunnel to specific app instance, fallback to 0
+~  srv     --server-info                                      call server /info
+~  srvd    --server-debug [APP_NAME] [APP_INSTANCE]           open ssh tunnel to port /info {debugPort}
+~  srvenv  --server-env [APP_NAME]                            dump system environment
+*          --server-start-debugger [APP_NAME] [APP_INSTANCE]  start debugger on server node process
+           ...    [APP_NAME]                                  run server commands for a specific app
+           ...    [APP_INSTANCE]                              tunnel to specific app instance, fallback to 0
 
 ~  are read-only commands
 *  are potentially _dangerous_ commands
