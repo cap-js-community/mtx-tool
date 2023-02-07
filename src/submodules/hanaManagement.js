@@ -131,8 +131,8 @@ const _hdiInstancesServiceManager = async (context, { filterTenantId } = {}) => 
     ...(filterTenantId && { query: { labelQuery: `tenant_id eq '${filterTenantId}'` } }),
     auth: { token },
   });
-  const reponseData = (await response.json()) || {};
-  const instances = reponseData.items || [];
+  const responseData = (await response.json()) || {};
+  const instances = (responseData.items || []).filter((instance) => instance.labels.tenant_id !== undefined);
   return instances;
 };
 
@@ -151,8 +151,8 @@ const _hdiBindingsServiceManager = async (
     ...(filterTenantId && { query: { labelQuery: `tenant_id eq '${filterTenantId}'` } }),
     auth: { token },
   });
-  const reponseData = (await getBindingsResponse.json()) || {};
-  const bindings = reponseData.items || [];
+  const responseData = (await getBindingsResponse.json()) || {};
+  const bindings = (responseData.items || []).filter((binding) => binding.labels.tenant_id !== undefined);
   if (doAssertFoundSome) {
     if (filterTenantId) {
       assert(
