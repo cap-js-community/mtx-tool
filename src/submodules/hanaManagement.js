@@ -119,7 +119,7 @@ async function _deleteInstanceServiceManager(sm_url, token, id) {
   });
 }
 
-const _hdiInstancesServiceManager = async (context, { filterTenantId } = {}) => {
+const _hdiInstancesServiceManager = async (context, { filterTenantId, doEnsureTenantLabel = true } = {}) => {
   const {
     cfService: { credentials },
   } = await context.getHdiInfo();
@@ -132,13 +132,16 @@ const _hdiInstancesServiceManager = async (context, { filterTenantId } = {}) => 
     auth: { token },
   });
   const responseData = (await response.json()) || {};
-  const instances = (responseData.items || []).filter((instance) => instance.labels.tenant_id !== undefined);
+  let instances = responseData.items || [];
+  if (doEnsureTenantLabel) {
+    instances = instances.filter((instance) => instance.labels.tenant_id !== undefined);
+  }
   return instances;
 };
 
 const _hdiBindingsServiceManager = async (
   context,
-  { filterTenantId, doReveal = false, doAssertFoundSome = false } = {}
+  { filterTenantId, doReveal = false, doAssertFoundSome = false, doEnsureTenantLabel = true } = {}
 ) => {
   const {
     cfService: { credentials },
@@ -152,7 +155,7 @@ const _hdiBindingsServiceManager = async (
     auth: { token },
   });
   const responseData = (await getBindingsResponse.json()) || {};
-  const bindings = (responseData.items || []).filter((binding) => binding.labels.tenant_id !== undefined);
+  let bindings = (responseData.items || []).filter((binding) => binding.labels.tenant_id !== undefined);
   if (doAssertFoundSome) {
     if (filterTenantId) {
       assert(
@@ -165,7 +168,13 @@ const _hdiBindingsServiceManager = async (
     }
   }
 
-  return doReveal ? bindings : bindings.map(_hidePasswordsInInstance);
+  if (!doReveal) {
+    bindings = bindings.map(_hidePasswordsInInstance);
+  }
+  if (doEnsureTenantLabel) {
+    bindings = bindings.filter((instance) => instance.labels.tenant_id !== undefined);
+  }
+  return bindings;
 };
 
 const _hdiContainersInstanceManager = async (
@@ -492,8 +501,8 @@ const hdiList = async (context, [tenantId], [doTimestamps]) =>
     : hdiListInstanceManager(context, tenantId, doTimestamps);
 
 const _hdiLongListServiceManager = async (context, filterTenantId, doReveal) => {
-  const instances = await _hdiInstancesServiceManager(context, { filterTenantId });
-  const bindings = await _hdiBindingsServiceManager(context, { filterTenantId, doReveal });
+  const instances = await _hdiInstancesServiceManager(context, { filterTenantId, doEnsureTenantLabel: false });
+  const bindings = await _hdiBindingsServiceManager(context, { filterTenantId, doReveal, doEnsureTenantLabel: false });
   return `
 === container instance${instances.length === 1 ? "" : "s"} ===
 
