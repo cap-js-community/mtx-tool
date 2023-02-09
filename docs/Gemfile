@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 # https://github.com/just-the-docs/just-the-docs/releases
-gem "just-the-docs", "~> 0.4.0.rc4"
+gem "just-the-docs", "~> 0.4.0"
 
 # https://github.com/github/pages-gem/releases
-gem "github-pages", "~> 227"
+gem "github-pages", "~> 228"
