@@ -52,6 +52,7 @@ commands:
 ~  uaad  --uaa-decode TOKEN                decode JSON web token
 ~  uaac  --uaa-client [TENANT]             obtain token for generic client
 ~  uaap  --uaa-passcode PASSCODE [TENANT]  obtain token for uaa one-time passcode
+~  uaai  --uaa-userinfo PASSCODE [TENANT]  detailed user info for passcode
 ~  uaas  --uaa-service SERVICE [TENANT]    obtain token for uaa trusted service
          ...    [TENANT]                   obtain token for tenant, fallback to paas tenant
          ...    --decode                   decode result token

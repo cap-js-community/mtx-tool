@@ -27,6 +27,8 @@ Obtaining the tokens always happens through a service instance of the "User Acco
 For details and background information regarding the service, please consult the official documentation:
 
 - [https://help.sap.com/docs/CP_AUTHORIZ_TRUST_MNG](https://help.sap.com/docs/CP_AUTHORIZ_TRUST_MNG)
+- [https://help.sap.com/docs/IDENTITY_AUTHENTICATION](https://help.sap.com/docs/IDENTITY_AUTHENTICATION)
+- [https://docs.cloudfoundry.org/api/uaa/](https://docs.cloudfoundry.org/api/uaa/)
 
 Commands for this area are:
 
@@ -35,6 +37,7 @@ Commands for this area are:
 ~  uaad  --uaa-decode TOKEN                decode JSON web token
 ~  uaac  --uaa-client [TENANT]             obtain token for generic client
 ~  uaap  --uaa-passcode PASSCODE [TENANT]  obtain token for uaa one-time passcode
+~  uaai  --uaa-userinfo PASSCODE [TENANT]  detailed user info for passcode
 ~  uaas  --uaa-service SERVICE [TENANT]    obtain token for uaa trusted service
          ...    [TENANT]                   obtain token for tenant, fallback to paas tenant
          ...    --decode                   decode result token
@@ -58,15 +61,48 @@ privileges that particular user has. In order to achieve this:
 ## Accessing Server APIs
 
 If your server exposes an endpoint with JWT authentication, which is the default in CAP, then you can
-access these endpoint with a JWT that mtx can get for you.
+access these endpoint with a generic client JWT that mtx can get for you.
 
-| accessor                     | get JWT with                        |
-| :--------------------------- | :---------------------------------- |
-| provider subaccount (paas)   | `mtx uaac`                          |
-| subscriber subaccount (saas) | `mtx uaac <subdomain or tenant id>` |
+| purpose                                            | command                             |
+| :------------------------------------------------- | :---------------------------------- |
+| obtain client JWT for provider subaccount (paas)   | `mtx uaac`                          |
+| obtain client JWT for subscriber subaccount (saas) | `mtx uaac <subdomain or tenant id>` |
 
 Set the `Authorization` header as `Bearer <jwt>` in HTTP requests for the endpoints to pass validation. We use
 [Postman](https://www.postman.com) for this, but any other HTTP client works as well.
+
+## Access And Userinfo With Passcode
+
+Instead of acting as a generic client for the server, you can access server APIs as a regular user, provided the user
+in question gives you a one-time-passcode, that their tenant's UAA published.
+
+As an example, let's say the user in question works for a tenant with subdomain `microogle` in the BTP region `eu10`,
+then they can obtain their passcode by logging in at
+`https://microogle.authentication.eu10.hana.ondemand.com/passcode`
+
+Using this one-time passcode, you can either get a regular JWT for accesses _as that user_, or their extended user
+info:
+
+| purpose                          | command                                        |
+| :------------------------------- | :--------------------------------------------- |
+| obtain user JWT                  | `mtx uaap <passcode> <subdomain or tenant id>` |
+| obtain extended user information | `mtx uaai <passcode> <subdomain or tenant id>` |
+
+Like before, if the command is run without the `subdomain or tenant_id` parameter, the tool will assume you mean the
+provider subaccount (paas).
+
+Using this passcode, you can also obtain extended information about the user. However, the contents of this vary based
+on how the underlying identity provider and UAA are set up. In the identity provider, you can map assertion attributes
+into the SAML bearer assertion of each user, and in the UAA these will be propagated as user information under certain
+conditions.
+
+{: .info }
+For a list of possible attributes that SAP Identity Authentication Services (IAS) can map see
+[Link](https://help.sap.com/docs/IDENTITY_AUTHENTICATION/6d6d63354d1242d185ab4830fc04feb1/d361407d36c5443298a909acbbd96ec4.html?version=Cloud).
+If these assertions match `user_attributes` that UAA expects, see
+[Link](https://docs.cloudfoundry.org/api/uaa/version/76.5.0/index.html#user-info), and the UAA's configuration
+`xs-security.json` allows `"foreign-scope-references": ["user_attributes"]`, then they will show up as extended user
+information.
 
 ## Accessing Service APIs
 

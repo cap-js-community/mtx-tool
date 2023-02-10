@@ -61,6 +61,13 @@ module.exports = {
     callback: uaa.uaaPasscode,
     readonly: true,
   },
+  UAA_USERINFO: {
+    commandVariants: ["uaai", "--uaa-userinfo"],
+    requiredPassArgs: [PASS_ARG.PASSCODE],
+    optionalPassArgs: [PASS_ARG.TENANT],
+    callback: uaa.uaaUserInfo,
+    readonly: true,
+  },
   UAA_SERVICE: {
     commandVariants: ["uaas", "--uaa-service"],
     requiredPassArgs: [PASS_ARG.SERVICE],

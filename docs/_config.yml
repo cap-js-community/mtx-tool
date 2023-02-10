@@ -26,7 +26,7 @@ description: >-
 # Build settings
 baseurl: /mtx-tool
 markdown: kramdown
-remote_theme: just-the-docs/just-the-docs@main
+remote_theme: just-the-docs/just-the-docs@v0.4.0
 
 # Exclude from processing.
 # The following items will not be processed, by default.
