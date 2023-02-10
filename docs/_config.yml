@@ -61,6 +61,17 @@ aux_links:
 # Back to top link
 back_to_top: true
 back_to_top_text: "Back to top"
+
+callouts:
+  info:
+    title: INFO
+    color: blue
+  warn:
+    title: WARNING
+    color: yellow
+  danger:
+    title: DANGER
+    color: red
 # Footer copyright
 # footer_content: 'Copyright &copy; 2021 SAP SE | <a href="https://www.sap.com/about/legal/privacy.html">SAP Privacy Statement</a>'
 
