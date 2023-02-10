@@ -256,7 +256,7 @@ const setupCleanCache = async () => {
   }
 };
 
-const _cfSsh = async (appName, { localPort, remotePort, remoteHostname, appInstanceIndex, command } = {}) => {
+const _cfSsh = async (appName, { localPort, remotePort, remoteHostname, appInstance, command } = {}) => {
   const args = [CF.EXEC, "ssh", appName];
   if (localPort !== undefined && localPort !== null && remotePort !== undefined && remotePort !== null) {
     args.push(
@@ -266,8 +266,8 @@ const _cfSsh = async (appName, { localPort, remotePort, remoteHostname, appInsta
       "--disable-pseudo-tty"
     );
   }
-  if (appInstanceIndex !== undefined && appInstanceIndex !== null) {
-    args.push("--app-instance-index", appInstanceIndex);
+  if (appInstance !== undefined && appInstance !== null) {
+    args.push("--app-instance-index", appInstance);
   }
   if (command !== undefined && command !== null) {
     args.push("--command", command);

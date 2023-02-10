@@ -3,7 +3,7 @@ root: true
 #  https://eslint.org/docs/rules/
 env:
   node: true
-  es2019: true
+  es2020: true
 plugins:
   - jest
 extends:

@@ -61,6 +61,13 @@ module.exports = {
     callback: uaa.uaaPasscode,
     readonly: true,
   },
+  UAA_USERINFO: {
+    commandVariants: ["uaai", "--uaa-userinfo"],
+    requiredPassArgs: [PASS_ARG.PASSCODE],
+    optionalPassArgs: [PASS_ARG.TENANT],
+    callback: uaa.uaaUserInfo,
+    readonly: true,
+  },
   UAA_SERVICE: {
     commandVariants: ["uaas", "--uaa-service"],
     requiredPassArgs: [PASS_ARG.SERVICE],
@@ -235,7 +242,7 @@ module.exports = {
   },
   SRV_START_DEBUGGER: {
     commandVariants: ["--server-start-debugger"],
-    optionalPassArgs: [PASS_ARG.APP_NAME],
+    optionalPassArgs: [PASS_ARG.APP_NAME, PASS_ARG.APP_INSTANCE],
     callback: srv.serverStartDebugger,
     danger: true,
   },
