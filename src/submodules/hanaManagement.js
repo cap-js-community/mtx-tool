@@ -20,6 +20,7 @@ const TUNNEL_LOCAL_PORT = 30015;
 const HIDDEN_PASSWORD_TEXT = "*** show with --reveal ***";
 const SERVICE_MANAGER_CONCURRENCY = 5;
 const SERVICE_MANAGER_IDEAL_BINDING_COUNT = 1;
+const SENSITIVE_CREDENTIAL_FIELDS = ["password", "hdi_password"];
 
 const compareForInstanceManagerTenantId = compareFor((a) => a.tenant_id.toUpperCase());
 const compareForServiceManagerTenantId = compareFor((a) => a.labels.tenant_id[0].toUpperCase());
@@ -28,14 +29,13 @@ const compareForServiceManagerBindingUpdatedAtDesc = compareFor((a) => a.updated
 const _formatOutput = (output) =>
   JSON.stringify(Array.isArray(output) && output.length === 1 ? output[0] : output, null, 2);
 
-const _hidePasswordsInInstance = (instance) => ({
-  ...instance,
-  credentials: {
-    ...instance.credentials,
-    password: HIDDEN_PASSWORD_TEXT,
-    hdi_password: HIDDEN_PASSWORD_TEXT,
-  },
-});
+const _hidePasswordsInBindingOrInstance = (entry) => {
+  for (let field of SENSITIVE_CREDENTIAL_FIELDS) {
+    if (entry?.credentials?.[field]) {
+      entry.credentials[field] = HIDDEN_PASSWORD_TEXT;
+    }
+  }
+};
 
 const _isServiceManager = async (context) => {
   const {
@@ -171,7 +171,7 @@ const _hdiBindingsServiceManager = async (
     }
   }
   if (!doReveal) {
-    bindings = bindings.map(_hidePasswordsInInstance);
+    bindings.forEach(_hidePasswordsInBindingOrInstance);
   }
   return bindings;
 };
@@ -191,7 +191,7 @@ const _hdiContainersInstanceManager = async (
       : get_all_managed_instances_url,
     auth: { username, password },
   });
-  const instances = (await response.json()) || [];
+  let instances = (await response.json()) || [];
   if (doAssertFoundSome) {
     if (filterTenantId) {
       assert(
@@ -203,8 +203,10 @@ const _hdiContainersInstanceManager = async (
       assert(Array.isArray(instances) && instances.length >= 1, "could not find any managed instances");
     }
   }
-
-  return doReveal ? instances : instances.map(_hidePasswordsInInstance);
+  if (!doReveal) {
+    instances.forEach(_hidePasswordsInBindingOrInstance);
+  }
+  return instances;
 };
 
 async function _hdiRebindBindingServiceManager(sm_url, token, binding, options) {
