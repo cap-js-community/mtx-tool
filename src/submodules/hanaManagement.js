@@ -155,7 +155,10 @@ const _hdiBindingsServiceManager = async (
     auth: { token },
   });
   const responseData = (await getBindingsResponse.json()) || {};
-  let bindings = (responseData.items || []).filter((binding) => binding.labels.tenant_id !== undefined);
+  let bindings = responseData.items || [];
+  if (doEnsureTenantLabel) {
+    bindings = bindings.filter((instance) => instance.labels.tenant_id !== undefined);
+  }
   if (doAssertFoundSome) {
     if (filterTenantId) {
       assert(
@@ -167,12 +170,8 @@ const _hdiBindingsServiceManager = async (
       assert(Array.isArray(bindings) && bindings.length >= 1, "could not find any hdi service bindings");
     }
   }
-
   if (!doReveal) {
     bindings = bindings.map(_hidePasswordsInInstance);
-  }
-  if (doEnsureTenantLabel) {
-    bindings = bindings.filter((instance) => instance.labels.tenant_id !== undefined);
   }
   return bindings;
 };
