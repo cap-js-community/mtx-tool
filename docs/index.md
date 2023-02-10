@@ -14,9 +14,9 @@ Prerequisite is an installed [CF cli](https://github.com/cloudfoundry/cli) v7 or
 
 ```bash
 # globally
-npm install --global @cap-js-community/mtx-tool@latest
+npm install --global @cap-js-community/mtx-tool
 # project local
-npm install --save-dev @cap-js-community/mtx-tool@latest
+npm install --save-dev @cap-js-community/mtx-tool
 ```
 
 ## Content
