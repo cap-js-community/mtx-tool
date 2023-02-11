@@ -49,6 +49,17 @@ exclude:
   - vendor/gems/
   - vendor/ruby/
 
+callouts:
+  info:
+    title: INFO
+    color: blue
+  warn:
+    title: WARNING
+    color: yellow
+  danger:
+    title: DANGER
+    color: red
+
 # Search config
 search_enabled: true
 search:
@@ -61,20 +72,6 @@ aux_links:
 # Back to top link
 back_to_top: true
 back_to_top_text: "Back to top"
-
-callouts:
-  info:
-    title: INFO
-    color: blue
-  warn:
-    title: WARNING
-    color: yellow
-  danger:
-    title: DANGER
-    color: red
-# Footer copyright
-# footer_content: 'Copyright &copy; 2021 SAP SE | <a href="https://www.sap.com/about/legal/privacy.html">SAP Privacy Statement</a>'
-
 # Footer last edited timestamp
 # last_edit_timestamp: true # show or hide edit time - page must have `last_modified_date` defined in the frontmatter
 # last_edit_time_format: "%b %e %Y at %I:%M %p" # uses ruby's time format: https://ruby-doc.org/stdlib-2.7.0/libdoc/time/rdoc/Time.html
