@@ -1,6 +1,8 @@
 # MTX Tool
 
+[![npm version](https://badge.fury.io/js/@cap-js-community%2Fmtx-tool.svg)](https://badge.fury.io/js/@cap-js-community%2Fmtx-tool)
 [![REUSE status](https://api.reuse.software/badge/github.com/cap-js-community/mtx-tool)](https://api.reuse.software/info/github.com/cap-js-community/mtx-tool)
+![CI](https://github.com/cap-js-community/mtx-tool/actions/workflows/ci-main.yml/badge.svg)
 
 Multitenancy and Extensibility Tool is a cli to reduce operational overhead for multitenant Cloud Foundry applications, particularly in the areas user authentication, tenant registration, CAP multitenancy, and HANA container management.
 
