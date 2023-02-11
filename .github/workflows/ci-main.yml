@@ -1,16 +1,14 @@
 # This workflow will protect the main branch by testing and linting new PRs and commits
 
-name: CI Main and Dev
+name: CI Main
 
 on:
   push:
     branches:
       - main
-      - "dev/**"
   pull_request:
     branches:
       - main
-      - "dev/**"
 
 jobs:
   test:
