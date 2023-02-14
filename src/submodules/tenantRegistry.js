@@ -20,7 +20,7 @@ const { getUaaTokenFromCredentials } = require("../shared/oauth");
 
 const REGISTRY_PAGE_SIZE = 200;
 const POLL_FREQUENCY = 10000;
-const TENANT_SUBSCRIBED_STATE = "SUBSCRIBED";
+const TENANT_UPDATABLE_STATES = ["SUBSCRIBED", "UPDATE_FAILED"];
 
 const _registrySubscriptionsPaged = async (context, tenant) => {
   const { subdomain: filterSubdomain, tenantId: filterTenantId } = resolveTenantArg(tenant);
@@ -155,7 +155,7 @@ const _registryUpdateAllDependencies = async (context) => {
   const { subscriptions } = await _registrySubscriptionsPaged(context);
   const result = [];
   // NOTE: we do this serially, so the logging output is understandable for users and the endpoint is not overloaded
-  for (const { consumerTenantId } of subscriptions.filter(({ state }) => state === TENANT_SUBSCRIBED_STATE)) {
+  for (const { consumerTenantId } of subscriptions.filter(({ state }) => TENANT_UPDATABLE_STATES.includes(state))) {
     result.push(await _registryCall(context, consumerTenantId, "PATCH"));
   }
   return result;
