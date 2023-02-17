@@ -108,7 +108,7 @@ commands:
 *  are potentially _dangerous_ commands
 ```
 
-- never use delete/offboard commands in production
+- adding `--force` to any _dangerous_ command will override the safeguard, use at your own risk
 - `--registry-offboard-skip` apps to skip are comma separated without spaces
 - `--registry-offboard-skip` can be used for app/services failing to offboard
 - `--cds-offboard-tenant` and `--cds-offboard-all` will delete the related hdi containers
