@@ -14,9 +14,9 @@ Prerequisite is an installed [CF cli](https://github.com/cloudfoundry/cli) v7 or
 
 ```bash
 # globally
-npm install --global @cap-js-community/mtx-tool@latest
+npm install --global @cap-js-community/mtx-tool
 # project local
-npm install --save-dev @cap-js-community/mtx-tool@latest
+npm install --save-dev @cap-js-community/mtx-tool
 ```
 
 ## Content
@@ -108,7 +108,7 @@ commands:
 *  are potentially _dangerous_ commands
 ```
 
-- never use delete/offboard commands in production
+- adding `--force` to any _dangerous_ command will override the safeguard, use at your own risk
 - `--registry-offboard-skip` apps to skip are comma separated without spaces
 - `--registry-offboard-skip` can be used for app/services failing to offboard
 - `--cds-offboard-tenant` and `--cds-offboard-all` will delete the related hdi containers
