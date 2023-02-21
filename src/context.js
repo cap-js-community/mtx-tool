@@ -46,7 +46,7 @@ const SETTING_TYPE = {
 const SETTING = require("./SETTING");
 
 const CACHE_GAP = 43200000; // 12 hours in milliseconds
-const UAA_TOKEN_CACHE_EXPIRY_GAP = 1000; // 1 second
+const UAA_TOKEN_CACHE_EXPIRY_GAP = 60000; // 1 minute
 
 const _run = async (command, ...args) => {
   return spawnAsync(command, args, {
@@ -294,6 +294,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const cachePath = pathlib.join(dir, FILENAME.CACHE);
   const cfApps = await _getCfApps(cfInfo);
   const cfUaaTokenCache = new LazyCache();
+  const timeoutIds = [];
   let rawAppMemoryCache = {};
 
   const _getAppNameCandidates = (appName) => [
@@ -460,9 +461,10 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const getCachedUaaTokenFromCredentials = async (credentials, options) => {
     return await cfUaaTokenCache.getSetCbAsync(credentials.clientid, async () => {
       const { access_token, expires_in } = await sharedUaaTokenFromCredentials(credentials, options);
-      setTimeout(
-        cfUaaTokenCache.delete.bind(cfUaaTokenCache, credentials.clientid),
-        Math.max(expires_in * 1000 - UAA_TOKEN_CACHE_EXPIRY_GAP, 0)
+      timeoutIds.push(
+        setTimeout(() => {
+          cfUaaTokenCache.delete(credentials.clientid);
+        }, Math.max(expires_in * 1000 - UAA_TOKEN_CACHE_EXPIRY_GAP, 0))
       );
       return access_token;
     });
@@ -473,6 +475,11 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
       cfService: { credentials },
     } = await getUaaInfo();
     return getCachedUaaTokenFromCredentials(credentials, options);
+  };
+  const clearTimeouts = () => {
+    for (const timeoutId of timeoutIds) {
+      clearTimeout(timeoutId);
+    }
   };
 
   return {
@@ -485,6 +492,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     getCachedUaaTokenFromCredentials,
     getUaaToken,
     getAppNameInfoCached,
+    clearTimeouts,
   };
 };
 
