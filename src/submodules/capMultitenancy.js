@@ -47,7 +47,6 @@ const _cdsTenants = async (context, tenant) => {
   filterSubdomain && assert(isDashedWord(filterSubdomain), `argument "${filterSubdomain}" is not a valid subdomain`);
 
   const { cfRouteUrl } = await context.getCdsInfo();
-  const token = await context.getUaaToken();
 
   const _getTenantRequestOptionsPathname = () => {
     if (isMtxs) {
@@ -59,7 +58,7 @@ const _cdsTenants = async (context, tenant) => {
   const response = await request({
     url: cfRouteUrl,
     pathname: _getTenantRequestOptionsPathname(),
-    auth: { token },
+    auth: { token: await context.getUaaToken() },
   });
   const resultRaw = await response.json();
   let result = Array.isArray(resultRaw) ? resultRaw : [resultRaw];
@@ -92,14 +91,13 @@ const cdsLongList = async (context, [tenant]) => {
 
 const _cdsOnboard = async (context, tenantId, subdomain) => {
   const { cfRouteUrl } = await context.getCdsInfo();
-  const token = await context.getUaaToken();
   await request({
     method: "PUT",
     url: cfRouteUrl,
     pathname: (await _isMtxs(context))
       ? `/-/cds/saas-provisioning/tenant/${tenantId}`
       : `/mtx/v1/provisioning/tenant/${tenantId}`,
-    auth: { token },
+    auth: { token: await context.getUaaToken() },
     headers: {
       "Content-Type": "application/json",
     },
@@ -138,12 +136,11 @@ const _cdsUpgrade = async (
     return;
   }
   const { cfAppGuid, cfRouteUrl } = await context.getCdsInfo();
-  const token = await context.getUaaToken();
   const upgradeResponse = await request({
     method: "POST",
     url: cfRouteUrl,
     pathname: isMtxs ? "/-/cds/saas-provisioning/upgrade" : "/mtx/v1/model/asyncUpgrade",
-    auth: { token },
+    auth: { token: await context.getUaaToken() },
     headers: {
       "Content-Type": "application/json",
       "X-Cf-App-Instance": `${cfAppGuid}:${appInstance}`,
@@ -161,7 +158,7 @@ const _cdsUpgrade = async (
       checkStatus: false,
       url: cfRouteUrl,
       pathname: isMtxs ? `/-/cds/jobs/pollJob(ID='${jobId}')` : `/mtx/v1/model/status/${jobId}`,
-      auth: { token },
+      auth: { token: await context.getUaaToken() },
       headers: {
         "X-Cf-App-Instance": `${cfAppGuid}:${appInstance}`,
       },
@@ -182,7 +179,7 @@ const _cdsUpgrade = async (
                 checkStatus: false,
                 url: cfRouteUrl,
                 pathname: `/-/cds/jobs/pollTask(ID='${taskId}')`,
-                auth: { token },
+                auth: { token: await context.getUaaToken() },
                 headers: {
                   "X-Cf-App-Instance": `${cfAppGuid}:${appInstance}`,
                 },
@@ -262,14 +259,13 @@ const cdsUpgradeAll = async (context, _, [doAutoUndeploy]) => {
 
 const _cdsOffboard = async (context, tenantId) => {
   const { cfRouteUrl } = await context.getCdsInfo();
-  const token = await context.getUaaToken();
   await request({
     method: "DELETE",
     url: cfRouteUrl,
     pathname: (await _isMtxs(context))
       ? `/-/cds/saas-provisioning/tenant/${tenantId}`
       : `/mtx/v1/provisioning/tenant/${tenantId}`,
-    auth: { token },
+    auth: { token: await context.getUaaToken() },
   });
 };
 
