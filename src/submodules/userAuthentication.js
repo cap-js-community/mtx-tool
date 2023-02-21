@@ -3,7 +3,6 @@
 const { isJWT, isDashedWord, guardedAccess, resolveTenantArg } = require("../shared/static");
 const { request } = require("../shared/request");
 const { assert } = require("../shared/error");
-const { getUaaTokenFromCredentials } = require("../shared/oauth");
 
 const _uaaOutputBearer = (token) => ["Authorization:", "Bearer " + token].join("\n");
 
@@ -26,7 +25,7 @@ const _uaaSaasServiceToken = async (context, tenant, service) => {
   let serviceCredentials = guardedAccess(cfEnvServices, service, 0, "credentials");
   serviceCredentials = guardedAccess(serviceCredentials, "uaa") || serviceCredentials;
   assert(serviceCredentials, "service %s not bound to xsuaa app %s", service, appName);
-  return getUaaTokenFromCredentials(serviceCredentials, resolveTenantArg(tenant));
+  return context.getCachedUaaTokenFromCredentials(serviceCredentials, resolveTenantArg(tenant));
 };
 
 const _uaaUserInfo = async (context, passcode, tenant) => {

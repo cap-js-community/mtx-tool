@@ -13,6 +13,7 @@ const { question, guardedAccess, tryReadJsonSync, tryAccessSync, spawnAsync } = 
 const { assert, fail } = require("./shared/error");
 const { request } = require("./shared/request");
 const { getUaaTokenFromCredentials: sharedUaaTokenFromCredentials } = require("./shared/oauth");
+const { LazyCache } = require("./shared/cache");
 
 const APP_SUFFIXES = ["-blue", "-green"];
 const APP_SUFFIXES_READONLY = ["-blue", "-green", "-live"];
@@ -45,6 +46,7 @@ const SETTING_TYPE = {
 const SETTING = require("./SETTING");
 
 const CACHE_GAP = 43200000; // 12 hours in milliseconds
+const UAA_TOKEN_CACHE_EXPIRY_GAP = 1000; // 1 second
 
 const _run = async (command, ...args) => {
   return spawnAsync(command, args, {
@@ -291,6 +293,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const runtimeConfig = _readRuntimeConfig(configPath);
   const cachePath = pathlib.join(dir, FILENAME.CACHE);
   const cfApps = await _getCfApps(cfInfo);
+  const cfUaaTokenCache = new LazyCache();
   let rawAppMemoryCache = {};
 
   const _getAppNameCandidates = (appName) => [
@@ -454,11 +457,22 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const getHdiInfo = getAppInfoCached(SETTING_TYPE.HDI);
   const getSrvInfo = getAppInfoCached(SETTING_TYPE.SRV);
 
+  const getCachedUaaTokenFromCredentials = async (credentials, options) => {
+    return await cfUaaTokenCache.getSetCbAsync(credentials.clientid, async () => {
+      const { access_token, expires_in } = await sharedUaaTokenFromCredentials(credentials, options);
+      setTimeout(
+        cfUaaTokenCache.delete.bind(cfUaaTokenCache, credentials.clientid),
+        Math.max(expires_in * 1000 - UAA_TOKEN_CACHE_EXPIRY_GAP, 0)
+      );
+      return access_token;
+    });
+  };
+
   const getUaaToken = async (options) => {
     const {
       cfService: { credentials },
     } = await getUaaInfo();
-    return sharedUaaTokenFromCredentials(credentials, options);
+    return getCachedUaaTokenFromCredentials(credentials, options);
   };
 
   return {
@@ -468,6 +482,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     getCdsInfo,
     getHdiInfo,
     getSrvInfo,
+    getCachedUaaTokenFromCredentials,
     getUaaToken,
     getAppNameInfoCached,
   };

@@ -14,7 +14,6 @@ const {
 } = require("../shared/static");
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
-const { getUaaTokenFromCredentials } = require("../shared/oauth");
 
 const TUNNEL_LOCAL_PORT = 30015;
 const HIDDEN_PASSWORD_TEXT = "*** show with --reveal ***";
@@ -124,7 +123,7 @@ const _hdiInstancesServiceManager = async (context, { filterTenantId, doEnsureTe
     cfService: { credentials },
   } = await context.getHdiInfo();
   const { sm_url } = credentials;
-  const token = await getUaaTokenFromCredentials(credentials);
+  const token = await context.getCachedUaaTokenFromCredentials(credentials);
   const response = await request({
     url: sm_url,
     pathname: "/v1/service_instances",
@@ -147,7 +146,7 @@ const _hdiBindingsServiceManager = async (
     cfService: { credentials },
   } = await context.getHdiInfo();
   const { sm_url } = credentials;
-  const token = await getUaaTokenFromCredentials(credentials);
+  const token = await context.getCachedUaaTokenFromCredentials(credentials);
   const getBindingsResponse = await request({
     url: sm_url,
     pathname: "/v1/service_bindings",
@@ -219,7 +218,7 @@ const _hdiRebindTenantServiceManager = async (context, filterTenantId, parameter
     cfService: { credentials },
   } = await context.getHdiInfo();
   const { sm_url } = credentials;
-  const token = await getUaaTokenFromCredentials(credentials);
+  const token = await context.getCachedUaaTokenFromCredentials(credentials);
   const bindings = await _hdiBindingsServiceManager(context, { filterTenantId, doAssertFoundSome: true });
 
   for (const binding of bindings) {
@@ -232,7 +231,7 @@ const _hdiRebindAllServiceManager = async (context, parameters) => {
     cfService: { credentials },
   } = await context.getHdiInfo();
   const { sm_url } = credentials;
-  const token = await getUaaTokenFromCredentials(credentials);
+  const token = await context.getCachedUaaTokenFromCredentials(credentials);
   const bindings = await _hdiBindingsServiceManager(context);
 
   bindings.sort(compareForServiceManagerTenantId);
@@ -258,7 +257,7 @@ const _hdiRepairBindingsServiceManager = async (context, parameters) => {
     cfService: { credentials },
   } = await context.getHdiInfo();
   const { sm_url } = credentials;
-  const token = await getUaaTokenFromCredentials(credentials);
+  const token = await context.getCachedUaaTokenFromCredentials(credentials);
 
   const instances = await _hdiInstancesServiceManager(context);
   const bindings = await _hdiBindingsServiceManager(context);
@@ -414,7 +413,7 @@ const _hdiDeleteServiceManager = async (context, filterTenantId) => {
     cfService: { credentials },
   } = await context.getHdiInfo();
   const { sm_url } = credentials;
-  const token = await getUaaTokenFromCredentials(credentials);
+  const token = await context.getCachedUaaTokenFromCredentials(credentials);
   // NOTE: deleting both the bindings and service instance best mimicks the behavior of instance manager
 
   const bindings = await _hdiBindingsServiceManager(context, { filterTenantId });
@@ -602,7 +601,7 @@ const hdiDeleteAllServiceManager = async (context) => {
     cfService: { credentials },
   } = await context.getHdiInfo();
   const { sm_url } = credentials;
-  const token = await getUaaTokenFromCredentials(credentials);
+  const token = await context.getCachedUaaTokenFromCredentials(credentials);
   const getBindingsResponse = await request({
     url: sm_url,
     pathname: "/v1/service_bindings",
@@ -700,7 +699,7 @@ const hdiMigrateAll = async (context) => {
   );
   const { credentials } = serviceManager;
   const { sm_url } = credentials;
-  const token = await getUaaTokenFromCredentials(credentials);
+  const token = await context.getCachedUaaTokenFromCredentials(credentials);
 
   const containers = await (
     await request({

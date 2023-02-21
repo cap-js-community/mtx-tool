@@ -16,7 +16,6 @@ const {
 } = require("../shared/static");
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
-const { getUaaTokenFromCredentials } = require("../shared/oauth");
 
 const REGISTRY_PAGE_SIZE = 200;
 const POLL_FREQUENCY = 10000;
@@ -30,7 +29,7 @@ const _registrySubscriptionsPaged = async (context, tenant) => {
     cfService: { credentials },
   } = await context.getRegInfo();
   const { saas_registry_url, appName } = credentials;
-  const token = await getUaaTokenFromCredentials(credentials);
+  const token = await context.getCachedUaaTokenFromCredentials(credentials);
 
   let subscriptions = [];
   let pageIndex = 0;
@@ -102,7 +101,7 @@ const _registryJobPoll = async (context, location, { token: _token = null, skipF
     cfService: { credentials },
   } = await context.getRegInfo();
   const { saas_registry_url } = credentials;
-  const token = _token || (await getUaaTokenFromCredentials(credentials));
+  const token = _token || (await context.getCachedUaaTokenFromCredentials(credentials));
   while (true) {
     if (!skipFirst) {
       await sleep(POLL_FREQUENCY);
@@ -134,7 +133,7 @@ const _registryCall = async (context, tenantId, method, skipApps = null) => {
     cfService: { credentials },
   } = await context.getRegInfo();
   const { saas_registry_url } = credentials;
-  const token = await getUaaTokenFromCredentials(credentials);
+  const token = await context.getCachedUaaTokenFromCredentials(credentials);
   const response = await request({
     method,
     url: saas_registry_url,
