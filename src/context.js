@@ -458,9 +458,10 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const getSrvInfo = getAppInfoCached(SETTING_TYPE.SRV);
 
   const getCachedUaaTokenFromCredentials = async (credentials, options) => {
-    return await cfUaaTokenCache.getSetCbAsync(credentials.clientid, async () => {
+    const now = Date.now();
+    return await cfUaaTokenCache.getSetCbAsync(credentials.clientid, now, async () => {
       const { access_token, expires_in } = await sharedUaaTokenFromCredentials(credentials, options);
-      return [Date.now() + expires_in * 1000, access_token];
+      return [now + expires_in * 1000, access_token];
     });
   };
 
