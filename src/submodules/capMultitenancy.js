@@ -154,8 +154,7 @@ const _cdsUpgrade = async (
 
   while (true) {
     await sleep(POLL_FREQUENCY);
-    const pollJobResponse = await requestTry({
-      checkStatus: false,
+    const pollJobResponse = await request({
       url: cfRouteUrl,
       pathname: isMtxs ? `/-/cds/jobs/pollJob(ID='${jobId}')` : `/mtx/v1/model/status/${jobId}`,
       auth: { token: await context.getUaaToken() },
@@ -166,6 +165,7 @@ const _cdsUpgrade = async (
     const pollJobResponseData = await _safeMaterializeJson(pollJobResponse, "poll job");
 
     const { status } = pollJobResponseData || {};
+    assert(status, "no status retrieved for jobId %s", jobId);
     console.log("polled status %s for jobId %s", status, jobId);
     if (status !== "RUNNING") {
       if (isMtxs) {
@@ -194,6 +194,7 @@ const _cdsUpgrade = async (
         console.log(tableList(table) + "\n");
         assert(allSuccess, "upgrade tenant failed");
       } else {
+        // is cds-mtx
         const { error, result } = pollJobResponseData || {};
         assert(!error, "upgrade tenant failed\n%j", error);
         const { tenants } = result;
