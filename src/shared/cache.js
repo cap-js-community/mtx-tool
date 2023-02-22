@@ -68,7 +68,7 @@ class ExpiringLazyCache extends LazyCache {
     return this.__expiringGap;
   }
   _isValid(expirationTime, currentTime) {
-    return expirationTime && (currentTime ?? Date.now()) <= expirationTime + this.__expiringGap;
+    return expirationTime && (currentTime ?? Date.now()) + this.__expiringGap <= expirationTime;
   }
   has(keyOrKeys, currentTime) {
     if (!super.has(keyOrKeys)) {
