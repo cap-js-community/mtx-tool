@@ -19,6 +19,7 @@ const writeFileAsync = promisify(writeFile);
 const POLL_FREQUENCY = 15000;
 const CDS_UPGRADE_APP_INSTANCE = 0;
 const CDS_OFFBOARD_CONCURRENCY = 5;
+const CDS_UPGRADE_TASK_STATUS_CONCURRENCY = 5;
 
 const _isMtxs = async (context) => {
   if (_isMtxs._result === undefined) {
@@ -173,8 +174,10 @@ const _cdsUpgrade = async (
         assert(tenants, "no tenants found in response for upgrade\n%j", upgradeResponseData);
         let allSuccess = true;
         const table = [["tenantId", "status", "message"]].concat(
-          await Promise.all(
-            Object.entries(tenants).map(async ([tenantId, { ID: taskId }]) => {
+          await limiter(
+            CDS_UPGRADE_TASK_STATUS_CONCURRENCY,
+            Object.entries(tenants).map((entry) => [entry]),
+            async ([tenantId, { ID: taskId }]) => {
               const pollTaskResponse = await requestTry({
                 checkStatus: false,
                 url: cfRouteUrl,
@@ -188,7 +191,7 @@ const _cdsUpgrade = async (
               const { status, error } = pollTaskResponseData || {};
               allSuccess &= status && !error;
               return [tenantId, status, error || ""];
-            })
+            }
           )
         );
         console.log(tableList(table) + "\n");
