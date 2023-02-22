@@ -457,29 +457,26 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const getHdiInfo = getAppInfoCached(SETTING_TYPE.HDI);
   const getSrvInfo = getAppInfoCached(SETTING_TYPE.SRV);
 
-  const getCachedUaaTokenFromCredentials = async (credentials, options) => {
-    const now = Date.now();
-    return await cfUaaTokenCache.getSetCb(
+  const getCachedUaaTokenFromCredentials = async (credentials, options) =>
+    await cfUaaTokenCache.getSetCb(
       credentials.clientid,
-      now,
-      ({ expires_in }) => expires_in,
-      ({ access_token }) => access_token,
-      sharedUaaTokenFromCredentials,
-      credentials,
-      options
+      async () => await sharedUaaTokenFromCredentials(credentials, options),
+      {
+        expirationExtractor: ({ expires_in }) => Date.now() + expires_in * 1000,
+        valueExtractor: ({ access_token }) => access_token,
+      }
     );
-    // const now = Date.now();
-    // const refresh = async () => {
-    //   const { access_token, expires_in } = await sharedUaaTokenFromCredentials(credentials, options);
-    //   return [now + expires_in * 1000, access_token];
-    // };
-    // const [expireTime, token] = await cfUaaTokenCache.getSetCb(credentials.clientid, refresh);
-    // if (now + UAA_TOKEN_CACHE_EXPIRY_GAP <= expireTime) {
-    //   return token;
-    // }
-    // const [, freshToken] = await cfUaaTokenCache.setCb(credentials.clientid, refresh).get(credentials.clientid);
-    // return freshToken;
-  };
+  // const now = Date.now();
+  // const refresh = async () => {
+  //   const { access_token, expires_in } = await sharedUaaTokenFromCredentials(credentials, options);
+  //   return [now + expires_in * 1000, access_token];
+  // };
+  // const [expireTime, token] = await cfUaaTokenCache.getSetCb(credentials.clientid, refresh);
+  // if (now + UAA_TOKEN_CACHE_EXPIRY_GAP <= expireTime) {
+  //   return token;
+  // }
+  // const [, freshToken] = await cfUaaTokenCache.setCb(credentials.clientid, refresh).get(credentials.clientid);
+  // return freshToken;
 
   const getCachedUaaToken = async (options) => {
     const {

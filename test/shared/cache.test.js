@@ -1,5 +1,5 @@
 "use strict";
-const LazyCache = require("../../src/shared/LazyCache");
+const { LazyCache } = require("../../src/shared/cache");
 
 let cache;
 describe("lazy cache", () => {
@@ -27,11 +27,11 @@ describe("lazy cache", () => {
       cache.set(["a", "b"], "ab");
       cache.set(["a", "b", "c"], "abc");
       cache.setCb("a with cb", () => "a with cb");
-      cache.setCb("b with cb", (b) => b, "b with cb");
-      cache.setCb("c with cb", (b, c) => b + c, "c", " with cb");
+      cache.setCb("b with cb", () => "b with cb");
+      cache.setCb("c with cb", () => "c with cb");
       await cache.setCb("a with cbA", async () => "a with cbA");
-      await cache.setCb("b with cbA", async (b) => b, "b with cbA");
-      await cache.setCb("c with cbA", async (b, c) => b + c, "c", " with cbA");
+      await cache.setCb("b with cbA", async () => "b with cbA");
+      await cache.setCb("c with cbA", async () => "c with cbA");
 
       expect(cache.set("d", "d")).toBe(cache);
 
@@ -55,12 +55,7 @@ describe("lazy cache", () => {
       expect(await cache.get("b with cbA")).toBe("b with cbA");
       expect(await cache.get("c with cbA")).toBe("c with cbA");
 
-      expect(
-        await Object.entries(cache._data()).reduce(async (result, [key, value]) => {
-          (await result)[key] = await value;
-          return result;
-        }, Promise.resolve({}))
-      ).toMatchInlineSnapshot(`
+      expect(await cache._dataSettled()).toMatchInlineSnapshot(`
         {
           "": "empty",
           "a": "a",
@@ -80,22 +75,17 @@ describe("lazy cache", () => {
     });
 
     it("getSetCb/getSetCbAsync", async () => {
-      const cbSpy = jest.fn((a) => a);
-      const cbAsyncSpy = jest.fn(async (a) => a);
+      const cbSpy = jest.fn(() => "a result");
+      const cbAsyncSpy = jest.fn(async () => "b result");
 
       for (let i = 0; i < 10; i++) {
-        expect(cache.getSetCb("a", cbSpy, "a result")).toBe("a result");
-        expect(await cache.getSetCb("b", cbAsyncSpy, "b result")).toBe("b result");
+        expect(cache.getSetCb("a", cbSpy)).toBe("a result");
+        expect(await cache.getSetCb("b", cbAsyncSpy)).toBe("b result");
       }
       expect(cbSpy).toHaveBeenCalledTimes(1);
       expect(cbAsyncSpy).toHaveBeenCalledTimes(1);
 
-      expect(
-        await Object.entries(cache._data()).reduce(async (result, [key, value]) => {
-          (await result)[key] = await value;
-          return result;
-        }, Promise.resolve({}))
-      ).toMatchInlineSnapshot(`
+      expect(await cache._dataSettled()).toMatchInlineSnapshot(`
         {
           "a": "a result",
           "b": "b result",

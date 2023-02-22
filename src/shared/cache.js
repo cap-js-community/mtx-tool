@@ -14,6 +14,12 @@ class LazyCache {
   _data() {
     return this.__data;
   }
+  async _dataSettled() {
+    return await Object.entries(this.__data).reduce(async (result, [key, value]) => {
+      (await result)[key] = await value;
+      return result;
+    }, Promise.resolve({}));
+  }
   _key(keyOrKeys) {
     return Array.isArray(keyOrKeys) ? keyOrKeys.join(this.__separator) : keyOrKeys;
   }
@@ -27,8 +33,8 @@ class LazyCache {
     this.__data[this._key(keyOrKeys)] = value;
     return this;
   }
-  setCb(keyOrKeys, callback, ...args) {
-    const resultOrPromise = callback(...args);
+  setCb(keyOrKeys, callback) {
+    const resultOrPromise = callback();
     return this.set(
       keyOrKeys,
       resultOrPromise instanceof Promise
@@ -39,10 +45,10 @@ class LazyCache {
         : resultOrPromise
     );
   }
-  getSetCb(keyOrKeys, callback, ...args) {
+  getSetCb(keyOrKeys, callback) {
     const key = this._key(keyOrKeys);
     if (!this.has(key)) {
-      this.setCb(key, callback, ...args);
+      this.setCb(key, callback);
     }
     return this.get(key);
   }
@@ -66,28 +72,33 @@ class ExpiringLazyCache extends LazyCache {
   _expiringGap() {
     return this.__expirationGap;
   }
-  _isValid(expiration, currentTime) {
-    return expiration && (currentTime ?? Date.now()) + this.__expirationGap <= expiration;
+  _isValid(expiration, currentTime = Date.now()) {
+    return expiration && currentTime + this.__expirationGap <= expiration;
   }
-  has(keyOrKeys, currentTime) {
+  has(keyOrKeys, currentTime = Date.now()) {
     if (!super.has(keyOrKeys)) {
       return false;
     }
     const [expiration] = super.get(keyOrKeys) ?? [];
     return this._isValid(expiration, currentTime);
   }
-  get(keyOrKeys, currentTime) {
+  get(keyOrKeys, currentTime = Date.now()) {
     const [expiration, value] = super.get(keyOrKeys) ?? [];
-    return this._isValid(expiration, currentTime) ? value : null;
+    return this._isValid(expiration, currentTime) ? value : undefined;
   }
   set(keyOrKeys, expiration, value) {
     return super.set(keyOrKeys, [expiration, value]);
   }
 
-  setCb(keyOrKeys, expirationExtractor, valueExtractor, callback, ...args) {
-    const resultOrPromise = callback(...args);
+  static _extract(result, expirationExtractor, valueExtractor) {
+    return expirationExtractor && valueExtractor ? [expirationExtractor(result), valueExtractor(result)] : result;
+  }
+
+  setCb(keyOrKeys, callback, { expirationExtractor, valueExtractor } = {}) {
+    const resultOrPromise = callback();
     if (!(resultOrPromise instanceof Promise)) {
-      return this.set(keyOrKeys, expirationExtractor(resultOrPromise), valueExtractor(resultOrPromise));
+      const [expiration, value] = ExpiringLazyCache._extract(resultOrPromise, expirationExtractor, valueExtractor);
+      return this.set(keyOrKeys, expiration, value);
     }
     return this.set(
       keyOrKeys,
@@ -98,18 +109,17 @@ class ExpiringLazyCache extends LazyCache {
           return Promise.reject(err);
         })
         .then((result) => {
-          const expiration = expirationExtractor(result);
-          const value = valueExtractor(result);
+          const [expiration, value] = ExpiringLazyCache._extract(result, expirationExtractor, valueExtractor);
           this.set(keyOrKeys, expiration, value);
           return value;
         })
     );
   }
 
-  getSetCb(keyOrKeys, currentTime, expirationExtractor, valueExtractor, callback, ...args) {
+  getSetCb(keyOrKeys, callback, { currentTime = Date.now(), expirationExtractor, valueExtractor } = {}) {
     const key = this._key(keyOrKeys);
     if (!this.has(key, currentTime) || !super.has(key)) {
-      this.setCb(key, expirationExtractor, valueExtractor, callback, ...args);
+      this.setCb(key, callback, { expirationExtractor, valueExtractor });
       const [, value] = super.get(key);
       return value;
     }
