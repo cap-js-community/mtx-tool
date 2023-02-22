@@ -459,7 +459,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
 
   const getCachedUaaTokenFromCredentials = async (credentials, options) => {
     const now = Date.now();
-    return await cfUaaTokenCache.getSetCbAsync(credentials.clientid, now, async () => {
+    return await cfUaaTokenCache.getSetCb(credentials.clientid, now, async () => {
       const { access_token, expires_in } = await sharedUaaTokenFromCredentials(credentials, options);
       return [now + expires_in * 1000, access_token];
     });
