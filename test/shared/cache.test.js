@@ -1,5 +1,5 @@
 "use strict";
-const { LazyCache } = require("../../src/shared/cache");
+const LazyCache = require("../../src/shared/LazyCache");
 
 let cache;
 describe("lazy cache", () => {

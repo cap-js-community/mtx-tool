@@ -57,7 +57,4 @@ class LazyCache {
   }
 }
 
-module.exports = {
-  DEFAULT_SEPARATOR,
-  LazyCache,
-};
+module.exports = LazyCache;

@@ -13,7 +13,7 @@ const { question, guardedAccess, tryReadJsonSync, tryAccessSync, spawnAsync } = 
 const { assert, fail } = require("./shared/error");
 const { request } = require("./shared/request");
 const { getUaaTokenFromCredentials: sharedUaaTokenFromCredentials } = require("./shared/oauth");
-const { LazyCache } = require("./shared/cache");
+const LazyCache = require("./shared/LazyCache");
 
 const APP_SUFFIXES = ["-blue", "-green"];
 const APP_SUFFIXES_READONLY = ["-blue", "-green", "-live"];
