@@ -1,7 +1,7 @@
 "use strict";
 
 const DEFAULT_SEPARATOR = "##";
-const DEFAULT_EXPIRING_GAP = 500;
+const DEFAULT_EXPIRING_GAP = 500; // 0.5 seconds
 
 class LazyCache {
   constructor({ separator = DEFAULT_SEPARATOR } = {}) {
