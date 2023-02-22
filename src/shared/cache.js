@@ -28,22 +28,21 @@ class LazyCache {
     return this;
   }
   setCb(keyOrKeys, callback, ...args) {
-    return this.set(keyOrKeys, callback(...args));
-  }
-  async setCbAsync(keyOrKeys, callback, ...args) {
-    return this.set(keyOrKeys, await callback(...args));
+    const resultOrPromise = callback(...args);
+    return this.set(
+      keyOrKeys,
+      resultOrPromise instanceof Promise
+        ? resultOrPromise.catch((err) => {
+            this.delete(keyOrKeys);
+            return Promise.reject(err);
+          })
+        : resultOrPromise
+    );
   }
   getSetCb(keyOrKeys, callback, ...args) {
     const key = this._key(keyOrKeys);
     if (!this.has(key)) {
       this.setCb(key, callback, ...args);
-    }
-    return this.get(key);
-  }
-  async getSetCbAsync(keyOrKeys, callback, ...args) {
-    const key = this._key(keyOrKeys);
-    if (!this.has(key)) {
-      await this.setCbAsync(key, callback, ...args);
     }
     return this.get(key);
   }
@@ -84,37 +83,40 @@ class ExpiringLazyCache extends LazyCache {
   set(keyOrKeys, expirationTime, value) {
     return super.set(keyOrKeys, [expirationTime, value]);
   }
-  setCb(keyOrKeys, callback, ...args) {
-    const [expirationTime, value] = callback(...args);
-    return this.set(keyOrKeys, expirationTime, value);
-  }
 
   // NOTE callback need to return a pair [expirationTime, value], expirationTime in milliseconds
-  async setCbAsync(keyOrKeys, callback, ...args) {
-    const [expirationTime, value] = await callback(...args);
+  setCb(keyOrKeys, callback, ...args) {
+    const resultOrPromise = callback(...args);
+    if (resultOrPromise instanceof Promise) {
+      return this.set(
+        keyOrKeys,
+        0,
+        resultOrPromise
+          .catch((err) => {
+            this.delete(keyOrKeys);
+            return Promise.reject(err);
+          })
+          .then(([expirationTime, value]) => {
+            this.set(keyOrKeys, expirationTime, value);
+            return value;
+          })
+      );
+    }
+    const [expirationTime, value] = resultOrPromise;
     return this.set(keyOrKeys, expirationTime, value);
   }
 
   // NOTE callback need to return a pair [expirationTime, value], expirationTime in milliseconds
   // NOTE if getSetCb that triggers the callback it is always successful ignoring expiration
-  // TODO does this handle multiple calls in quick succession well???
   getSetCb(keyOrKeys, currentTime, callback, ...args) {
     const key = this._key(keyOrKeys);
     if (!this.has(key, currentTime) || !super.has(key)) {
       this.setCb(key, callback, ...args);
-      const [, value] = super.get(key);
-      return value;
-    }
-    return this.get(key, currentTime);
-  }
-
-  // NOTE callback need to return a pair [expirationTime, value], expirationTime in milliseconds
-  // NOTE if getSetCb that triggers the callback it is always successful ignoring expiration
-  async getSetCbAsync(keyOrKeys, currentTime, callback, ...args) {
-    const key = this._key(keyOrKeys);
-    if (!this.has(key, currentTime) || !super.has(key)) {
-      await this.setCbAsync(key, callback, ...args);
-      const [, value] = super.get(key);
+      const resultOrPromise = super.get(key);
+      if (resultOrPromise instanceof Promise) {
+        return resultOrPromise;
+      }
+      const [, value] = resultOrPromise;
       return value;
     }
     return this.get(key, currentTime);
