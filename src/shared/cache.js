@@ -1,6 +1,7 @@
 "use strict";
 
 const DEFAULT_SEPARATOR = "##";
+const DEFAULT_EXPIRING_GAP = 500;
 
 class LazyCache {
   constructor({ separator = DEFAULT_SEPARATOR } = {}) {
@@ -58,7 +59,65 @@ class LazyCache {
   }
 }
 
+class ExpiringLazyCache extends LazyCache {
+  constructor({ separator = DEFAULT_SEPARATOR, expiringGap = DEFAULT_EXPIRING_GAP } = {}) {
+    super({ separator });
+    this.__expiringGap = expiringGap;
+  }
+  _expiringGap() {
+    return this.__expiringGap;
+  }
+  _isValid(expirationTime, currentTime) {
+    return expirationTime && (currentTime ?? Date.now()) <= expirationTime + this.__expiringGap;
+  }
+  has(keyOrKeys, currentTime) {
+    if (!super.has(keyOrKeys)) {
+      return false;
+    }
+    const [expirationTime] = super.get(keyOrKeys) ?? [];
+    return this._isValid(expirationTime, currentTime);
+  }
+  get(keyOrKeys, currentTime) {
+    const [expirationTime, value] = super.get(keyOrKeys) ?? [];
+    return this._isValid(expirationTime, currentTime) ? value : null;
+  }
+  set(keyOrKeys, expirationTime, value) {
+    return super.set(keyOrKeys, [expirationTime, value]);
+  }
+  setCb(keyOrKeys, callback, ...args) {
+    const [expirationTime, value] = callback(...args);
+    return this.set(keyOrKeys, expirationTime, value);
+  }
+
+  // NOTE callback need to return a pair [expirationTime, value], expirationTime in milliseconds
+  async setCbAsync(keyOrKeys, callback, ...args) {
+    const [expirationTime, value] = await callback(...args);
+    return this.set(keyOrKeys, expirationTime, value);
+  }
+
+  // NOTE callback need to return a pair [expirationTime, value], expirationTime in milliseconds
+  // TODO does this handle multiple calls in quick succession well???
+  getSetCb(keyOrKeys, currentTime, callback, ...args) {
+    const key = this._key(keyOrKeys);
+    if (!this.has(key, currentTime) && !super.has(key)) {
+      this.setCb(key, callback, ...args);
+    }
+    return this.get(key, currentTime);
+  }
+
+  // NOTE callback need to return a pair [expirationTime, value], expirationTime in milliseconds
+  async getSetCbAsync(keyOrKeys, currentTime, callback, ...args) {
+    const key = this._key(keyOrKeys);
+    if (!this.has(key, currentTime) && !super.has(key)) {
+      await this.setCbAsync(key, callback, ...args);
+    }
+    return this.get(key, currentTime);
+  }
+}
+
 module.exports = {
+  DEFAULT_EXPIRING_GAP,
   DEFAULT_SEPARATOR,
   LazyCache,
+  ExpiringLazyCache,
 };

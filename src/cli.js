@@ -155,7 +155,7 @@ const checkOption = async (cliOption, args) => {
   const context = passContext ? await newContext({ usePersistedCache: useCache, isReadonlyCommand: readonly }) : null;
   danger && !flagArgs.includes(FORCE_FLAG) && (await _dangerGuard());
   const result = context ? await callback(context, passArgs, flagValues) : await callback(passArgs, flagValues);
-  context?.clearTimeouts();
+
   if (typeof result === "string") {
     console.log(result);
   } else if (Array.isArray(result)) {
