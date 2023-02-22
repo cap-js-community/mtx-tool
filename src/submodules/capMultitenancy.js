@@ -186,7 +186,7 @@ const _cdsUpgrade = async (
               });
               const pollTaskResponseData = await _safeMaterializeJson(pollTaskResponse, "poll task");
               const { status, error } = pollTaskResponseData || {};
-              allSuccess &= !error;
+              allSuccess &= status && !error;
               return [tenantId, status, error || ""];
             })
           )
