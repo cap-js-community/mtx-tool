@@ -29,7 +29,6 @@ const _registrySubscriptionsPaged = async (context, tenant) => {
     cfService: { credentials },
   } = await context.getRegInfo();
   const { saas_registry_url, appName } = credentials;
-  const token = await context.getCachedUaaTokenFromCredentials(credentials);
 
   let subscriptions = [];
   let pageIndex = 0;
@@ -43,7 +42,7 @@ const _registrySubscriptionsPaged = async (context, tenant) => {
         size: REGISTRY_PAGE_SIZE,
         page: ++pageIndex,
       },
-      auth: { token },
+      auth: { token: await context.getCachedUaaTokenFromCredentials(credentials) },
     });
     const { subscriptions: pageSubscriptions, morePages } = await response.json();
     subscriptions = subscriptions.concat(pageSubscriptions);
@@ -96,12 +95,11 @@ const registryServiceConfig = async (context) => {
   return JSON.stringify(JSON.parse(appUrls), null, 2);
 };
 
-const _registryJobPoll = async (context, location, { token: _token = null, skipFirst = false } = {}) => {
+const _registryJobPoll = async (context, location, { skipFirst = false } = {}) => {
   const {
     cfService: { credentials },
   } = await context.getRegInfo();
   const { saas_registry_url } = credentials;
-  const token = _token || (await context.getCachedUaaTokenFromCredentials(credentials));
   while (true) {
     if (!skipFirst) {
       await sleep(POLL_FREQUENCY);
@@ -110,7 +108,7 @@ const _registryJobPoll = async (context, location, { token: _token = null, skipF
     const response = await request({
       url: saas_registry_url,
       pathname: location,
-      auth: { token },
+      auth: { token: await context.getCachedUaaTokenFromCredentials(credentials) },
     });
     const responseBody = await response.json();
     const { state } = responseBody;
@@ -133,13 +131,12 @@ const _registryCall = async (context, tenantId, method, skipApps = null) => {
     cfService: { credentials },
   } = await context.getRegInfo();
   const { saas_registry_url } = credentials;
-  const token = await context.getCachedUaaTokenFromCredentials(credentials);
   const response = await request({
     method,
     url: saas_registry_url,
     pathname: `/saas-manager/v1/application/tenants/${tenantId}/subscriptions`,
     ...(skipApps && { query: { noCallbacksAppNames: skipApps } }),
-    auth: { token },
+    auth: { token: await context.getCachedUaaTokenFromCredentials(credentials) },
   });
 
   const [location] = response.headers.raw().location;
@@ -147,7 +144,7 @@ const _registryCall = async (context, tenantId, method, skipApps = null) => {
   console.log("response: %s", responseText);
   console.log("polling job %s with interval %isec", location, POLL_FREQUENCY / 1000);
 
-  return _registryJobPoll(context, location, { token });
+  return _registryJobPoll(context, location);
 };
 
 const _registryUpdateAllDependencies = async (context) => {
