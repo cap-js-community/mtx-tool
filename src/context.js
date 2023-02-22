@@ -13,7 +13,7 @@ const { question, guardedAccess, tryReadJsonSync, tryAccessSync, spawnAsync } = 
 const { assert, fail } = require("./shared/error");
 const { request } = require("./shared/request");
 const { getUaaTokenFromCredentials: sharedUaaTokenFromCredentials } = require("./shared/oauth");
-const { ExpiringLazyCache } = require("./shared/cache");
+const { LazyCache } = require("./shared/cache");
 
 const APP_SUFFIXES = ["-blue", "-green"];
 const APP_SUFFIXES_READONLY = ["-blue", "-green", "-live"];
@@ -47,6 +47,7 @@ const SETTING = require("./SETTING");
 
 const CACHE_GAP = 43200000; // 12 hours in milliseconds
 const UAA_TOKEN_CACHE_EXPIRY_GAP = 60000; // 1 minute
+// const UAA_TOKEN_CACHE_EXPIRY_GAP = 0; // debugging
 
 const _run = async (command, ...args) => {
   return spawnAsync(command, args, {
@@ -293,7 +294,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const runtimeConfig = _readRuntimeConfig(configPath);
   const cachePath = pathlib.join(dir, FILENAME.CACHE);
   const cfApps = await _getCfApps(cfInfo);
-  const cfUaaTokenCache = new ExpiringLazyCache({ expiringGap: UAA_TOKEN_CACHE_EXPIRY_GAP });
+  const cfUaaTokenCache = new LazyCache();
   let rawAppMemoryCache = {};
 
   const _getAppNameCandidates = (appName) => [
@@ -459,10 +460,19 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
 
   const getCachedUaaTokenFromCredentials = async (credentials, options) => {
     const now = Date.now();
-    return await cfUaaTokenCache.getSetCb(credentials.clientid, now, async () => {
+    // console.log("=== === === === get token '%s'", credentials.clientid);
+    const refresh = async () => {
+      // console.log("=== === === === refresh token '%s'", credentials.clientid);
       const { access_token, expires_in } = await sharedUaaTokenFromCredentials(credentials, options);
       return [now + expires_in * 1000, access_token];
-    });
+      // return [now + 20000, access_token];
+    };
+    const [expireTime, token] = await cfUaaTokenCache.getSetCb(credentials.clientid, refresh);
+    if (now + UAA_TOKEN_CACHE_EXPIRY_GAP <= expireTime) {
+      return token;
+    }
+    const [, freshToken] = await cfUaaTokenCache.setCb(credentials.clientid, refresh).get(credentials.clientid);
+    return freshToken;
   };
 
   const getUaaToken = async (options) => {

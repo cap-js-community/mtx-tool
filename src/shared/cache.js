@@ -58,74 +58,7 @@ class LazyCache {
   }
 }
 
-class ExpiringLazyCache extends LazyCache {
-  constructor({ separator = DEFAULT_SEPARATOR, expiringGap = DEFAULT_EXPIRING_GAP } = {}) {
-    super({ separator });
-    this.__expiringGap = expiringGap;
-  }
-  _expiringGap() {
-    return this.__expiringGap;
-  }
-  _isValid(expirationTime, currentTime) {
-    return expirationTime && (currentTime ?? Date.now()) + this.__expiringGap <= expirationTime;
-  }
-  has(keyOrKeys, currentTime) {
-    if (!super.has(keyOrKeys)) {
-      return false;
-    }
-    const [expirationTime] = super.get(keyOrKeys) ?? [];
-    return this._isValid(expirationTime, currentTime);
-  }
-  get(keyOrKeys, currentTime) {
-    const [expirationTime, value] = super.get(keyOrKeys) ?? [];
-    return this._isValid(expirationTime, currentTime) ? value : null;
-  }
-  set(keyOrKeys, expirationTime, value) {
-    return super.set(keyOrKeys, [expirationTime, value]);
-  }
-
-  // NOTE callback need to return a pair [expirationTime, value], expirationTime in milliseconds
-  setCb(keyOrKeys, callback, ...args) {
-    const resultOrPromise = callback(...args);
-    if (resultOrPromise instanceof Promise) {
-      return this.set(
-        keyOrKeys,
-        0,
-        resultOrPromise
-          .catch((err) => {
-            this.delete(keyOrKeys);
-            return Promise.reject(err);
-          })
-          .then(([expirationTime, value]) => {
-            this.set(keyOrKeys, expirationTime, value);
-            return value;
-          })
-      );
-    }
-    const [expirationTime, value] = resultOrPromise;
-    return this.set(keyOrKeys, expirationTime, value);
-  }
-
-  // NOTE callback need to return a pair [expirationTime, value], expirationTime in milliseconds
-  // NOTE if getSetCb that triggers the callback it is always successful ignoring expiration
-  getSetCb(keyOrKeys, currentTime, callback, ...args) {
-    const key = this._key(keyOrKeys);
-    if (!this.has(key, currentTime) || !super.has(key)) {
-      this.setCb(key, callback, ...args);
-      const resultOrPromise = super.get(key);
-      if (resultOrPromise instanceof Promise) {
-        return resultOrPromise;
-      }
-      const [, value] = resultOrPromise;
-      return value;
-    }
-    return this.get(key, currentTime);
-  }
-}
-
 module.exports = {
-  DEFAULT_EXPIRING_GAP,
   DEFAULT_SEPARATOR,
   LazyCache,
-  ExpiringLazyCache,
 };
