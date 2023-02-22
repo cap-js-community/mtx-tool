@@ -471,7 +471,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     return freshToken;
   };
 
-  const getUaaToken = async (options) => {
+  const getCachedUaaToken = async (options) => {
     const {
       cfService: { credentials },
     } = await getUaaInfo();
@@ -486,7 +486,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     getHdiInfo,
     getSrvInfo,
     getCachedUaaTokenFromCredentials,
-    getUaaToken,
+    getCachedUaaToken,
     getAppNameInfoCached,
   };
 };

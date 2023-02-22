@@ -59,7 +59,7 @@ const _cdsTenants = async (context, tenant) => {
   const response = await request({
     url: cfRouteUrl,
     pathname: _getTenantRequestOptionsPathname(),
-    auth: { token: await context.getUaaToken() },
+    auth: { token: await context.getCachedUaaToken() },
   });
   const resultRaw = await response.json();
   let result = Array.isArray(resultRaw) ? resultRaw : [resultRaw];
@@ -98,7 +98,7 @@ const _cdsOnboard = async (context, tenantId, subdomain) => {
     pathname: (await _isMtxs(context))
       ? `/-/cds/saas-provisioning/tenant/${tenantId}`
       : `/mtx/v1/provisioning/tenant/${tenantId}`,
-    auth: { token: await context.getUaaToken() },
+    auth: { token: await context.getCachedUaaToken() },
     headers: {
       "Content-Type": "application/json",
     },
@@ -141,7 +141,7 @@ const _cdsUpgrade = async (
     method: "POST",
     url: cfRouteUrl,
     pathname: isMtxs ? "/-/cds/saas-provisioning/upgrade" : "/mtx/v1/model/asyncUpgrade",
-    auth: { token: await context.getUaaToken() },
+    auth: { token: await context.getCachedUaaToken() },
     headers: {
       "Content-Type": "application/json",
       "X-Cf-App-Instance": `${cfAppGuid}:${appInstance}`,
@@ -158,7 +158,7 @@ const _cdsUpgrade = async (
     const pollJobResponse = await request({
       url: cfRouteUrl,
       pathname: isMtxs ? `/-/cds/jobs/pollJob(ID='${jobId}')` : `/mtx/v1/model/status/${jobId}`,
-      auth: { token: await context.getUaaToken() },
+      auth: { token: await context.getCachedUaaToken() },
       headers: {
         "X-Cf-App-Instance": `${cfAppGuid}:${appInstance}`,
       },
@@ -182,7 +182,7 @@ const _cdsUpgrade = async (
                 checkStatus: false,
                 url: cfRouteUrl,
                 pathname: `/-/cds/jobs/pollTask(ID='${taskId}')`,
-                auth: { token: await context.getUaaToken() },
+                auth: { token: await context.getCachedUaaToken() },
                 headers: {
                   "X-Cf-App-Instance": `${cfAppGuid}:${appInstance}`,
                 },
@@ -269,7 +269,7 @@ const _cdsOffboard = async (context, tenantId) => {
     pathname: (await _isMtxs(context))
       ? `/-/cds/saas-provisioning/tenant/${tenantId}`
       : `/mtx/v1/provisioning/tenant/${tenantId}`,
-    auth: { token: await context.getUaaToken() },
+    auth: { token: await context.getCachedUaaToken() },
   });
 };
 

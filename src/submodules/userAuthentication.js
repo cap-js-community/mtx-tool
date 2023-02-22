@@ -34,7 +34,7 @@ const _uaaUserInfo = async (context, passcode, tenant) => {
       credentials: { url: paasUrl, identityzone: paasZoneDomain },
     },
   } = await context.getUaaInfo();
-  const token = await context.getUaaToken({ ...resolveTenantArg(tenant), passcode });
+  const token = await context.getCachedUaaToken({ ...resolveTenantArg(tenant), passcode });
   const [, jwtBody] = _tokenDecode(token);
   const zoneId = jwtBody.zid;
   const zoneDomain = jwtBody.ext_attr && jwtBody.ext_attr.zdn;
@@ -58,12 +58,12 @@ const uaaDecode = async ([token]) => {
 
 const uaaClient = async (context, [tenant], [doDecode]) =>
   doDecode
-    ? _uaaOutputDecoded(await context.getUaaToken(resolveTenantArg(tenant)))
-    : _uaaOutputBearer(await context.getUaaToken(resolveTenantArg(tenant)));
+    ? _uaaOutputDecoded(await context.getCachedUaaToken(resolveTenantArg(tenant)))
+    : _uaaOutputBearer(await context.getCachedUaaToken(resolveTenantArg(tenant)));
 const uaaPasscode = async (context, [passcode, tenant], [doDecode]) =>
   doDecode
-    ? _uaaOutputDecoded(await context.getUaaToken({ ...resolveTenantArg(tenant), passcode }))
-    : _uaaOutputBearer(await context.getUaaToken({ ...resolveTenantArg(tenant), passcode }));
+    ? _uaaOutputDecoded(await context.getCachedUaaToken({ ...resolveTenantArg(tenant), passcode }))
+    : _uaaOutputBearer(await context.getCachedUaaToken({ ...resolveTenantArg(tenant), passcode }));
 const uaaService = async (context, [service, tenant], [doDecode]) =>
   doDecode
     ? _uaaOutputDecoded(await _uaaSaasServiceToken(context, tenant, service))

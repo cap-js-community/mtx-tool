@@ -13,7 +13,7 @@ const DEFAULT_ENV_FILENAME = "default-env.json";
 
 const serverInfo = async (context) => {
   const { cfRouteUrl } = await context.getSrvInfo();
-  const token = await context.getUaaToken();
+  const token = await context.getCachedUaaToken();
   const response = await request({
     url: cfRouteUrl,
     pathname: "/info",
@@ -32,7 +32,7 @@ const _serverDebug = async (context, { appName, appInstance = 0 } = {}) => {
   );
   const { runtime, debugPort: inferredPort } = (cfBuildpackInfoKey && BUILDPACK_INFO[cfBuildpackInfoKey]) || {};
   const localPort = inferredPort || 8000;
-  const token = await context.getUaaToken();
+  const token = await context.getCachedUaaToken();
 
   let responseData = {};
   if (cfRouteUrl) {

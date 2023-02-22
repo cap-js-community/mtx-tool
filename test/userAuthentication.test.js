@@ -36,7 +36,7 @@ const uaaCfServiceMock = {
 
 const contextMock = {
   getUaaInfo: jest.fn(),
-  getUaaToken: jest.fn((options) => {
+  getCachedUaaToken: jest.fn((options) => {
     return contextMock.getCachedUaaTokenFromCredentials(options);
   }),
   getCachedUaaTokenFromCredentials: jest.fn((options) => {
