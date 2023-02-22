@@ -99,7 +99,7 @@ class ExpiringLazyCache extends LazyCache {
   // TODO does this handle multiple calls in quick succession well???
   getSetCb(keyOrKeys, currentTime, callback, ...args) {
     const key = this._key(keyOrKeys);
-    if (!this.has(key, currentTime) && !super.has(key)) {
+    if (!this.has(key, currentTime) || !super.has(key)) {
       this.setCb(key, callback, ...args);
     }
     return this.get(key, currentTime);
@@ -108,7 +108,7 @@ class ExpiringLazyCache extends LazyCache {
   // NOTE callback need to return a pair [expirationTime, value], expirationTime in milliseconds
   async getSetCbAsync(keyOrKeys, currentTime, callback, ...args) {
     const key = this._key(keyOrKeys);
-    if (!this.has(key, currentTime) && !super.has(key)) {
+    if (!this.has(key, currentTime) || !super.has(key)) {
       await this.setCbAsync(key, callback, ...args);
     }
     return this.get(key, currentTime);
