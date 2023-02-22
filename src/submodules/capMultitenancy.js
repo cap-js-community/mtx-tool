@@ -176,7 +176,7 @@ const _cdsUpgrade = async (
         const table = [["tenantId", "status", "message"]].concat(
           await limiter(
             CDS_UPGRADE_TASK_STATUS_CONCURRENCY,
-            Object.entries(tenants).map((entry) => [entry]),
+            Object.entries(tenants),
             async ([tenantId, { ID: taskId }]) => {
               const pollTaskResponse = await requestTry({
                 checkStatus: false,
@@ -282,8 +282,8 @@ const cdsOffboardAll = async (context) => {
   const tenants = await _cdsTenants(context);
   await limiter(
     CDS_OFFBOARD_CONCURRENCY,
-    tenants.map(({ subscribedTenantId }) => [subscribedTenantId]),
-    async (subscribedTenantId) => await _cdsOffboard(context, subscribedTenantId)
+    tenants,
+    async ({ subscribedTenantId }) => await _cdsOffboard(context, subscribedTenantId)
   );
 };
 

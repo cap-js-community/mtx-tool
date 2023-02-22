@@ -261,7 +261,7 @@ const balancedSplit = (input, k) => {
  * the number concurrent executions.
  *
  * @param limit     number of concurrent executions
- * @param payloads  array where each element is an array of arguments passed to the iterator
+ * @param payloads  array where each element the argument passed into iterator
  * @param iterator  (async) function to process a payload
  * @returns {Promise<[]>} promise for an array of iterator results
  */
@@ -271,8 +271,8 @@ const limiter = async (limit, payloads, iterator) => {
   for (const payload of payloads) {
     const p =
       iterator.constructor.name === "AsyncFunction"
-        ? iterator(...payload)
-        : Promise.resolve().then(() => iterator(...payload));
+        ? iterator(payload)
+        : Promise.resolve().then(() => iterator(payload));
     returnPromises.push(p);
 
     if (limit <= payloads.length) {

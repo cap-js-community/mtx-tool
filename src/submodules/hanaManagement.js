@@ -247,8 +247,8 @@ const _hdiRebindAllServiceManager = async (context, parameters) => {
 
   await limiter(
     SERVICE_MANAGER_CONCURRENCY,
-    bindings.map((binding) => [sm_url, token, binding, { parameters }]),
-    _hdiRebindBindingServiceManager
+    bindings,
+    async (binding) => await _hdiRebindBindingServiceManager(sm_url, token, binding, { parameters })
   );
 };
 
@@ -272,32 +272,28 @@ const _hdiRepairBindingsServiceManager = async (context, parameters) => {
     if (instanceBindings.length < SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
       const missingBindingCount = SERVICE_MANAGER_IDEAL_BINDING_COUNT - instanceBindings.length;
       for (let i = 0; i < missingBindingCount; i++) {
-        changes.push([
-          async () => {
-            await _createBindingServiceManagerFromInstance(sm_url, token, instance, { parameters });
-            console.log(
-              "created %i missing binding%s for tenant %s",
-              missingBindingCount,
-              missingBindingCount === 1 ? "" : "s",
-              tenantId
-            );
-          },
-        ]);
+        changes.push(async () => {
+          await _createBindingServiceManagerFromInstance(sm_url, token, instance, { parameters });
+          console.log(
+            "created %i missing binding%s for tenant %s",
+            missingBindingCount,
+            missingBindingCount === 1 ? "" : "s",
+            tenantId
+          );
+        });
       }
     } else if (instanceBindings.length > SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
       const ambivalentBindings = instanceBindings.slice(1);
       for (const { id } of ambivalentBindings) {
-        changes.push([
-          async () => {
-            await _deleteBindingServiceManager(sm_url, token, id);
-            console.log(
-              "deleted %i ambivalent binding%s for tenant %s",
-              ambivalentBindings.length,
-              ambivalentBindings.length === 1 ? "" : "s",
-              tenantId
-            );
-          },
-        ]);
+        changes.push(async () => {
+          await _deleteBindingServiceManager(sm_url, token, id);
+          console.log(
+            "deleted %i ambivalent binding%s for tenant %s",
+            ambivalentBindings.length,
+            ambivalentBindings.length === 1 ? "" : "s",
+            tenantId
+          );
+        });
       }
     }
   }
