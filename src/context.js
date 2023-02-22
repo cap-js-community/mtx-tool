@@ -47,7 +47,6 @@ const SETTING = require("./SETTING");
 
 const CACHE_GAP = 43200000; // 12 hours in milliseconds
 const UAA_TOKEN_CACHE_EXPIRY_GAP = 60000; // 1 minute
-// const UAA_TOKEN_CACHE_EXPIRY_GAP = 0; // debugging
 
 const _run = async (command, ...args) => {
   return spawnAsync(command, args, {
@@ -460,12 +459,9 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
 
   const getCachedUaaTokenFromCredentials = async (credentials, options) => {
     const now = Date.now();
-    // console.log("=== === === === get token '%s'", credentials.clientid);
     const refresh = async () => {
-      // console.log("=== === === === refresh token '%s'", credentials.clientid);
       const { access_token, expires_in } = await sharedUaaTokenFromCredentials(credentials, options);
       return [now + expires_in * 1000, access_token];
-      // return [now + 20000, access_token];
     };
     const [expireTime, token] = await cfUaaTokenCache.getSetCb(credentials.clientid, refresh);
     if (now + UAA_TOKEN_CACHE_EXPIRY_GAP <= expireTime) {
