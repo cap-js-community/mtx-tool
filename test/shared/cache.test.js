@@ -146,7 +146,7 @@ describe("cache", () => {
       cache = new ExpiringLazyCache({ expirationGap: customExpirationGap });
       const key = "a";
       const value = "a";
-      const now = Date.now();
+      const now = 1000000000000;
       const offset = 60;
       const step = 10;
 
@@ -193,8 +193,8 @@ describe("cache", () => {
       });
 
       test("has/get/set/setCb/setCbAsync", async () => {
-        const now = Date.now();
-        const testTime = 1500;
+        const now = 1000000000000;
+        const testTime = DEFAULT_EXPIRATION_GAP + 1500;
         const expiringTime = now + testTime;
         cache.set("", expiringTime, "empty");
         cache.set("a", expiringTime, "a");
@@ -218,25 +218,25 @@ describe("cache", () => {
 
         expect(cache.set("d", expiringTime, "d")).toBe(cache);
 
-        expect(cache.has("a")).toBe(true);
-        expect(cache.has(["a"])).toBe(true);
-        expect(cache.has("z")).toBe(false);
-        expect(cache.has(["z"])).toBe(false);
+        expect(cache.has("a", now)).toBe(true);
+        expect(cache.has(["a"], now)).toBe(true);
+        expect(cache.has("z", now)).toBe(false);
+        expect(cache.has(["z"], now)).toBe(false);
 
-        expect(cache.get("")).toBe("empty");
-        expect(cache.get([])).toBe("empty");
-        expect(cache.get("a")).toBe("a");
-        expect(cache.get("b")).toBe("b");
-        expect(cache.get("c")).toBe("c");
-        expect(cache.get(["a", "b"])).toBe("ab");
-        expect(cache.get(["a", "b", "c"])).toBe("abc");
+        expect(cache.get("", now)).toBe("empty");
+        expect(cache.get([], now)).toBe("empty");
+        expect(cache.get("a", now)).toBe("a");
+        expect(cache.get("b", now)).toBe("b");
+        expect(cache.get("c", now)).toBe("c");
+        expect(cache.get(["a", "b"], now)).toBe("ab");
+        expect(cache.get(["a", "b", "c"], now)).toBe("abc");
 
-        expect(cache.get("a with cb")).toBe("a with cb");
-        expect(cache.get("b with cb")).toBe("b with cb");
-        expect(cache.get("c with cb")).toBe("c with cb");
-        expect(cache.get("a with cbA")).toBe("a with cbA");
-        expect(cache.get("b with cbA")).toBe("b with cbA");
-        expect(cache.get("c with cbA")).toBe("c with cbA");
+        expect(cache.get("a with cb", now)).toBe("a with cb");
+        expect(cache.get("b with cb", now)).toBe("b with cb");
+        expect(cache.get("c with cb", now)).toBe("c with cb");
+        expect(cache.get("a with cbA", now)).toBe("a with cbA");
+        expect(cache.get("b with cbA", now)).toBe("b with cbA");
+        expect(cache.get("c with cbA", now)).toBe("c with cbA");
 
         const afterExpiredTime = expiringTime - DEFAULT_EXPIRATION_GAP + 1;
 
@@ -263,7 +263,7 @@ describe("cache", () => {
 
       test("getSetCb/getSetCbAsync", async () => {
         const now = 1000000000000;
-        const testTime = 1500;
+        const testTime = DEFAULT_EXPIRATION_GAP + 1500;
         const expirationTime = now + testTime;
         const step = 100;
         const afterExpiredTime = expirationTime - DEFAULT_EXPIRATION_GAP + 1;
