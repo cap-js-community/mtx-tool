@@ -466,17 +466,6 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
         valueExtractor: ({ access_token }) => access_token,
       }
     );
-  // const now = Date.now();
-  // const refresh = async () => {
-  //   const { access_token, expires_in } = await sharedUaaTokenFromCredentials(credentials, options);
-  //   return [now + expires_in * 1000, access_token];
-  // };
-  // const [expireTime, token] = await cfUaaTokenCache.getSetCb(credentials.clientid, refresh);
-  // if (now + UAA_TOKEN_CACHE_EXPIRY_GAP <= expireTime) {
-  //   return token;
-  // }
-  // const [, freshToken] = await cfUaaTokenCache.setCb(credentials.clientid, refresh).get(credentials.clientid);
-  // return freshToken;
 
   const getCachedUaaToken = async (options) => {
     const {
