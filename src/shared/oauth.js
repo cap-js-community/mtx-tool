@@ -30,7 +30,7 @@ const getUaaTokenFromCredentials = async (credentials, { passcode, subdomain, te
 
   const baseOptions = { clientId, passcode, tenantId };
   const options = isX509Enabled ? { ...baseOptions, certificate, key } : { ...baseOptions, clientSecret };
-  return getUaaToken(url, options);
+  return await getUaaToken(url, options);
 };
 
 const getUaaToken = async (url, { clientId, clientSecret, passcode, certificate, key, tenantId } = {}) => {
@@ -42,7 +42,7 @@ const getUaaToken = async (url, { clientId, clientSecret, passcode, certificate,
     ...(clientSecret && { client_secret: clientSecret }),
     ...(passcode && { passcode }),
   });
-  const { access_token } = await (
+  return await (
     await request({
       ...(agent && { agent }),
       method: "POST",
@@ -57,7 +57,6 @@ const getUaaToken = async (url, { clientId, clientSecret, passcode, certificate,
       logged: false,
     })
   ).json();
-  return access_token;
 };
 
 module.exports = {
