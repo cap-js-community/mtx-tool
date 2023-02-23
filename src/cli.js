@@ -120,47 +120,48 @@ const checkOption = async (cliOption, args) => {
     useCache = true,
     readonly = false,
   } = cliOption;
-  if (firstArg && commandVariants.includes(firstArg)) {
-    const command = commandVariants[commandVariants.length - 1];
-    let flagValues = null;
-    assert(
-      passArgs.length >= requiredPassArgs.length,
-      'command "%s" requires %s %s',
-      command,
-      requiredPassArgs.length === 1 ? "argument" : "arguments",
-      requiredPassArgs.join(", ")
-    );
-    const allPassArgs = [].concat(requiredPassArgs, optionalPassArgs);
-    assert(
-      passArgs.length <= allPassArgs.length,
-      'command "%s" takes %s %s',
-      command,
-      allPassArgs.length === 1 ? "argument" : "arguments",
-      allPassArgs.join(", ")
-    );
-    if (optionalFlagArgs) {
-      flagArgs.forEach((flagArg) => {
-        assert(
-          flagArg === FORCE_FLAG || optionalFlagArgs.includes(flagArg),
-          'flag argument "%s" not valid for command "%s"',
-          flagArg,
-          command
-        );
-      });
-      flagValues = optionalFlagArgs.map((flag) => flagArgs.includes(flag));
-    }
-    !silent && console.log("running", command, ...passArgs, ...flagArgs);
-    const context = passContext ? await newContext({ usePersistedCache: useCache, isReadonlyCommand: readonly }) : null;
-    danger && !flagArgs.includes(FORCE_FLAG) && (await _dangerGuard());
-    const result = context ? await callback(context, passArgs, flagValues) : await callback(passArgs, flagValues);
-
-    if (typeof result === "string") {
-      console.log(result);
-    } else if (Array.isArray(result)) {
-      console.log(...result);
-    }
-    return true;
+  if (!firstArg || !commandVariants.includes(firstArg)) {
+    return false;
   }
+  const command = commandVariants[commandVariants.length - 1];
+  let flagValues = null;
+  assert(
+    passArgs.length >= requiredPassArgs.length,
+    'command "%s" requires %s %s',
+    command,
+    requiredPassArgs.length === 1 ? "argument" : "arguments",
+    requiredPassArgs.join(", ")
+  );
+  const allPassArgs = [].concat(requiredPassArgs, optionalPassArgs);
+  assert(
+    passArgs.length <= allPassArgs.length,
+    'command "%s" takes %s %s',
+    command,
+    allPassArgs.length === 1 ? "argument" : "arguments",
+    allPassArgs.join(", ")
+  );
+  if (optionalFlagArgs) {
+    flagArgs.forEach((flagArg) => {
+      assert(
+        flagArg === FORCE_FLAG || optionalFlagArgs.includes(flagArg),
+        'flag argument "%s" not valid for command "%s"',
+        flagArg,
+        command
+      );
+    });
+    flagValues = optionalFlagArgs.map((flag) => flagArgs.includes(flag));
+  }
+  !silent && console.log("running", command, ...passArgs, ...flagArgs);
+  const context = passContext ? await newContext({ usePersistedCache: useCache, isReadonlyCommand: readonly }) : null;
+  danger && !flagArgs.includes(FORCE_FLAG) && (await _dangerGuard());
+  const result = context ? await callback(context, passArgs, flagValues) : await callback(passArgs, flagValues);
+
+  if (typeof result === "string") {
+    console.log(result);
+  } else if (Array.isArray(result)) {
+    console.log(...result);
+  }
+  return true;
 };
 
 const cli = async (args) => {

@@ -19,6 +19,7 @@ const writeFileAsync = promisify(writeFile);
 const POLL_FREQUENCY = 15000;
 const CDS_UPGRADE_APP_INSTANCE = 0;
 const CDS_OFFBOARD_CONCURRENCY = 5;
+const CDS_UPGRADE_TASK_STATUS_CONCURRENCY = 5;
 
 const _isMtxs = async (context) => {
   if (_isMtxs._result === undefined) {
@@ -47,7 +48,6 @@ const _cdsTenants = async (context, tenant) => {
   filterSubdomain && assert(isDashedWord(filterSubdomain), `argument "${filterSubdomain}" is not a valid subdomain`);
 
   const { cfRouteUrl } = await context.getCdsInfo();
-  const token = await context.getUaaToken();
 
   const _getTenantRequestOptionsPathname = () => {
     if (isMtxs) {
@@ -59,7 +59,7 @@ const _cdsTenants = async (context, tenant) => {
   const response = await request({
     url: cfRouteUrl,
     pathname: _getTenantRequestOptionsPathname(),
-    auth: { token },
+    auth: { token: await context.getCachedUaaToken() },
   });
   const resultRaw = await response.json();
   let result = Array.isArray(resultRaw) ? resultRaw : [resultRaw];
@@ -92,14 +92,13 @@ const cdsLongList = async (context, [tenant]) => {
 
 const _cdsOnboard = async (context, tenantId, subdomain) => {
   const { cfRouteUrl } = await context.getCdsInfo();
-  const token = await context.getUaaToken();
   await request({
     method: "PUT",
     url: cfRouteUrl,
     pathname: (await _isMtxs(context))
       ? `/-/cds/saas-provisioning/tenant/${tenantId}`
       : `/mtx/v1/provisioning/tenant/${tenantId}`,
-    auth: { token },
+    auth: { token: await context.getCachedUaaToken() },
     headers: {
       "Content-Type": "application/json",
     },
@@ -138,12 +137,11 @@ const _cdsUpgrade = async (
     return;
   }
   const { cfAppGuid, cfRouteUrl } = await context.getCdsInfo();
-  const token = await context.getUaaToken();
   const upgradeResponse = await request({
     method: "POST",
     url: cfRouteUrl,
     pathname: isMtxs ? "/-/cds/saas-provisioning/upgrade" : "/mtx/v1/model/asyncUpgrade",
-    auth: { token },
+    auth: { token: await context.getCachedUaaToken() },
     headers: {
       "Content-Type": "application/json",
       "X-Cf-App-Instance": `${cfAppGuid}:${appInstance}`,
@@ -157,11 +155,10 @@ const _cdsUpgrade = async (
 
   while (true) {
     await sleep(POLL_FREQUENCY);
-    const pollJobResponse = await requestTry({
-      checkStatus: false,
+    const pollJobResponse = await request({
       url: cfRouteUrl,
       pathname: isMtxs ? `/-/cds/jobs/pollJob(ID='${jobId}')` : `/mtx/v1/model/status/${jobId}`,
-      auth: { token },
+      auth: { token: await context.getCachedUaaToken() },
       headers: {
         "X-Cf-App-Instance": `${cfAppGuid}:${appInstance}`,
       },
@@ -169,6 +166,7 @@ const _cdsUpgrade = async (
     const pollJobResponseData = await _safeMaterializeJson(pollJobResponse, "poll job");
 
     const { status } = pollJobResponseData || {};
+    assert(status, "no status retrieved for jobId %s", jobId);
     console.log("polled status %s for jobId %s", status, jobId);
     if (status !== "RUNNING") {
       if (isMtxs) {
@@ -176,27 +174,30 @@ const _cdsUpgrade = async (
         assert(tenants, "no tenants found in response for upgrade\n%j", upgradeResponseData);
         let allSuccess = true;
         const table = [["tenantId", "status", "message"]].concat(
-          await Promise.all(
-            Object.entries(tenants).map(async ([tenantId, { ID: taskId }]) => {
+          await limiter(
+            CDS_UPGRADE_TASK_STATUS_CONCURRENCY,
+            Object.entries(tenants),
+            async ([tenantId, { ID: taskId }]) => {
               const pollTaskResponse = await requestTry({
                 checkStatus: false,
                 url: cfRouteUrl,
                 pathname: `/-/cds/jobs/pollTask(ID='${taskId}')`,
-                auth: { token },
+                auth: { token: await context.getCachedUaaToken() },
                 headers: {
                   "X-Cf-App-Instance": `${cfAppGuid}:${appInstance}`,
                 },
               });
               const pollTaskResponseData = await _safeMaterializeJson(pollTaskResponse, "poll task");
               const { status, error } = pollTaskResponseData || {};
-              allSuccess &= !error;
+              allSuccess &= status && !error;
               return [tenantId, status, error || ""];
-            })
+            }
           )
         );
         console.log(tableList(table) + "\n");
         assert(allSuccess, "upgrade tenant failed");
       } else {
+        // is cds-mtx
         const { error, result } = pollJobResponseData || {};
         assert(!error, "upgrade tenant failed\n%j", error);
         const { tenants } = result;
@@ -262,14 +263,13 @@ const cdsUpgradeAll = async (context, _, [doAutoUndeploy]) => {
 
 const _cdsOffboard = async (context, tenantId) => {
   const { cfRouteUrl } = await context.getCdsInfo();
-  const token = await context.getUaaToken();
   await request({
     method: "DELETE",
     url: cfRouteUrl,
     pathname: (await _isMtxs(context))
       ? `/-/cds/saas-provisioning/tenant/${tenantId}`
       : `/mtx/v1/provisioning/tenant/${tenantId}`,
-    auth: { token },
+    auth: { token: await context.getCachedUaaToken() },
   });
 };
 
@@ -282,8 +282,8 @@ const cdsOffboardAll = async (context) => {
   const tenants = await _cdsTenants(context);
   await limiter(
     CDS_OFFBOARD_CONCURRENCY,
-    tenants.map(({ subscribedTenantId }) => [subscribedTenantId]),
-    async (subscribedTenantId) => await _cdsOffboard(context, subscribedTenantId)
+    tenants,
+    async ({ subscribedTenantId }) => await _cdsOffboard(context, subscribedTenantId)
   );
 };
 

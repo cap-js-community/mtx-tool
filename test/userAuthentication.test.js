@@ -36,8 +36,13 @@ const uaaCfServiceMock = {
 
 const contextMock = {
   getUaaInfo: jest.fn(),
-  getUaaToken: jest.fn((options) => {
-    return sharedOAuthMock.getUaaTokenFromCredentials(uaaCfServiceMock.credentials, options);
+  getCachedUaaToken: jest.fn((options) => {
+    return contextMock.getCachedUaaTokenFromCredentials(options);
+  }),
+  getCachedUaaTokenFromCredentials: jest.fn((options) => {
+    return sharedOAuthMock
+      .getUaaTokenFromCredentials(uaaCfServiceMock.credentials, options)
+      .then(({ access_token }) => access_token);
   }),
 };
 
@@ -55,7 +60,10 @@ describe("uaa tests", () => {
 
   test("uaaClient without tenant", async () => {
     const commonPrepares = () => {
-      fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ access_token: PAAS_TOKEN }) });
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ access_token: PAAS_TOKEN, expires_in: Infinity }),
+      });
     };
     const commonAsserts = () => {
       expect(fetchMock).toHaveBeenCalledTimes(1);
@@ -76,7 +84,10 @@ describe("uaa tests", () => {
 
   test("uaaClient with tenant", async () => {
     const commonPrepares = () => {
-      fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ access_token: SAAS_TOKEN }) });
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ access_token: SAAS_TOKEN, expires_in: Infinity }),
+      });
     };
     const commonAsserts = () => {
       expect(fetchMock).toHaveBeenCalledTimes(1);
@@ -96,7 +107,10 @@ describe("uaa tests", () => {
 
   test("uaaPasscode without tenant", async () => {
     const commonPrepares = () => {
-      fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ access_token: PASSCODE_TOKEN }) });
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ access_token: PASSCODE_TOKEN, expires_in: Infinity }),
+      });
     };
     const commonAsserts = () => {
       expect(fetchMock).toHaveBeenCalledTimes(1);
@@ -116,7 +130,10 @@ describe("uaa tests", () => {
 
   test("uaaPasscode with tenant", async () => {
     const commonPrepares = () => {
-      fetchMock.mockResolvedValueOnce({ ok: true, json: async () => ({ access_token: SAAS_PASSCODE_TOKEN }) });
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ access_token: SAAS_PASSCODE_TOKEN, expires_in: Infinity }),
+      });
     };
     const commonAsserts = () => {
       expect(fetchMock).toHaveBeenCalledTimes(1);
@@ -147,7 +164,7 @@ describe("uaa tests", () => {
         cfService: uaaCfServiceMock,
         cfEnvServices: { service: [{ credentials: cfEnvServicesMock }] },
       });
-      sharedOAuthMock.getUaaTokenFromCredentials.mockReturnValueOnce(SAAS_SERVICE_TOKEN);
+      contextMock.getCachedUaaTokenFromCredentials.mockReturnValueOnce(SAAS_SERVICE_TOKEN);
     };
     const commonAsserts = () => {
       expect(sharedStaticMock.isDashedWord).toHaveBeenCalledTimes(1);
@@ -161,8 +178,8 @@ describe("uaa tests", () => {
         expect.anything(),
         expect.anything()
       );
-      expect(sharedOAuthMock.getUaaTokenFromCredentials).toHaveBeenCalledTimes(1);
-      expect(sharedOAuthMock.getUaaTokenFromCredentials).toHaveBeenCalledWith(
+      expect(contextMock.getCachedUaaTokenFromCredentials).toHaveBeenCalledTimes(1);
+      expect(contextMock.getCachedUaaTokenFromCredentials).toHaveBeenCalledWith(
         {
           url: "serviceurl",
           clientid: "serviceclientid",
