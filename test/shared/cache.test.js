@@ -126,6 +126,16 @@ describe("cache", () => {
         expect(firstCaller).toHaveBeenCalledTimes(1);
         expect(secondCaller).toHaveBeenCalledTimes(0);
         expect(thirdCaller).toHaveBeenCalledTimes(0);
+
+        jest.clearAllMocks();
+        await Promise.all([
+          cache.getSetCb("key1", firstCaller),
+          cache.getSetCb("key1", secondCaller),
+          cache.getSetCb("key2", thirdCaller),
+        ]);
+        expect(firstCaller).toHaveBeenCalledTimes(1);
+        expect(secondCaller).toHaveBeenCalledTimes(0);
+        expect(thirdCaller).toHaveBeenCalledTimes(1);
       });
     });
   });
@@ -279,6 +289,30 @@ describe("cache", () => {
           a: [expirationTime, "a result"],
           b: [expirationTime, "b result"],
         });
+      });
+
+      test("getSetCb with async callbacks", async () => {
+        const firstCaller = jest.fn(async () => [100, "a"]);
+        const secondCaller = jest.fn(async () => [100, "a"]);
+        const thirdCaller = jest.fn(async () => [100, "a"]);
+        await Promise.all([
+          cache.getSetCb("key", firstCaller),
+          cache.getSetCb("key", secondCaller),
+          cache.getSetCb("key", thirdCaller),
+        ]);
+        expect(firstCaller).toHaveBeenCalledTimes(1);
+        expect(secondCaller).toHaveBeenCalledTimes(0);
+        expect(thirdCaller).toHaveBeenCalledTimes(0);
+
+        jest.clearAllMocks();
+        await Promise.all([
+          cache.getSetCb("key1", firstCaller),
+          cache.getSetCb("key1", secondCaller),
+          cache.getSetCb("key2", thirdCaller),
+        ]);
+        expect(firstCaller).toHaveBeenCalledTimes(1);
+        expect(secondCaller).toHaveBeenCalledTimes(0);
+        expect(thirdCaller).toHaveBeenCalledTimes(1);
       });
     });
   });
