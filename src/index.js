@@ -3,6 +3,7 @@
 module.exports = {
   ...require("./cli"),
   ...require("./context"),
+  ...require("./shared/cache"),
   ...require("./shared/error"),
   ...require("./shared/fetch"),
   ...require("./shared/oauth"),
