@@ -135,7 +135,8 @@ const _registryCall = async (context, tenantId, method, skipApps = null, updateA
     method,
     url: saas_registry_url,
     pathname: `/saas-manager/v1/application/tenants/${tenantId}/subscriptions`,
-    ...((skipApps && { query: { noCallbacksAppNames: skipApps } }) || ( updateAppUrl && {query: {updateApplicationURL: updateAppUrl}})),
+    ...((skipApps && { query: { noCallbacksAppNames: skipApps } }) ||
+      (updateAppUrl && { query: { updateApplicationURL: updateAppUrl } })),
     auth: { token: await context.getCachedUaaTokenFromCredentials(credentials) },
   });
 
@@ -157,9 +158,11 @@ const _registryUpdateAllDependencies = async (context, updateAppUrl) => {
   return result;
 };
 
-const registryUpdateDependencies = async (context, [tenantId, updateAppUrl]) => _registryCall(context, tenantId, "PATCH", null, updateAppUrl);
+const registryUpdateDependencies = async (context, [tenantId, updateAppUrl]) =>
+  _registryCall(context, tenantId, "PATCH", null, updateAppUrl);
 
-const registryUpdateAllDependencies = async (context, [updateAppUrl]) => _registryUpdateAllDependencies(context, updateAppUrl);
+const registryUpdateAllDependencies = async (context, [updateAppUrl]) =>
+  _registryUpdateAllDependencies(context, updateAppUrl);
 
 const registryOffboardSubscription = async (context, [tenantId]) => _registryCall(context, tenantId, "DELETE");
 

@@ -236,7 +236,9 @@ describe("reg tests", () => {
     expect(loggerSpy.error.mock.calls).toHaveLength(0);
   });
   test("reg update tenant all with update app url", async () => {
-    const { nockDone } = await nockBack("reg-update-tenant-all-with-update-appurl.json", { afterRecord: anonymizeNock });
+    const { nockDone } = await nockBack("reg-update-tenant-all-with-update-appurl.json", {
+      afterRecord: anonymizeNock,
+    });
 
     expect(await reg.registryUpdateAllDependencies(await freshContext(), [true])).toMatchInlineSnapshot(`
       [
