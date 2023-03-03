@@ -176,10 +176,30 @@ describe("reg tests", () => {
     expect(loggerSpy.error.mock.calls).toHaveLength(0);
   });
 
+  test("reg update tenant with update app url", async () => {
+    const { nockDone } = await nockBack("reg-update-tenant-with-update-appurl.json", { afterRecord: anonymizeNock });
+
+    expect(await reg.registryUpdateDependencies(await freshContext(), [testTenantId, true])).toMatchInlineSnapshot(`
+      "{
+        "id": "3b2e7059-86e9-4599-a017-60154745b4fb",
+        "state": "SUCCEEDED"
+      }"
+    `);
+    expect(outputFromLogger(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
+      "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
+      PATCH https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/tenants/5ecc7413-2b7e-414a-9496-ad4a61f6cccf/subscriptions?updateApplicationURL=true 202 Accepted
+      response: Job for update subscription of application: afc-dev and tenant: 5ecc7413-2b7e-414a-9496-ad4a61f6cccf, was created
+      polling job /api/v2.0/jobs/3b2e7059-86e9-4599-a017-60154745b4fb with interval 10sec
+      GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/api/v2.0/jobs/3b2e7059-86e9-4599-a017-60154745b4fb 200 OK"
+    `);
+
+    nockDone();
+    expect(loggerSpy.error.mock.calls).toHaveLength(0);
+  });
   test("reg update tenant all", async () => {
     const { nockDone } = await nockBack("reg-update-tenant-all.json", { afterRecord: anonymizeNock });
 
-    expect(await reg.registryUpdateAllDependencies(await freshContext())).toMatchInlineSnapshot(`
+    expect(await reg.registryUpdateAllDependencies(await freshContext(), [])).toMatchInlineSnapshot(`
       [
         "{
         "id": "77a3bd87-7fff-4f33-bf98-c1d1300cab34",
@@ -207,6 +227,45 @@ describe("reg tests", () => {
       polling job /api/v2.0/jobs/263eb598-6d9d-4480-a251-0f8eb5a0c41e with interval 10sec
       GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/api/v2.0/jobs/263eb598-6d9d-4480-a251-0f8eb5a0c41e 200 OK
       PATCH https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/tenants/cb9158ce-f8fd-441b-b443-17219e8f79fa/subscriptions 202 Accepted
+      response: Job for update subscription of application: afc-dev and tenant: cb9158ce-f8fd-441b-b443-17219e8f79fa, was created
+      polling job /api/v2.0/jobs/2638c748-3546-4fd8-b176-f92bb8a09068 with interval 10sec
+      GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/api/v2.0/jobs/2638c748-3546-4fd8-b176-f92bb8a09068 200 OK"
+    `);
+
+    nockDone();
+    expect(loggerSpy.error.mock.calls).toHaveLength(0);
+  });
+  test("reg update tenant all with update app url", async () => {
+    const { nockDone } = await nockBack("reg-update-tenant-all-with-update-appurl.json", { afterRecord: anonymizeNock });
+
+    expect(await reg.registryUpdateAllDependencies(await freshContext(), [true])).toMatchInlineSnapshot(`
+      [
+        "{
+        "id": "77a3bd87-7fff-4f33-bf98-c1d1300cab34",
+        "state": "SUCCEEDED"
+      }",
+        "{
+        "id": "263eb598-6d9d-4480-a251-0f8eb5a0c41e",
+        "state": "SUCCEEDED"
+      }",
+        "{
+        "id": "2638c748-3546-4fd8-b176-f92bb8a09068",
+        "state": "SUCCEEDED"
+      }",
+      ]
+    `);
+    expect(outputFromLogger(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
+      "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
+      GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?appName=afc-dev&size=200&page=1 200 OK
+      PATCH https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/tenants/5ecc7413-2b7e-414a-9496-ad4a61f6cccf/subscriptions?updateApplicationURL=true 202 Accepted
+      response: Job for update subscription of application: afc-dev and tenant: 5ecc7413-2b7e-414a-9496-ad4a61f6cccf, was created
+      polling job /api/v2.0/jobs/77a3bd87-7fff-4f33-bf98-c1d1300cab34 with interval 10sec
+      GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/api/v2.0/jobs/77a3bd87-7fff-4f33-bf98-c1d1300cab34 200 OK
+      PATCH https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/tenants/6917dfd6-7590-4033-af2a-140b75263b0d/subscriptions?updateApplicationURL=true 202 Accepted
+      response: Job for update subscription of application: afc-dev and tenant: 6917dfd6-7590-4033-af2a-140b75263b0d, was created
+      polling job /api/v2.0/jobs/263eb598-6d9d-4480-a251-0f8eb5a0c41e with interval 10sec
+      GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/api/v2.0/jobs/263eb598-6d9d-4480-a251-0f8eb5a0c41e 200 OK
+      PATCH https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/tenants/cb9158ce-f8fd-441b-b443-17219e8f79fa/subscriptions?updateApplicationURL=true 202 Accepted
       response: Job for update subscription of application: afc-dev and tenant: cb9158ce-f8fd-441b-b443-17219e8f79fa, was created
       polling job /api/v2.0/jobs/2638c748-3546-4fd8-b176-f92bb8a09068 with interval 10sec
       GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/api/v2.0/jobs/2638c748-3546-4fd8-b176-f92bb8a09068 200 OK"

@@ -62,8 +62,8 @@ commands:
 ~  regll  --registry-long-list [TENANT]                 long list all subscribed subaccounts
 ~  regs   --registry-service-config                     show registry service config
 ~  regj   --registry-job JOB_ID                         show registry job
-          --registry-update TENANT_ID                   update tenant dependencies
-          --registry-update-all                         update dependencies for all subscribed tenants
+          --registry-update TENANT_ID [UPDATE_APP_URL]  update tenant dependencies with update subscribed app url or not
+          --registry-update-all [UPDATE_APP_URL]        update dependencies for all subscribed tenants with update subscribed app url or not
 *         --registry-offboard TENANT_ID                 offboard tenant subscription
 *         --registry-offboard-skip TENANT_ID SKIP_APPS  offboard tenant subscription skipping apps
           ...    [TENANT]                               filter list for tenant id or subdomain
@@ -119,3 +119,4 @@ commands:
 - `--hdi-migrate-all` will call the instance-manager's migration route and then lazily create missing service-bindings
   on service-manager
 - `TENANT` means you can enter either the subdomain or tenant id and both will work
+- `UPDATE_APP_URL` is an indicate that to update the aleady subscribed apps' URL, example: `mtx --registry-update-all true`

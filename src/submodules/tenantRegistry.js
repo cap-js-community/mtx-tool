@@ -125,7 +125,7 @@ const registryJob = async (context, [jobId]) => {
 
 // https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/4a8b63678cf24d5b8b36bd1957391ce3.html
 // https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/9c4f927011db4bd0a53b23a1b33b36d0.html
-const _registryCall = async (context, tenantId, method, skipApps = null) => {
+const _registryCall = async (context, tenantId, method, skipApps = null, updateAppUrl = null) => {
   assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
   const {
     cfService: { credentials },
@@ -135,7 +135,7 @@ const _registryCall = async (context, tenantId, method, skipApps = null) => {
     method,
     url: saas_registry_url,
     pathname: `/saas-manager/v1/application/tenants/${tenantId}/subscriptions`,
-    ...(skipApps && { query: { noCallbacksAppNames: skipApps } }),
+    ...((skipApps && { query: { noCallbacksAppNames: skipApps } }) || ( updateAppUrl && {query: {updateApplicationURL: updateAppUrl}})),
     auth: { token: await context.getCachedUaaTokenFromCredentials(credentials) },
   });
 
@@ -147,19 +147,19 @@ const _registryCall = async (context, tenantId, method, skipApps = null) => {
   return _registryJobPoll(context, location);
 };
 
-const _registryUpdateAllDependencies = async (context) => {
+const _registryUpdateAllDependencies = async (context, updateAppUrl) => {
   const { subscriptions } = await _registrySubscriptionsPaged(context);
   const result = [];
   // NOTE: we do this serially, so the logging output is understandable for users and the endpoint is not overloaded
   for (const { consumerTenantId } of subscriptions.filter(({ state }) => TENANT_UPDATABLE_STATES.includes(state))) {
-    result.push(await _registryCall(context, consumerTenantId, "PATCH"));
+    result.push(await _registryCall(context, consumerTenantId, "PATCH", null, updateAppUrl));
   }
   return result;
 };
 
-const registryUpdateDependencies = async (context, [tenantId]) => _registryCall(context, tenantId, "PATCH");
+const registryUpdateDependencies = async (context, [tenantId, updateAppUrl]) => _registryCall(context, tenantId, "PATCH", null, updateAppUrl);
 
-const registryUpdateAllDependencies = async (context) => _registryUpdateAllDependencies(context);
+const registryUpdateAllDependencies = async (context, [updateAppUrl]) => _registryUpdateAllDependencies(context, updateAppUrl);
 
 const registryOffboardSubscription = async (context, [tenantId]) => _registryCall(context, tenantId, "DELETE");
 
