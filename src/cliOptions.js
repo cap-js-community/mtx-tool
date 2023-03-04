@@ -113,7 +113,7 @@ module.exports = {
   REGISTRY_UPDATE_APPURL: {
     commandVariants: ["--registry-update-url"],
     optionalPassArgs: [PASS_ARG.TENANT_ID],
-    callback: reg.registryUpdateAppUrl,
+    callback: reg.registryUpdateApplicationURL,
   },
   REGISTRY_OFFBOARD_SUBSCRIPTION: {
     commandVariants: ["--registry-offboard"],
