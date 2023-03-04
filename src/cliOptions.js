@@ -19,7 +19,6 @@ const PASS_ARG = Object.freeze({
   APP_NAME: "APP_NAME",
   APP_INSTANCE: "APP_INSTANCE",
   PARAMS: "PARAMS",
-  UPDATE_APP_URL: "UPDATE_APP_URL",
 });
 
 const FLAG_ARG = Object.freeze({
@@ -105,12 +104,10 @@ module.exports = {
   REGISTRY_UPDATE_DEPENDENCIES: {
     commandVariants: ["--registry-update"],
     requiredPassArgs: [PASS_ARG.TENANT_ID],
-    optionalPassArgs: [PASS_ARG.UPDATE_APP_URL],
     callback: reg.registryUpdateDependencies,
   },
   REGISTRY_UPDATE_ALL_DEPENDENCIES: {
     commandVariants: ["--registry-update-all"],
-    optionalPassArgs: [PASS_ARG.UPDATE_APP_URL],
     callback: reg.registryUpdateAllDependencies,
   },
   REGISTRY_OFFBOARD_SUBSCRIPTION: {
