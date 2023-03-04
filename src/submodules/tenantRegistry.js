@@ -125,23 +125,37 @@ const registryJob = async (context, [jobId]) => {
 
 // https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/4a8b63678cf24d5b8b36bd1957391ce3.html
 // https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/9c4f927011db4bd0a53b23a1b33b36d0.html
-const _registryCall = async (context, tenantId, method, skipApps = null) => {
+const _registryCall = async (context, tenantId, method, { skipApps, updateApplicationURL } = {}) => {
   assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
   const {
     cfService: { credentials },
   } = await context.getRegInfo();
   const { saas_registry_url } = credentials;
+  let query = {};
+  if (skipApps) {
+    //query parameter just for DELETE
+    query = { noCallbacksAppNames: skipApps };
+  }
+  if (updateApplicationURL) {
+    //query parameter just for PATCH, and only for update the App's URL
+    query = { updateApplicationURL: true, skipUpdatingDependencies: true };
+  }
   const response = await request({
     method,
     url: saas_registry_url,
     pathname: `/saas-manager/v1/application/tenants/${tenantId}/subscriptions`,
-    ...(skipApps && { query: { noCallbacksAppNames: skipApps } }),
+    ...((skipApps || updateApplicationURL) && { query }),
     auth: { token: await context.getCachedUaaTokenFromCredentials(credentials) },
   });
 
-  const [location] = response.headers.raw().location;
   const responseText = await response.text();
   console.log("response: %s", responseText);
+  // Update App's URL together with skipUpdatingDependencies, the API call becomes synchronous
+  // No need to get job to check if the update is completed or not
+  if (updateApplicationURL) {
+    return;
+  }
+  const [location] = response.headers.raw().location;
   console.log("polling job %s with interval %isec", location, POLL_FREQUENCY / 1000);
 
   return _registryJobPoll(context, location);
@@ -157,14 +171,29 @@ const _registryUpdateAllDependencies = async (context) => {
   return result;
 };
 
+const _registryUpdateApplicationURL = async (context, tenantId = null) => {
+  if (tenantId) {
+    return await _registryCall(context, tenantId, "PATCH", { updateApplicationURL: true });
+  } else {
+    const { subscriptions } = await _registrySubscriptionsPaged(context);
+    const result = [];
+    for (const { consumerTenantId } of subscriptions.filter(({ state }) => TENANT_UPDATABLE_STATES.includes(state))) {
+      result.push(await _registryCall(context, consumerTenantId, "PATCH", { updateApplicationURL: true }));
+    }
+    return result;
+  }
+};
+
 const registryUpdateDependencies = async (context, [tenantId]) => _registryCall(context, tenantId, "PATCH");
 
 const registryUpdateAllDependencies = async (context) => _registryUpdateAllDependencies(context);
 
+const registryUpdateApplicationURL = async (context, [tenantId]) => _registryUpdateApplicationURL(context, tenantId);
+
 const registryOffboardSubscription = async (context, [tenantId]) => _registryCall(context, tenantId, "DELETE");
 
 const registryOffboardSubscriptionSkip = async (context, [tenantId, skipApps]) =>
-  _registryCall(context, tenantId, "DELETE", skipApps);
+  _registryCall(context, tenantId, "DELETE", { skipApps });
 
 module.exports = {
   registryListSubscriptions,
@@ -173,6 +202,7 @@ module.exports = {
   registryJob,
   registryUpdateDependencies,
   registryUpdateAllDependencies,
+  registryUpdateApplicationURL,
   registryOffboardSubscription,
   registryOffboardSubscriptionSkip,
 };
