@@ -125,37 +125,46 @@ const registryJob = async (context, [jobId]) => {
 
 // https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/4a8b63678cf24d5b8b36bd1957391ce3.html
 // https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/9c4f927011db4bd0a53b23a1b33b36d0.html
-const _registryCall = async (context, tenantId, method, { skipApps, updateApplicationURL } = {}) => {
+const _registryCall = async (
+  context,
+  tenantId,
+  method,
+  { noCallbacksAppNames, updateApplicationURL, skipUpdatingDependencies, doJobPoll = true } = {}
+) => {
   assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
   const {
     cfService: { credentials },
   } = await context.getRegInfo();
   const { saas_registry_url } = credentials;
-  let query = {};
-  if (skipApps) {
-    //query parameter just for DELETE
-    query = { noCallbacksAppNames: skipApps };
-  }
-  if (updateApplicationURL) {
-    //query parameter just for PATCH, and only for update the App's URL
-    query = { updateApplicationURL: true, skipUpdatingDependencies: true };
-  }
+  const query = {
+    ...(noCallbacksAppNames && { noCallbacksAppNames }),
+    ...(updateApplicationURL && { updateApplicationURL }),
+    ...(skipUpdatingDependencies && { skipUpdatingDependencies }),
+  };
   const response = await request({
     method,
     url: saas_registry_url,
     pathname: `/saas-manager/v1/application/tenants/${tenantId}/subscriptions`,
-    ...((skipApps || updateApplicationURL) && { query }),
+    ...((noCallbacksAppNames || updateApplicationURL || skipUpdatingDependencies) && { query }),
     auth: { token: await context.getCachedUaaTokenFromCredentials(credentials) },
   });
 
-  const responseText = await response.text();
-  console.log("response: %s", responseText);
-  // Update App's URL together with skipUpdatingDependencies, the API call becomes synchronous
-  // No need to get job to check if the update is completed or not
-  if (updateApplicationURL) {
-    return;
+  if (!doJobPoll) {
+    const result = {
+      id: tenantId,
+      state: "SUCCEEDED",
+    };
+    if (response.status === 200) {
+      console.log(`Subscription Operation with method ${method} for tenant ${tenantId} successfully`);
+    } else {
+      console.log(`Subscription Operation with method ${method} for tenant ${tenantId} failed`);
+      result.state = "FAILED";
+    }
+    return JSON.stringify(result, null, 2);
   }
   const [location] = response.headers.raw().location;
+  const responseText = await response.text();
+  console.log("response: %s", responseText);
   console.log("polling job %s with interval %isec", location, POLL_FREQUENCY / 1000);
 
   return _registryJobPoll(context, location);
@@ -173,12 +182,22 @@ const _registryUpdateAllDependencies = async (context) => {
 
 const _registryUpdateApplicationURL = async (context, tenantId = null) => {
   if (tenantId) {
-    return await _registryCall(context, tenantId, "PATCH", { updateApplicationURL: true });
+    return await _registryCall(context, tenantId, "PATCH", {
+      updateApplicationURL: true,
+      skipUpdatingDependencies: true,
+      doJobPoll: false,
+    });
   } else {
     const { subscriptions } = await _registrySubscriptionsPaged(context);
     const result = [];
     for (const { consumerTenantId } of subscriptions.filter(({ state }) => TENANT_UPDATABLE_STATES.includes(state))) {
-      result.push(await _registryCall(context, consumerTenantId, "PATCH", { updateApplicationURL: true }));
+      result.push(
+        await _registryCall(context, consumerTenantId, "PATCH", {
+          updateApplicationURL: true,
+          skipUpdatingDependencies: true,
+          doJobPoll: false,
+        })
+      );
     }
     return result;
   }
@@ -193,7 +212,7 @@ const registryUpdateApplicationURL = async (context, [tenantId]) => _registryUpd
 const registryOffboardSubscription = async (context, [tenantId]) => _registryCall(context, tenantId, "DELETE");
 
 const registryOffboardSubscriptionSkip = async (context, [tenantId, skipApps]) =>
-  _registryCall(context, tenantId, "DELETE", { skipApps });
+  _registryCall(context, tenantId, "DELETE", { noCallbacksAppNames: skipApps });
 
 module.exports = {
   registryListSubscriptions,
