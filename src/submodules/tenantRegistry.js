@@ -145,22 +145,14 @@ const _registryCall = async (
     method,
     url: saas_registry_url,
     pathname: `/saas-manager/v1/application/tenants/${tenantId}/subscriptions`,
-    ...((noCallbacksAppNames || updateApplicationURL || skipUpdatingDependencies) && { query }),
+    ...(Object.keys(query).length !== 0 && { query }),
     auth: { token: await context.getCachedUaaTokenFromCredentials(credentials) },
   });
 
   if (!doJobPoll) {
-    const result = {
-      id: tenantId,
-      state: "SUCCEEDED",
-    };
-    if (response.status === 200) {
-      console.log(`Subscription Operation with method ${method} for tenant ${tenantId} successfully`);
-    } else {
-      console.log(`Subscription Operation with method ${method} for tenant ${tenantId} failed`);
-      result.state = "FAILED";
-    }
-    return JSON.stringify(result, null, 2);
+    const state = response.status === 200 ? "SUCCESS" : "FAILED";
+    console.log("Subscription Operation with method %s for tenant %s finished with state %s", method, tenantId, state);
+    return JSON.stringify({ tenantId, state }, null, 2);
   }
   const [location] = response.headers.raw().location;
   const responseText = await response.text();
