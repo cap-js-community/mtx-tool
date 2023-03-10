@@ -11,13 +11,12 @@
  */
 
 const pathlib = require("path");
-const { format } = require("util");
 const nock = require("nock");
 
 const { newContext } = require("../src/context");
 const cds = require("../src/submodules/capMultitenancy");
 const { anonymizeNock } = require("./util/anonymizeNock");
-const { partition } = require("../src/shared/static");
+const { outputFromLoggerPartitionFetch } = require("./util/static");
 
 // https://github.com/nock/nock#modes
 const NOCK_MODE = {
@@ -48,15 +47,6 @@ let loggerSpy = {
   error: jest.spyOn(console, "error").mockImplementation(),
 };
 const freshContext = async () => await newContext({ usePersistedCache: false, isReadonlyCommand: false });
-
-const outputFromLogger = (calls) => calls.map((args) => format(...args)).join("\n");
-const outputFromLoggerPartitionFetch = (calls) => {
-  const inputLogLines = outputFromLogger(calls).split("\n");
-  const [fetchLogLines, logLines] = partition(inputLogLines, (line) =>
-    /^(?:GET|POST|PATCH|DELETE) https:\/\//i.test(line)
-  );
-  return [...logLines, "", ...fetchLogLines].join("\n");
-};
 
 describe("cds tests", () => {
   beforeAll(async () => {});
