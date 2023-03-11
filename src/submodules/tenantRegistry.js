@@ -166,30 +166,32 @@ const _registryCallForTenant = async (
   return _registryJobPoll(context, location);
 };
 
-const _registryCall = async (context, tenantId, method, options = {}) => {
-  if (tenantId) {
-    return await _registryCallForTenant(context, tenantId, method, options);
-  } else {
-    const { subscriptions } = await _registrySubscriptionsPaged(context);
-    const result = [];
-    // NOTE: we do this serially, so the logging output is understandable for users and the endpoint is not overloaded
-    for (const { consumerTenantId } of subscriptions.filter(({ state }) => TENANT_UPDATABLE_STATES.includes(state))) {
-      result.push(await _registryCallForTenant(context, consumerTenantId, method, options));
-    }
-    return result;
+const _registryCallForTenants = async (context, method, options = {}) => {
+  const { subscriptions } = await _registrySubscriptionsPaged(context);
+  const result = [];
+  // NOTE: we do this serially, so the logging output is understandable for users and the endpoint is not overloaded
+  for (const { consumerTenantId } of subscriptions.filter(({ state }) => TENANT_UPDATABLE_STATES.includes(state))) {
+    result.push(await _registryCallForTenant(context, consumerTenantId, method, options));
   }
+  return result;
 };
 
 const registryUpdateDependencies = async (context, [tenantId]) => _registryCallForTenant(context, tenantId, "PATCH");
 
-const registryUpdateAllDependencies = async (context) => _registryCall(context, null, "PATCH");
+const registryUpdateAllDependencies = async (context) => _registryCallForTenants(context, "PATCH");
 
 const registryUpdateApplicationURL = async (context, [tenantId]) =>
-  _registryCall(context, tenantId, "PATCH", {
-    updateApplicationURL: true,
-    skipUpdatingDependencies: true,
-    doJobPoll: false,
-  });
+  tenantId
+    ? _registryCallForTenant(context, tenantId, "PATCH", {
+        updateApplicationURL: true,
+        skipUpdatingDependencies: true,
+        doJobPoll: false,
+      })
+    : _registryCallForTenants(context, "PATCH", {
+        updateApplicationURL: true,
+        skipUpdatingDependencies: true,
+        doJobPoll: false,
+      });
 
 const registryOffboardSubscription = async (context, [tenantId]) => _registryCallForTenant(context, tenantId, "DELETE");
 
