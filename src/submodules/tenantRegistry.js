@@ -20,6 +20,10 @@ const { request } = require("../shared/request");
 const REGISTRY_PAGE_SIZE = 200;
 const POLL_FREQUENCY = 10000;
 const TENANT_UPDATABLE_STATES = ["SUBSCRIBED", "UPDATE_FAILED"];
+const RESPONSE_STATE = Object.freeze({
+  SUCCEEDED: "SUCCEEDED",
+  FAILED: "FAILED",
+});
 
 const _registrySubscriptionsPaged = async (context, tenant) => {
   const { subdomain: filterSubdomain, tenantId: filterTenantId } = resolveTenantArg(tenant);
@@ -112,7 +116,7 @@ const _registryJobPoll = async (context, location, { skipFirst = false } = {}) =
     });
     const responseBody = await response.json();
     const { state } = responseBody;
-    if (!state || state === "SUCCEEDED" || state === "FAILED") {
+    if (!state || state === RESPONSE_STATE.SUCCEEDED || state === RESPONSE_STATE.FAILED) {
       return JSON.stringify(responseBody, null, 2);
     }
   }
@@ -150,7 +154,7 @@ const _registryCall = async (
   });
 
   if (!doJobPoll) {
-    const state = response.status === 200 ? "SUCCESS" : "FAILED";
+    const state = response.status === 200 ? RESPONSE_STATE.SUCCEEDED : RESPONSE_STATE.FAILED;
     console.log("Subscription Operation with method %s for tenant %s finished with state %s", method, tenantId, state);
     return JSON.stringify({ tenantId, state }, null, 2);
   }
