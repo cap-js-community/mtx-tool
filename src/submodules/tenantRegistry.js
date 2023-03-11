@@ -129,7 +129,7 @@ const registryJob = async (context, [jobId]) => {
 
 // https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/4a8b63678cf24d5b8b36bd1957391ce3.html
 // https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/9c4f927011db4bd0a53b23a1b33b36d0.html
-const _registryCall = async (
+const _registryCallForTenant = async (
   context,
   tenantId,
   method,
@@ -166,49 +166,35 @@ const _registryCall = async (
   return _registryJobPoll(context, location);
 };
 
-const _registryUpdateAllDependencies = async (context) => {
-  const { subscriptions } = await _registrySubscriptionsPaged(context);
-  const result = [];
-  // NOTE: we do this serially, so the logging output is understandable for users and the endpoint is not overloaded
-  for (const { consumerTenantId } of subscriptions.filter(({ state }) => TENANT_UPDATABLE_STATES.includes(state))) {
-    result.push(await _registryCall(context, consumerTenantId, "PATCH"));
-  }
-  return result;
-};
-
-const _registryUpdateApplicationURL = async (context, tenantId = null) => {
+const _registryCall = async (context, tenantId, method, options = {}) => {
   if (tenantId) {
-    return await _registryCall(context, tenantId, "PATCH", {
-      updateApplicationURL: true,
-      skipUpdatingDependencies: true,
-      doJobPoll: false,
-    });
+    return await _registryCallForTenant(context, tenantId, method, options);
   } else {
     const { subscriptions } = await _registrySubscriptionsPaged(context);
     const result = [];
+    // NOTE: we do this serially, so the logging output is understandable for users and the endpoint is not overloaded
     for (const { consumerTenantId } of subscriptions.filter(({ state }) => TENANT_UPDATABLE_STATES.includes(state))) {
-      result.push(
-        await _registryCall(context, consumerTenantId, "PATCH", {
-          updateApplicationURL: true,
-          skipUpdatingDependencies: true,
-          doJobPoll: false,
-        })
-      );
+      result.push(await _registryCallForTenant(context, consumerTenantId, method, options));
     }
     return result;
   }
 };
 
-const registryUpdateDependencies = async (context, [tenantId]) => _registryCall(context, tenantId, "PATCH");
+const registryUpdateDependencies = async (context, [tenantId]) => _registryCallForTenant(context, tenantId, "PATCH");
 
-const registryUpdateAllDependencies = async (context) => _registryUpdateAllDependencies(context);
+const registryUpdateAllDependencies = async (context) => _registryCall(context, null, "PATCH");
 
-const registryUpdateApplicationURL = async (context, [tenantId]) => _registryUpdateApplicationURL(context, tenantId);
+const registryUpdateApplicationURL = async (context, [tenantId]) =>
+  _registryCall(context, tenantId, "PATCH", {
+    updateApplicationURL: true,
+    skipUpdatingDependencies: true,
+    doJobPoll: false,
+  });
 
-const registryOffboardSubscription = async (context, [tenantId]) => _registryCall(context, tenantId, "DELETE");
+const registryOffboardSubscription = async (context, [tenantId]) => _registryCallForTenant(context, tenantId, "DELETE");
 
 const registryOffboardSubscriptionSkip = async (context, [tenantId, skipApps]) =>
-  _registryCall(context, tenantId, "DELETE", { noCallbacksAppNames: skipApps });
+  _registryCallForTenant(context, tenantId, "DELETE", { noCallbacksAppNames: skipApps });
 
 module.exports = {
   registryListSubscriptions,
