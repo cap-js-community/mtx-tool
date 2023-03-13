@@ -20,6 +20,10 @@ const { request } = require("../shared/request");
 const REGISTRY_PAGE_SIZE = 200;
 const POLL_FREQUENCY = 10000;
 const TENANT_UPDATABLE_STATES = ["SUBSCRIBED", "UPDATE_FAILED"];
+const RESPONSE_STATE = Object.freeze({
+  SUCCEEDED: "SUCCEEDED",
+  FAILED: "FAILED",
+});
 
 const _registrySubscriptionsPaged = async (context, tenant) => {
   const { subdomain: filterSubdomain, tenantId: filterTenantId } = resolveTenantArg(tenant);
@@ -112,7 +116,7 @@ const _registryJobPoll = async (context, location, { skipFirst = false } = {}) =
     });
     const responseBody = await response.json();
     const { state } = responseBody;
-    if (!state || state === "SUCCEEDED" || state === "FAILED") {
+    if (!state || state === RESPONSE_STATE.SUCCEEDED || state === RESPONSE_STATE.FAILED) {
       return JSON.stringify(responseBody, null, 2);
     }
   }
@@ -125,7 +129,7 @@ const registryJob = async (context, [jobId]) => {
 
 // https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/4a8b63678cf24d5b8b36bd1957391ce3.html
 // https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/9c4f927011db4bd0a53b23a1b33b36d0.html
-const _registryCall = async (
+const _registryCallForTenant = async (
   context,
   tenantId,
   method,
@@ -150,7 +154,7 @@ const _registryCall = async (
   });
 
   if (!doJobPoll) {
-    const state = response.status === 200 ? "SUCCESS" : "FAILED";
+    const state = response.status === 200 ? RESPONSE_STATE.SUCCEEDED : RESPONSE_STATE.FAILED;
     console.log("Subscription Operation with method %s for tenant %s finished with state %s", method, tenantId, state);
     return JSON.stringify({ tenantId, state }, null, 2);
   }
@@ -162,49 +166,37 @@ const _registryCall = async (
   return _registryJobPoll(context, location);
 };
 
-const _registryUpdateAllDependencies = async (context) => {
+const _registryCallForTenants = async (context, method, options = {}) => {
   const { subscriptions } = await _registrySubscriptionsPaged(context);
   const result = [];
   // NOTE: we do this serially, so the logging output is understandable for users and the endpoint is not overloaded
   for (const { consumerTenantId } of subscriptions.filter(({ state }) => TENANT_UPDATABLE_STATES.includes(state))) {
-    result.push(await _registryCall(context, consumerTenantId, "PATCH"));
+    result.push(await _registryCallForTenant(context, consumerTenantId, method, options));
   }
   return result;
 };
 
-const _registryUpdateApplicationURL = async (context, tenantId = null) => {
-  if (tenantId) {
-    return await _registryCall(context, tenantId, "PATCH", {
-      updateApplicationURL: true,
-      skipUpdatingDependencies: true,
-      doJobPoll: false,
-    });
-  } else {
-    const { subscriptions } = await _registrySubscriptionsPaged(context);
-    const result = [];
-    for (const { consumerTenantId } of subscriptions.filter(({ state }) => TENANT_UPDATABLE_STATES.includes(state))) {
-      result.push(
-        await _registryCall(context, consumerTenantId, "PATCH", {
-          updateApplicationURL: true,
-          skipUpdatingDependencies: true,
-          doJobPoll: false,
-        })
-      );
-    }
-    return result;
-  }
-};
+const registryUpdateDependencies = async (context, [tenantId]) => _registryCallForTenant(context, tenantId, "PATCH");
 
-const registryUpdateDependencies = async (context, [tenantId]) => _registryCall(context, tenantId, "PATCH");
+const registryUpdateAllDependencies = async (context) => _registryCallForTenants(context, "PATCH");
 
-const registryUpdateAllDependencies = async (context) => _registryUpdateAllDependencies(context);
+const registryUpdateApplicationURL = async (context, [tenantId]) =>
+  tenantId
+    ? _registryCallForTenant(context, tenantId, "PATCH", {
+        updateApplicationURL: true,
+        skipUpdatingDependencies: true,
+        doJobPoll: false,
+      })
+    : _registryCallForTenants(context, "PATCH", {
+        updateApplicationURL: true,
+        skipUpdatingDependencies: true,
+        doJobPoll: false,
+      });
 
-const registryUpdateApplicationURL = async (context, [tenantId]) => _registryUpdateApplicationURL(context, tenantId);
-
-const registryOffboardSubscription = async (context, [tenantId]) => _registryCall(context, tenantId, "DELETE");
+const registryOffboardSubscription = async (context, [tenantId]) => _registryCallForTenant(context, tenantId, "DELETE");
 
 const registryOffboardSubscriptionSkip = async (context, [tenantId, skipApps]) =>
-  _registryCall(context, tenantId, "DELETE", { noCallbacksAppNames: skipApps });
+  _registryCallForTenant(context, tenantId, "DELETE", { noCallbacksAppNames: skipApps });
 
 module.exports = {
   registryListSubscriptions,
