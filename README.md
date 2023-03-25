@@ -1,7 +1,7 @@
 # MTX Tool
 
-[![npm version](https://badgen.net/npm/v/@cap-js-community/mtx-tool)](https://www.npmjs.com/package/@cap-js-community/mtx-tool)
-[![monthly downloads](https://badgen.net/npm/dm/@cap-js-community/mtx-tool)](https://www.npmjs.com/package/@cap-js-community/mtx-tool)
+[![npm version](https://img.shields.io/npm/v/@cap-js-community/mtx-tool)](https://www.npmjs.com/package/@cap-js-community/mtx-tool)
+[![monthly downloads](https://img.shields.io/npm/dm/@cap-js-community/mtx-tool)](https://www.npmjs.com/package/@cap-js-community/mtx-tool)
 [![REUSE status](https://api.reuse.software/badge/github.com/cap-js-community/mtx-tool)](https://api.reuse.software/info/github.com/cap-js-community/mtx-tool)
 ![CI Main](https://github.com/cap-js-community/mtx-tool/actions/workflows/ci-main.yml/badge.svg)
 
