@@ -39,19 +39,6 @@ const question = async (ask, prefill) =>
     prefill && rli.write(prefill);
   });
 
-const guardedAccess = (node, ...keys) => {
-  if (!node) {
-    return null;
-  }
-  for (const key of keys) {
-    if (!Object.prototype.hasOwnProperty.call(node, key)) {
-      return null;
-    }
-    node = node[key];
-  }
-  return node === undefined ? null : node;
-};
-
 const tryReadJsonSync = (filepath) => {
   try {
     const data = readFileSync(filepath, "utf8");
@@ -339,7 +326,6 @@ module.exports = {
   isDashedWord,
   sleep,
   question,
-  guardedAccess,
   tryReadJsonSync,
   tryAccessSync,
   tryJsonParse,

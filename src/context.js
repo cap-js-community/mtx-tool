@@ -9,7 +9,7 @@ const {
 } = require("fs");
 const { version } = require("../package.json");
 
-const { question, guardedAccess, tryReadJsonSync, tryAccessSync, spawnAsync } = require("./shared/static");
+const { question, tryReadJsonSync, tryAccessSync, spawnAsync } = require("./shared/static");
 const { assert, fail } = require("./shared/error");
 const { request } = require("./shared/request");
 const { getUaaTokenFromCredentials: sharedUaaTokenFromCredentials } = require("./shared/oauth");
@@ -302,16 +302,16 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   ];
 
   const getRawAppInfo = async (cfApp) => {
-    const cfBuildpack = guardedAccess(cfApp, "lifecycle", "data", "buildpacks", 0);
+    const cfBuildpack = cfApp.lifecycle?.data?.buildpacks?.[0];
     const cfEnv = await _cfRequest(cfInfo, `/v3/apps/${cfApp.guid}/env`);
     const [cfProcess] = await _cfRequestPaged(cfInfo, `/v3/apps/${cfApp.guid}/processes`);
-    const cfEnvServices = guardedAccess(cfEnv, "system_env_json", "VCAP_SERVICES");
-    const cfEnvApp = guardedAccess(cfEnv, "application_env_json", "VCAP_APPLICATION");
-    const cfEnvVariables = guardedAccess(cfEnv, "environment_variables");
+    const cfEnvServices = cfEnv.system_env_json?.VCAP_SERVICES;
+    const cfEnvApp = cfEnv.application_env_json?.VCAP_APPLICATION;
+    const cfEnvVariables = cfEnv.environment_variables;
 
     const cfRoutes = await _cfRequestPaged(cfInfo, `/v3/apps/${cfApp.guid}/routes`);
-    const cfRoute = guardedAccess(cfRoutes, "0");
-    const cfDomainGuid = guardedAccess(cfRoute, "relationships", "domain", "data", "guid");
+    const cfRoute = cfRoutes?.[0];
+    const cfDomainGuid = cfRoute?.relationships?.domain?.data?.guid;
     const cfRouteDomain = cfDomainGuid && (await _cfRequest(cfInfo, `/v3/domains/${cfDomainGuid}`));
 
     return {
@@ -393,8 +393,8 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
 
     const cfSsh = async (options) => _cfSsh(appName, options);
 
-    const cfAppName = guardedAccess(cfApp, "name");
-    const cfAppGuid = guardedAccess(cfApp, "guid");
+    const cfAppName = cfApp.name;
+    const cfAppGuid = cfApp.guid;
     return {
       cfAppName,
       cfAppGuid,

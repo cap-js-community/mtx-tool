@@ -4,7 +4,6 @@ const {
   isDashedWord,
   tableList,
   isPortFree,
-  guardedAccess,
   formatTimestampsWithRelativeDays,
   compareFor,
   limiter,
@@ -610,7 +609,7 @@ const hdiDeleteAllServiceManager = async (context) => {
 
   // NOTE: we want to do this serially
   for (const binding of bindings) {
-    const tenantId = guardedAccess(binding, "labels", "tenant_id", 0);
+    const tenantId = binding.labels?.tenant_id?.[0];
     tenantId && (await _hdiDelete(context, tenantId));
   }
 };
