@@ -1,6 +1,6 @@
 "use strict";
 
-const { isJWT, isDashedWord, guardedAccess, resolveTenantArg } = require("../shared/static");
+const { isJWT, isDashedWord, resolveTenantArg } = require("../shared/static");
 const { request } = require("../shared/request");
 const { assert } = require("../shared/error");
 
@@ -22,8 +22,13 @@ const _uaaSaasServiceToken = async (context, tenant, service) => {
     cfEnvApp: { application_name: appName },
     cfEnvServices,
   } = await context.getUaaInfo();
-  let serviceCredentials = guardedAccess(cfEnvServices, service, 0, "credentials");
-  serviceCredentials = guardedAccess(serviceCredentials, "uaa") || serviceCredentials;
+  let serviceCredentials = cfEnvServices[service]?.[0]?.credentials;
+  if (serviceCredentials === undefined) {
+    serviceCredentials = cfEnvServices["user-provided"]?.find((userProvidedService) =>
+      userProvidedService.tags.includes(service)
+    )?.credentials;
+  }
+  serviceCredentials = serviceCredentials?.uaa ?? serviceCredentials;
   assert(serviceCredentials, "service %s not bound to xsuaa app %s", service, appName);
   return context.getCachedUaaTokenFromCredentials(serviceCredentials, resolveTenantArg(tenant));
 };
