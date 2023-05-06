@@ -1,7 +1,6 @@
 "use strict";
 
 const {
-  isDashedWord,
   tableList,
   isPortFree,
   formatTimestampsWithRelativeDays,
@@ -19,6 +18,8 @@ const HIDDEN_PASSWORD_TEXT = "*** show with --reveal ***";
 const SERVICE_MANAGER_CONCURRENCY = 5;
 const SERVICE_MANAGER_IDEAL_BINDING_COUNT = 1;
 const SENSITIVE_CREDENTIAL_FIELDS = ["password", "hdi_password"];
+
+const isValidTenantId = (input) => input && /^[0-9a-z-_/]+$/i.test(input);
 
 const compareForInstanceManagerTenantId = compareFor((a) => a.tenant_id.toUpperCase());
 const compareForServiceManagerTenantId = compareFor((a) => a.labels.tenant_id[0].toUpperCase());
@@ -409,7 +410,7 @@ const _hdiDeleteServiceManager = async (context, filterTenantId) => {
   } = await context.getHdiInfo();
   const { sm_url } = credentials;
   const token = await context.getCachedUaaTokenFromCredentials(credentials);
-  // NOTE: deleting both the bindings and service instance best mimicks the behavior of instance manager
+  // NOTE: deleting both the bindings and service instance best mimics the behavior of instance manager
 
   const bindings = await _hdiBindingsServiceManager(context, { filterTenantId });
   for (const { id } of bindings) {
@@ -559,7 +560,7 @@ const hdiListRelations = async (context, [tenantId], [doTimestamps]) => {
 };
 
 const hdiRebindTenant = async (context, [tenantId, rawParameters]) => {
-  assert(isDashedWord(tenantId), `argument "${tenantId}" is not a valid hdi tenantId`);
+  assert(isValidTenantId(tenantId), `argument "${tenantId}" is not a valid hdi tenantId`);
   const parameters = tryJsonParse(rawParameters);
   assert(!rawParameters || isObject(parameters), `argument "${rawParameters}" needs to be a valid JSON object`);
   return (await _isServiceManager(context))
@@ -582,12 +583,12 @@ const hdiRepairBindings = async (context, [rawParameters]) => {
 };
 
 const hdiTunnelTenant = async (context, [tenantId], [doReveal]) => {
-  assert(isDashedWord(tenantId), `argument "${tenantId}" is not a valid hdi tenantId`);
+  assert(isValidTenantId(tenantId), `argument "${tenantId}" is not a valid hdi tenantId`);
   return _hdiTunnel(context, tenantId, doReveal);
 };
 
 const hdiDeleteTenant = async (context, [tenantId]) => {
-  assert(isDashedWord(tenantId), "TENANT_ID is not a dashed word", tenantId);
+  assert(isValidTenantId(tenantId), "TENANT_ID is not a valid hdi tenantId", tenantId);
   return await _hdiDelete(context, tenantId);
 };
 
