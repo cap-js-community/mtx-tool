@@ -30,7 +30,7 @@
   "cdsAppName": {
     "name": "cds-mtx app",
     "envVariable": "MTX_CDS_APP",
-    "question": "cf app running @sap/cds-mtx library (optional)?",
+    "question": "cf app running @sap/cds-mtx or @sap/cds-mtxs library (optional)?",
     "failMessage": "option requires configured app running @sap/cds-mtx",
     "requireRoute": true
   },
