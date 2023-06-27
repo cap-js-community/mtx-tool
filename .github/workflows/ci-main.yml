@@ -1,7 +1,10 @@
+# https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
 # This workflow will protect the main branch by testing and linting new PRs and commits
 
 name: CI Main
 
+# https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#push
+# https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request
 on:
   push:
     branches:
