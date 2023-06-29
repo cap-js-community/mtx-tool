@@ -387,17 +387,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- switch to CF V3 API
-  https://v3-apidocs.cloudfoundry.org/version/3.91.0/
-
-### Fixed
-
-- add app-version check to cache
-
-## v0.5.24 - 2020-08-30
-
-### Added
-
 - switch to CAPI v3
   https://v3-apidocs.cloudfoundry.org/version/3.91.0/
 
