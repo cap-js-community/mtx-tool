@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## v0.7.11 - 2023-07-12
+
+### Fixed
+
+- cds: auto undeploy for mtxs (#34)
+
+- hdi: allow hdi tenantIds to contain forward slash
+
+- uaa: make uaa service token work with user provided services
+
 ## v0.7.10 - 2023-03-13
 
 ### Added
