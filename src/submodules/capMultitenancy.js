@@ -129,13 +129,23 @@ const _cdsUpgrade = async (
   if (tenants === undefined) {
     tenants = isMtxs ? ["*"] : ["all"];
   }
-  if (isMtxs && doAutoUndeploy) {
-    console.warn("warning: cds-mtxs does not support auto-undeploy yet");
-  }
 
   if (tenants.length === 0) {
     return;
   }
+  const autoUndeployOptions = isMtxs
+    ? {
+        options: {
+          _: {
+            hdi: {
+              deploy: {
+                auto_undeploy: true,
+              },
+            },
+          },
+        },
+      }
+    : { autoUndeploy: true };
   const { cfAppGuid, cfRouteUrl } = await context.getCdsInfo();
   const upgradeResponse = await request({
     method: "POST",
@@ -147,7 +157,7 @@ const _cdsUpgrade = async (
       "X-Cf-App-Instance": `${cfAppGuid}:${appInstance}`,
       ...(isMtxs && { Prefer: "respond-async" }),
     },
-    body: JSON.stringify({ tenants, ...(doAutoUndeploy && { autoUndeploy: true }) }),
+    body: JSON.stringify({ tenants, ...(doAutoUndeploy && autoUndeployOptions) }),
   });
   const upgradeResponseData = await _safeMaterializeJson(upgradeResponse, "upgrade");
   const jobId = isMtxs ? upgradeResponseData.ID : upgradeResponseData.jobID;
