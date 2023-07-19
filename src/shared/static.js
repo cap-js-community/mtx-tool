@@ -327,6 +327,11 @@ const randomString = (
 
 const isObject = (input) => input !== null && typeof input === "object";
 
+const safeUnshift = (baseArray, ...args) => {
+  baseArray.unshift(...args.filter((arg) => arg !== undefined));
+  return baseArray;
+};
+
 module.exports = {
   ENV,
   isPortFree,
@@ -351,4 +356,5 @@ module.exports = {
   limiter,
   randomString,
   isObject,
+  safeUnshift,
 };
