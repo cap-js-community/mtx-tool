@@ -9,14 +9,14 @@ const {
 } = require("fs");
 const { version } = require("../package.json");
 
-const { ENV, question, tryReadJsonSync, tryAccessSync, spawnAsync, safeArrayPush } = require("./shared/static");
+const { ENV, question, tryReadJsonSync, tryAccessSync, spawnAsync } = require("./shared/static");
 const { assert, fail } = require("./shared/error");
 const { request } = require("./shared/request");
 const { getUaaTokenFromCredentials: sharedUaaTokenFromCredentials } = require("./shared/oauth");
 const { ExpiringLazyCache } = require("./shared/cache");
 const { SETTING_TYPE, SETTING } = require("./setting");
 
-const APP_SUFFIXES = safeArrayPush(["-blue", "-green"], process.env[ENV.APP_SUFFIX]);
+const APP_SUFFIXES = ["-blue", "-green"];
 const APP_SUFFIXES_READONLY = APP_SUFFIXES.concat(["-live"]);
 const HOME = process.env.HOME || process.env.USERPROFILE;
 const CF = Object.freeze({
@@ -289,6 +289,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   let rawAppMemoryCache = {};
 
   const _getAppNameCandidates = (appName) => [
+    ...(process.env[ENV.APP_SUFFIX] ? [appName + process.env[ENV.APP_SUFFIX]] : []),
     appName,
     ...(isReadonlyCommand ? APP_SUFFIXES_READONLY : APP_SUFFIXES).map((suffix) => appName + suffix),
   ];

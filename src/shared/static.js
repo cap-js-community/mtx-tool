@@ -327,10 +327,6 @@ const randomString = (
 
 const isObject = (input) => input !== null && typeof input === "object";
 
-const safeArrayPush = (baseArray, ...args) => {
-  return baseArray.concat(args.filter((arg) => arg !== undefined));
-};
-
 module.exports = {
   ENV,
   isPortFree,
@@ -355,5 +351,4 @@ module.exports = {
   limiter,
   randomString,
   isObject,
-  safeArrayPush,
 };
