@@ -9,14 +9,15 @@ const {
 } = require("fs");
 const { version } = require("../package.json");
 
-const { question, tryReadJsonSync, tryAccessSync, spawnAsync } = require("./shared/static");
+const { ENV, question, tryReadJsonSync, tryAccessSync, spawnAsync, safeArrayPush } = require("./shared/static");
 const { assert, fail } = require("./shared/error");
 const { request } = require("./shared/request");
 const { getUaaTokenFromCredentials: sharedUaaTokenFromCredentials } = require("./shared/oauth");
 const { ExpiringLazyCache } = require("./shared/cache");
+const { SETTING_TYPE, SETTING } = require("./setting");
 
-const APP_SUFFIXES = ["-blue", "-green"];
-const APP_SUFFIXES_READONLY = ["-blue", "-green", "-live"];
+const APP_SUFFIXES = safeArrayPush(["-blue", "-green"], process.env[ENV.APP_SUFFIX]);
+const APP_SUFFIXES_READONLY = APP_SUFFIXES.concat(["-live"]);
 const HOME = process.env.HOME || process.env.USERPROFILE;
 const CF = Object.freeze({
   EXEC: "cf",
@@ -35,15 +36,6 @@ const FILENAME = Object.freeze({
   CONFIG: ".mtxrc.json",
   CACHE: ".mtxcache.json",
 });
-
-const SETTING_TYPE = {
-  UAA: "uaaAppName",
-  REG: "regAppName",
-  CDS: "cdsAppName",
-  HDI: "hdiAppName",
-  SRV: "srvAppName",
-};
-const SETTING = require("./SETTING");
 
 const CACHE_GAP = 43200000; // 12 hours in milliseconds
 const UAA_TOKEN_CACHE_EXPIRY_GAP = 60000; // 1 minute
