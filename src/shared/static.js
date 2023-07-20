@@ -332,6 +332,22 @@ const safeUnshift = (baseArray, ...args) => {
   return baseArray;
 };
 
+const reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
+const reHasRegExpChar = RegExp(reRegExpChar.source);
+
+/**
+ * Escapes the `RegExp` special characters "^", "$", "\", ".", "*", "+",
+ * "?", "(", ")", "[", "]", "{", "}", and "|" in `input`.
+ *
+ * @see https://github.com/lodash/lodash/blob/master/escapeRegExp.js
+ *
+ * @param {string} input The string to escape.
+ * @returns {string} Returns the escaped string.
+ */
+const escapeRegExp = (input) => {
+  return input && reHasRegExpChar.test(input) ? input.replace(reRegExpChar, "\\$&") : input;
+};
+
 module.exports = {
   ENV,
   isPortFree,
@@ -357,4 +373,5 @@ module.exports = {
   randomString,
   isObject,
   safeUnshift,
+  escapeRegExp,
 };

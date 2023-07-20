@@ -9,14 +9,22 @@ const {
 } = require("fs");
 const { version } = require("../package.json");
 
-const { ENV, question, tryReadJsonSync, tryAccessSync, spawnAsync, safeUnshift } = require("./shared/static");
+const {
+  ENV,
+  question,
+  tryReadJsonSync,
+  tryAccessSync,
+  spawnAsync,
+  safeUnshift,
+  escapeRegExp,
+} = require("./shared/static");
 const { assert, fail } = require("./shared/error");
 const { request } = require("./shared/request");
 const { getUaaTokenFromCredentials: sharedUaaTokenFromCredentials } = require("./shared/oauth");
 const { ExpiringLazyCache } = require("./shared/cache");
 const { SETTING_TYPE, SETTING } = require("./setting");
 
-const APP_SUFFIXES = safeUnshift(["", "-blue", "-green"], process.env[ENV.APP_SUFFIX]);
+const APP_SUFFIXES = safeUnshift(["", "-{{UUID}}", "-blue", "-green"], process.env[ENV.APP_SUFFIX]);
 const APP_SUFFIXES_READONLY = APP_SUFFIXES.concat(["-live"]);
 const HOME = process.env.HOME || process.env.USERPROFILE;
 const CF = Object.freeze({
@@ -288,8 +296,27 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const cfUaaTokenCache = new ExpiringLazyCache({ expirationGap: UAA_TOKEN_CACHE_EXPIRY_GAP });
   let rawAppMemoryCache = {};
 
-  const _getAppNameCandidates = (appName) =>
-    (isReadonlyCommand ? APP_SUFFIXES_READONLY : APP_SUFFIXES).map((suffix) => appName + suffix);
+  const _getAppNameCandidates = (appName) => {
+    const appSuffixes = isReadonlyCommand ? APP_SUFFIXES_READONLY : APP_SUFFIXES;
+
+    return appSuffixes.map((suffix) => {
+      const label = appName + suffix;
+      const isTemplate = /{{UUID}}/g.test(label);
+      let regexp;
+      if (isTemplate) {
+        const [front, back] = label.split("{{UUID}}");
+        regexp = new RegExp(
+          escapeRegExp(front) +
+            "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" +
+            escapeRegExp(back)
+        );
+      }
+      return {
+        label,
+        regexp,
+      };
+    });
+  };
   const getRawAppInfo = async (cfApp) => {
     const cfBuildpack = cfApp.lifecycle?.data?.buildpacks?.[0];
     const cfEnv = await _cfRequest(cfInfo, `/v3/apps/${cfApp.guid}/env`);
@@ -421,11 +448,22 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     assert(appName, setting.failMessage);
 
     // determine matching cfApp considering suffixes
+    // NOTE: the appNameCandidates order should take precedence over cfApps order.
     const appNameCandidates = _getAppNameCandidates(appName);
-    const cfApp = cfApps.find(({ name }) => appNameCandidates.includes(name));
-    assert(cfApp, `no cf app found for name "${appName}", tried candidates "${appNameCandidates}"`);
+    let cfApp;
+    for (const { label, regexp } of appNameCandidates) {
+      cfApp = regexp ? cfApps.find(({ name }) => regexp.test(name)) : cfApps.find(({ name }) => label === name);
+      if (cfApp) {
+        break;
+      }
+    }
+
+    assert(
+      cfApp,
+      `no cf app found for name "${appName}", tried candidates "${appNameCandidates.map(({ label }) => label)}"`
+    );
     if (appName !== cfApp.name) {
-      console.log('using app with special suffix "%s"', cfApp.name);
+      console.log('using app "%s"', cfApp.name);
     }
 
     const rawAppInfo = await getRawAppInfoCached(cfApp);
