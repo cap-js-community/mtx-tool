@@ -1,3 +1,5 @@
+"use strict";
+
 const { ENV } = require("./shared/static");
 
 const SETTING_TYPE = {
