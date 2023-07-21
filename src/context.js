@@ -21,7 +21,7 @@ const {
 const { assert, fail } = require("./shared/error");
 const { request } = require("./shared/request");
 const { getUaaTokenFromCredentials: sharedUaaTokenFromCredentials } = require("./shared/oauth");
-const { ExpiringLazyCache } = require("./shared/cache");
+const { LazyCache, ExpiringLazyCache } = require("./shared/cache");
 const { SETTING_TYPE, SETTING } = require("./setting");
 
 const APP_SUFFIXES = safeUnshift(["", "-{{UUID}}", "-blue", "-green"], process.env[ENV.APP_SUFFIX]);
@@ -294,6 +294,8 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const cachePath = pathlib.join(dir, FILENAME.CACHE);
   const cfApps = await _getCfApps(cfInfo);
   const cfUaaTokenCache = new ExpiringLazyCache({ expirationGap: UAA_TOKEN_CACHE_EXPIRY_GAP });
+  const settingTypeToAppNameCache = new LazyCache();
+  const appNameToCfAppCache = new LazyCache();
   let rawAppMemoryCache = {};
 
   const _getAppNameCandidates = (appName) => {
@@ -376,10 +378,9 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     return rawAppMemoryCache[appName];
   };
 
-  const processRawAppInfo = (appName, rawAppInfo, setting) => {
+  const processRawAppInfo = (appName, rawAppInfo, { requireServices, requireRoute } = {}) => {
     const { cfApp, cfBuildpack, cfEnvServices, cfEnvApp, cfEnvVariables, cfRoute, cfRouteDomain, cfProcess } =
       rawAppInfo;
-    const { requireServices, requireRoute } = setting || {};
 
     let cfService = null;
     if (Array.isArray(requireServices)) {
@@ -425,57 +426,69 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     };
   };
 
+  const _getAppNameFromSettingType = (type) =>
+    settingTypeToAppNameCache.getSetCb(type, () => {
+      const setting = SETTING[type];
+
+      // determine configured appName
+      const configAppName = runtimeConfig[type];
+      const envAppName = (setting.envVariable && process.env[setting.envVariable]) || null;
+      if (envAppName && configAppName !== envAppName) {
+        if (configAppName) {
+          console.log(
+            'overriding configured %s "%s" with "%s" from environment variable %s',
+            setting.name,
+            configAppName,
+            envAppName,
+            setting.envVariable
+          );
+        } else {
+          console.log('using %s "%s" from environment variable %s', setting.name, envAppName, setting.envVariable);
+        }
+      }
+      const appName = envAppName || configAppName;
+      assert(appName, setting.failMessage);
+      return appName;
+    });
+
+  const _getCfAppFromAppName = (appName) =>
+    appNameToCfAppCache.getSetCb(appName, () => {
+      // determine matching cfApp considering suffixes
+      // NOTE: the appNameCandidates order should take precedence over cfApps order.
+      const appNameCandidates = _getAppNameCandidates(appName);
+      let cfApp;
+      for (const { label, regexp } of appNameCandidates) {
+        cfApp = regexp ? cfApps.find(({ name }) => regexp.test(name)) : cfApps.find(({ name }) => label === name);
+        if (cfApp) {
+          break;
+        }
+      }
+
+      assert(
+        cfApp,
+        `no cf app found for name "${appName}", tried candidates "${appNameCandidates.map(({ label }) => label)}"`
+      );
+      if (appName !== cfApp.name) {
+        console.log('using app "%s"', cfApp.name);
+      }
+      return cfApp;
+    });
+
   const getAppInfoCached = (type) => async () => {
-    const setting = SETTING[type];
+    const appName = _getAppNameFromSettingType(type);
 
-    // determine configured appName
-    const configAppName = runtimeConfig[type];
-    const envAppName = (setting.envVariable && process.env[setting.envVariable]) || null;
-    if (envAppName && configAppName !== envAppName) {
-      if (configAppName) {
-        console.log(
-          'overriding configured %s "%s" with "%s" from environment variable %s',
-          setting.name,
-          configAppName,
-          envAppName,
-          setting.envVariable
-        );
-      } else {
-        console.log('using %s "%s" from environment variable %s', setting.name, envAppName, setting.envVariable);
-      }
-    }
-    const appName = envAppName || configAppName;
-    assert(appName, setting.failMessage);
-
-    // determine matching cfApp considering suffixes
-    // NOTE: the appNameCandidates order should take precedence over cfApps order.
-    const appNameCandidates = _getAppNameCandidates(appName);
-    let cfApp;
-    for (const { label, regexp } of appNameCandidates) {
-      cfApp = regexp ? cfApps.find(({ name }) => regexp.test(name)) : cfApps.find(({ name }) => label === name);
-      if (cfApp) {
-        break;
-      }
-    }
-
-    assert(
-      cfApp,
-      `no cf app found for name "${appName}", tried candidates "${appNameCandidates.map(({ label }) => label)}"`
-    );
-    if (appName !== cfApp.name) {
-      console.log('using app "%s"', cfApp.name);
-    }
-
+    const cfApp = _getCfAppFromAppName(appName);
     const rawAppInfo = await getRawAppInfoCached(cfApp);
+    const setting = SETTING[type];
     return processRawAppInfo(cfApp.name, rawAppInfo, setting);
   };
 
   const getAppNameInfoCached = async (appName, setting) => {
     assert(appName, "used getAppNameInfoCached without appName parameter");
-    const cfApp = cfApps.find(({ name }) => name === appName);
-    assert(cfApp, "could not find app with name %s", appName);
+
+    const cfApp = _getCfAppFromAppName(appName);
     const rawAppInfo = await getRawAppInfoCached(cfApp);
-    return processRawAppInfo(appName, rawAppInfo, setting);
+    return processRawAppInfo(cfApp.name, rawAppInfo, setting);
   };
 
   const getUaaInfo = getAppInfoCached(SETTING_TYPE.UAA);
