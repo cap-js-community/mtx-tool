@@ -9,14 +9,23 @@ const {
 } = require("fs");
 const { version } = require("../package.json");
 
-const { question, tryReadJsonSync, tryAccessSync, spawnAsync } = require("./shared/static");
+const {
+  ENV,
+  question,
+  tryReadJsonSync,
+  tryAccessSync,
+  spawnAsync,
+  safeUnshift,
+  escapeRegExp,
+} = require("./shared/static");
 const { assert, fail } = require("./shared/error");
 const { request } = require("./shared/request");
 const { getUaaTokenFromCredentials: sharedUaaTokenFromCredentials } = require("./shared/oauth");
-const { ExpiringLazyCache } = require("./shared/cache");
+const { LazyCache, ExpiringLazyCache } = require("./shared/cache");
+const { SETTING_TYPE, SETTING } = require("./setting");
 
-const APP_SUFFIXES = ["-blue", "-green"];
-const APP_SUFFIXES_READONLY = ["-blue", "-green", "-live"];
+const APP_SUFFIXES = safeUnshift(["", "-{UUID}", "-blue", "-green"], process.env[ENV.APP_SUFFIX]);
+const APP_SUFFIXES_READONLY = APP_SUFFIXES.concat(["-live"]);
 const HOME = process.env.HOME || process.env.USERPROFILE;
 const CF = Object.freeze({
   EXEC: "cf",
@@ -35,15 +44,6 @@ const FILENAME = Object.freeze({
   CONFIG: ".mtxrc.json",
   CACHE: ".mtxcache.json",
 });
-
-const SETTING_TYPE = {
-  UAA: "uaaAppName",
-  REG: "regAppName",
-  CDS: "cdsAppName",
-  HDI: "hdiAppName",
-  SRV: "srvAppName",
-};
-const SETTING = require("./SETTING");
 
 const CACHE_GAP = 43200000; // 12 hours in milliseconds
 const UAA_TOKEN_CACHE_EXPIRY_GAP = 60000; // 1 minute
@@ -294,12 +294,9 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const cachePath = pathlib.join(dir, FILENAME.CACHE);
   const cfApps = await _getCfApps(cfInfo);
   const cfUaaTokenCache = new ExpiringLazyCache({ expirationGap: UAA_TOKEN_CACHE_EXPIRY_GAP });
+  const settingTypeToAppNameCache = new LazyCache();
+  const appNameToCfAppCache = new LazyCache();
   let rawAppMemoryCache = {};
-
-  const _getAppNameCandidates = (appName) => [
-    appName,
-    ...(isReadonlyCommand ? APP_SUFFIXES_READONLY : APP_SUFFIXES).map((suffix) => appName + suffix),
-  ];
 
   const getRawAppInfo = async (cfApp) => {
     const cfBuildpack = cfApp.lifecycle?.data?.buildpacks?.[0];
@@ -360,10 +357,9 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     return rawAppMemoryCache[appName];
   };
 
-  const processRawAppInfo = (appName, rawAppInfo, setting) => {
+  const processRawAppInfo = (appName, rawAppInfo, { requireServices, requireRoute } = {}) => {
     const { cfApp, cfBuildpack, cfEnvServices, cfEnvApp, cfEnvVariables, cfRoute, cfRouteDomain, cfProcess } =
       rawAppInfo;
-    const { requireServices, requireRoute } = setting || {};
 
     let cfService = null;
     if (Array.isArray(requireServices)) {
@@ -409,46 +405,94 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     };
   };
 
-  const getAppInfoCached = (type) => async () => {
-    const setting = SETTING[type];
+  const _getAppNameFromSettingType = (type) =>
+    settingTypeToAppNameCache.getSetCb(type, () => {
+      const setting = SETTING[type];
 
-    // determine configured appName
-    const configAppName = runtimeConfig[type];
-    const envAppName = (setting.envVariable && process.env[setting.envVariable]) || null;
-    if (envAppName && configAppName !== envAppName) {
-      if (configAppName) {
-        console.log(
-          'overriding configured %s "%s" with "%s" from environment variable %s',
-          setting.name,
-          configAppName,
-          envAppName,
-          setting.envVariable
-        );
-      } else {
-        console.log('using %s "%s" from environment variable %s', setting.name, envAppName, setting.envVariable);
+      // determine configured appName
+      const configAppName = runtimeConfig[type];
+      const envAppName = (setting.envVariable && process.env[setting.envVariable]) || null;
+      if (envAppName && configAppName !== envAppName) {
+        if (configAppName) {
+          console.log(
+            'overriding configured %s "%s" with "%s" from environment variable %s',
+            setting.name,
+            configAppName,
+            envAppName,
+            setting.envVariable
+          );
+        } else {
+          console.log('using %s "%s" from environment variable %s', setting.name, envAppName, setting.envVariable);
+        }
       }
-    }
-    const appName = envAppName || configAppName;
-    assert(appName, setting.failMessage);
+      const appName = envAppName || configAppName;
+      assert(appName, setting.failMessage);
+      return appName;
+    });
 
-    // determine matching cfApp considering suffixes
-    const appNameCandidates = _getAppNameCandidates(appName);
-    const cfApp = cfApps.find(({ name }) => appNameCandidates.includes(name));
-    assert(cfApp, `no cf app found for name "${appName}", tried candidates "${appNameCandidates}"`);
-    if (appName !== cfApp.name) {
-      console.log('using app with special suffix "%s"', cfApp.name);
-    }
+  const _getAppNameCandidates = (appName) => {
+    const appSuffixes = isReadonlyCommand ? APP_SUFFIXES_READONLY : APP_SUFFIXES;
 
+    return appSuffixes.map((suffix) => {
+      const label = appName + suffix;
+      const isTemplate = /{UUID}/g.test(label);
+      let regexp;
+      if (isTemplate) {
+        const [front, back] = label.split("{UUID}");
+        regexp = new RegExp(
+          escapeRegExp(front) +
+            "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" +
+            escapeRegExp(back)
+        );
+      }
+      return {
+        suffix,
+        label,
+        regexp,
+      };
+    });
+  };
+
+  const _getCfAppFromAppName = (appName) =>
+    appNameToCfAppCache.getSetCb(appName, () => {
+      // determine matching cfApp considering suffixes
+      // NOTE: the appNameCandidates order should take precedence over cfApps order.
+      const appNameCandidates = _getAppNameCandidates(appName);
+      let cfApp;
+      let cfAppSuffix;
+      for (const { suffix, label, regexp } of appNameCandidates) {
+        cfApp = regexp ? cfApps.find(({ name }) => regexp.test(name)) : cfApps.find(({ name }) => label === name);
+        if (cfApp) {
+          cfAppSuffix = suffix;
+          break;
+        }
+      }
+
+      assert(
+        cfApp,
+        `no cf app found for name "${appName}", tried candidates "${appNameCandidates.map(({ label }) => label)}"`
+      );
+      if (appName !== cfApp.name) {
+        console.log('using app "%s" based on suffix "%s"', cfApp.name, cfAppSuffix);
+      }
+      return cfApp;
+    });
+
+  const getAppInfoCached = (type) => async () => {
+    const appName = _getAppNameFromSettingType(type);
+
+    const cfApp = _getCfAppFromAppName(appName);
     const rawAppInfo = await getRawAppInfoCached(cfApp);
+    const setting = SETTING[type];
     return processRawAppInfo(cfApp.name, rawAppInfo, setting);
   };
 
   const getAppNameInfoCached = async (appName, setting) => {
     assert(appName, "used getAppNameInfoCached without appName parameter");
-    const cfApp = cfApps.find(({ name }) => name === appName);
-    assert(cfApp, "could not find app with name %s", appName);
+
+    const cfApp = _getCfAppFromAppName(appName);
     const rawAppInfo = await getRawAppInfoCached(cfApp);
-    return processRawAppInfo(appName, rawAppInfo, setting);
+    return processRawAppInfo(cfApp.name, rawAppInfo, setting);
   };
 
   const getUaaInfo = getAppInfoCached(SETTING_TYPE.UAA);

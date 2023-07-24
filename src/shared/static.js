@@ -8,6 +8,15 @@ const net = require("net");
 const childProcess = require("child_process");
 const util = require("util");
 
+const ENV = Object.freeze({
+  UAA_APP: "MTX_UAA_APP",
+  REGISTRY_APP: "MTX_REG_APP",
+  CDS_APP: "MTX_CDS_APP",
+  HDI_APP: "MTX_HDI_APP",
+  SERVER_APP: "MTX_SRV_APP",
+  APP_SUFFIX: "MTX_APP_SUFFIX",
+});
+
 const isUUID = (input) =>
   input && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(input);
 const isJWT = (input) => input && /^[0-9a-z-_.]+$/i.test(input);
@@ -318,7 +327,29 @@ const randomString = (
 
 const isObject = (input) => input !== null && typeof input === "object";
 
+const safeUnshift = (baseArray, ...args) => {
+  baseArray.unshift(...args.filter((arg) => arg !== undefined));
+  return baseArray;
+};
+
+const reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
+const reHasRegExpChar = RegExp(reRegExpChar.source);
+
+/**
+ * Escapes the `RegExp` special characters "^", "$", "\", ".", "*", "+",
+ * "?", "(", ")", "[", "]", "{", "}", and "|" in `input`.
+ *
+ * @see https://github.com/lodash/lodash/blob/master/escapeRegExp.js
+ *
+ * @param {string} input The string to escape.
+ * @returns {string} Returns the escaped string.
+ */
+const escapeRegExp = (input) => {
+  return input && reHasRegExpChar.test(input) ? input.replace(reRegExpChar, "\\$&") : input;
+};
+
 module.exports = {
+  ENV,
   isPortFree,
   nextFreePort,
   isUUID,
@@ -341,4 +372,6 @@ module.exports = {
   limiter,
   randomString,
   isObject,
+  safeUnshift,
+  escapeRegExp,
 };
