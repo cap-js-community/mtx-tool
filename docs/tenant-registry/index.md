@@ -47,6 +47,7 @@ Commands for this area are:
 *         --registry-offboard-skip TENANT_ID SKIP_APPS  offboard tenant subscription skipping apps
           ...    [TENANT]                               filter list for tenant id or subdomain
           ...    --time                                 list includes timestamps
+          ...    --skip-unchanged                       skip update for unchanged dependencies
 
 ~  are read-only commands
 *  are potentially _dangerous_ commands

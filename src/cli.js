@@ -44,6 +44,7 @@ commands:
 *         --registry-offboard-skip TENANT_ID SKIP_APPS  offboard tenant subscription skipping apps
           ...    [TENANT]                               filter list for tenant id or subdomain
           ...    --time                                 list includes timestamps
+          ...    --skip-unchanged                       skip update for unchanged dependencies
 
    === cap multitenancy (cds) ===
 ~  cdsl   --cds-list [TENANT]                       list all cds-mtx tenant names

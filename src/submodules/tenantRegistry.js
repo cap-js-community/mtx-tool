@@ -133,7 +133,13 @@ const _registryCallForTenant = async (
   context,
   tenantId,
   method,
-  { noCallbacksAppNames, updateApplicationURL, skipUpdatingDependencies, doJobPoll = true } = {}
+  {
+    noCallbacksAppNames,
+    updateApplicationURL,
+    skipUnchangedDependencies,
+    skipUpdatingDependencies,
+    doJobPoll = true,
+  } = {}
 ) => {
   assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
   const {
@@ -143,6 +149,7 @@ const _registryCallForTenant = async (
   const query = {
     ...(noCallbacksAppNames && { noCallbacksAppNames }),
     ...(updateApplicationURL && { updateApplicationURL }),
+    ...(skipUnchangedDependencies && { skipUnchangedDependencies }),
     ...(skipUpdatingDependencies && { skipUpdatingDependencies }),
   };
   const response = await request({
@@ -176,9 +183,11 @@ const _registryCallForTenants = async (context, method, options = {}) => {
   return result;
 };
 
-const registryUpdateDependencies = async (context, [tenantId]) => _registryCallForTenant(context, tenantId, "PATCH");
+const registryUpdateDependencies = async (context, [tenantId], [doSkipUnchanged]) =>
+  _registryCallForTenant(context, tenantId, "PATCH", { skipUnchangedDependencies: doSkipUnchanged });
 
-const registryUpdateAllDependencies = async (context) => _registryCallForTenants(context, "PATCH");
+const registryUpdateAllDependencies = async (context, _, [doSkipUnchanged]) =>
+  _registryCallForTenants(context, "PATCH", { skipUnchangedDependencies: doSkipUnchanged });
 
 const registryUpdateApplicationURL = async (context, [tenantId]) =>
   tenantId
