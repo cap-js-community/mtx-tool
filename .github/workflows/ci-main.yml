@@ -4,12 +4,8 @@
 name: CI Main
 
 # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#push
-# https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request
-on:
+^on:
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
 
@@ -19,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16, 18]
+        node-version: [16, 18, 20]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     name: test - node.js ${{ matrix.node-version }}
@@ -38,7 +34,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           cache: "npm"
       - run: npm ci --package-lock
       - run: npm run lint:ci
