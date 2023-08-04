@@ -164,7 +164,7 @@ describe("reg tests", () => {
   test("reg update tenant", async () => {
     const { nockDone } = await nockBack("reg-update-tenant.json", { afterRecord: anonymizeNock });
 
-    expect(await reg.registryUpdateDependencies(await freshContext(), [testTenantId])).toMatchInlineSnapshot(`
+    expect(await reg.registryUpdateDependencies(await freshContext(), [testTenantId], [false])).toMatchInlineSnapshot(`
       "{
         "id": "3b2e7059-86e9-4599-a017-60154745b4fb",
         "state": "SUCCEEDED"
@@ -186,7 +186,7 @@ describe("reg tests", () => {
   test("reg update tenant all", async () => {
     const { nockDone } = await nockBack("reg-update-tenant-all.json", { afterRecord: anonymizeNock });
 
-    expect(await reg.registryUpdateAllDependencies(await freshContext())).toMatchInlineSnapshot(`
+    expect(await reg.registryUpdateAllDependencies(await freshContext(), undefined, [false])).toMatchInlineSnapshot(`
       [
         "{
         "id": "77a3bd87-7fff-4f33-bf98-c1d1300cab34",

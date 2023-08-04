@@ -26,6 +26,7 @@ const FLAG_ARG = Object.freeze({
   REVEAL: "--reveal",
   TIMESTAMPS: "--time",
   AUTO_UNDEPLOY: "--auto-undeploy",
+  SKIP_UNCHANGED: "--skip-unchanged",
 });
 
 module.exports = {
@@ -104,10 +105,12 @@ module.exports = {
   REGISTRY_UPDATE_DEPENDENCIES: {
     commandVariants: ["--registry-update"],
     requiredPassArgs: [PASS_ARG.TENANT_ID],
+    optionalFlagArgs: [FLAG_ARG.SKIP_UNCHANGED],
     callback: reg.registryUpdateDependencies,
   },
   REGISTRY_UPDATE_ALL_DEPENDENCIES: {
     commandVariants: ["--registry-update-all"],
+    optionalFlagArgs: [FLAG_ARG.SKIP_UNCHANGED],
     callback: reg.registryUpdateAllDependencies,
   },
   REGISTRY_UPDATE_APPURL: {
