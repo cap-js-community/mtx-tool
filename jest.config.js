@@ -4,6 +4,10 @@
 // https://jestjs.io/docs/en/configuration.html
 
 module.exports = {
+  // NOTE: Inline Snapshots are not supported when using Prettier 3.0.0 or above
+  // https://jestjs.io/docs/configuration/#prettierpath-string
+  prettierPath: null,
+
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
