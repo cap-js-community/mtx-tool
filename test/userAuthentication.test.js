@@ -66,8 +66,8 @@ describe("uaa tests", () => {
       });
     };
     const commonAsserts = () => {
-      expect(fetchMock).toHaveBeenCalledTimes(1);
       expect(fetchMock.mock.calls[0]).toMatchSnapshot();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
     };
 
     commonPrepares();
@@ -90,8 +90,8 @@ describe("uaa tests", () => {
       });
     };
     const commonAsserts = () => {
-      expect(fetchMock).toHaveBeenCalledTimes(1);
       expect(fetchMock.mock.calls[0]).toMatchSnapshot();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
     };
     commonPrepares();
     const result1 = await uaa.uaaClient(contextMock, [SUBDOMAIN], [false]);
@@ -113,8 +113,8 @@ describe("uaa tests", () => {
       });
     };
     const commonAsserts = () => {
-      expect(fetchMock).toHaveBeenCalledTimes(1);
       expect(fetchMock.mock.calls[0]).toMatchSnapshot();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
     };
     commonPrepares();
     const result1 = await uaa.uaaPasscode(contextMock, [PASSCODE], [false]);
@@ -136,8 +136,8 @@ describe("uaa tests", () => {
       });
     };
     const commonAsserts = () => {
-      expect(fetchMock).toHaveBeenCalledTimes(1);
       expect(fetchMock.mock.calls[0]).toMatchSnapshot();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
     };
     commonPrepares();
     const result1 = await uaa.uaaPasscode(contextMock, [PASSCODE, SUBDOMAIN], [false]);
