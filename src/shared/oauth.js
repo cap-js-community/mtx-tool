@@ -41,7 +41,7 @@ const getUaaToken = async (url, { clientId, clientSecret, passcode, certificate,
     client_id: clientId,
     ...(clientSecret && { client_secret: clientSecret }),
     ...(passcode && { passcode }),
-  });
+  }).toString();
   return await (
     await request({
       ...(agent && { agent }),
