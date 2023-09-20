@@ -32,11 +32,11 @@ const _serverDebug = async (context, { appName, appInstance = 0 } = {}) => {
   );
   const { runtime, debugPort: inferredPort } = (cfBuildpackInfoKey && BUILDPACK_INFO[cfBuildpackInfoKey]) || {};
   const localPort = inferredPort || 8000;
-  const token = await context.getCachedUaaToken();
 
   let responseData = {};
   if (cfRouteUrl) {
     try {
+      const token = await context.getCachedUaaToken();
       const response = await request({
         url: cfRouteUrl,
         pathname: "/info",
