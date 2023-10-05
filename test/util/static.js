@@ -9,10 +9,17 @@ const outputFromLoggerPartitionFetch = (calls) => {
   const [fetchLogLines, logLines] = partition(inputLogLines, (line) =>
     /^(?:GET|POST|PATCH|DELETE) https:\/\//i.test(line)
   );
-  return [...logLines, "", ...fetchLogLines].join("\n");
+  const fetchLogLinesWithMockTimestamp = fetchLogLines.map((line) => line.replace(/\(\d+ms\)/g, "(88ms)"));
+  return [...logLines, "", ...fetchLogLinesWithMockTimestamp].join("\n");
 };
+
+const anonymizeListTimestamps = (output) =>
+  output
+    .replace(/created_on *updated_on */g, "created_on  updated_on")
+    .replace(/\(\d+ days? ago\) */g, "(x days ago)  ");
 
 module.exports = {
   outputFromLogger,
   outputFromLoggerPartitionFetch,
+  anonymizeListTimestamps,
 };
