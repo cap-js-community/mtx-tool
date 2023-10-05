@@ -190,7 +190,7 @@ describe("cds tests", () => {
   test("cds upgrade tenant and auto-upgrade", async () => {
     const { nockDone } = await nockBack("cds-upgrade-tenant.json", { afterRecord: anonymizeNock });
 
-    expect(await cds.cdsUpgradeTenant(await freshContext(), [testTenantId], [true])).toMatchInlineSnapshot(`undefined`);
+    expect(await cds.cdsUpgradeTenant(await freshContext(), [testTenantId], [true])).toBeUndefined();
     expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
       started upgrade on server with jobId b2dc8918-dc2b-4af2-b866-a42da5e588ae polling interval 15sec
@@ -211,7 +211,9 @@ describe("cds tests", () => {
       GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/model/status/b2dc8918-dc2b-4af2-b866-a42da5e588ae 200 OK (88ms)"
     `);
     loggerSpy.info.mockClear();
-    expect(await cds.cdsUpgradeTenant(await freshContext(), [testTenantId], [false])).toMatchInlineSnapshot(`undefined`);
+    expect(await cds.cdsUpgradeTenant(await freshContext(), [testTenantId], [false])).toMatchInlineSnapshot(
+      `undefined`
+    );
     expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
       started upgrade on server with jobId 221692fa-9c7a-4bc3-9b51-5fc262c8c177 polling interval 15sec
