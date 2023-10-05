@@ -53,6 +53,7 @@ const fetch = async ({
   const _bearerAuthHeader = auth && Object.prototype.hasOwnProperty.call(auth, "token") ? "Bearer " + auth.token : null;
   const _authHeader = _basicAuthHeader || _bearerAuthHeader;
   const _method = method || "GET";
+  const startTime = Date.now();
   const response = await fetchlib(_url, {
     method: _method,
     headers: {
@@ -64,7 +65,7 @@ const fetch = async ({
     ...(redirect && { redirect }),
   });
   if (logged) {
-    console.log(`${_method} ${_url} ${response.status} ${response.statusText}`);
+    console.log(`${_method} ${_url} ${response.status} ${response.statusText} (${Date.now() - startTime}ms)`);
   }
   if (checkStatus) {
     if (!response.ok) {
