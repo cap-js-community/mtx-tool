@@ -58,22 +58,22 @@ describe("cache", () => {
         expect(await cache.get("c with cbA")).toBe("c with cbA");
 
         expect(await cache._dataSettled()).toMatchInlineSnapshot(`
-                  {
-                    "": "empty",
-                    "a": "a",
-                    "a with cb": "a with cb",
-                    "a with cbA": "a with cbA",
-                    "a##b": "ab",
-                    "a##b##c": "abc",
-                    "b": "b",
-                    "b with cb": "b with cb",
-                    "b with cbA": "b with cbA",
-                    "c": "c",
-                    "c with cb": "c with cb",
-                    "c with cbA": "c with cbA",
-                    "d": "d",
-                  }
-              `);
+          {
+            "": "empty",
+            "a": "a",
+            "a with cb": "a with cb",
+            "a with cbA": "a with cbA",
+            "a##b": "ab",
+            "a##b##c": "abc",
+            "b": "b",
+            "b with cb": "b with cb",
+            "b with cbA": "b with cbA",
+            "c": "c",
+            "c with cb": "c with cb",
+            "c with cbA": "c with cbA",
+            "d": "d",
+          }
+        `);
       });
 
       test("getSetCb/getSetCbAsync", async () => {
@@ -88,11 +88,11 @@ describe("cache", () => {
         expect(cbAsyncSpy).toHaveBeenCalledTimes(1);
 
         expect(await cache._dataSettled()).toMatchInlineSnapshot(`
-                  {
-                    "a": "a result",
-                    "b": "b result",
-                  }
-              `);
+          {
+            "a": "a result",
+            "b": "b result",
+          }
+        `);
       });
 
       test("count/delete/clear", async () => {

@@ -16,7 +16,7 @@ const nock = require("nock");
 const { newContext } = require("../src/context");
 const hdi = require("../src/submodules/hanaManagement");
 const { anonymizeNock } = require("./util/anonymizeNock");
-const { outputFromLoggerPartitionFetch } = require("./util/static");
+const { outputFromLoggerPartitionFetch, anonymizeListTimestamps } = require("./util/static");
 
 // https://github.com/nock/nock#modes
 const NOCK_MODE = {
@@ -54,11 +54,8 @@ describe("hdi tests", () => {
   test("hdi list and longlist", async () => {
     const { nockDone } = await nockBack("hdi-list.json", { afterRecord: anonymizeNock });
 
-    expect(
-      (await hdi.hdiList(await freshContext(), [], [true]))
-        .replace(/created_on *updated_on */g, "created_on  updated_on")
-        .replace(/\(\d+ days? ago\) */g, "(x days ago)  ")
-    ).toMatchInlineSnapshot(`
+    const hdiListOutput = await hdi.hdiList(await freshContext(), [], [true]);
+    expect(anonymizeListTimestamps(hdiListOutput)).toMatchInlineSnapshot(`
       "#  tenant_id                                         host                                          schema                                      ready  created_on  updated_on
       1  5ecc7413-2b7e-414a-9496-ad4a61f6cccf              service-manager-items-4-credentials-host:443  service-manager-items-4-credentials-schema  true   2022-04-26T18:05:44Z (x days ago)  2022-04-26T18:05:45Z (x days ago)  
       2  6917dfd6-7590-4033-af2a-140b75263b0d              service-manager-items-8-credentials-host:443  service-manager-items-8-credentials-schema  true   2022-04-28T07:57:50Z (x days ago)  2022-04-28T07:58:00Z (x days ago)  
@@ -72,9 +69,9 @@ describe("hdi tests", () => {
     `);
     expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-
-      GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances 200 OK
-      GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings 200 OK"
+      
+      GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances 200 OK (88ms)
+      GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings 200 OK (88ms)"
     `);
     loggerSpy.info.mockClear();
     expect(await hdi.hdiList(await freshContext(), [], [false])).toMatchInlineSnapshot(`
@@ -91,17 +88,17 @@ describe("hdi tests", () => {
     `);
     expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-
-      GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances 200 OK
-      GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings 200 OK"
+      
+      GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances 200 OK (88ms)
+      GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings 200 OK (88ms)"
     `);
     loggerSpy.info.mockClear();
     expect(await hdi.hdiLongList(await freshContext(), [], [true])).toMatchSnapshot();
     expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-
-      GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances 200 OK
-      GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings 200 OK"
+      
+      GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances 200 OK (88ms)
+      GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings 200 OK (88ms)"
     `);
 
     nockDone();
@@ -111,19 +108,16 @@ describe("hdi tests", () => {
   test("hdi list and longlist filtered", async () => {
     const { nockDone } = await nockBack("hdi-list-filtered.json", { afterRecord: anonymizeNock });
 
-    expect(
-      (await hdi.hdiList(await freshContext(), [testTenantId], [true]))
-        .replace(/created_on *updated_on */g, "created_on  updated_on")
-        .replace(/\(\d+ days? ago\) */g, "(x days ago)  ")
-    ).toMatchInlineSnapshot(`
+    const hdiListOutput = await hdi.hdiList(await freshContext(), [testTenantId], [true]);
+    expect(anonymizeListTimestamps(hdiListOutput)).toMatchInlineSnapshot(`
       "tenant_id                             host                                          schema                                      ready  created_on  updated_on
       5ecc7413-2b7e-414a-9496-ad4a61f6cccf  service-manager-items-0-credentials-host:443  service-manager-items-0-credentials-schema  true   2022-04-26T18:05:44Z (x days ago)  2022-04-26T18:05:45Z (x days ago)  "
     `);
     expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-
-      GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances?labelQuery=tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK
-      GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings?labelQuery=tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK"
+      
+      GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances?labelQuery=tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)
+      GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings?labelQuery=tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)"
     `);
     loggerSpy.info.mockClear();
     expect(await hdi.hdiList(await freshContext(), [testTenantId], [false])).toMatchInlineSnapshot(`
@@ -132,17 +126,17 @@ describe("hdi tests", () => {
     `);
     expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-
-      GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances?labelQuery=tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK
-      GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings?labelQuery=tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK"
+      
+      GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances?labelQuery=tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)
+      GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings?labelQuery=tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)"
     `);
     loggerSpy.info.mockClear();
     expect(await hdi.hdiLongList(await freshContext(), [testTenantId], [true])).toMatchSnapshot();
     expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-
-      GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances?labelQuery=tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK
-      GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings?labelQuery=tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK"
+      
+      GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances?labelQuery=tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)
+      GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings?labelQuery=tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)"
     `);
 
     nockDone();

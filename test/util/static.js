@@ -13,7 +13,13 @@ const outputFromLoggerPartitionFetch = (calls) => {
   return [...logLines, "", ...fetchLogLinesWithMockTimestamp].join("\n");
 };
 
+const anonymizeListTimestamps = (output) =>
+  output
+    .replace(/created_on *updated_on */g, "created_on  updated_on")
+    .replace(/\(\d+ days? ago\) */g, "(x days ago)  ");
+
 module.exports = {
   outputFromLogger,
   outputFromLoggerPartitionFetch,
+  anonymizeListTimestamps,
 };
