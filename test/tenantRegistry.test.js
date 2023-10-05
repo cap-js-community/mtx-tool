@@ -64,7 +64,7 @@ describe("reg tests", () => {
     `);
     expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-      
+
       GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?appName=afc-dev&size=200&page=1 200 OK (88ms)"
     `);
     loggerSpy.info.mockClear();
@@ -77,14 +77,14 @@ describe("reg tests", () => {
     `);
     expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-      
+
       GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?appName=afc-dev&size=200&page=1 200 OK (88ms)"
     `);
     loggerSpy.info.mockClear();
     expect(await reg.registryLongListSubscriptions(await freshContext(), [])).toMatchSnapshot();
     expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-      
+
       GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?appName=afc-dev&size=200&page=1 200 OK (88ms)"
     `);
     loggerSpy.info.mockClear();
@@ -103,7 +103,7 @@ describe("reg tests", () => {
     `);
     expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-      
+
       GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?appName=afc-dev&tenantId=5ecc7413-2b7e-414a-9496-ad4a61f6cccf&size=200&page=1 200 OK (88ms)"
     `);
     loggerSpy.info.mockClear();
@@ -113,7 +113,7 @@ describe("reg tests", () => {
     `);
     expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-      
+
       GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?appName=afc-dev&tenantId=5ecc7413-2b7e-414a-9496-ad4a61f6cccf&size=200&page=1 200 OK (88ms)"
     `);
     loggerSpy.info.mockClear();
@@ -122,7 +122,7 @@ describe("reg tests", () => {
     expect(result).toMatchSnapshot();
     expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-      
+
       GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?appName=afc-dev&tenantId=5ecc7413-2b7e-414a-9496-ad4a61f6cccf&size=200&page=1 200 OK (88ms)"
     `);
     loggerSpy.info.mockClear();
@@ -168,7 +168,7 @@ describe("reg tests", () => {
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
       response: Job for update subscription of application: afc-dev and tenant: 5ecc7413-2b7e-414a-9496-ad4a61f6cccf, was created
       polling job /api/v2.0/jobs/3b2e7059-86e9-4599-a017-60154745b4fb with interval 10sec
-      
+
       PATCH https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/tenants/5ecc7413-2b7e-414a-9496-ad4a61f6cccf/subscriptions 202 Accepted (88ms)
       GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/api/v2.0/jobs/3b2e7059-86e9-4599-a017-60154745b4fb 200 OK (88ms)"
     `);
@@ -204,7 +204,7 @@ describe("reg tests", () => {
       polling job /api/v2.0/jobs/263eb598-6d9d-4480-a251-0f8eb5a0c41e with interval 10sec
       response: Job for update subscription of application: afc-dev and tenant: cb9158ce-f8fd-441b-b443-17219e8f79fa, was created
       polling job /api/v2.0/jobs/2638c748-3546-4fd8-b176-f92bb8a09068 with interval 10sec
-      
+
       GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?appName=afc-dev&size=200&page=1 200 OK (88ms)
       PATCH https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/tenants/5ecc7413-2b7e-414a-9496-ad4a61f6cccf/subscriptions 202 Accepted (88ms)
       GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/api/v2.0/jobs/77a3bd87-7fff-4f33-bf98-c1d1300cab34 200 OK (88ms)
@@ -242,7 +242,7 @@ describe("reg tests", () => {
       Subscription Operation with method PATCH for tenant 5ecc7413-2b7e-414a-9496-ad4a61f6cccf finished with state SUCCEEDED
       Subscription Operation with method PATCH for tenant 6917dfd6-7590-4033-af2a-140b75263b0d finished with state SUCCEEDED
       Subscription Operation with method PATCH for tenant cb9158ce-f8fd-441b-b443-17219e8f79fa finished with state SUCCEEDED
-      
+
       GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?appName=afc-dev&size=200&page=1 200 OK (88ms)
       PATCH https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/tenants/5ecc7413-2b7e-414a-9496-ad4a61f6cccf/subscriptions?updateApplicationURL=true&skipUpdatingDependencies=true 200 OK (88ms)
       PATCH https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/tenants/6917dfd6-7590-4033-af2a-140b75263b0d/subscriptions?updateApplicationURL=true&skipUpdatingDependencies=true 200 OK (88ms)
@@ -265,7 +265,7 @@ describe("reg tests", () => {
     expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
       Subscription Operation with method PATCH for tenant 5ecc7413-2b7e-414a-9496-ad4a61f6cccf finished with state SUCCEEDED
-      
+
       PATCH https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/tenants/5ecc7413-2b7e-414a-9496-ad4a61f6cccf/subscriptions?updateApplicationURL=true&skipUpdatingDependencies=true 200 OK (88ms)"
     `);
 
