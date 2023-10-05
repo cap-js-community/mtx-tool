@@ -1,0 +1,32 @@
+diff --git a/node_modules/jest-snapshot/build/InlineSnapshots.js b/node_modules/jest-snapshot/build/InlineSnapshots.js
+index b8c750d..556b583 100644
+--- a/node_modules/jest-snapshot/build/InlineSnapshots.js
++++ b/node_modules/jest-snapshot/build/InlineSnapshots.js
+@@ -193,11 +193,24 @@ const saveSnapshotsForFile = (snapshots, sourceFilePath, rootDir, prettier) => {
+ 
+       // A hack to prevent unexpected line breaks in the generated code
+       node.loc.end.line = node.loc.start.line;
++      const codeParts = generate(node, {
++        retainLines: true
++      }).code.trim().split("\n");
++      const codeIndented = codeParts
++          .map((part, index) => {
++            switch (index) {
++              case 0:
++                return part;
++              case codeParts.length - 1:
++                return " ".repeat(node.loc.start.column) + part;
++              default:
++                return " ".repeat(node.loc.start.column + 2) + part;
++            }
++          })
++          .join("\n");
+       return (
+         sourceSoFar.slice(0, node.start) +
+-        generate(node, {
+-          retainLines: true
+-        }).code.trim() +
++        codeIndented +
+         sourceSoFar.slice(node.end)
+       );
+     },
