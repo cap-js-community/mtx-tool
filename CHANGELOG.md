@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## v0.7.14 - 2023-10-20
+
+### Added
+
+- add response time to all logged requests
+
+- reg: enable access for registry instances with `service` plan
+
+## Fixed
+
+- srv: fix debug command for case where uaa is not configured
+
 ## v0.7.13 - 2023-08-04
 
 ### Added
