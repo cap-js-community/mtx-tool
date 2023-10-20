@@ -37,6 +37,10 @@ const SETTING = {
         label: "saas-registry",
         plan: "application",
       },
+      {
+        label: "saas-registry",
+        plan: "service",
+      },
     ],
   },
   [SETTING_TYPE.CDS]: {

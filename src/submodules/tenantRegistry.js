@@ -30,23 +30,24 @@ const _registrySubscriptionsPaged = async (context, tenant) => {
   filterSubdomain && assert(isDashedWord(filterSubdomain), `argument "${filterSubdomain}" is not a valid subdomain`);
 
   const {
-    cfService: { credentials },
+    cfService: { plan, credentials },
   } = await context.getRegInfo();
   const { saas_registry_url, appName } = credentials;
 
   let subscriptions = [];
   let pageIndex = 0;
+  const token = await context.getCachedUaaTokenFromCredentials(credentials);
   while (true) {
     const response = await request({
       url: saas_registry_url,
-      pathname: "/saas-manager/v1/application/subscriptions",
+      pathname: `/saas-manager/v1/${plan}/subscriptions`,
       query: {
         appName,
         ...(filterTenantId && { tenantId: filterTenantId }),
         size: REGISTRY_PAGE_SIZE,
         page: ++pageIndex,
       },
-      auth: { token: await context.getCachedUaaTokenFromCredentials(credentials) },
+      auth: { token },
     });
     const { subscriptions: pageSubscriptions, morePages } = await response.json();
     subscriptions = subscriptions.concat(pageSubscriptions);
@@ -109,10 +110,11 @@ const _registryJobPoll = async (context, location, { skipFirst = false } = {}) =
       await sleep(POLL_FREQUENCY);
       skipFirst = false;
     }
+    const token = await context.getCachedUaaTokenFromCredentials(credentials);
     const response = await request({
       url: saas_registry_url,
       pathname: location,
-      auth: { token: await context.getCachedUaaTokenFromCredentials(credentials) },
+      auth: { token },
     });
     const responseBody = await response.json();
     const { state } = responseBody;
@@ -143,7 +145,7 @@ const _registryCallForTenant = async (
 ) => {
   assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
   const {
-    cfService: { credentials },
+    cfService: { plan, credentials },
   } = await context.getRegInfo();
   const { saas_registry_url } = credentials;
   const query = {
@@ -152,12 +154,13 @@ const _registryCallForTenant = async (
     ...(skipUnchangedDependencies && { skipUnchangedDependencies }),
     ...(skipUpdatingDependencies && { skipUpdatingDependencies }),
   };
+  const token = await context.getCachedUaaTokenFromCredentials(credentials);
   const response = await request({
     method,
     url: saas_registry_url,
-    pathname: `/saas-manager/v1/application/tenants/${tenantId}/subscriptions`,
+    pathname: `/saas-manager/v1/${plan}/tenants/${tenantId}/subscriptions`,
     ...(Object.keys(query).length !== 0 && { query }),
-    auth: { token: await context.getCachedUaaTokenFromCredentials(credentials) },
+    auth: { token },
   });
 
   if (!doJobPoll) {
