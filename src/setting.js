@@ -31,6 +31,13 @@ const SETTING = {
       },
     ],
   },
+  [SETTING_TYPE.UAA_KEY]: {
+    config: "uaaKey",
+    name: "uaa service key",
+    envVariable: ENV.UAA_KEY,
+    question: "xsuaa service instance and key separated by colon, e.g., my-uaa:access (optional)?",
+    failMessage: "could not read uaa service key",
+  },
   [SETTING_TYPE.REGISTRY_APP]: {
     config: "regAppName",
     name: "saas-registry app",
@@ -47,6 +54,13 @@ const SETTING = {
         plan: "service",
       },
     ],
+  },
+  [SETTING_TYPE.REGISTRY_KEY]: {
+    config: "regKey",
+    name: "saas-registry service key",
+    envVariable: ENV.REGISTRY_KEY,
+    question: "saas-registry service instance and key separated by colon, e.g., my-registry:access (optional)?",
+    failMessage: "could not read saas-registry service key",
   },
   [SETTING_TYPE.CDS_APP]: {
     config: "cdsAppName",
@@ -73,6 +87,14 @@ const SETTING = {
         plan: "hdi-shared",
       },
     ],
+  },
+  [SETTING_TYPE.HDI_KEY]: {
+    config: "hdiKey",
+    name: "service-manager service key",
+    envVariable: ENV.HDI_KEY,
+    question:
+      "service-manager service instance and key separated by colon, e.g., my-service-manager:access (optional)?",
+    failMessage: "could not read service-manager service key",
   },
   [SETTING_TYPE.SERVER_APP]: {
     config: "srvAppName",
