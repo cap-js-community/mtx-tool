@@ -1,7 +1,8 @@
 "use strict";
 
-const fetchMock = require("node-fetch");
-jest.mock("node-fetch");
+global.fetch = jest.fn();
+const fetchMock = global.fetch;
+
 const sharedStaticMock = require("../src/shared/static");
 jest.mock("../src/shared/static", () => require("./__mocks/shared/static"));
 const sharedErrorMock = require("../src/shared/error");

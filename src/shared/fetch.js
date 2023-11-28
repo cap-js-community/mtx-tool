@@ -1,9 +1,8 @@
 "use strict";
 
 const urllib = require("url");
-const fetchlib = require("node-fetch");
 
-const fetch = async ({
+const request = async ({
   // https://nodejs.org/docs/latest-v10.x/api/url.html
   url,
   protocol,
@@ -14,14 +13,15 @@ const fetch = async ({
   search,
   query,
   hash,
-  // https://github.com/node-fetch/node-fetch#options
+  // https://developer.mozilla.org/en-US/docs/Web/API/fetch
   method,
   headers,
   body,
   redirect,
-  agent,
+  dispatcher,
   // custom
   auth,
+  agent, // legacy alias for dispatcher
   logged = true,
   checkStatus = true,
 }) => {
@@ -44,6 +44,9 @@ const fetch = async ({
     ...(query && { query }),
     ...(hash && { hash }),
   });
+
+  const _dispatcher = dispatcher || agent;
+
   const _basicAuthHeader =
     auth &&
     Object.prototype.hasOwnProperty.call(auth, "username") &&
@@ -52,15 +55,17 @@ const fetch = async ({
       : null;
   const _bearerAuthHeader = auth && Object.prototype.hasOwnProperty.call(auth, "token") ? "Bearer " + auth.token : null;
   const _authHeader = _basicAuthHeader || _bearerAuthHeader;
+
   const _method = method || "GET";
+
   const startTime = Date.now();
-  const response = await fetchlib(_url, {
+  const response = await fetch(_url, {
     method: _method,
     headers: {
       ...headers,
       ...(_authHeader && { Authorization: _authHeader }),
     },
-    ...(agent && { agent }),
+    ...(_dispatcher && { dispatcher: _dispatcher }),
     ...(body && { body }),
     ...(redirect && { redirect }),
   });
@@ -75,4 +80,4 @@ const fetch = async ({
   return response;
 };
 
-module.exports = fetch;
+module.exports = request;
