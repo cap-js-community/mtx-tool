@@ -51,7 +51,7 @@
   "homepage": "https://cap-js-community.github.io/mtx-tool/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cap-js-community/mtx-tool.git"
+    "url": "git+https://github.com/cap-js-community/mtx-tool.git"
   },
   "bugs": {
     "url": "https://github.com/cap-js-community/mtx-tool/issues"

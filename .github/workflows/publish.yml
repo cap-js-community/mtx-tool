@@ -16,11 +16,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: "npm"
+          cache: npm
           registry-url: https://registry.npmjs.org/
       - run: npm ci --package-lock
       - run: npm test
       - run: npm run lint:ci
       - run: npm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
