@@ -11,6 +11,7 @@ const {
   resolveTenantArg,
   balancedSplit,
   limiter,
+  formatTimestampsWithRelativeDays,
 } = require("../shared/static");
 const { assert, assertAll } = require("../shared/error");
 const { request, requestTry } = require("../shared/request");
@@ -69,19 +70,23 @@ const _cdsTenants = async (context, tenant) => {
   return result;
 };
 
-const cdsList = async (context, [tenant]) => {
+const cdsList = async (context, [tenant], [doTimestamps]) => {
+  const headerRow = ["subscribedTenantId", "subscribedSubdomain", "subscriptionAppName", "eventType"];
+  doTimestamps && headerRow.push("created_on", "updated_on");
+  const nowDate = new Date();
+
+  const tenantRow = (tenant) => {
+    const row = [
+      tenant.subscribedTenantId,
+      tenant.subscribedSubdomain,
+      tenant.subscriptionAppName || "",
+      tenant.eventType,
+    ];
+    doTimestamps && row.push(...formatTimestampsWithRelativeDays([tenant.createdAt, tenant.modifiedAt], nowDate));
+    return row;
+  };
   const tenants = await _cdsTenants(context, tenant);
-  const table =
-    tenants && tenants.length
-      ? [["subscribedTenantId", "subscribedSubdomain", "subscriptionAppName", "eventType"]].concat(
-          tenants.map(({ subscribedTenantId, subscribedSubdomain, subscriptionAppName, eventType }) => [
-            subscribedTenantId,
-            subscribedSubdomain,
-            subscriptionAppName || "",
-            eventType,
-          ])
-        )
-      : null;
+  const table = tenants && tenants.length ? [headerRow].concat(tenants.map(tenantRow)) : null;
   return tableList(table, { withRowNumber: !tenant });
 };
 
