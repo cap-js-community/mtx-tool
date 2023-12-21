@@ -56,6 +56,7 @@ commands:
 *         --cds-offboard-all                        offboard all tenants
           ...    [TENANT]                           filter list for tenant id or subdomain
           ...    --auto-undeploy                    upgrade with auto undeploy
+          ...    --time                             list includes timestamps
 
    === hana management (hdi) ===
 ~  hdil   --hdi-list [TENANT_ID]                  list all hdi container instances
