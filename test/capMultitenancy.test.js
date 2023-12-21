@@ -16,7 +16,7 @@ const nock = require("nock");
 const { newContext } = require("../src/context");
 const cds = require("../src/submodules/capMultitenancy");
 const { anonymizeNock } = require("./util/anonymizeNock");
-const { outputFromLoggerPartitionFetch } = require("./util/static");
+const { outputFromLoggerPartitionFetch, anonymizeListTimestamps } = require("./util/static");
 
 // https://github.com/nock/nock#modes
 const NOCK_MODE = {
@@ -59,7 +59,22 @@ describe("cds tests", () => {
   test("cds list and longlist", async () => {
     const { nockDone } = await nockBack("cds-list.json", { afterRecord: anonymizeNock });
 
-    expect(await cds.cdsList(await freshContext(), [])).toMatchInlineSnapshot(`
+    const cdsListOutput = await cds.cdsList(await freshContext(), [], [true]);
+    expect(anonymizeListTimestamps(cdsListOutput)).toMatchInlineSnapshot(`
+      "#  subscribedTenantId                    subscribedSubdomain   subscriptionAppName  eventType
+      1  5ecc7413-2b7e-414a-9496-ad4a61f6cccf  skyfin-company        afc-dev              UPDATE   
+      2  6917dfd6-7590-4033-af2a-140b75263b0d  skyfin-debug-company  afc-dev              UPDATE   
+      3  7b20408e-3fe0-4ade-aa2e-ad97baac72e8  skyfin                                     CREATE   
+      4  cb9158ce-f8fd-441b-b443-17219e8f79fa  skysand               afc-dev              UPDATE   "
+    `);
+    expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
+      "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
+      using legacy cds-mtx apis, consider upgrading to cds-mtxs
+
+      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/mtx/v1/provisioning/tenant 200 OK (88ms)"
+    `);
+    loggerSpy.info.mockClear();
+    expect(await cds.cdsList(await freshContext(), [], [false])).toMatchInlineSnapshot(`
       "#  subscribedTenantId                    subscribedSubdomain   subscriptionAppName  eventType
       1  5ecc7413-2b7e-414a-9496-ad4a61f6cccf  skyfin-company        afc-dev              UPDATE   
       2  6917dfd6-7590-4033-af2a-140b75263b0d  skyfin-debug-company  afc-dev              UPDATE   
