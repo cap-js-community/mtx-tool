@@ -36,6 +36,9 @@
     "node": ">=16.0.0",
     "npm": ">=8.19.0"
   },
+  "dependencies": {
+    "node-fetch": "^2.7.0"
+  },
   "devDependencies": {
     "eslint": "^8.54.0",
     "eslint-config-prettier": "^9.0.0",
