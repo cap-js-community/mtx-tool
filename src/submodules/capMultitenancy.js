@@ -3,6 +3,7 @@
 const { promisify } = require("util");
 const { writeFile } = require("fs");
 const {
+  ENV,
   isUUID,
   isDashedWord,
   sleep,
@@ -16,10 +17,14 @@ const {
 const { assert, assertAll } = require("../shared/error");
 const { request, requestTry } = require("../shared/request");
 
-const writeFileAsync = promisify(writeFile);
 const POLL_FREQUENCY = 15000;
 const CDS_UPGRADE_APP_INSTANCE = 0;
-const CDS_REQUEST_CONCURRENCY = 10;
+const CDS_REQUEST_CONCURRENCY_FALLBACK = 10;
+
+const writeFileAsync = promisify(writeFile);
+const cdsRequestConcurrency = process.env[ENV.CDS_CONCURRENCY]
+  ? parseInt(process.env[ENV.CDS_CONCURRENCY])
+  : CDS_REQUEST_CONCURRENCY_FALLBACK;
 
 const _isMtxs = async (context) => {
   if (_isMtxs._result === undefined) {
@@ -188,7 +193,7 @@ const _cdsUpgrade = async (
         assert(tenants, "no tenants found in response for upgrade\n%j", upgradeResponseData);
         let allSuccess = true;
         const table = [["tenantId", "status", "message"]].concat(
-          await limiter(CDS_REQUEST_CONCURRENCY, Object.entries(tenants), async ([tenantId, { ID: taskId }]) => {
+          await limiter(cdsRequestConcurrency, Object.entries(tenants), async ([tenantId, { ID: taskId }]) => {
             const pollTaskResponse = await requestTry({
               checkStatus: false,
               url: cfRouteUrl,
@@ -291,7 +296,7 @@ const cdsOffboardTenant = async (context, [tenantId]) => {
 const cdsOffboardAll = async (context) => {
   const tenants = await _cdsTenants(context);
   await limiter(
-    CDS_REQUEST_CONCURRENCY,
+    cdsRequestConcurrency,
     tenants,
     async ({ subscribedTenantId }) => await _cdsOffboard(context, subscribedTenantId)
   );
