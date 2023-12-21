@@ -134,6 +134,7 @@ module.exports = {
   CDS_LIST: {
     commandVariants: ["cdsl", "--cds-list"],
     optionalPassArgs: [PASS_ARG.TENANT],
+    optionalFlagArgs: [FLAG_ARG.TIMESTAMPS],
     callback: cds.cdsList,
     readonly: true,
   },
