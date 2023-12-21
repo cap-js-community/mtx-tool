@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## v0.7.15 - 2023-12-21
+
+### Added
+
+- cds: added missing timestamp functionality (fixes #46)
+
+- cds,hdi: allow users to control request concurrency with env variables `MTX_CDS_CONCURRENCY`, `MTX_HDI_CONCURRENCY`
+
+## changed
+
+- cds,hdi: changed default request concurrency from 5 to 10
+
 ## v0.7.14 - 2023-10-20
 
 ### Added
