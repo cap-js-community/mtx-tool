@@ -15,7 +15,7 @@ const { request } = require("../shared/request");
 
 const TUNNEL_LOCAL_PORT = 30015;
 const HIDDEN_PASSWORD_TEXT = "*** show with --reveal ***";
-const SERVICE_MANAGER_CONCURRENCY = 5;
+const SERVICE_MANAGER_REQUEST_CONCURRENCY = 10;
 const SERVICE_MANAGER_IDEAL_BINDING_COUNT = 1;
 const SENSITIVE_CREDENTIAL_FIELDS = ["password", "hdi_password"];
 
@@ -246,7 +246,7 @@ const _hdiRebindAllServiceManager = async (context, parameters) => {
   console.log("rebinding tenants %s", tenantIds.join(", "));
 
   await limiter(
-    SERVICE_MANAGER_CONCURRENCY,
+    SERVICE_MANAGER_REQUEST_CONCURRENCY,
     bindings,
     async (binding) => await _hdiRebindBindingServiceManager(sm_url, token, binding, { parameters })
   );
@@ -298,7 +298,7 @@ const _hdiRepairBindingsServiceManager = async (context, parameters) => {
     }
   }
 
-  await limiter(SERVICE_MANAGER_CONCURRENCY, changes, async (fn) => await fn());
+  await limiter(SERVICE_MANAGER_REQUEST_CONCURRENCY, changes, async (fn) => await fn());
   changes.length === 0 && console.log("found exactly one binding for %i instances, all is well", instances.length);
 };
 
