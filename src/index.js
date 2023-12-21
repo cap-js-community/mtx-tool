@@ -5,7 +5,6 @@ module.exports = {
   ...require("./context"),
   ...require("./shared/cache"),
   ...require("./shared/error"),
-  ...require("./shared/fetch"),
   ...require("./shared/oauth"),
   ...require("./shared/request"),
   ...require("./shared/static"),
