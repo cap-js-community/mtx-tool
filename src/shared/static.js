@@ -208,6 +208,9 @@ const _dateDiffInDays = (from, to) => {
 };
 
 const formatTimestampWithRelativeDays = (input, nowDate = new Date()) => {
+  if (!input) {
+    return "";
+  }
   const inputDate = new Date(input);
   const daysAgo = _dateDiffInDays(inputDate, nowDate);
   const outputAbsolute = inputDate.toISOString().replace(/\.[0-9]{3}/, "");
