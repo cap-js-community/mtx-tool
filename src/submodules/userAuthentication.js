@@ -1,5 +1,7 @@
 "use strict";
 
+// TODO: uaa trusted service token doesn't work for service-key
+
 const { isJWT, isDashedWord, resolveTenantArg } = require("../shared/static");
 const { request } = require("../shared/request");
 const { assert } = require("../shared/error");

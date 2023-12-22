@@ -204,6 +204,7 @@ const APP_CLI_OPTIONS = Object.freeze({
     optionalFlagArgs: [FLAG_ARG.DECODE, FLAG_ARG.USER_INFO],
     callback: uaa.uaaServiceUser,
     readonly: true,
+    appOnly: true,
   },
 
   REGISTRY_LIST: {
@@ -330,6 +331,7 @@ const APP_CLI_OPTIONS = Object.freeze({
     callback: hdi.hdiTunnelTenant,
     useCache: false,
     readonly: true,
+    apponly: true,
   },
   HDI_REBIND_TENANT: {
     commandVariants: ["hdirt", "--hdi-rebind-tenant"],
