@@ -209,9 +209,9 @@ const _setup = async (location) => {
   const newRuntimeConfig = {};
   console.log("hit enter to skip a question. re-using the same app for multiple questions is possible.");
   try {
-    const settings = Object.entries(SETTING);
+    const settings = Object.values(SETTING);
     for (let i = 0; i < settings.length; i++) {
-      const [key, value] = settings[i];
+      const value = settings[i];
       const ask = `${i + 1}/${settings.length} | ${value.question}`;
       const answer = (await question(ask, runtimeConfig[value.config])).trim();
       if (answer) {
