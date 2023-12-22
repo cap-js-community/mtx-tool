@@ -31,8 +31,6 @@ const SETTING = {
       },
     ],
   },
-  [SETTING_TYPE.REG]: {
-    name: "registry app",
   [SETTING_TYPE.REGISTRY_APP]: {
     config: "regAppName",
     name: "saas-registry app",
@@ -50,7 +48,6 @@ const SETTING = {
       },
     ],
   },
-  [SETTING_TYPE.CDS]: {
   [SETTING_TYPE.CDS_APP]: {
     config: "cdsAppName",
     name: "cds-mtx app",
@@ -77,7 +74,6 @@ const SETTING = {
       },
     ],
   },
-  [SETTING_TYPE.SRV]: {
   [SETTING_TYPE.SERVER_APP]: {
     config: "srvAppName",
     name: "server app",
