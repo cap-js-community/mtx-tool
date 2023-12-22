@@ -471,8 +471,8 @@ const hdiListServiceManager = async (context, filterTenantId, doTimestamps) => {
     const [binding] = bindingsByInstance[instance.id] || [];
     const row = [
       instance.labels.tenant_id[0],
-      binding ? binding.credentials.host + ":" + binding.credentials.port : "missing binding",
-      binding ? binding.credentials.schema : "",
+      binding ? binding.credentials?.host + ":" + binding.credentials?.port : "missing binding",
+      binding ? binding.credentials?.schema : "",
       instance.ready,
     ];
     doTimestamps && row.push(...formatTimestampsWithRelativeDays([instance.created_at, instance.updated_at], nowDate));
