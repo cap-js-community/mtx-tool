@@ -156,8 +156,8 @@ const _readRuntimeConfig = (filepath, { logged = false, checkConfig = true } = {
   }
 
   return rawRuntimeConfig
-    ? Object.keys(SETTING).reduce((result, key) => {
-        result[key] = rawRuntimeConfig[key];
+    ? Object.values(SETTING).reduce((result, value) => {
+        result[value.config] = rawRuntimeConfig[value.config];
         return result;
       }, Object.create(null))
     : {};
@@ -209,13 +209,13 @@ const _setup = async (location) => {
   const newRuntimeConfig = {};
   console.log("hit enter to skip a question. re-using the same app for multiple questions is possible.");
   try {
-    const settings = Object.entries(SETTING);
+    const settings = Object.values(SETTING);
     for (let i = 0; i < settings.length; i++) {
-      const [key, value] = settings[i];
+      const value = settings[i];
       const ask = `${i + 1}/${settings.length} | ${value.question}`;
-      const answer = (await question(ask, runtimeConfig[key])).trim();
+      const answer = (await question(ask, runtimeConfig[value.config])).trim();
       if (answer) {
-        newRuntimeConfig[key] = answer;
+        newRuntimeConfig[value.config] = answer;
       }
     }
   } catch (err) {
@@ -235,10 +235,10 @@ const setupLocal = async () => {
 const setupList = () => {
   const { filepath } = _resolveDir(FILENAME.CONFIG) || {};
   const runtimeConfig = _readRuntimeConfig(filepath, { logged: true });
-  return Object.entries(SETTING)
+  return Object.values(SETTING)
     .map(
-      ([key, value], i, settings) =>
-        `${i + 1}/${settings.length} | ${value.question} ${runtimeConfig[key] || "<empty>"}`
+      (value, i, settings) =>
+        `${i + 1}/${settings.length} | ${value.question} ${runtimeConfig[value.config] || "<empty>"}`
     )
     .join("\n");
 };
@@ -410,7 +410,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
       const setting = SETTING[type];
 
       // determine configured appName
-      const configAppName = runtimeConfig[type];
+      const configAppName = runtimeConfig[setting.config];
       const envAppName = (setting.envVariable && process.env[setting.envVariable]) || null;
       if (envAppName && configAppName !== envAppName) {
         if (configAppName) {
@@ -495,11 +495,11 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     return processRawAppInfo(cfApp.name, rawAppInfo, setting);
   };
 
-  const getUaaInfo = getAppInfoCached(SETTING_TYPE.UAA);
-  const getRegInfo = getAppInfoCached(SETTING_TYPE.REG);
-  const getCdsInfo = getAppInfoCached(SETTING_TYPE.CDS);
-  const getHdiInfo = getAppInfoCached(SETTING_TYPE.HDI);
-  const getSrvInfo = getAppInfoCached(SETTING_TYPE.SRV);
+  const getUaaInfo = getAppInfoCached(SETTING_TYPE.UAA_APP);
+  const getRegInfo = getAppInfoCached(SETTING_TYPE.REGISTRY_APP);
+  const getCdsInfo = getAppInfoCached(SETTING_TYPE.CDS_APP);
+  const getHdiInfo = getAppInfoCached(SETTING_TYPE.HDI_APP);
+  const getSrvInfo = getAppInfoCached(SETTING_TYPE.SERVER_APP);
 
   const getCachedUaaTokenFromCredentials = async (credentials, options) =>
     await cfUaaTokenCache.getSetCb(
