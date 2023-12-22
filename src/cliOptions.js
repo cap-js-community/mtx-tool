@@ -76,6 +76,7 @@ module.exports = {
     optionalFlagArgs: [FLAG_ARG.DECODE],
     callback: uaa.uaaService,
     readonly: true,
+    appOnly: true,
   },
 
   REGISTRY_LIST: {
@@ -201,6 +202,7 @@ module.exports = {
     callback: hdi.hdiTunnelTenant,
     useCache: false,
     readonly: true,
+    apponly: true,
   },
   HDI_REBIND_TENANT: {
     commandVariants: ["hdirt", "--hdi-rebind-tenant"],
