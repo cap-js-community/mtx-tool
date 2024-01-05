@@ -249,6 +249,13 @@ module.exports = {
     useCache: false,
     readonly: true,
   },
+  SRV_CERTIFICATES: {
+    commandVariants: ["srvcrt", "--server-certificates"],
+    optionalPassArgs: [PASS_ARG.APP_NAME],
+    callback: srv.serverCertificates,
+    useCache: false,
+    readonly: true,
+  },
   SRV_START_DEBUGGER: {
     commandVariants: ["--server-start-debugger"],
     optionalPassArgs: [PASS_ARG.APP_NAME, PASS_ARG.APP_INSTANCE],
