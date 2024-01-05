@@ -258,7 +258,12 @@ const setupCleanCache = async () => {
   }
 };
 
-const _cfSsh = async (appName, { localPort, remotePort, remoteHostname, appInstance, command } = {}) => {
+const _enableSsh = async (appName) => {
+  await _run(CF.EXEC, "enable-ssh", appName);
+  await _run(CF.EXEC, "restage", appName)
+}
+
+const _cfSsh = async (appName, { localPort, remotePort, remoteHostname, appInstance, command, enableSsh } = {}) => {
   const args = [CF.EXEC, "ssh", appName];
   if (localPort !== undefined && localPort !== null && remotePort !== undefined && remotePort !== null) {
     args.push(
@@ -278,6 +283,26 @@ const _cfSsh = async (appName, { localPort, remotePort, remoteHostname, appInsta
   try {
     return await _run(...args);
   } catch (err) {
+    const [result] = await _run(CF.EXEC, "ssh-enabled", appName)
+    if (result.includes("ssh is disabled") && enableSsh) {
+      console.log("enabling ssh for app")
+      try {
+        await _enableSsh(appName)
+      } catch(err) {
+        return fail(
+          "caught error during enabling ssh: %s",
+          [err.message, err.stdout, err.stderr].filter((s) => s && s.length).join("\n")
+        );
+      }
+      try {
+        return await _run(...args);
+      } catch(err) {
+        return fail(
+          "caught error during cf ssh: %s",
+          [err.message, err.stdout, err.stderr].filter((s) => s && s.length).join("\n")
+        );
+      }
+    }
     return fail(
       "caught error during cf ssh: %s",
       [err.message, err.stdout, err.stderr].filter((s) => s && s.length).join("\n")
