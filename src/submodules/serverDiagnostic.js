@@ -83,18 +83,13 @@ const serverEnvironment = async (context, [appName]) => {
   console.log(`saved system environment to ${DEFAULT_ENV_FILENAME}`);
 };
 const serverCertificates = async (context, [appName]) => {
-  const { cfSsh } = appName
-    ? await context.getAppNameInfoCached(appName)
-    : await context.getSrvInfo();
+  const { cfSsh } = appName ? await context.getAppNameInfoCached(appName) : await context.getSrvInfo();
   const dumpFile = async (cfFileName, localFileName) => {
-    const [file] = await cfSsh({command: `cat ${cfFileName}`})
-    writeFileSync(
-      localFileName,
-      file
-    );
-  }
-  await dumpFile("$CF_INSTANCE_CERT", "certificate.crt")
-  await dumpFile("$CF_INSTANCE_KEY", "certificate.key")
+    const [file] = await cfSsh({ command: `cat ${cfFileName}` });
+    writeFileSync(localFileName, file);
+  };
+  await dumpFile("$CF_INSTANCE_CERT", "certificate.crt");
+  await dumpFile("$CF_INSTANCE_KEY", "certificate.key");
   console.log("saved system certificates");
 };
 
