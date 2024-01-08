@@ -73,12 +73,12 @@ const _serverDebug = async (context, { appName, appInstance = 0 } = {}) => {
 const serverDebug = async (context, [appName, appInstance]) => _serverDebug(context, { appName, appInstance });
 
 const serverEnvironment = async (context, [appName]) => {
-  const { cfEnvServices, cfEnvVariables } = appName
+  const { cfEnvServices, cfEnvApp, cfEnvVariables } = appName
     ? await context.getAppNameInfoCached(appName)
     : await context.getSrvInfo();
   writeFileSync(
     DEFAULT_ENV_FILENAME,
-    orderedStringify({ VCAP_SERVICES: cfEnvServices, ...cfEnvVariables }, null, 2) + "\n"
+    orderedStringify({ VCAP_SERVICES: cfEnvServices, VCAP_APPLICATION: cfEnvApp, ...cfEnvVariables }, null, 2) + "\n"
   );
   console.log(`saved system environment to ${DEFAULT_ENV_FILENAME}`);
 };
