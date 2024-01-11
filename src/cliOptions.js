@@ -251,7 +251,7 @@ module.exports = {
   },
   SRV_CERTIFICATES: {
     commandVariants: ["srvcrt", "--server-certificates"],
-    optionalPassArgs: [PASS_ARG.APP_NAME],
+    optionalPassArgs: [PASS_ARG.APP_NAME, PASS_ARG.APP_INSTANCE],
     callback: srv.serverCertificates,
     useCache: false,
     readonly: true,
