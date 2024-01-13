@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## v0.7.16 - 2024-01-13
+
+### Added
+
+- srv: new functionality to dump certificates from app server (pr #53) contributed by @kkoile
+
+## changed
+
+- srv: environment dump now exports VCAP_APPLICATION (pr #55) contributed by @kkoile
+
 ## v0.7.15 - 2023-12-21
 
 ### Added
