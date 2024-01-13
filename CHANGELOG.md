@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - srv: new functionality to dump certificates from app server (pr #53) contributed by @kkoile
 
-## changed
+### Changed
 
 - srv: environment dump now exports VCAP_APPLICATION (pr #55) contributed by @kkoile
 
@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - cds,hdi: allow users to control request concurrency with env variables `MTX_CDS_CONCURRENCY`, `MTX_HDI_CONCURRENCY`
 
-## changed
+### Changed
 
 - cds,hdi: changed default request concurrency from 5 to 10
 
@@ -35,7 +35,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - reg: enable access for registry instances with `service` plan
 
-## Fixed
+### Fixed
 
 - srv: fix debug command for case where uaa is not configured
 
