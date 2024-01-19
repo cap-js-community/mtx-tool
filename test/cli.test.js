@@ -36,15 +36,15 @@ describe("cli tests", () => {
       .map((line) => line.replace(/(.*--[a-z-]+)((?: [A-Z_[\]]+)*).*?$/, "$1$2")); // remove everything after last "word with dashes"
 
     const legendDangerous = usageOptionsLinesWithLegend.filter((line) => line.startsWith("*  are"));
-    const legendReadlonly = usageOptionsLinesWithLegend.filter((line) => line.startsWith("~  are"));
+    const legendReadOnly = usageOptionsLinesWithLegend.filter((line) => line.startsWith("~  are"));
 
     expect(
       (cliOptionsDangerous.length === 0 && legendDangerous.length === 0) ||
         (cliOptionsDangerous.length !== 0 && legendDangerous.length !== 0)
     ).toBe(true);
     expect(
-      (cliOptionsReadonly.length === 0 && legendReadlonly.length === 0) ||
-        (cliOptionsReadonly.length !== 0 && legendReadlonly.length !== 0)
+      (cliOptionsReadonly.length === 0 && legendReadOnly.length === 0) ||
+        (cliOptionsReadonly.length !== 0 && legendReadOnly.length !== 0)
     ).toBe(true);
 
     const usageDangerousLines = usageOptionsLines
