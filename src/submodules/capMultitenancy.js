@@ -116,14 +116,13 @@ const _cdsOnboard = async (context, tenantId, metadata = {}) => {
   });
 };
 
-// subscribedSubdomain: subdomain
-
 const cdsOnboardTenant = async (context, [tenantId, rawMetadata]) => {
   let metadata;
   assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
   if (rawMetadata) {
-    const metadata = tryJsonParse(rawMetadata);
+    metadata = tryJsonParse(rawMetadata);
     assert(isObject(metadata), "METADATA is not a JSON object");
+    console.log("using onboarding metadata: %O", metadata);
   }
   return _cdsOnboard(context, tenantId, metadata);
 };
