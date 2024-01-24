@@ -47,16 +47,17 @@ commands:
           ...    --skip-unchanged                       skip update for unchanged dependencies
 
    === cap multitenancy (cds) ===
-~  cdsl   --cds-list [TENANT]                       list all cds-mtx tenant names
-~  cdsll  --cds-long-list [TENANT]                  long list all cds-mtx tenants
-   cdsot  --cds-onboard-tenant TENANT_ID SUBDOMAIN  onboard specific tenant
-   cdsut  --cds-upgrade-tenant TENANT_ID            upgrade specific tenant
-   cdsua  --cds-upgrade-all                         upgrade all tenants
-*         --cds-offboard-tenant TENANT_ID           offboard specific tenant
-*         --cds-offboard-all                        offboard all tenants
-          ...    [TENANT]                           filter list for tenant id or subdomain
-          ...    --auto-undeploy                    upgrade with auto undeploy
-          ...    --time                             list includes timestamps
+~  cdsl   --cds-list [TENANT]                        list all cds-mtx tenant names
+~  cdsll  --cds-long-list [TENANT]                   long list all cds-mtx tenants
+   cdsot  --cds-onboard-tenant TENANT_ID [METADATA]  onboard specific tenant
+   cdsut  --cds-upgrade-tenant TENANT_ID             upgrade specific tenant
+   cdsua  --cds-upgrade-all                          upgrade all tenants
+*         --cds-offboard-tenant TENANT_ID            offboard specific tenant
+*         --cds-offboard-all                         offboard all tenants
+          ...    [METADATA]                          onboard subscription metadata
+          ...    [TENANT]                            filter list for tenant id or subdomain
+          ...    --auto-undeploy                     upgrade with auto undeploy
+          ...    --time                              list includes timestamps
 
    === hana management (hdi) ===
 ~  hdil   --hdi-list [TENANT_ID]                  list all hdi container instances

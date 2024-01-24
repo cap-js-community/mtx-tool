@@ -19,6 +19,7 @@ const PASS_ARG = Object.freeze({
   APP_NAME: "APP_NAME",
   APP_INSTANCE: "APP_INSTANCE",
   PARAMS: "PARAMS",
+  METADATA: "METADATA",
 });
 
 const FLAG_ARG = Object.freeze({
@@ -147,7 +148,8 @@ module.exports = {
   },
   CDS_ONBOARD_TENANT: {
     commandVariants: ["cdsot", "--cds-onboard-tenant"],
-    requiredPassArgs: [PASS_ARG.TENANT_ID, PASS_ARG.SUBDOMAIN],
+    requiredPassArgs: [PASS_ARG.TENANT_ID],
+    optionalPassArgs: [PASS_ARG.METADATA],
     callback: cds.cdsOnboardTenant,
   },
   CDS_UPGRADE_TENANT: {
