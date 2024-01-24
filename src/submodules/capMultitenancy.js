@@ -13,6 +13,7 @@ const {
   balancedSplit,
   limiter,
   formatTimestampsWithRelativeDays,
+  isObject,
 } = require("../shared/static");
 const { assert, assertAll } = require("../shared/error");
 const { request, requestTry } = require("../shared/request");
@@ -99,7 +100,7 @@ const cdsLongList = async (context, [tenant]) => {
   return JSON.stringify(data, null, 2);
 };
 
-const _cdsOnboard = async (context, tenantId, subdomain) => {
+const _cdsOnboard = async (context, tenantId, metadata = {}) => {
   const { cfRouteUrl } = await context.getCdsInfo();
   await request({
     method: "PUT",
@@ -111,14 +112,20 @@ const _cdsOnboard = async (context, tenantId, subdomain) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ subscribedSubdomain: subdomain, eventType: "CREATE" }),
+    body: JSON.stringify({ ...metadata, eventType: "CREATE" }),
   });
 };
 
-const cdsOnboardTenant = async (context, [tenantId, subdomain]) => {
+// subscribedSubdomain: subdomain
+
+const cdsOnboardTenant = async (context, [tenantId], [rawMetadata]) => {
+  let metadata;
   assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
-  assert(isDashedWord(subdomain), "SUBDOMAIN is not a valid subdomain", subdomain);
-  return _cdsOnboard(context, tenantId, subdomain);
+  if (rawMetadata) {
+    const metadata = tryJsonParse(rawMetadata);
+    assert(isObject(metadata), "METADATA is not a JSON object");
+  }
+  return _cdsOnboard(context, tenantId, metadata);
 };
 
 const _cdsUpgradeBuildLogFilepath = (tenantId) => `cds-upgrade-buildlog-${tenantId}.txt`;
