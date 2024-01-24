@@ -118,7 +118,7 @@ const _cdsOnboard = async (context, tenantId, metadata = {}) => {
 
 // subscribedSubdomain: subdomain
 
-const cdsOnboardTenant = async (context, [tenantId], [rawMetadata]) => {
+const cdsOnboardTenant = async (context, [tenantId, rawMetadata]) => {
   let metadata;
   assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
   if (rawMetadata) {
