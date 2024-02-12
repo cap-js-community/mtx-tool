@@ -10,22 +10,23 @@ const getUaaTokenFromCredentials = async (credentials, { passcode, subdomain, te
   tenantId && assert(isUUID(tenantId), `argument "${tenantId}" is not a valid tenantId`);
 
   const {
-    url: serviceUrl,
+    url: serviceUrlPaas,
     clientid: clientId,
     clientsecret: clientSecret,
-    certurl: certUrl,
+    certurl: certUrlPaas,
     certificate,
     key,
     identityzone: identityZone,
   } = credentials;
-  const isX509Enabled = !clientSecret && certUrl;
-  const baseUrl = isX509Enabled ? certUrl : serviceUrl;
-  const url = subdomain ? baseUrl.replace(identityZone, subdomain) : baseUrl;
+  const isX509Enabled = !clientSecret && certUrlPaas;
+  const serviceUrl = subdomain ? serviceUrlPaas.replace(identityZone, subdomain) : serviceUrlPaas;
+  const certUrl = subdomain && certUrlPaas ? certUrlPaas.replace(identityZone, subdomain) : certUrlPaas;
+  const url = isX509Enabled ? certUrl : serviceUrl;
 
   passcode &&
     assert(
       [10, 32].includes(passcode.length),
-      `"argument ${passcode}" is not a valid passcode, get one at ${url}/passcode`
+      `"argument ${passcode}" is not a valid passcode, get one at ${serviceUrl}/passcode`
     );
 
   const baseOptions = { clientId, passcode, tenantId };
