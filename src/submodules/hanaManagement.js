@@ -565,7 +565,7 @@ const hdiListRelations = async (context, [tenantId], [doTimestamps]) => {
 };
 
 const hdiRebindTenant = async (context, [tenantId, rawParameters]) => {
-  assert(isValidTenantId(tenantId), `argument "${tenantId}" is not a valid hdi tenantId`);
+  assert(isValidTenantId(tenantId), `argument "${tenantId}" is not a valid hdi tenant id`);
   const parameters = tryJsonParse(rawParameters);
   assert(!rawParameters || isObject(parameters), `argument "${rawParameters}" needs to be a valid JSON object`);
   return (await _isServiceManager(context))
@@ -588,12 +588,12 @@ const hdiRepairBindings = async (context, [rawParameters]) => {
 };
 
 const hdiTunnelTenant = async (context, [tenantId], [doReveal]) => {
-  assert(isValidTenantId(tenantId), `argument "${tenantId}" is not a valid hdi tenantId`);
+  assert(isValidTenantId(tenantId), `argument "${tenantId}" is not a valid hdi tenant id`);
   return _hdiTunnel(context, tenantId, doReveal);
 };
 
 const hdiDeleteTenant = async (context, [tenantId]) => {
-  assert(isValidTenantId(tenantId), "TENANT_ID is not a valid hdi tenantId", tenantId);
+  assert(isValidTenantId(tenantId), `argument "${tenantId}" is not a valid hdi tenant id`);
   return await _hdiDelete(context, tenantId);
 };
 
@@ -643,6 +643,13 @@ const hdiDeleteAllInstanceManager = async (context) => {
 const hdiDeleteAll = async (context) =>
   (await _isServiceManager(context)) ? hdiDeleteAllServiceManager(context) : hdiDeleteAllInstanceManager(context);
 
+const hdiEnableTenant = async (context, [], [tenantId]) => {
+  assert(await _isServiceManager(context), "enable tenant is only supported for service-manager");
+  assert(!tenantId || isValidTenantId(tenantId), `argument "${tenantId}" is not a valid hdi tenant id`);
+
+  // TODO code on
+};
+
 module.exports = {
   hdiList,
   hdiLongList,
@@ -653,4 +660,5 @@ module.exports = {
   hdiTunnelTenant,
   hdiDeleteTenant,
   hdiDeleteAll,
+  hdiEnableTenant,
 };
