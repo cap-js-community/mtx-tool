@@ -38,16 +38,18 @@ const _registrySubscriptionsPaged = async (context, tenant) => {
   let subscriptions = [];
   let pageIndex = 0;
   const token = await context.getCachedUaaTokenFromCredentials(credentials);
+  const query = {
+    appName,
+    ...(filterTenantId && { tenantId: filterTenantId }),
+    ...(plan === "service" && { includeIndirectSubscriptions: true }),
+    size: REGISTRY_PAGE_SIZE,
+    page: ++pageIndex,
+  };
   while (true) {
     const response = await request({
       url: saas_registry_url,
       pathname: `/saas-manager/v1/${plan}/subscriptions`,
-      query: {
-        appName,
-        ...(filterTenantId && { tenantId: filterTenantId }),
-        size: REGISTRY_PAGE_SIZE,
-        page: ++pageIndex,
-      },
+      query,
       auth: { token },
     });
     const { subscriptions: pageSubscriptions, morePages } = await response.json();
