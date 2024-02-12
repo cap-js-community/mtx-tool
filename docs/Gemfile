@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 # NOTE: this fixes the relevant jekyll version
 # https://github.com/github/pages-gem/releases
-gem "github-pages", "~> 228", group: :jekyll_plugins
+gem "github-pages", "~> 229", group: :jekyll_plugins
 
 # https://github.com/just-the-docs/just-the-docs/releases
-gem "just-the-docs", "~> 0.4.0"
+gem "just-the-docs", "~> 0.7.0"
