@@ -36,11 +36,11 @@ const _uaaOutput = (token, { doDecode = false, userInfo } = {}) => {
   if (doDecode) {
     const [jwtHeader, jwtBody] = _tokenDecode(token);
     result = ["JWT Header:", JSON.stringify(jwtHeader), "", "JWT Body:", JSON.stringify(jwtBody, null, 2), ""];
-    if (userInfo) {
-      result.push("User Info:", JSON.stringify(userInfo, null, 2), "");
-    }
   } else {
     result = ["Authorization:", "Bearer " + token, ""];
+  }
+  if (userInfo) {
+    result.push("User Info:", JSON.stringify(userInfo, null, 2), "");
   }
   return result.slice(0, -1).join("\n");
 };
