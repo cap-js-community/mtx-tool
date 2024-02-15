@@ -109,140 +109,25 @@ describe("uaa tests", () => {
     expect(result).toMatchSnapshot();
   });
 
-  /*
-  test("uaaPasscode without tenant", async () => {
-    const commonPrepares = () => {
+  test.each([
+    ["saas user default", SAAS_USER_TOKEN, [USERNAME, PASSWORD, SUBDOMAIN], [false, false], 1],
+    ["saas user --decode", SAAS_USER_TOKEN, [USERNAME, PASSWORD, SUBDOMAIN], [true, false], 1],
+    ["saas user --userinfo", SAAS_USER_TOKEN, [USERNAME, PASSWORD, SUBDOMAIN], [false, true], 2],
+    ["saas user --decode --userinfo", SAAS_USER_TOKEN, [USERNAME, PASSWORD, SUBDOMAIN], [true, true], 2],
+  ])("%s", async (_, token, passArgs, passFlags, fetchCalls) => {
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ access_token: token, expires_in: Infinity }),
+    });
+    if (fetchCalls > 1) {
       fetchMock.mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ access_token: PAAS_PASSCODE_TOKEN, expires_in: Infinity }),
+        json: async () => uaaUserInfoMock,
       });
-    };
-    const commonAsserts = () => {
-      expect(fetchMock.mock.calls[0]).toMatchSnapshot();
-      expect(fetchMock).toHaveBeenCalledTimes(1);
-    };
-    commonPrepares();
-    const result1 = await uaa.uaaPasscode(contextMock, [PASSCODE], [false]);
-    commonAsserts();
-    expect(result1).toMatchSnapshot();
-
-    jest.clearAllMocks();
-    commonPrepares();
-    const result2 = await uaa.uaaPasscode(contextMock, [PASSCODE], [true]);
-    commonAsserts();
-    expect(result2).toMatchSnapshot();
-  });
-
-  test("uaaPasscode with tenant", async () => {
-    const commonPrepares = () => {
-      fetchMock.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ access_token: SAAS_PASSCODE_TOKEN, expires_in: Infinity }),
-      });
-    };
-    const commonAsserts = () => {
-      expect(fetchMock.mock.calls[0]).toMatchSnapshot();
-      expect(fetchMock).toHaveBeenCalledTimes(1);
-    };
-    commonPrepares();
-    const result1 = await uaa.uaaPasscode(contextMock, [PASSCODE, SUBDOMAIN], [false]);
-    commonAsserts();
-    expect(result1).toMatchSnapshot();
-
-    jest.clearAllMocks();
-    commonPrepares();
-    const result2 = await uaa.uaaPasscode(contextMock, [PASSCODE, SUBDOMAIN], [true]);
-    commonAsserts();
-    expect(result2).toMatchSnapshot();
-  });
-
-  test("uaaUser with tenant", async () => {
-    const commonPrepares = () => {
-      fetchMock.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ access_token: SAAS_USER_TOKEN, expires_in: Infinity }),
-      });
-      fetchMock.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ access_token: SAAS_USER_TOKEN, expires_in: Infinity }),
-      });
-    };
-    const commonAsserts = () => {
-      expect(fetchMock.mock.calls[0]).toMatchSnapshot();
-      expect(fetchMock).toHaveBeenCalledTimes(1);
-    };
-    let result;
-    commonPrepares();
-    result = await uaa.uaaUser(contextMock, [USERNAME, PASSWORD, SUBDOMAIN], [false, false]);
-    commonAsserts();
-    expect(result).toMatchSnapshot();
-
-    jest.clearAllMocks();
-    commonPrepares();
-    result = await uaa.uaaUser(contextMock, [USERNAME, PASSWORD, SUBDOMAIN], [false, true]);
-    commonAsserts();
-    expect(result).toMatchSnapshot();
-
-    jest.clearAllMocks();
-    commonPrepares();
-    result = await uaa.uaaUser(contextMock, [USERNAME, PASSWORD, SUBDOMAIN], [true, false]);
-    commonAsserts();
-    expect(result).toMatchSnapshot();
-
-    jest.clearAllMocks();
-    commonPrepares();
-    result = await uaa.uaaUser(contextMock, [USERNAME, PASSWORD, SUBDOMAIN], [true, true]);
-    commonAsserts();
+    }
+    const result = await uaa.uaaUser(contextMock, passArgs, passFlags);
+    expect(fetchMock.mock.calls).toMatchSnapshot();
+    expect(fetchMock).toHaveBeenCalledTimes(fetchCalls);
     expect(result).toMatchSnapshot();
   });
-
-  test("uaaServiceClient with tenant", async () => {
-    const cfEnvServicesMock = {
-      url: "serviceurl",
-      clientid: "serviceclientid",
-      clientsecret: "serviceclientsecret",
-    };
-    const commonPrepares = () => {
-      sharedStaticMock.isDashedWord.mockReturnValue(true);
-      contextMock.getUaaInfo.mockReturnValueOnce({
-        cfEnvApp: { application_name: "appname" },
-        cfService: uaaCfServiceMock,
-        cfEnvServices: { service: [{ credentials: cfEnvServicesMock }] },
-      });
-      contextMock.getCachedUaaTokenFromCredentials.mockReturnValueOnce(SAAS_SERVICE_TOKEN);
-    };
-    const commonAsserts = () => {
-      expect(sharedStaticMock.isDashedWord).toHaveBeenCalledTimes(1);
-      expect(sharedStaticMock.isDashedWord).toHaveBeenNthCalledWith(1, SERVICE);
-      expect(sharedErrorMock.assert).toHaveBeenCalledTimes(2);
-      expect(sharedErrorMock.assert).toHaveBeenNthCalledWith(1, true, expect.anything());
-      expect(sharedErrorMock.assert).toHaveBeenNthCalledWith(
-        2,
-        cfEnvServicesMock,
-        expect.anything(),
-        expect.anything(),
-        expect.anything()
-      );
-      expect(contextMock.getCachedUaaTokenFromCredentials).toHaveBeenCalledTimes(1);
-      expect(contextMock.getCachedUaaTokenFromCredentials).toHaveBeenCalledWith(
-        {
-          url: "serviceurl",
-          clientid: "serviceclientid",
-          clientsecret: "serviceclientsecret",
-        },
-        { subdomain: "subdomain" }
-      );
-    };
-    commonPrepares();
-    const result1 = await uaa.uaaServiceClient(contextMock, [SERVICE, SUBDOMAIN], [false]);
-    commonAsserts();
-    expect(result1).toMatchSnapshot();
-
-    jest.clearAllMocks();
-    commonPrepares();
-    const result2 = await uaa.uaaServiceClient(contextMock, [SERVICE, SUBDOMAIN], [true]);
-    commonAsserts();
-    expect(result2).toMatchSnapshot();
-  });
-*/
 });
