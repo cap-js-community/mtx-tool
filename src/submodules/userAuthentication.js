@@ -37,12 +37,12 @@ const _uaaOutput = (token, { doDecode = false, userInfo } = {}) => {
     const [jwtHeader, jwtBody] = _tokenDecode(token);
     result = ["JWT Header:", JSON.stringify(jwtHeader), "", "JWT Body:", JSON.stringify(jwtBody, null, 2), ""];
     if (userInfo) {
-      result.push("User Info:", JSON.stringify(result, null, 2), "");
+      result.push("User Info:", JSON.stringify(userInfo, null, 2), "");
     }
   } else {
     result = ["Authorization:", "Bearer " + token, ""];
   }
-  return result.join("\n");
+  return result.slice(0, -1).join("\n");
 };
 
 const _uaaSaasServiceToken = async (context, service, options = undefined) => {
