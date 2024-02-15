@@ -10,14 +10,40 @@ const _tokenDecode = (token) =>
     .slice(0, 2)
     .map((part) => JSON.parse(Buffer.from(part, "base64").toString()));
 
-const _uaaOutputBearer = (token) => ["Authorization:", "Bearer " + token].join("\n");
-
-const _uaaOutputDecoded = (token) => {
-  const [jwtHeader, jwtBody] = _tokenDecode(token);
-  return ["JWT Header:", JSON.stringify(jwtHeader), "", "JWT Body:", JSON.stringify(jwtBody, null, 2)].join("\n");
+const _uaaUserInfo = async (context, token) => {
+  const {
+    cfService: {
+      credentials: { url: paasUrl, identityzone: paasZoneDomain },
+    },
+  } = await context.getUaaInfo();
+  const [, jwtBody] = _tokenDecode(token);
+  const zoneId = jwtBody.zid;
+  const zoneDomain = jwtBody.ext_attr && jwtBody.ext_attr.zdn;
+  const uaaResponse = await request({
+    url: zoneDomain ? paasUrl.replace(paasZoneDomain, zoneDomain) : paasUrl,
+    pathname: "/userinfo",
+    headers: {
+      Accept: "application/json",
+      "X-Zid": zoneId,
+    },
+    auth: { token },
+  });
+  return await uaaResponse.json();
 };
 
-const _uaaOutput = (token, doDecode, doAddUserInfo) => {};
+const _uaaOutput = (token, { doDecode = false, userInfo } = {}) => {
+  let result = [];
+  if (doDecode) {
+    const [jwtHeader, jwtBody] = _tokenDecode(token);
+    result = ["JWT Header:", JSON.stringify(jwtHeader), "", "JWT Body:", JSON.stringify(jwtBody, null, 2), ""];
+    if (userInfo) {
+      result.push("User Info:", JSON.stringify(result, null, 2), "");
+    }
+  } else {
+    result = ["Authorization:", "Bearer " + token, ""];
+  }
+  return result.join("\n");
+};
 
 const _uaaSaasServiceToken = async (context, service, options = undefined) => {
   assert(isDashedWord(service), `argument "${service}" is not a valid service`);
@@ -36,59 +62,44 @@ const _uaaSaasServiceToken = async (context, service, options = undefined) => {
   return context.getCachedUaaTokenFromCredentials(serviceCredentials, options);
 };
 
-const _uaaUserInfo = async (context, passcode, tenant) => {
-  const {
-    cfService: {
-      credentials: { url: paasUrl, identityzone: paasZoneDomain },
-    },
-  } = await context.getUaaInfo();
-  const token = await context.getCachedUaaToken({ ...resolveTenantArg(tenant), passcode });
-  const [, jwtBody] = _tokenDecode(token);
-  const zoneId = jwtBody.zid;
-  const zoneDomain = jwtBody.ext_attr && jwtBody.ext_attr.zdn;
-  const uaaResponse = await request({
-    url: zoneDomain ? paasUrl.replace(paasZoneDomain, zoneDomain) : paasUrl,
-    pathname: "/userinfo",
-    headers: {
-      Accept: "application/json",
-      "X-Zid": zoneId,
-    },
-    auth: { token },
-  });
-  const result = await uaaResponse.json();
-  return JSON.stringify(result, null, 2) + "\n";
-};
-
 const uaaDecode = async ([token]) => {
   assert(isJWT(token), "argument is not a json web token", token);
-  return _uaaOutput(token, true);
+  return _uaaOutput(token, { doDecode: true });
 };
 
 const uaaClient = async (context, [tenant], [doDecode]) =>
-  _uaaOutput(await context.getCachedUaaToken(resolveTenantArg(tenant)), doDecode);
-const uaaPasscode = async (context, [passcode, tenant], [doDecode, doAddUserInfo]) =>
-  _uaaOutput(await context.getCachedUaaToken({ ...resolveTenantArg(tenant), passcode }), doDecode, doAddUserInfo);
-const uaaUser = async (context, [username, password, tenant], [doDecode, doAddUserInfo]) =>
-  _uaaOutput(
-    await context.getCachedUaaToken({ ...resolveTenantArg(tenant), username, password }),
+  _uaaOutput(await context.getCachedUaaToken(resolveTenantArg(tenant)), { doDecode });
+const uaaPasscode = async (context, [passcode, tenant], [doDecode, doAddUserInfo]) => {
+  const token = await context.getCachedUaaToken({ ...resolveTenantArg(tenant), passcode });
+  return _uaaOutput(token, {
     doDecode,
-    doAddUserInfo
-  );
+    ...(doAddUserInfo && { userInfo: await _uaaUserInfo(context, token) }),
+  });
+};
+const uaaUser = async (context, [username, password, tenant], [doDecode, doAddUserInfo]) => {
+  const token = await context.getCachedUaaToken({ ...resolveTenantArg(tenant), username, password });
+  return _uaaOutput(token, {
+    doDecode,
+    ...(doAddUserInfo && { userInfo: await _uaaUserInfo(context, token) }),
+  });
+};
 
 const uaaServiceClient = async (context, [service, tenant], [doDecode]) =>
-  _uaaOutput(await _uaaSaasServiceToken(context, service, { ...resolveTenantArg(tenant) }), doDecode);
-const uaaServicePasscode = async (context, [service, passcode, tenant], [doDecode, doAddUserInfo]) =>
-  _uaaOutput(
-    await _uaaSaasServiceToken(context, service, { ...resolveTenantArg(tenant), passcode }),
+  _uaaOutput(await _uaaSaasServiceToken(context, service, { ...resolveTenantArg(tenant) }), { doDecode });
+const uaaServicePasscode = async (context, [service, passcode, tenant], [doDecode, doAddUserInfo]) => {
+  const token = await _uaaSaasServiceToken(context, service, { ...resolveTenantArg(tenant), passcode });
+  return _uaaOutput(token, {
     doDecode,
-    doAddUserInfo
-  );
-const uaaServiceUser = async (context, [service, username, password, tenant], [doDecode, doAddUserInfo]) =>
-  _uaaOutput(
-    await _uaaSaasServiceToken(context, service, { ...resolveTenantArg(tenant), username, password }),
+    ...(doAddUserInfo && { userInfo: await _uaaUserInfo(context, token) }),
+  });
+};
+const uaaServiceUser = async (context, [service, username, password, tenant], [doDecode, doAddUserInfo]) => {
+  const token = await _uaaSaasServiceToken(context, service, { ...resolveTenantArg(tenant), username, password });
+  return _uaaOutput(token, {
     doDecode,
-    doAddUserInfo
-  );
+    ...(doAddUserInfo && { userInfo: await _uaaUserInfo(context, token) }),
+  });
+};
 
 module.exports = {
   uaaDecode,
