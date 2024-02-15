@@ -32,7 +32,7 @@ const _uaaUserInfo = async (context, token) => {
 };
 
 const _uaaOutput = (token, { doDecode = false, userInfo } = {}) => {
-  let result = [];
+  let result;
   if (doDecode) {
     const [jwtHeader, jwtBody] = _tokenDecode(token);
     result = ["JWT Header:", JSON.stringify(jwtHeader), "", "JWT Body:", JSON.stringify(jwtBody, null, 2), ""];
