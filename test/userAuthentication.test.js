@@ -59,6 +59,11 @@ const contextMock = {
   }),
 };
 
+let loggerSpy = {
+  info: jest.spyOn(console, "log").mockImplementation(),
+  error: jest.spyOn(console, "error").mockImplementation(),
+};
+
 describe("uaa tests", () => {
   afterEach(() => {
     jest.clearAllMocks();
