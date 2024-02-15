@@ -40,6 +40,7 @@ const getUaaToken = async (
 ) => {
   const agent = certificate && new https.Agent({ ...(key && { key }), ...(certificate && { cert: certificate }) });
   const grantType = passcode || username ? "password" : "client_credentials";
+  const loginHint = username && JSON.stringify({ origin: "sap.custom" });
   const body = new URLSearchParams({
     grant_type: grantType,
     client_id: clientId,
@@ -47,6 +48,7 @@ const getUaaToken = async (
     ...(passcode && { passcode }),
     ...(username && { username }),
     ...(password && { password }),
+    ...(loginHint && { login_hint: loginHint }),
   }).toString();
   return await (
     await request({
