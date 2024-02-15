@@ -16,7 +16,7 @@ const _uaaOutputDecoded = (token) => {
   return ["JWT Header:", JSON.stringify(jwtHeader), "", "JWT Body:", JSON.stringify(jwtBody, null, 2)].join("\n");
 };
 
-const _uaaSaasServiceToken = async (context, tenant, service) => {
+const _uaaSaasServiceToken = async (context, service, options = {}) => {
   assert(isDashedWord(service), `argument "${service}" is not a valid service`);
   const {
     cfEnvApp: { application_name: appName },
@@ -30,7 +30,7 @@ const _uaaSaasServiceToken = async (context, tenant, service) => {
   }
   serviceCredentials = serviceCredentials?.uaa ?? serviceCredentials;
   assert(serviceCredentials, "service %s not bound to xsuaa app %s", service, appName);
-  return context.getCachedUaaTokenFromCredentials(serviceCredentials, resolveTenantArg(tenant));
+  return context.getCachedUaaTokenFromCredentials(serviceCredentials, options);
 };
 
 const _uaaUserInfo = async (context, passcode, tenant) => {
@@ -65,20 +65,38 @@ const uaaClient = async (context, [tenant], [doDecode]) =>
   doDecode
     ? _uaaOutputDecoded(await context.getCachedUaaToken(resolveTenantArg(tenant)))
     : _uaaOutputBearer(await context.getCachedUaaToken(resolveTenantArg(tenant)));
-const uaaPasscode = async (context, [passcode, tenant], [doDecode]) =>
+const uaaPasscode = async (context, [passcode, tenant], [doDecode, doAddUserInfo]) =>
   doDecode
     ? _uaaOutputDecoded(await context.getCachedUaaToken({ ...resolveTenantArg(tenant), passcode }))
     : _uaaOutputBearer(await context.getCachedUaaToken({ ...resolveTenantArg(tenant), passcode }));
-const uaaService = async (context, [service, tenant], [doDecode]) =>
+const uaaUser = async (context, [username, password, tenant], [doDecode]) =>
   doDecode
-    ? _uaaOutputDecoded(await _uaaSaasServiceToken(context, tenant, service))
-    : _uaaOutputBearer(await _uaaSaasServiceToken(context, tenant, service));
-const uaaUserInfo = async (context, [passcode, tenant]) => await _uaaUserInfo(context, passcode, tenant);
+    ? _uaaOutputDecoded(await context.getCachedUaaToken({ ...resolveTenantArg(tenant), username, password }))
+    : _uaaOutputBearer(await context.getCachedUaaToken({ ...resolveTenantArg(tenant), username, password }));
+
+const uaaServiceClient = async (context, [service, tenant], [doDecode]) =>
+  doDecode
+    ? _uaaOutputDecoded(await _uaaSaasServiceToken(context, service, { ...resolveTenantArg(tenant) }))
+    : _uaaOutputBearer(await _uaaSaasServiceToken(context, service, { ...resolveTenantArg(tenant) }));
+const uaaServicePasscode = async (context, [service, passcode, tenant], [doDecode, doAddUserInfo]) =>
+  doDecode
+    ? _uaaOutputDecoded(await _uaaSaasServiceToken(context, service, { ...resolveTenantArg(tenant), passcode }))
+    : _uaaOutputBearer(await _uaaSaasServiceToken(context, service, { ...resolveTenantArg(tenant), passcode }));
+const uaaServiceUser = async (context, [service, username, password, tenant], [doDecode]) =>
+  doDecode
+    ? _uaaOutputDecoded(
+        await _uaaSaasServiceToken(context, service, { ...resolveTenantArg(tenant), username, password })
+      )
+    : _uaaOutputBearer(
+        await _uaaSaasServiceToken(context, service, { ...resolveTenantArg(tenant), username, password })
+      );
 
 module.exports = {
   uaaDecode,
   uaaClient,
   uaaPasscode,
-  uaaService,
-  uaaUserInfo,
+  uaaUser,
+  uaaServiceClient,
+  uaaServicePasscode,
+  uaaServiceUser,
 };

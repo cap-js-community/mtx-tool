@@ -34,13 +34,16 @@ Commands for this area are:
 
 ```
    === user authentication (uaa) ===
-~  uaad  --uaa-decode TOKEN                decode JSON web token
-~  uaac  --uaa-client [TENANT]             obtain token for generic client
-~  uaap  --uaa-passcode PASSCODE [TENANT]  obtain token for uaa one-time passcode
-~  uaai  --uaa-userinfo PASSCODE [TENANT]  detailed user info for passcode
-~  uaas  --uaa-service SERVICE [TENANT]    obtain token for uaa trusted service
-         ...    [TENANT]                   obtain token for tenant, fallback to paas tenant
-         ...    --decode                   decode result token
+~  uaad   --uaa-decode TOKEN                                     decode JSON web token
+~  uaac   --uaa-client [TENANT]                                  obtain uaa token for generic client
+~  uaap   --uaa-passcode PASSCODE [TENANT]                       obtain uaa token for one-time passcode
+~  uaau   --uaa-user USERNAME PASSWORD [TENANT]                  obtain uaa token for username password
+~  uaasc  --uaa-service-client SERVICE [TENANT]                  obtain service token for generic client
+~  uaasp  --uaa-service-passcode SERVICE PASSCODE [TENANT]       obtain service token for one-time passcode
+~  uaasu  --uaa-service-user SERVICE USERNAME PASSWORD [TENANT]  obtain service token for username password
+          ...    [TENANT]                                        obtain token for tenant, fallback to paas tenant
+          ...    --decode                                        decode result token
+          ...    --userinfo                                      add detailed user info for passcode
 
 ~  are read-only commands
 ```

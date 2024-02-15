@@ -151,7 +151,7 @@ describe("uaa tests", () => {
     expect(result2).toMatchSnapshot();
   });
 
-  test("uaaService with tenant", async () => {
+  test("uaaServiceClient with tenant", async () => {
     const cfEnvServicesMock = {
       url: "serviceurl",
       clientid: "serviceclientid",
@@ -189,13 +189,13 @@ describe("uaa tests", () => {
       );
     };
     commonPrepares();
-    const result1 = await uaa.uaaService(contextMock, [SERVICE, SUBDOMAIN], [false]);
+    const result1 = await uaa.uaaServiceClient(contextMock, [SERVICE, SUBDOMAIN], [false]);
     commonAsserts();
     expect(result1).toMatchSnapshot();
 
     jest.clearAllMocks();
     commonPrepares();
-    const result2 = await uaa.uaaService(contextMock, [SERVICE, SUBDOMAIN], [true]);
+    const result2 = await uaa.uaaServiceClient(contextMock, [SERVICE, SUBDOMAIN], [true]);
     commonAsserts();
     expect(result2).toMatchSnapshot();
   });

@@ -12,6 +12,8 @@ const PASS_ARG = Object.freeze({
   TENANT: "TENANT", // either subdomain or tenant_id
   SUBDOMAIN: "SUBDOMAIN",
   PASSCODE: "PASSCODE",
+  USERNAME: "USERNAME",
+  PASSWORD: "PASSWORD",
   SERVICE: "SERVICE",
   JOB_ID: "JOB_ID",
   TENANT_ID: "TENANT_ID",
@@ -63,19 +65,36 @@ module.exports = {
     callback: uaa.uaaPasscode,
     readonly: true,
   },
-  UAA_USERINFO: {
-    commandVariants: ["uaai", "--uaa-userinfo"],
-    requiredPassArgs: [PASS_ARG.PASSCODE],
+  UAA_USER: {
+    commandVariants: ["uaau", "--uaa-user"],
+    requiredPassArgs: [PASS_ARG.USERNAME, PASS_ARG.PASSWORD],
     optionalPassArgs: [PASS_ARG.TENANT],
-    callback: uaa.uaaUserInfo,
+    optionalFlagArgs: [FLAG_ARG.DECODE],
+    callback: uaa.uaaUser,
     readonly: true,
   },
-  UAA_SERVICE: {
-    commandVariants: ["uaas", "--uaa-service"],
+  UAA_SERVICE_CLIENT: {
+    commandVariants: ["uaasc", "--uaa-service-client"],
     requiredPassArgs: [PASS_ARG.SERVICE],
     optionalPassArgs: [PASS_ARG.TENANT],
     optionalFlagArgs: [FLAG_ARG.DECODE],
-    callback: uaa.uaaService,
+    callback: uaa.uaaServiceClient,
+    readonly: true,
+  },
+  UAA_SERVICE_PASSCODE: {
+    commandVariants: ["uaasp", "--uaa-service-passcode"],
+    requiredPassArgs: [PASS_ARG.SERVICE, PASS_ARG.PASSCODE],
+    optionalPassArgs: [PASS_ARG.TENANT],
+    optionalFlagArgs: [FLAG_ARG.DECODE],
+    callback: uaa.uaaServicePasscode,
+    readonly: true,
+  },
+  UAA_SERVICE_USER: {
+    commandVariants: ["uaasu", "--uaa-service-user"],
+    requiredPassArgs: [PASS_ARG.SERVICE, PASS_ARG.USERNAME, PASS_ARG.PASSWORD],
+    optionalPassArgs: [PASS_ARG.TENANT],
+    optionalFlagArgs: [FLAG_ARG.DECODE],
+    callback: uaa.uaaServiceUser,
     readonly: true,
   },
 
