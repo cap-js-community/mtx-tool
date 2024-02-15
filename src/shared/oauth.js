@@ -5,7 +5,7 @@ const { isDashedWord, isUUID } = require("./static");
 const { assert } = require("./error");
 const { request } = require("./request");
 
-const getUaaTokenFromCredentials = async (credentials, { passcode, subdomain, tenantId } = {}) => {
+const getUaaTokenFromCredentials = async (credentials, { subdomain, tenantId, passcode, username, password } = {}) => {
   subdomain && assert(isDashedWord(subdomain), `argument "${subdomain}" is not a valid subdomain`);
   tenantId && assert(isUUID(tenantId), `argument "${tenantId}" is not a valid tenantId`);
 
@@ -29,19 +29,24 @@ const getUaaTokenFromCredentials = async (credentials, { passcode, subdomain, te
       `"argument ${passcode}" is not a valid passcode, get one at ${serviceUrl}/passcode`
     );
 
-  const baseOptions = { clientId, passcode, tenantId };
+  const baseOptions = { clientId, tenantId, passcode, username, password };
   const options = isX509Enabled ? { ...baseOptions, certificate, key } : { ...baseOptions, clientSecret };
   return await getUaaToken(url, options);
 };
 
-const getUaaToken = async (url, { clientId, clientSecret, passcode, certificate, key, tenantId } = {}) => {
+const getUaaToken = async (
+  url,
+  { clientId, clientSecret, certificate, key, tenantId, passcode, username, password } = {}
+) => {
   const agent = certificate && new https.Agent({ ...(key && { key }), ...(certificate && { cert: certificate }) });
-  const grantType = (passcode && "password") || "client_credentials";
+  const grantType = passcode || username ? "password" : "client_credentials";
   const body = new URLSearchParams({
     grant_type: grantType,
     client_id: clientId,
     ...(clientSecret && { client_secret: clientSecret }),
     ...(passcode && { passcode }),
+    ...(username && { username }),
+    ...(password && { password }),
   }).toString();
   return await (
     await request({
