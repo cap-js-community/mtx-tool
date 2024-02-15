@@ -4,8 +4,6 @@ const fetchMock = require("node-fetch");
 jest.mock("node-fetch");
 const sharedStaticMock = require("../src/shared/static");
 jest.mock("../src/shared/static", () => require("./__mocks/shared/static"));
-const sharedErrorMock = require("../src/shared/error");
-jest.mock("../src/shared/error", () => require("./__mocks/shared/error"));
 const sharedOAuthMock = require("../src/shared/oauth");
 jest.mock("../src/shared/oauth", () => require("./__mocks/shared/oauth"));
 
@@ -16,6 +14,7 @@ const PASSCODE = "passcode90";
 const USERNAME = "username";
 const PASSWORD = "password90";
 const SERVICE = "service";
+const APP_NAME = "appname";
 
 const PAAS_CLIENT_TOKEN =
   "eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vc2t5ZmluLmF1dGhlbnRpY2F0aW9uLnNhcC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoia2V5LWlkLTEiLCJ0eXAiOiJKV1QifQ.eyJqdGkiOiI1NDlhYmVlZWFjYzY0OWY2OGFmNTg5Y2FmZTMzYTJjNiIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI3YjIwNDA4ZS0zZmUwLTRhZGUtYWEyZS1hZDk3YmFhYzcyZTgiLCJ6ZG4iOiJza3lmaW4ifSwic3ViIjoic2ItYWZjLWRldiF0NTg3NCIsImF1dGhvcml0aWVzIjpbInVhYS5yZXNvdXJjZSIsImFmYy1kZXYhdDU4NzQubXRkZXBsb3ltZW50IiwiYWZjLWRldiF0NTg3NC5tdGNhbGxiYWNrIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSIsImFmYy1kZXYhdDU4NzQubXRkZXBsb3ltZW50IiwiYWZjLWRldiF0NTg3NC5tdGNhbGxiYWNrIl0sImNsaWVudF9pZCI6InNiLWFmYy1kZXYhdDU4NzQiLCJjaWQiOiJzYi1hZmMtZGV2IXQ1ODc0IiwiYXpwIjoic2ItYWZjLWRldiF0NTg3NCIsImdyYW50X3R5cGUiOiJjbGllbnRfY3JlZGVudGlhbHMiLCJyZXZfc2lnIjoiYWI1OTRmNDMiLCJpYXQiOjE2MjE1MTQzNTksImV4cCI6MTYyMTU1NzU1OSwiaXNzIjoiaHR0cDovL3NreWZpbi5sb2NhbGhvc3Q6ODA4MC91YWEvb2F1dGgvdG9rZW4iLCJ6aWQiOiI3YjIwNDA4ZS0zZmUwLTRhZGUtYWEyZS1hZDk3YmFhYzcyZTgiLCJhdWQiOlsidWFhIiwic2ItYWZjLWRldiF0NTg3NCIsImFmYy1kZXYhdDU4NzQiXX0.u5LbQ7T01RNOwovupuLqi2xv9Sq8QPizY1k9MB4iNTnE6PrEacVaYhZFjBGuqRU6RDjIdfB1drzSGm1MwtrRAYkwWthu9YAfgHVanujXpjkD6NOE6J4sMfmJoy7e9BewJwPZ6l8k6G_Jqnm-9vURMlzjXRXqr1UyAVxlcqc4ZMikVc-25_XvYJKgp_qnbX1kBUwxECeTWtIB80SbroCgbGMwKCck58JyLr2RrZ4ZEPApeE-rWXFGDPtpmECzPRRl2aptA2Nur3fdl5g8Sqih5i_sSmIWMeoeViMVAgbbTZ-graNzcWB8yHri8UNZVihcl5cRAXH9Gvw4kNcYhSxP-Q";
@@ -47,6 +46,12 @@ const uaaCfServiceMock = {
   },
 };
 
+const cfEnvServicesMock = {
+  url: "serviceurl",
+  clientid: "serviceclientid",
+  clientsecret: "serviceclientsecret",
+};
+
 const contextMock = {
   getUaaInfo: jest.fn(() => ({ cfService: uaaCfServiceMock })),
   getCachedUaaToken: jest.fn((options) => {
@@ -69,70 +74,179 @@ describe("uaa tests", () => {
     jest.clearAllMocks();
   });
 
-  test("uaaDecode", async () => {
-    const result = await uaa.uaaDecode([PAAS_CLIENT_TOKEN]);
-    expect(sharedStaticMock.isJWT).toHaveBeenCalledTimes(1);
-    expect(sharedStaticMock.isJWT).toHaveBeenCalledWith(PAAS_CLIENT_TOKEN);
-    expect(result).toMatchSnapshot();
+  describe("without context", () => {
+    test("uaaDecode", async () => {
+      const result = await uaa.uaaDecode([PAAS_CLIENT_TOKEN]);
+      expect(sharedStaticMock.isJWT).toHaveBeenCalledTimes(1);
+      expect(sharedStaticMock.isJWT).toHaveBeenCalledWith(PAAS_CLIENT_TOKEN);
+      expect(result).toMatchSnapshot();
+    });
   });
 
-  test.each([
-    ["paas client default", PAAS_CLIENT_TOKEN, [], [false]],
-    ["paas client --decode", PAAS_CLIENT_TOKEN, [], [true]],
-    ["saas client default", SAAS_CLIENT_TOKEN, [SUBDOMAIN], [false]],
-    ["saas client --decode", SAAS_CLIENT_TOKEN, [SUBDOMAIN], [true]],
-  ])("%s", async (_, token, passArgs, passFlags) => {
-    fetchMock.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({ access_token: token, expires_in: Infinity }),
-    });
-    const result = await uaa.uaaClient(contextMock, passArgs, passFlags);
-    expect(fetchMock.mock.calls[0]).toMatchSnapshot();
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    expect(result).toMatchSnapshot();
-  });
-
-  test.each([
-    ["saas passcode default", SAAS_PASSCODE_TOKEN, [PASSCODE, SUBDOMAIN], [false, false], 1],
-    ["saas passcode --decode", SAAS_PASSCODE_TOKEN, [PASSCODE, SUBDOMAIN], [true, false], 1],
-    ["saas passcode --userinfo", SAAS_PASSCODE_TOKEN, [PASSCODE, SUBDOMAIN], [false, true], 2],
-    ["saas passcode --decode --userinfo", SAAS_PASSCODE_TOKEN, [PASSCODE, SUBDOMAIN], [true, true], 2],
-  ])("%s", async (_, token, passArgs, passFlags, fetchCalls) => {
-    fetchMock.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({ access_token: token, expires_in: Infinity }),
-    });
-    if (fetchCalls > 1) {
+  describe("xsuaa tokens", () => {
+    test.each([
+      ["paas client default", PAAS_CLIENT_TOKEN, [], [false]],
+      ["paas client --decode", PAAS_CLIENT_TOKEN, [], [true]],
+      ["saas client default", SAAS_CLIENT_TOKEN, [SUBDOMAIN], [false]],
+      ["saas client --decode", SAAS_CLIENT_TOKEN, [SUBDOMAIN], [true]],
+    ])("%s", async (_, token, passArgs, passFlags) => {
       fetchMock.mockResolvedValueOnce({
         ok: true,
-        json: async () => uaaUserInfoMock,
+        json: async () => ({ access_token: token, expires_in: Infinity }),
       });
-    }
-    const result = await uaa.uaaPasscode(contextMock, passArgs, passFlags);
-    expect(fetchMock.mock.calls).toMatchSnapshot();
-    expect(fetchMock).toHaveBeenCalledTimes(fetchCalls);
-    expect(result).toMatchSnapshot();
-  });
-
-  test.each([
-    ["saas user default", SAAS_USER_TOKEN, [USERNAME, PASSWORD, SUBDOMAIN], [false, false], 1],
-    ["saas user --decode", SAAS_USER_TOKEN, [USERNAME, PASSWORD, SUBDOMAIN], [true, false], 1],
-    ["saas user --userinfo", SAAS_USER_TOKEN, [USERNAME, PASSWORD, SUBDOMAIN], [false, true], 2],
-    ["saas user --decode --userinfo", SAAS_USER_TOKEN, [USERNAME, PASSWORD, SUBDOMAIN], [true, true], 2],
-  ])("%s", async (_, token, passArgs, passFlags, fetchCalls) => {
-    fetchMock.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({ access_token: token, expires_in: Infinity }),
+      const result = await uaa.uaaClient(contextMock, passArgs, passFlags);
+      expect(fetchMock.mock.calls[0]).toMatchSnapshot();
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(result).toMatchSnapshot();
     });
-    if (fetchCalls > 1) {
+
+    test.each([
+      ["saas passcode default", SAAS_PASSCODE_TOKEN, [PASSCODE, SUBDOMAIN], [false, false], 1],
+      ["saas passcode --decode", SAAS_PASSCODE_TOKEN, [PASSCODE, SUBDOMAIN], [true, false], 1],
+      ["saas passcode --userinfo", SAAS_PASSCODE_TOKEN, [PASSCODE, SUBDOMAIN], [false, true], 2],
+      ["saas passcode --decode --userinfo", SAAS_PASSCODE_TOKEN, [PASSCODE, SUBDOMAIN], [true, true], 2],
+    ])("%s", async (_, token, passArgs, passFlags, fetchCalls) => {
       fetchMock.mockResolvedValueOnce({
         ok: true,
-        json: async () => uaaUserInfoMock,
+        json: async () => ({ access_token: token, expires_in: Infinity }),
       });
-    }
-    const result = await uaa.uaaUser(contextMock, passArgs, passFlags);
-    expect(fetchMock.mock.calls).toMatchSnapshot();
-    expect(fetchMock).toHaveBeenCalledTimes(fetchCalls);
-    expect(result).toMatchSnapshot();
+      if (fetchCalls > 1) {
+        fetchMock.mockResolvedValueOnce({
+          ok: true,
+          json: async () => uaaUserInfoMock,
+        });
+      }
+      const result = await uaa.uaaPasscode(contextMock, passArgs, passFlags);
+      expect(fetchMock.mock.calls).toMatchSnapshot();
+      expect(fetchMock).toHaveBeenCalledTimes(fetchCalls);
+      expect(result).toMatchSnapshot();
+    });
+
+    test.each([
+      ["saas user default", SAAS_USER_TOKEN, [USERNAME, PASSWORD, SUBDOMAIN], [false, false], 1],
+      ["saas user --decode", SAAS_USER_TOKEN, [USERNAME, PASSWORD, SUBDOMAIN], [true, false], 1],
+      ["saas user --userinfo", SAAS_USER_TOKEN, [USERNAME, PASSWORD, SUBDOMAIN], [false, true], 2],
+      ["saas user --decode --userinfo", SAAS_USER_TOKEN, [USERNAME, PASSWORD, SUBDOMAIN], [true, true], 2],
+    ])("%s", async (_, token, passArgs, passFlags, fetchCalls) => {
+      fetchMock.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ access_token: token, expires_in: Infinity }),
+      });
+      if (fetchCalls > 1) {
+        fetchMock.mockResolvedValueOnce({
+          ok: true,
+          json: async () => uaaUserInfoMock,
+        });
+      }
+      const result = await uaa.uaaUser(contextMock, passArgs, passFlags);
+      expect(fetchMock.mock.calls).toMatchSnapshot();
+      expect(fetchMock).toHaveBeenCalledTimes(fetchCalls);
+      expect(result).toMatchSnapshot();
+    });
+  });
+
+  describe("service tokens", () => {
+    test.each([
+      ["saas service client default", SAAS_SERVICE_CLIENT_TOKEN, [SERVICE, SUBDOMAIN], [false]],
+      ["saas service client --decode", SAAS_SERVICE_CLIENT_TOKEN, [SERVICE, SUBDOMAIN], [true]],
+    ])("%s", async (_, token, passArgs, passFlags) => {
+      sharedStaticMock.isDashedWord.mockReturnValue(true);
+      contextMock.getUaaInfo.mockReturnValueOnce({
+        cfEnvApp: { application_name: APP_NAME },
+        cfService: uaaCfServiceMock,
+        cfEnvServices: { [SERVICE]: [{ credentials: cfEnvServicesMock }] },
+      });
+      contextMock.getCachedUaaTokenFromCredentials.mockReturnValueOnce(token);
+
+      const result = await uaa.uaaServiceClient(contextMock, passArgs, passFlags);
+      expect(contextMock.getUaaInfo).toHaveBeenCalledTimes(1);
+      expect(result).toMatchSnapshot();
+    });
+
+    test.each([
+      ["saas service passcode default", SAAS_SERVICE_PASSCODE_TOKEN, [SERVICE, PASSCODE, SUBDOMAIN], [false, false], 0],
+      ["saas service passcode --decode", SAAS_SERVICE_PASSCODE_TOKEN, [SERVICE, PASSCODE, SUBDOMAIN], [true, false], 0],
+      [
+        "saas service passcode --userinfo",
+        SAAS_SERVICE_PASSCODE_TOKEN,
+        [SERVICE, PASSCODE, SUBDOMAIN],
+        [false, true],
+        1,
+      ],
+      [
+        "saas service passcode --decode --userinfo",
+        SAAS_SERVICE_PASSCODE_TOKEN,
+        [SERVICE, PASSCODE, SUBDOMAIN],
+        [true, true],
+        1,
+      ],
+    ])("%s", async (_, token, passArgs, passFlags, fetchCalls) => {
+      sharedStaticMock.isDashedWord.mockReturnValue(true);
+      contextMock.getUaaInfo.mockReturnValueOnce({
+        cfEnvApp: { application_name: APP_NAME },
+        cfService: uaaCfServiceMock,
+        cfEnvServices: { [SERVICE]: [{ credentials: cfEnvServicesMock }] },
+      });
+      contextMock.getCachedUaaTokenFromCredentials.mockReturnValueOnce(token);
+      if (fetchCalls > 0) {
+        fetchMock.mockResolvedValueOnce({
+          ok: true,
+          json: async () => uaaUserInfoMock,
+        });
+      }
+      const result = await uaa.uaaServicePasscode(contextMock, passArgs, passFlags);
+      expect(fetchMock.mock.calls).toMatchSnapshot();
+      expect(fetchMock).toHaveBeenCalledTimes(fetchCalls);
+      expect(result).toMatchSnapshot();
+    });
+
+    test.each([
+      [
+        "saas service user default",
+        SAAS_SERVICE_USER_TOKEN,
+        [SERVICE, USERNAME, PASSWORD, SUBDOMAIN],
+        [false, false],
+        1,
+      ],
+      [
+        "saas service user --decode",
+        SAAS_SERVICE_USER_TOKEN,
+        [SERVICE, USERNAME, PASSWORD, SUBDOMAIN],
+        [true, false],
+        1,
+      ],
+      [
+        "saas service user --userinfo",
+        SAAS_SERVICE_USER_TOKEN,
+        [SERVICE, USERNAME, PASSWORD, SUBDOMAIN],
+        [false, true],
+        2,
+      ],
+      [
+        "saas service user --decode --userinfo",
+        SAAS_SERVICE_USER_TOKEN,
+        [SERVICE, USERNAME, PASSWORD, SUBDOMAIN],
+        [true, true],
+        2,
+      ],
+    ])("%s", async (_, token, passArgs, passFlags, fetchCalls) => {
+      sharedStaticMock.isDashedWord.mockReturnValue(true);
+      contextMock.getUaaInfo.mockReturnValueOnce({
+        cfEnvApp: { application_name: APP_NAME },
+        cfService: uaaCfServiceMock,
+        cfEnvServices: { service: [{ credentials: cfEnvServicesMock }] },
+      });
+      contextMock.getCachedUaaTokenFromCredentials.mockReturnValueOnce(SAAS_SERVICE_TOKEN);
+      if (fetchCalls > 1) {
+        fetchMock.mockResolvedValueOnce({
+          ok: true,
+          json: async () => uaaUserInfoMock,
+        });
+      }
+      const result = await uaa.uaaServiceUser(contextMock, passArgs, passFlags);
+      expect(fetchMock.mock.calls).toMatchSnapshot();
+      expect(fetchMock).toHaveBeenCalledTimes(fetchCalls);
+      expect(result).toMatchSnapshot();
+    });
   });
 });
