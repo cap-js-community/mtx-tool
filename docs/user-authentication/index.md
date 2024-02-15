@@ -43,7 +43,7 @@ Commands for this area are:
 ~  uaasu  --uaa-service-user SERVICE USERNAME PASSWORD [TENANT]  obtain service token for username password
           ...    [TENANT]                                        obtain token for tenant, fallback to paas tenant
           ...    --decode                                        decode result token
-          ...    --userinfo                                      add detailed user info for passcode
+          ...    --userinfo                                      add detailed user info for passcode or password
 
 ~  are read-only commands
 ```
