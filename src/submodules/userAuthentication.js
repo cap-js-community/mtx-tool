@@ -69,6 +69,7 @@ const uaaDecode = async ([token]) => {
 
 const uaaClient = async (context, [tenant], [doDecode]) =>
   _uaaOutput(await context.getCachedUaaToken(resolveTenantArg(tenant)), { doDecode });
+
 const uaaPasscode = async (context, [passcode, tenant], [doDecode, doAddUserInfo]) => {
   const token = await context.getCachedUaaToken({ ...resolveTenantArg(tenant), passcode });
   return _uaaOutput(token, {
@@ -76,6 +77,7 @@ const uaaPasscode = async (context, [passcode, tenant], [doDecode, doAddUserInfo
     ...(doAddUserInfo && { userInfo: await _uaaUserInfo(context, token) }),
   });
 };
+
 const uaaUser = async (context, [username, password, tenant], [doDecode, doAddUserInfo]) => {
   const token = await context.getCachedUaaToken({ ...resolveTenantArg(tenant), username, password });
   return _uaaOutput(token, {
@@ -86,6 +88,7 @@ const uaaUser = async (context, [username, password, tenant], [doDecode, doAddUs
 
 const uaaServiceClient = async (context, [service, tenant], [doDecode]) =>
   _uaaOutput(await _uaaSaasServiceToken(context, service, { ...resolveTenantArg(tenant) }), { doDecode });
+
 const uaaServicePasscode = async (context, [service, passcode, tenant], [doDecode, doAddUserInfo]) => {
   const token = await _uaaSaasServiceToken(context, service, { ...resolveTenantArg(tenant), passcode });
   return _uaaOutput(token, {
@@ -93,6 +96,7 @@ const uaaServicePasscode = async (context, [service, passcode, tenant], [doDecod
     ...(doAddUserInfo && { userInfo: await _uaaUserInfo(context, token) }),
   });
 };
+
 const uaaServiceUser = async (context, [service, username, password, tenant], [doDecode, doAddUserInfo]) => {
   const token = await _uaaSaasServiceToken(context, service, { ...resolveTenantArg(tenant), username, password });
   return _uaaOutput(token, {
