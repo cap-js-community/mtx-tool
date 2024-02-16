@@ -208,38 +208,38 @@ describe("uaa tests", () => {
         SAAS_SERVICE_USER_TOKEN,
         [SERVICE, USERNAME, PASSWORD, SUBDOMAIN],
         [false, false],
-        1,
+        0,
       ],
       [
         "saas service user --decode",
         SAAS_SERVICE_USER_TOKEN,
         [SERVICE, USERNAME, PASSWORD, SUBDOMAIN],
         [true, false],
-        1,
+        0,
       ],
       [
         "saas service user --userinfo",
         SAAS_SERVICE_USER_TOKEN,
         [SERVICE, USERNAME, PASSWORD, SUBDOMAIN],
         [false, true],
-        2,
+        1,
       ],
       [
         "saas service user --decode --userinfo",
         SAAS_SERVICE_USER_TOKEN,
         [SERVICE, USERNAME, PASSWORD, SUBDOMAIN],
         [true, true],
-        2,
+        1,
       ],
     ])("%s", async (_, token, passArgs, passFlags, fetchCalls) => {
       sharedStaticMock.isDashedWord.mockReturnValue(true);
       contextMock.getUaaInfo.mockReturnValueOnce({
         cfEnvApp: { application_name: APP_NAME },
         cfService: uaaCfServiceMock,
-        cfEnvServices: { service: [{ credentials: cfEnvServicesMock }] },
+        cfEnvServices: { [SERVICE]: [{ credentials: cfEnvServicesMock }] },
       });
-      contextMock.getCachedUaaTokenFromCredentials.mockReturnValueOnce(SAAS_SERVICE_TOKEN);
-      if (fetchCalls > 1) {
+      contextMock.getCachedUaaTokenFromCredentials.mockReturnValueOnce(token);
+      if (fetchCalls > 0) {
         fetchMock.mockResolvedValueOnce({
           ok: true,
           json: async () => uaaUserInfoMock,
