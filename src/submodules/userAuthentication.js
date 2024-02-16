@@ -48,6 +48,9 @@ const _uaaOutput = (token, { doDecode = false, userInfo } = {}) => {
 const _uaaSaasServiceToken = async (context, service, options = undefined) => {
   assert(isDashedWord(service), `argument "${service}" is not a valid service`);
   const {
+    cfService: {
+      credentials: { identityzone: identityZone },
+    },
     cfEnvApp: { application_name: appName },
     cfEnvServices,
   } = await context.getUaaInfo();
@@ -58,6 +61,7 @@ const _uaaSaasServiceToken = async (context, service, options = undefined) => {
     )?.credentials;
   }
   serviceCredentials = serviceCredentials?.uaa ?? serviceCredentials;
+  serviceCredentials.identityzone = serviceCredentials.identityzone ?? identityZone;
   assert(serviceCredentials, "service %s not bound to xsuaa app %s", service, appName);
   return context.getCachedUaaTokenFromCredentials(serviceCredentials, options);
 };
