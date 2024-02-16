@@ -34,13 +34,16 @@ Commands for this area are:
 
 ```
    === user authentication (uaa) ===
-~  uaad  --uaa-decode TOKEN                decode JSON web token
-~  uaac  --uaa-client [TENANT]             obtain token for generic client
-~  uaap  --uaa-passcode PASSCODE [TENANT]  obtain token for uaa one-time passcode
-~  uaai  --uaa-userinfo PASSCODE [TENANT]  detailed user info for passcode
-~  uaas  --uaa-service SERVICE [TENANT]    obtain token for uaa trusted service
-         ...    [TENANT]                   obtain token for tenant, fallback to paas tenant
-         ...    --decode                   decode result token
+~  uaad   --uaa-decode TOKEN                                     decode JSON web token
+~  uaac   --uaa-client [TENANT]                                  obtain uaa token for generic client
+~  uaap   --uaa-passcode PASSCODE [TENANT]                       obtain uaa token for one-time passcode
+~  uaau   --uaa-user USERNAME PASSWORD [TENANT]                  obtain uaa token for username password
+~  uaasc  --uaa-service-client SERVICE [TENANT]                  obtain service token for generic client
+~  uaasp  --uaa-service-passcode SERVICE PASSCODE [TENANT]       obtain service token for one-time passcode
+~  uaasu  --uaa-service-user SERVICE USERNAME PASSWORD [TENANT]  obtain service token for username password
+          ...    [TENANT]                                        obtain token for tenant, fallback to paas tenant
+          ...    --decode                                        decode result token
+          ...    --userinfo                                      add detailed user info for passcode or username
 
 ~  are read-only commands
 ```
@@ -58,23 +61,23 @@ privileges that particular user has. In order to achieve this:
   passcode. In our example it is `https://skyfin-company.authentication.sap.hana.ondemand.com/passcode`.
 - Using the user's one-time passcode run `mtx uaap vjcOkwoVFL4ig17YIebYJYgKODSK6rsL skyfin-company --decode`.
 
-## Accessing Server APIs
+## Accessing APIs as Technical User
 
 If your server exposes an endpoint with JWT authentication, which is the default in CAP, then you can
 access these endpoint with a generic client JWT that mtx can get for you.
 
-| purpose                                            | command                             |
-| :------------------------------------------------- | :---------------------------------- |
-| obtain client JWT for provider subaccount (paas)   | `mtx uaac`                          |
-| obtain client JWT for subscriber subaccount (saas) | `mtx uaac <subdomain or tenant id>` |
+| purpose                                           | command                             |
+| :------------------------------------------------ | :---------------------------------- |
+| obtain client JWT of provider subaccount (paas)   | `mtx uaac`                          |
+| obtain client JWT of subscriber subaccount (saas) | `mtx uaac <subdomain or tenant id>` |
 
 Set the `Authorization` header as `Bearer <jwt>` in HTTP requests for the endpoints to pass validation. We use
-[Postman](https://www.postman.com) for this, but any other HTTP client works as well.
+[curl](https://curl.se) for this, but any other HTTP client works as well.
 
-## Access And Userinfo With Passcode
+## Accessing APIs as User
 
-Instead of acting as a generic client for the server, you can access server APIs as a regular user, provided the user
-in question gives you a one-time-passcode, that their tenant's UAA published.
+Instead of acting as a generic client, you can access APIs as a regular user, provided the user in question gives you
+a one-time-passcode, that their tenant's UAA published.
 
 As an example, let's say the user in question works for a tenant with subdomain `microogle` in the BTP region `eu10`,
 then they can obtain their passcode by logging in at
@@ -83,10 +86,10 @@ then they can obtain their passcode by logging in at
 Using this one-time passcode, you can either get a regular JWT for accesses _as that user_, or their extended user
 info:
 
-| purpose                          | command                                        |
-| :------------------------------- | :--------------------------------------------- |
-| obtain user JWT                  | `mtx uaap <passcode> <subdomain or tenant id>` |
-| obtain extended user information | `mtx uaai <passcode> <subdomain or tenant id>` |
+| purpose                     | command                                                   |
+| :-------------------------- | :-------------------------------------------------------- |
+| obtain user JWT             | `mtx uaap <passcode> <subdomain or tenant id>`            |
+| obtain user JWT + user info | `mtx uaap <passcode> <subdomain or tenant id> --userinfo` |
 
 Like before, if the command is run without the `subdomain or tenant_id` parameter, the tool will assume you mean the
 provider subaccount (paas).
@@ -104,10 +107,24 @@ If these assertions match `user_attributes` that UAA expects, see
 `xs-security.json` allows `"foreign-scope-references": ["user_attributes"]`, then they will show up as extended user
 information.
 
+Similarly to using a one-time passcode, you can access APIs as some user if you have both the username and password of
+that user.
+
+| purpose                     | command                                                              |
+| :-------------------------- | :------------------------------------------------------------------- |
+| obtain user JWT             | `mtx uaau <username> <password> <subdomain or tenant id>`            |
+| obtain user JWT + user info | `mtx uaau <username> <password> <subdomain or tenant id> --userinfo` |
+
 ## Accessing Service APIs
 
 You can access services in the same way that the server accesses them, usually for debugging purposes. You will
 need to know the label of the service and it needs to be bound to the app which is configured for user authentication.
+
+| purpose                       | command                                                              |
+| :---------------------------- | :------------------------------------------------------------------- |
+| obtain client JWT for service | `mtx uaasc <service> <subdomain or tenant id>`                       |
+| obtain user JWT for service   | `mtx uaasp <service> <passcode> <subdomain or tenant id>`            |
+| obtain user JWT for service   | `mtx uaasu <service> <username> <password> <subdomain or tenant id>` |
 
 For example `destination` is the label of the [BTP destination service](https://help.sap.com/docs/CP_CONNECTIVITY).
 You will also need to choose a trusted subdomain to use, for example `skyfin-company`.
@@ -117,7 +134,7 @@ If the subdomain belongs to the
 xsapp provider subaccount, then it will always be trusted. If the subdomain belongs to a different subaccount, it will
 only be trusted if that account has successfully subscribed to the xsapp.
 
-So, `mtx uaas destination skyfin-company`, will give you the corresponding JWT, which can then be decoded or used as
+So, `mtx uaasc destination skyfin-company`, will give you the corresponding JWT, which can then be decoded or used as
 `Authorization` header in an HTTP client.
 
 ## Example for Saas Service

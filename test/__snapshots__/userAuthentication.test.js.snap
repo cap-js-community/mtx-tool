@@ -1,25 +1,491 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`uaa tests uaaClient with tenant 1`] = `
-[
-  "https://subdomain.authentication/oauth/token",
-  {
-    "body": "grant_type=client_credentials&client_id=clientid&client_secret=clientsecret",
-    "headers": {
-      "Accept": "application/json",
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    "method": "POST",
+exports[`uaa tests service tokens saas service client --decode 1`] = `
+"JWT Header:
+{"alg":"RS256","jku":"https://skyfin-company.authentication.sap.hana.ondemand.com/token_keys","kid":"default-jwt-key--1246513990","typ":"JWT","jid":"VYTBlP7gGUeEhZktHP6Uz7ccPsFh2xM/Y098Jis59dM="}
+
+JWT Body:
+{
+  "jti": "9bf347cf30d14b3399589dc6766c4548",
+  "ext_attr": {
+    "enhancer": "XSUAA",
+    "subaccountid": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+    "zdn": "skyfin-company",
+    "serviceinstanceid": "3c6e7048-f419-45ab-861b-1d500ed9a872"
   },
-]
+  "sub": "sb-afc-dev!b5874|businesslogging-sb-prod!b3598",
+  "authorities": [
+    "businesslogging-sb-prod!b3598.DeleteLogsByApp",
+    "businesslogging-sb-prod!b3598.ReadLogsByApp",
+    "uaa.resource",
+    "businesslogging-sb-prod!b3598.initdb",
+    "businesslogging-sb-prod!b3598.CreateTextResource",
+    "businesslogging-sb-prod!b3598.CreateConfig",
+    "businesslogging-sb-prod!b3598.callback"
+  ],
+  "scope": [
+    "businesslogging-sb-prod!b3598.DeleteLogsByApp",
+    "businesslogging-sb-prod!b3598.ReadLogsByApp",
+    "uaa.resource",
+    "businesslogging-sb-prod!b3598.initdb",
+    "businesslogging-sb-prod!b3598.CreateTextResource",
+    "businesslogging-sb-prod!b3598.CreateConfig",
+    "businesslogging-sb-prod!b3598.callback"
+  ],
+  "client_id": "sb-afc-dev!b5874|businesslogging-sb-prod!b3598",
+  "cid": "sb-afc-dev!b5874|businesslogging-sb-prod!b3598",
+  "azp": "sb-afc-dev!b5874|businesslogging-sb-prod!b3598",
+  "grant_type": "client_credentials",
+  "rev_sig": "b5b1a706",
+  "iat": 1708077721,
+  "exp": 1708120921,
+  "iss": "https://skyfin-company.authentication.sap.hana.ondemand.com/oauth/token",
+  "zid": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+  "aud": [
+    "uaa",
+    "sb-afc-dev!b5874|businesslogging-sb-prod!b3598",
+    "businesslogging-sb-prod!b3598"
+  ]
+}"
 `;
 
-exports[`uaa tests uaaClient with tenant 2`] = `
+exports[`uaa tests service tokens saas service client default 1`] = `
 "Authorization:
-Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTEyNDY1MTM5OTAiLCJ0eXAiOiJKV1QifQ.eyJqdGkiOiI5OTQ0NmY2YzNmOWU0NWI1OTNhYWU0MDA0ODkwZjk3YSIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI1ZWNjNzQxMy0yYjdlLTQxNGEtOTQ5Ni1hZDRhNjFmNmNjY2YiLCJ6ZG4iOiJza3lmaW4tY29tcGFueSJ9LCJzdWIiOiJzYi1hZmMtZGV2IXQ1ODc0IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIiwiYWZjLWRldiF0NTg3NC5tdGRlcGxveW1lbnQiLCJhZmMtZGV2IXQ1ODc0Lm10Y2FsbGJhY2siXSwic2NvcGUiOlsidWFhLnJlc291cmNlIiwiYWZjLWRldiF0NTg3NC5tdGRlcGxveW1lbnQiLCJhZmMtZGV2IXQ1ODc0Lm10Y2FsbGJhY2siXSwiY2xpZW50X2lkIjoic2ItYWZjLWRldiF0NTg3NCIsImNpZCI6InNiLWFmYy1kZXYhdDU4NzQiLCJhenAiOiJzYi1hZmMtZGV2IXQ1ODc0IiwiZ3JhbnRfdHlwZSI6ImNsaWVudF9jcmVkZW50aWFscyIsInJldl9zaWciOiI0ZDczMTQ4ZSIsImlhdCI6MTYyMTUxNTMyNiwiZXhwIjoxNjIxNTU4NTI2LCJpc3MiOiJodHRwczovL3NreWZpbi1jb21wYW55LmF1dGhlbnRpY2F0aW9uLnNhcC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjVlY2M3NDEzLTJiN2UtNDE0YS05NDk2LWFkNGE2MWY2Y2NjZiIsImF1ZCI6WyJ1YWEiLCJzYi1hZmMtZGV2IXQ1ODc0IiwiYWZjLWRldiF0NTg3NCJdfQ.fp3nMFh0NvqGqMNXPyeY9SCQBVvXbi2MgV6p3nQ9X8YXUjT758E0q405FY3dWxo5pqwAk75MHdr-A_PpxM4X99CGsjKe5Jm_-BlVjLs0bYOMbfo-pSTKb9iPBY_8ACsA1dn8XTDBH8ZRLtaz00v0Hc1a6dbpsABiXp_H1HYs8Q93XghtqBJegs5YK8vxLsvPiWS8fZKm577QYtIpx6e4p9ThPIxY3c5BPPARRKhrwWlSYeRxwcWd3uhDeC3O_PSomAeUV21KJym4_tLB4Pw35rbnNhVyCy1SklL7FMXPkhbC6vmlF7_ID17yhY8hsaLIVrpTrVksgKmjNXqkOguaQw"
+Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTEyNDY1MTM5OTAiLCJ0eXAiOiJKV1QiLCJqaWQiOiAiVllUQmxQN2dHVWVFaFprdEhQNlV6N2NjUHNGaDJ4TS9ZMDk4SmlzNTlkTT0ifQ.eyJqdGkiOiI5YmYzNDdjZjMwZDE0YjMzOTk1ODlkYzY3NjZjNDU0OCIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI1ZWNjNzQxMy0yYjdlLTQxNGEtOTQ5Ni1hZDRhNjFmNmNjY2YiLCJ6ZG4iOiJza3lmaW4tY29tcGFueSIsInNlcnZpY2VpbnN0YW5jZWlkIjoiM2M2ZTcwNDgtZjQxOS00NWFiLTg2MWItMWQ1MDBlZDlhODcyIn0sInN1YiI6InNiLWFmYy1kZXYhYjU4NzR8YnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTgiLCJhdXRob3JpdGllcyI6WyJidXNpbmVzc2xvZ2dpbmctc2ItcHJvZCFiMzU5OC5EZWxldGVMb2dzQnlBcHAiLCJidXNpbmVzc2xvZ2dpbmctc2ItcHJvZCFiMzU5OC5SZWFkTG9nc0J5QXBwIiwidWFhLnJlc291cmNlIiwiYnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTguaW5pdGRiIiwiYnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTguQ3JlYXRlVGV4dFJlc291cmNlIiwiYnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTguQ3JlYXRlQ29uZmlnIiwiYnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTguY2FsbGJhY2siXSwic2NvcGUiOlsiYnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTguRGVsZXRlTG9nc0J5QXBwIiwiYnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTguUmVhZExvZ3NCeUFwcCIsInVhYS5yZXNvdXJjZSIsImJ1c2luZXNzbG9nZ2luZy1zYi1wcm9kIWIzNTk4LmluaXRkYiIsImJ1c2luZXNzbG9nZ2luZy1zYi1wcm9kIWIzNTk4LkNyZWF0ZVRleHRSZXNvdXJjZSIsImJ1c2luZXNzbG9nZ2luZy1zYi1wcm9kIWIzNTk4LkNyZWF0ZUNvbmZpZyIsImJ1c2luZXNzbG9nZ2luZy1zYi1wcm9kIWIzNTk4LmNhbGxiYWNrIl0sImNsaWVudF9pZCI6InNiLWFmYy1kZXYhYjU4NzR8YnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTgiLCJjaWQiOiJzYi1hZmMtZGV2IWI1ODc0fGJ1c2luZXNzbG9nZ2luZy1zYi1wcm9kIWIzNTk4IiwiYXpwIjoic2ItYWZjLWRldiFiNTg3NHxidXNpbmVzc2xvZ2dpbmctc2ItcHJvZCFiMzU5OCIsImdyYW50X3R5cGUiOiJjbGllbnRfY3JlZGVudGlhbHMiLCJyZXZfc2lnIjoiYjViMWE3MDYiLCJpYXQiOjE3MDgwNzc3MjEsImV4cCI6MTcwODEyMDkyMSwiaXNzIjoiaHR0cHM6Ly9za3lmaW4tY29tcGFueS5hdXRoZW50aWNhdGlvbi5zYXAuaGFuYS5vbmRlbWFuZC5jb20vb2F1dGgvdG9rZW4iLCJ6aWQiOiI1ZWNjNzQxMy0yYjdlLTQxNGEtOTQ5Ni1hZDRhNjFmNmNjY2YiLCJhdWQiOlsidWFhIiwic2ItYWZjLWRldiFiNTg3NHxidXNpbmVzc2xvZ2dpbmctc2ItcHJvZCFiMzU5OCIsImJ1c2luZXNzbG9nZ2luZy1zYi1wcm9kIWIzNTk4Il19.UVhwIZMohTbI4zHjZn19sZ2e-ViGWoyA-gTwMLDO31uLd9iEHTt-vGuqNhg0HzAexcNC-XfL5Bkl13nEu5PnoJKOwEk0-d6qfu_PiSh930pqnC7j7qSWUVq0qP4K4gFgjuUFBz710r_d0ezAKk3tw81Crgb0Kcb5SIxpz9XoWpotM31yiWLrovIGR3cuCSbnnBc3pNjRNPSeoAkM4UIsD11ju5aL1YFb75vMRW7rg5BRxzlATLdoT04wT1o3y1JCWFwp44OVwnvcSycW2Jl74FbN6XT3MIfShmlHdUusZN2ewiOXvamJ7Gmn47ZBhwikQGHZoNezpWtKzP3HPQPaZg"
 `;
 
-exports[`uaa tests uaaClient with tenant 3`] = `
+exports[`uaa tests service tokens saas service passcode --decode --userinfo 1`] = `
+[
+  [
+    "https://skyfin-company.authentication/userinfo",
+    {
+      "headers": {
+        "Accept": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTEyNDY1MTM5OTAiLCJ0eXAiOiJKV1QiLCJqaWQiOiAiUzkvMVJQenN2K2ZxVTBpK0ZWU1NlTXFRV29mQzdKbEY0Q1hIVHQ3TzRuQT0ifQ.eyJqdGkiOiJhMWU1Njc3Y2FkYjI0YWFkOWU5MDc5MjlmNjJhMTgwNiIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI1ZWNjNzQxMy0yYjdlLTQxNGEtOTQ5Ni1hZDRhNjFmNmNjY2YiLCJ6ZG4iOiJza3lmaW4tY29tcGFueSIsIm9pZGNJc3N1ZXIiOiJodHRwczovL2F3ZHNwOGVmNC5hY2NvdW50czQwMC5vbmRlbWFuZC5jb20iLCJzZXJ2aWNlaW5zdGFuY2VpZCI6IjNjNmU3MDQ4LWY0MTktNDVhYi04NjFiLTFkNTAwZWQ5YTg3MiJ9LCJ1c2VyX3V1aWQiOiI4ZTk3MTY2Yi0xNTRjLTQyYzQtYWEzOC05NzMxY2U0MWE5ODciLCJ4cy51c2VyLmF0dHJpYnV0ZXMiOnt9LCJ4cy5zeXN0ZW0uYXR0cmlidXRlcyI6eyJ4cy5zYW1sLmdyb3VwcyI6WyJhZmNfZGV2ZWxvcGVyX2NhbmFyeSIsImFmY19kZXZlbG9wZXJfaHViIl0sInhzLnJvbGVjb2xsZWN0aW9ucyI6W119LCJnaXZlbl9uYW1lIjoiUmljaGFyZCIsImZhbWlseV9uYW1lIjoiTGluZG5lciIsInN1YiI6ImE5N2QxMGMxLTdkMGQtNDU3My1hYmZiLTNhZGNlZjU0N2EzMiIsInNjb3BlIjpbIm9wZW5pZCIsInVhYS51c2VyIl0sImNsaWVudF9pZCI6InNiLWFmYy1kZXYhYjU4NzR8YnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTgiLCJjaWQiOiJzYi1hZmMtZGV2IWI1ODc0fGJ1c2luZXNzbG9nZ2luZy1zYi1wcm9kIWIzNTk4IiwiYXpwIjoic2ItYWZjLWRldiFiNTg3NHxidXNpbmVzc2xvZ2dpbmctc2ItcHJvZCFiMzU5OCIsImdyYW50X3R5cGUiOiJwYXNzd29yZCIsInVzZXJfaWQiOiJhOTdkMTBjMS03ZDBkLTQ1NzMtYWJmYi0zYWRjZWY1NDdhMzIiLCJvcmlnaW4iOiJzYXAuY3VzdG9tIiwidXNlcl9uYW1lIjoicmljaGFyZC5saW5kbmVyQHNhcC5jb20iLCJlbWFpbCI6InJpY2hhcmQubGluZG5lckBzYXAuY29tIiwicmV2X3NpZyI6ImY0MmE3MTYwIiwiaWF0IjoxNzA4MDc3NzU1LCJleHAiOjE3MDgxMjA5NTUsImlzcyI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL29hdXRoL3Rva2VuIiwiemlkIjoiNWVjYzc0MTMtMmI3ZS00MTRhLTk0OTYtYWQ0YTYxZjZjY2NmIiwiYXVkIjpbInVhYSIsInNiLWFmYy1kZXYhYjU4NzR8YnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTgiLCJvcGVuaWQiXX0.nh7UEXdp0vk0rEkTs_GKV1qfwT_MBdswOnNyntlybvXGSxhkOrPB7PFFksq7Ke2w3yBsRdJ0xt5vRT_XPeyYphEomliCgWOXn4clWzWWuR9hUYYmxpBI2ZY30zK5baJjUWRVv-F_RD0clGnZJR5LxgzQVNIrjIJbTFBoGr7DgIc9TmxdXgrUYZoKt5XvKiLosXTQfIB46nL9pfK1fzChjWhGOCWj0dIigPgNHqQx1BbePOkgLZb72rRvqOpzGN-ynd36sowOEKgqmeiPjt4NEPukmX63yxpMv-PTf7syKAF49oPIZCblA5MWD416OEPj525_44dS8IL5LQB3V2_YIg",
+        "X-Zid": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+      },
+      "method": "GET",
+    },
+  ],
+]
+`;
+
+exports[`uaa tests service tokens saas service passcode --decode --userinfo 2`] = `
+"JWT Header:
+{"alg":"RS256","jku":"https://skyfin-company.authentication.sap.hana.ondemand.com/token_keys","kid":"default-jwt-key--1246513990","typ":"JWT","jid":"S9/1RPzsv+fqU0i+FVSSeMqQWofC7JlF4CXHTt7O4nA="}
+
+JWT Body:
+{
+  "jti": "a1e5677cadb24aad9e907929f62a1806",
+  "ext_attr": {
+    "enhancer": "XSUAA",
+    "subaccountid": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+    "zdn": "skyfin-company",
+    "oidcIssuer": "https://awdsp8ef4.accounts400.ondemand.com",
+    "serviceinstanceid": "3c6e7048-f419-45ab-861b-1d500ed9a872"
+  },
+  "user_uuid": "8e97166b-154c-42c4-aa38-9731ce41a987",
+  "xs.user.attributes": {},
+  "xs.system.attributes": {
+    "xs.saml.groups": [
+      "afc_developer_canary",
+      "afc_developer_hub"
+    ],
+    "xs.rolecollections": []
+  },
+  "given_name": "Richard",
+  "family_name": "Lindner",
+  "sub": "a97d10c1-7d0d-4573-abfb-3adcef547a32",
+  "scope": [
+    "openid",
+    "uaa.user"
+  ],
+  "client_id": "sb-afc-dev!b5874|businesslogging-sb-prod!b3598",
+  "cid": "sb-afc-dev!b5874|businesslogging-sb-prod!b3598",
+  "azp": "sb-afc-dev!b5874|businesslogging-sb-prod!b3598",
+  "grant_type": "password",
+  "user_id": "a97d10c1-7d0d-4573-abfb-3adcef547a32",
+  "origin": "sap.custom",
+  "user_name": "richard.lindner@sap.com",
+  "email": "richard.lindner@sap.com",
+  "rev_sig": "f42a7160",
+  "iat": 1708077755,
+  "exp": 1708120955,
+  "iss": "https://skyfin-company.authentication.sap.hana.ondemand.com/oauth/token",
+  "zid": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+  "aud": [
+    "uaa",
+    "sb-afc-dev!b5874|businesslogging-sb-prod!b3598",
+    "openid"
+  ]
+}
+
+User Info:
+{
+  "userStuff": "details"
+}"
+`;
+
+exports[`uaa tests service tokens saas service passcode --decode 1`] = `[]`;
+
+exports[`uaa tests service tokens saas service passcode --decode 2`] = `
+"JWT Header:
+{"alg":"RS256","jku":"https://skyfin-company.authentication.sap.hana.ondemand.com/token_keys","kid":"default-jwt-key--1246513990","typ":"JWT","jid":"S9/1RPzsv+fqU0i+FVSSeMqQWofC7JlF4CXHTt7O4nA="}
+
+JWT Body:
+{
+  "jti": "a1e5677cadb24aad9e907929f62a1806",
+  "ext_attr": {
+    "enhancer": "XSUAA",
+    "subaccountid": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+    "zdn": "skyfin-company",
+    "oidcIssuer": "https://awdsp8ef4.accounts400.ondemand.com",
+    "serviceinstanceid": "3c6e7048-f419-45ab-861b-1d500ed9a872"
+  },
+  "user_uuid": "8e97166b-154c-42c4-aa38-9731ce41a987",
+  "xs.user.attributes": {},
+  "xs.system.attributes": {
+    "xs.saml.groups": [
+      "afc_developer_canary",
+      "afc_developer_hub"
+    ],
+    "xs.rolecollections": []
+  },
+  "given_name": "Richard",
+  "family_name": "Lindner",
+  "sub": "a97d10c1-7d0d-4573-abfb-3adcef547a32",
+  "scope": [
+    "openid",
+    "uaa.user"
+  ],
+  "client_id": "sb-afc-dev!b5874|businesslogging-sb-prod!b3598",
+  "cid": "sb-afc-dev!b5874|businesslogging-sb-prod!b3598",
+  "azp": "sb-afc-dev!b5874|businesslogging-sb-prod!b3598",
+  "grant_type": "password",
+  "user_id": "a97d10c1-7d0d-4573-abfb-3adcef547a32",
+  "origin": "sap.custom",
+  "user_name": "richard.lindner@sap.com",
+  "email": "richard.lindner@sap.com",
+  "rev_sig": "f42a7160",
+  "iat": 1708077755,
+  "exp": 1708120955,
+  "iss": "https://skyfin-company.authentication.sap.hana.ondemand.com/oauth/token",
+  "zid": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+  "aud": [
+    "uaa",
+    "sb-afc-dev!b5874|businesslogging-sb-prod!b3598",
+    "openid"
+  ]
+}"
+`;
+
+exports[`uaa tests service tokens saas service passcode --userinfo 1`] = `
+[
+  [
+    "https://skyfin-company.authentication/userinfo",
+    {
+      "headers": {
+        "Accept": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTEyNDY1MTM5OTAiLCJ0eXAiOiJKV1QiLCJqaWQiOiAiUzkvMVJQenN2K2ZxVTBpK0ZWU1NlTXFRV29mQzdKbEY0Q1hIVHQ3TzRuQT0ifQ.eyJqdGkiOiJhMWU1Njc3Y2FkYjI0YWFkOWU5MDc5MjlmNjJhMTgwNiIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI1ZWNjNzQxMy0yYjdlLTQxNGEtOTQ5Ni1hZDRhNjFmNmNjY2YiLCJ6ZG4iOiJza3lmaW4tY29tcGFueSIsIm9pZGNJc3N1ZXIiOiJodHRwczovL2F3ZHNwOGVmNC5hY2NvdW50czQwMC5vbmRlbWFuZC5jb20iLCJzZXJ2aWNlaW5zdGFuY2VpZCI6IjNjNmU3MDQ4LWY0MTktNDVhYi04NjFiLTFkNTAwZWQ5YTg3MiJ9LCJ1c2VyX3V1aWQiOiI4ZTk3MTY2Yi0xNTRjLTQyYzQtYWEzOC05NzMxY2U0MWE5ODciLCJ4cy51c2VyLmF0dHJpYnV0ZXMiOnt9LCJ4cy5zeXN0ZW0uYXR0cmlidXRlcyI6eyJ4cy5zYW1sLmdyb3VwcyI6WyJhZmNfZGV2ZWxvcGVyX2NhbmFyeSIsImFmY19kZXZlbG9wZXJfaHViIl0sInhzLnJvbGVjb2xsZWN0aW9ucyI6W119LCJnaXZlbl9uYW1lIjoiUmljaGFyZCIsImZhbWlseV9uYW1lIjoiTGluZG5lciIsInN1YiI6ImE5N2QxMGMxLTdkMGQtNDU3My1hYmZiLTNhZGNlZjU0N2EzMiIsInNjb3BlIjpbIm9wZW5pZCIsInVhYS51c2VyIl0sImNsaWVudF9pZCI6InNiLWFmYy1kZXYhYjU4NzR8YnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTgiLCJjaWQiOiJzYi1hZmMtZGV2IWI1ODc0fGJ1c2luZXNzbG9nZ2luZy1zYi1wcm9kIWIzNTk4IiwiYXpwIjoic2ItYWZjLWRldiFiNTg3NHxidXNpbmVzc2xvZ2dpbmctc2ItcHJvZCFiMzU5OCIsImdyYW50X3R5cGUiOiJwYXNzd29yZCIsInVzZXJfaWQiOiJhOTdkMTBjMS03ZDBkLTQ1NzMtYWJmYi0zYWRjZWY1NDdhMzIiLCJvcmlnaW4iOiJzYXAuY3VzdG9tIiwidXNlcl9uYW1lIjoicmljaGFyZC5saW5kbmVyQHNhcC5jb20iLCJlbWFpbCI6InJpY2hhcmQubGluZG5lckBzYXAuY29tIiwicmV2X3NpZyI6ImY0MmE3MTYwIiwiaWF0IjoxNzA4MDc3NzU1LCJleHAiOjE3MDgxMjA5NTUsImlzcyI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL29hdXRoL3Rva2VuIiwiemlkIjoiNWVjYzc0MTMtMmI3ZS00MTRhLTk0OTYtYWQ0YTYxZjZjY2NmIiwiYXVkIjpbInVhYSIsInNiLWFmYy1kZXYhYjU4NzR8YnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTgiLCJvcGVuaWQiXX0.nh7UEXdp0vk0rEkTs_GKV1qfwT_MBdswOnNyntlybvXGSxhkOrPB7PFFksq7Ke2w3yBsRdJ0xt5vRT_XPeyYphEomliCgWOXn4clWzWWuR9hUYYmxpBI2ZY30zK5baJjUWRVv-F_RD0clGnZJR5LxgzQVNIrjIJbTFBoGr7DgIc9TmxdXgrUYZoKt5XvKiLosXTQfIB46nL9pfK1fzChjWhGOCWj0dIigPgNHqQx1BbePOkgLZb72rRvqOpzGN-ynd36sowOEKgqmeiPjt4NEPukmX63yxpMv-PTf7syKAF49oPIZCblA5MWD416OEPj525_44dS8IL5LQB3V2_YIg",
+        "X-Zid": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+      },
+      "method": "GET",
+    },
+  ],
+]
+`;
+
+exports[`uaa tests service tokens saas service passcode --userinfo 2`] = `
+"Authorization:
+Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTEyNDY1MTM5OTAiLCJ0eXAiOiJKV1QiLCJqaWQiOiAiUzkvMVJQenN2K2ZxVTBpK0ZWU1NlTXFRV29mQzdKbEY0Q1hIVHQ3TzRuQT0ifQ.eyJqdGkiOiJhMWU1Njc3Y2FkYjI0YWFkOWU5MDc5MjlmNjJhMTgwNiIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI1ZWNjNzQxMy0yYjdlLTQxNGEtOTQ5Ni1hZDRhNjFmNmNjY2YiLCJ6ZG4iOiJza3lmaW4tY29tcGFueSIsIm9pZGNJc3N1ZXIiOiJodHRwczovL2F3ZHNwOGVmNC5hY2NvdW50czQwMC5vbmRlbWFuZC5jb20iLCJzZXJ2aWNlaW5zdGFuY2VpZCI6IjNjNmU3MDQ4LWY0MTktNDVhYi04NjFiLTFkNTAwZWQ5YTg3MiJ9LCJ1c2VyX3V1aWQiOiI4ZTk3MTY2Yi0xNTRjLTQyYzQtYWEzOC05NzMxY2U0MWE5ODciLCJ4cy51c2VyLmF0dHJpYnV0ZXMiOnt9LCJ4cy5zeXN0ZW0uYXR0cmlidXRlcyI6eyJ4cy5zYW1sLmdyb3VwcyI6WyJhZmNfZGV2ZWxvcGVyX2NhbmFyeSIsImFmY19kZXZlbG9wZXJfaHViIl0sInhzLnJvbGVjb2xsZWN0aW9ucyI6W119LCJnaXZlbl9uYW1lIjoiUmljaGFyZCIsImZhbWlseV9uYW1lIjoiTGluZG5lciIsInN1YiI6ImE5N2QxMGMxLTdkMGQtNDU3My1hYmZiLTNhZGNlZjU0N2EzMiIsInNjb3BlIjpbIm9wZW5pZCIsInVhYS51c2VyIl0sImNsaWVudF9pZCI6InNiLWFmYy1kZXYhYjU4NzR8YnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTgiLCJjaWQiOiJzYi1hZmMtZGV2IWI1ODc0fGJ1c2luZXNzbG9nZ2luZy1zYi1wcm9kIWIzNTk4IiwiYXpwIjoic2ItYWZjLWRldiFiNTg3NHxidXNpbmVzc2xvZ2dpbmctc2ItcHJvZCFiMzU5OCIsImdyYW50X3R5cGUiOiJwYXNzd29yZCIsInVzZXJfaWQiOiJhOTdkMTBjMS03ZDBkLTQ1NzMtYWJmYi0zYWRjZWY1NDdhMzIiLCJvcmlnaW4iOiJzYXAuY3VzdG9tIiwidXNlcl9uYW1lIjoicmljaGFyZC5saW5kbmVyQHNhcC5jb20iLCJlbWFpbCI6InJpY2hhcmQubGluZG5lckBzYXAuY29tIiwicmV2X3NpZyI6ImY0MmE3MTYwIiwiaWF0IjoxNzA4MDc3NzU1LCJleHAiOjE3MDgxMjA5NTUsImlzcyI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL29hdXRoL3Rva2VuIiwiemlkIjoiNWVjYzc0MTMtMmI3ZS00MTRhLTk0OTYtYWQ0YTYxZjZjY2NmIiwiYXVkIjpbInVhYSIsInNiLWFmYy1kZXYhYjU4NzR8YnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTgiLCJvcGVuaWQiXX0.nh7UEXdp0vk0rEkTs_GKV1qfwT_MBdswOnNyntlybvXGSxhkOrPB7PFFksq7Ke2w3yBsRdJ0xt5vRT_XPeyYphEomliCgWOXn4clWzWWuR9hUYYmxpBI2ZY30zK5baJjUWRVv-F_RD0clGnZJR5LxgzQVNIrjIJbTFBoGr7DgIc9TmxdXgrUYZoKt5XvKiLosXTQfIB46nL9pfK1fzChjWhGOCWj0dIigPgNHqQx1BbePOkgLZb72rRvqOpzGN-ynd36sowOEKgqmeiPjt4NEPukmX63yxpMv-PTf7syKAF49oPIZCblA5MWD416OEPj525_44dS8IL5LQB3V2_YIg
+
+User Info:
+{
+  "userStuff": "details"
+}"
+`;
+
+exports[`uaa tests service tokens saas service passcode default 1`] = `[]`;
+
+exports[`uaa tests service tokens saas service passcode default 2`] = `
+"Authorization:
+Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTEyNDY1MTM5OTAiLCJ0eXAiOiJKV1QiLCJqaWQiOiAiUzkvMVJQenN2K2ZxVTBpK0ZWU1NlTXFRV29mQzdKbEY0Q1hIVHQ3TzRuQT0ifQ.eyJqdGkiOiJhMWU1Njc3Y2FkYjI0YWFkOWU5MDc5MjlmNjJhMTgwNiIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI1ZWNjNzQxMy0yYjdlLTQxNGEtOTQ5Ni1hZDRhNjFmNmNjY2YiLCJ6ZG4iOiJza3lmaW4tY29tcGFueSIsIm9pZGNJc3N1ZXIiOiJodHRwczovL2F3ZHNwOGVmNC5hY2NvdW50czQwMC5vbmRlbWFuZC5jb20iLCJzZXJ2aWNlaW5zdGFuY2VpZCI6IjNjNmU3MDQ4LWY0MTktNDVhYi04NjFiLTFkNTAwZWQ5YTg3MiJ9LCJ1c2VyX3V1aWQiOiI4ZTk3MTY2Yi0xNTRjLTQyYzQtYWEzOC05NzMxY2U0MWE5ODciLCJ4cy51c2VyLmF0dHJpYnV0ZXMiOnt9LCJ4cy5zeXN0ZW0uYXR0cmlidXRlcyI6eyJ4cy5zYW1sLmdyb3VwcyI6WyJhZmNfZGV2ZWxvcGVyX2NhbmFyeSIsImFmY19kZXZlbG9wZXJfaHViIl0sInhzLnJvbGVjb2xsZWN0aW9ucyI6W119LCJnaXZlbl9uYW1lIjoiUmljaGFyZCIsImZhbWlseV9uYW1lIjoiTGluZG5lciIsInN1YiI6ImE5N2QxMGMxLTdkMGQtNDU3My1hYmZiLTNhZGNlZjU0N2EzMiIsInNjb3BlIjpbIm9wZW5pZCIsInVhYS51c2VyIl0sImNsaWVudF9pZCI6InNiLWFmYy1kZXYhYjU4NzR8YnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTgiLCJjaWQiOiJzYi1hZmMtZGV2IWI1ODc0fGJ1c2luZXNzbG9nZ2luZy1zYi1wcm9kIWIzNTk4IiwiYXpwIjoic2ItYWZjLWRldiFiNTg3NHxidXNpbmVzc2xvZ2dpbmctc2ItcHJvZCFiMzU5OCIsImdyYW50X3R5cGUiOiJwYXNzd29yZCIsInVzZXJfaWQiOiJhOTdkMTBjMS03ZDBkLTQ1NzMtYWJmYi0zYWRjZWY1NDdhMzIiLCJvcmlnaW4iOiJzYXAuY3VzdG9tIiwidXNlcl9uYW1lIjoicmljaGFyZC5saW5kbmVyQHNhcC5jb20iLCJlbWFpbCI6InJpY2hhcmQubGluZG5lckBzYXAuY29tIiwicmV2X3NpZyI6ImY0MmE3MTYwIiwiaWF0IjoxNzA4MDc3NzU1LCJleHAiOjE3MDgxMjA5NTUsImlzcyI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL29hdXRoL3Rva2VuIiwiemlkIjoiNWVjYzc0MTMtMmI3ZS00MTRhLTk0OTYtYWQ0YTYxZjZjY2NmIiwiYXVkIjpbInVhYSIsInNiLWFmYy1kZXYhYjU4NzR8YnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTgiLCJvcGVuaWQiXX0.nh7UEXdp0vk0rEkTs_GKV1qfwT_MBdswOnNyntlybvXGSxhkOrPB7PFFksq7Ke2w3yBsRdJ0xt5vRT_XPeyYphEomliCgWOXn4clWzWWuR9hUYYmxpBI2ZY30zK5baJjUWRVv-F_RD0clGnZJR5LxgzQVNIrjIJbTFBoGr7DgIc9TmxdXgrUYZoKt5XvKiLosXTQfIB46nL9pfK1fzChjWhGOCWj0dIigPgNHqQx1BbePOkgLZb72rRvqOpzGN-ynd36sowOEKgqmeiPjt4NEPukmX63yxpMv-PTf7syKAF49oPIZCblA5MWD416OEPj525_44dS8IL5LQB3V2_YIg"
+`;
+
+exports[`uaa tests service tokens saas service user --decode --userinfo 1`] = `
+[
+  [
+    "https://skyfin-company.authentication/userinfo",
+    {
+      "headers": {
+        "Accept": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTEyNDY1MTM5OTAiLCJ0eXAiOiJKV1QiLCJqaWQiOiAiYWVYOE5lalRmbEplUXhBZVMxTFVnT1JNY2RFU0JCS1BZQXdXYW14bVljYz0ifQ.eyJqdGkiOiIyZGY3MjMzYzBkMTM0NjE0ODQyMjBhOGI3YTBjNzNjYiIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI1ZWNjNzQxMy0yYjdlLTQxNGEtOTQ5Ni1hZDRhNjFmNmNjY2YiLCJ6ZG4iOiJza3lmaW4tY29tcGFueSIsIm9pZGNJc3N1ZXIiOiJodHRwczovL2F3ZHNwOGVmNC5hY2NvdW50czQwMC5vbmRlbWFuZC5jb20iLCJzZXJ2aWNlaW5zdGFuY2VpZCI6IjNjNmU3MDQ4LWY0MTktNDVhYi04NjFiLTFkNTAwZWQ5YTg3MiJ9LCJ1c2VyX3V1aWQiOiJhYmI5ZGQ5Yi1iMDEyLTRkZjctYmNjZi00MWVkODY3NmNhYjMiLCJ4cy51c2VyLmF0dHJpYnV0ZXMiOnt9LCJ4cy5zeXN0ZW0uYXR0cmlidXRlcyI6eyJ4cy5yb2xlY29sbGVjdGlvbnMiOlsiQUZDX0FMTCJdfSwiZ2l2ZW5fbmFtZSI6IkRlZmF1bHQiLCJmYW1pbHlfbmFtZSI6IlRlc3RVc2VyIiwic3ViIjoiOWI4ODAzMjAtZDVmOC00NDg3LTkxN2MtYmMwZThjYzcwZDZmIiwic2NvcGUiOlsib3BlbmlkIiwiYnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTguRGlzcGxheUFsbEJ1c2luZXNzTG9ncyIsInVhYS51c2VyIl0sImNsaWVudF9pZCI6InNiLWFmYy1kZXYhYjU4NzR8YnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTgiLCJjaWQiOiJzYi1hZmMtZGV2IWI1ODc0fGJ1c2luZXNzbG9nZ2luZy1zYi1wcm9kIWIzNTk4IiwiYXpwIjoic2ItYWZjLWRldiFiNTg3NHxidXNpbmVzc2xvZ2dpbmctc2ItcHJvZCFiMzU5OCIsImdyYW50X3R5cGUiOiJwYXNzd29yZCIsInVzZXJfaWQiOiI5Yjg4MDMyMC1kNWY4LTQ0ODctOTE3Yy1iYzBlOGNjNzBkNmYiLCJvcmlnaW4iOiJzYXAuY3VzdG9tIiwidXNlcl9uYW1lIjoidGVzdHVzZXJAc2FwLmNvbSIsImVtYWlsIjoidGVzdHVzZXJAc2FwLmNvbSIsImF1dGhfdGltZSI6MTcwODA3Nzc5NiwicmV2X3NpZyI6Ijc0Y2MyZmJmIiwiaWF0IjoxNzA4MDc3Nzk2LCJleHAiOjE3MDgxMjA5OTYsImlzcyI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL29hdXRoL3Rva2VuIiwiemlkIjoiNWVjYzc0MTMtMmI3ZS00MTRhLTk0OTYtYWQ0YTYxZjZjY2NmIiwiYXVkIjpbInVhYSIsInNiLWFmYy1kZXYhYjU4NzR8YnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTgiLCJvcGVuaWQiLCJidXNpbmVzc2xvZ2dpbmctc2ItcHJvZCFiMzU5OCJdfQ.mgKzqg5kVuFiCtWQiC9oWwT8Ng0exL9ldkK0eAaLZKZERm2774CjwFoOPicuwGlzVBrU6adjztW-SdVnGA6GBzCRHUX7ce7okk20QVEKeHoZQFHvlZHJlHW93GP4K8kZ4R3vQPYgCIvNhRUwU7uz_TKdnJc68ffNnpFw_iu8LPjAX42_226dcLZbiWO4z3l0nr_mytCIm6ww6Y2GNZEJGxhwz-dU0JhtGQJkVohmy0zfKUtGs8X4Hc3AGXL65kL9Fh1fZPS5trYlU5VlFbf6d6i4WVPKuq969JZQM_-NXTCwiCdlYdsvG5zwzROOFmpc8hJPW1_3oczvbRTAC-DZDg",
+        "X-Zid": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+      },
+      "method": "GET",
+    },
+  ],
+]
+`;
+
+exports[`uaa tests service tokens saas service user --decode --userinfo 2`] = `
+"JWT Header:
+{"alg":"RS256","jku":"https://skyfin-company.authentication.sap.hana.ondemand.com/token_keys","kid":"default-jwt-key--1246513990","typ":"JWT","jid":"aeX8NejTflJeQxAeS1LUgORMcdESBBKPYAwWamxmYcc="}
+
+JWT Body:
+{
+  "jti": "2df7233c0d13461484220a8b7a0c73cb",
+  "ext_attr": {
+    "enhancer": "XSUAA",
+    "subaccountid": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+    "zdn": "skyfin-company",
+    "oidcIssuer": "https://awdsp8ef4.accounts400.ondemand.com",
+    "serviceinstanceid": "3c6e7048-f419-45ab-861b-1d500ed9a872"
+  },
+  "user_uuid": "abb9dd9b-b012-4df7-bccf-41ed8676cab3",
+  "xs.user.attributes": {},
+  "xs.system.attributes": {
+    "xs.rolecollections": [
+      "AFC_ALL"
+    ]
+  },
+  "given_name": "Default",
+  "family_name": "TestUser",
+  "sub": "9b880320-d5f8-4487-917c-bc0e8cc70d6f",
+  "scope": [
+    "openid",
+    "businesslogging-sb-prod!b3598.DisplayAllBusinessLogs",
+    "uaa.user"
+  ],
+  "client_id": "sb-afc-dev!b5874|businesslogging-sb-prod!b3598",
+  "cid": "sb-afc-dev!b5874|businesslogging-sb-prod!b3598",
+  "azp": "sb-afc-dev!b5874|businesslogging-sb-prod!b3598",
+  "grant_type": "password",
+  "user_id": "9b880320-d5f8-4487-917c-bc0e8cc70d6f",
+  "origin": "sap.custom",
+  "user_name": "testuser@sap.com",
+  "email": "testuser@sap.com",
+  "auth_time": 1708077796,
+  "rev_sig": "74cc2fbf",
+  "iat": 1708077796,
+  "exp": 1708120996,
+  "iss": "https://skyfin-company.authentication.sap.hana.ondemand.com/oauth/token",
+  "zid": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+  "aud": [
+    "uaa",
+    "sb-afc-dev!b5874|businesslogging-sb-prod!b3598",
+    "openid",
+    "businesslogging-sb-prod!b3598"
+  ]
+}
+
+User Info:
+{
+  "userStuff": "details"
+}"
+`;
+
+exports[`uaa tests service tokens saas service user --decode 1`] = `[]`;
+
+exports[`uaa tests service tokens saas service user --decode 2`] = `
+"JWT Header:
+{"alg":"RS256","jku":"https://skyfin-company.authentication.sap.hana.ondemand.com/token_keys","kid":"default-jwt-key--1246513990","typ":"JWT","jid":"aeX8NejTflJeQxAeS1LUgORMcdESBBKPYAwWamxmYcc="}
+
+JWT Body:
+{
+  "jti": "2df7233c0d13461484220a8b7a0c73cb",
+  "ext_attr": {
+    "enhancer": "XSUAA",
+    "subaccountid": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+    "zdn": "skyfin-company",
+    "oidcIssuer": "https://awdsp8ef4.accounts400.ondemand.com",
+    "serviceinstanceid": "3c6e7048-f419-45ab-861b-1d500ed9a872"
+  },
+  "user_uuid": "abb9dd9b-b012-4df7-bccf-41ed8676cab3",
+  "xs.user.attributes": {},
+  "xs.system.attributes": {
+    "xs.rolecollections": [
+      "AFC_ALL"
+    ]
+  },
+  "given_name": "Default",
+  "family_name": "TestUser",
+  "sub": "9b880320-d5f8-4487-917c-bc0e8cc70d6f",
+  "scope": [
+    "openid",
+    "businesslogging-sb-prod!b3598.DisplayAllBusinessLogs",
+    "uaa.user"
+  ],
+  "client_id": "sb-afc-dev!b5874|businesslogging-sb-prod!b3598",
+  "cid": "sb-afc-dev!b5874|businesslogging-sb-prod!b3598",
+  "azp": "sb-afc-dev!b5874|businesslogging-sb-prod!b3598",
+  "grant_type": "password",
+  "user_id": "9b880320-d5f8-4487-917c-bc0e8cc70d6f",
+  "origin": "sap.custom",
+  "user_name": "testuser@sap.com",
+  "email": "testuser@sap.com",
+  "auth_time": 1708077796,
+  "rev_sig": "74cc2fbf",
+  "iat": 1708077796,
+  "exp": 1708120996,
+  "iss": "https://skyfin-company.authentication.sap.hana.ondemand.com/oauth/token",
+  "zid": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+  "aud": [
+    "uaa",
+    "sb-afc-dev!b5874|businesslogging-sb-prod!b3598",
+    "openid",
+    "businesslogging-sb-prod!b3598"
+  ]
+}"
+`;
+
+exports[`uaa tests service tokens saas service user --userinfo 1`] = `
+[
+  [
+    "https://skyfin-company.authentication/userinfo",
+    {
+      "headers": {
+        "Accept": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTEyNDY1MTM5OTAiLCJ0eXAiOiJKV1QiLCJqaWQiOiAiYWVYOE5lalRmbEplUXhBZVMxTFVnT1JNY2RFU0JCS1BZQXdXYW14bVljYz0ifQ.eyJqdGkiOiIyZGY3MjMzYzBkMTM0NjE0ODQyMjBhOGI3YTBjNzNjYiIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI1ZWNjNzQxMy0yYjdlLTQxNGEtOTQ5Ni1hZDRhNjFmNmNjY2YiLCJ6ZG4iOiJza3lmaW4tY29tcGFueSIsIm9pZGNJc3N1ZXIiOiJodHRwczovL2F3ZHNwOGVmNC5hY2NvdW50czQwMC5vbmRlbWFuZC5jb20iLCJzZXJ2aWNlaW5zdGFuY2VpZCI6IjNjNmU3MDQ4LWY0MTktNDVhYi04NjFiLTFkNTAwZWQ5YTg3MiJ9LCJ1c2VyX3V1aWQiOiJhYmI5ZGQ5Yi1iMDEyLTRkZjctYmNjZi00MWVkODY3NmNhYjMiLCJ4cy51c2VyLmF0dHJpYnV0ZXMiOnt9LCJ4cy5zeXN0ZW0uYXR0cmlidXRlcyI6eyJ4cy5yb2xlY29sbGVjdGlvbnMiOlsiQUZDX0FMTCJdfSwiZ2l2ZW5fbmFtZSI6IkRlZmF1bHQiLCJmYW1pbHlfbmFtZSI6IlRlc3RVc2VyIiwic3ViIjoiOWI4ODAzMjAtZDVmOC00NDg3LTkxN2MtYmMwZThjYzcwZDZmIiwic2NvcGUiOlsib3BlbmlkIiwiYnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTguRGlzcGxheUFsbEJ1c2luZXNzTG9ncyIsInVhYS51c2VyIl0sImNsaWVudF9pZCI6InNiLWFmYy1kZXYhYjU4NzR8YnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTgiLCJjaWQiOiJzYi1hZmMtZGV2IWI1ODc0fGJ1c2luZXNzbG9nZ2luZy1zYi1wcm9kIWIzNTk4IiwiYXpwIjoic2ItYWZjLWRldiFiNTg3NHxidXNpbmVzc2xvZ2dpbmctc2ItcHJvZCFiMzU5OCIsImdyYW50X3R5cGUiOiJwYXNzd29yZCIsInVzZXJfaWQiOiI5Yjg4MDMyMC1kNWY4LTQ0ODctOTE3Yy1iYzBlOGNjNzBkNmYiLCJvcmlnaW4iOiJzYXAuY3VzdG9tIiwidXNlcl9uYW1lIjoidGVzdHVzZXJAc2FwLmNvbSIsImVtYWlsIjoidGVzdHVzZXJAc2FwLmNvbSIsImF1dGhfdGltZSI6MTcwODA3Nzc5NiwicmV2X3NpZyI6Ijc0Y2MyZmJmIiwiaWF0IjoxNzA4MDc3Nzk2LCJleHAiOjE3MDgxMjA5OTYsImlzcyI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL29hdXRoL3Rva2VuIiwiemlkIjoiNWVjYzc0MTMtMmI3ZS00MTRhLTk0OTYtYWQ0YTYxZjZjY2NmIiwiYXVkIjpbInVhYSIsInNiLWFmYy1kZXYhYjU4NzR8YnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTgiLCJvcGVuaWQiLCJidXNpbmVzc2xvZ2dpbmctc2ItcHJvZCFiMzU5OCJdfQ.mgKzqg5kVuFiCtWQiC9oWwT8Ng0exL9ldkK0eAaLZKZERm2774CjwFoOPicuwGlzVBrU6adjztW-SdVnGA6GBzCRHUX7ce7okk20QVEKeHoZQFHvlZHJlHW93GP4K8kZ4R3vQPYgCIvNhRUwU7uz_TKdnJc68ffNnpFw_iu8LPjAX42_226dcLZbiWO4z3l0nr_mytCIm6ww6Y2GNZEJGxhwz-dU0JhtGQJkVohmy0zfKUtGs8X4Hc3AGXL65kL9Fh1fZPS5trYlU5VlFbf6d6i4WVPKuq969JZQM_-NXTCwiCdlYdsvG5zwzROOFmpc8hJPW1_3oczvbRTAC-DZDg",
+        "X-Zid": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+      },
+      "method": "GET",
+    },
+  ],
+]
+`;
+
+exports[`uaa tests service tokens saas service user --userinfo 2`] = `
+"Authorization:
+Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTEyNDY1MTM5OTAiLCJ0eXAiOiJKV1QiLCJqaWQiOiAiYWVYOE5lalRmbEplUXhBZVMxTFVnT1JNY2RFU0JCS1BZQXdXYW14bVljYz0ifQ.eyJqdGkiOiIyZGY3MjMzYzBkMTM0NjE0ODQyMjBhOGI3YTBjNzNjYiIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI1ZWNjNzQxMy0yYjdlLTQxNGEtOTQ5Ni1hZDRhNjFmNmNjY2YiLCJ6ZG4iOiJza3lmaW4tY29tcGFueSIsIm9pZGNJc3N1ZXIiOiJodHRwczovL2F3ZHNwOGVmNC5hY2NvdW50czQwMC5vbmRlbWFuZC5jb20iLCJzZXJ2aWNlaW5zdGFuY2VpZCI6IjNjNmU3MDQ4LWY0MTktNDVhYi04NjFiLTFkNTAwZWQ5YTg3MiJ9LCJ1c2VyX3V1aWQiOiJhYmI5ZGQ5Yi1iMDEyLTRkZjctYmNjZi00MWVkODY3NmNhYjMiLCJ4cy51c2VyLmF0dHJpYnV0ZXMiOnt9LCJ4cy5zeXN0ZW0uYXR0cmlidXRlcyI6eyJ4cy5yb2xlY29sbGVjdGlvbnMiOlsiQUZDX0FMTCJdfSwiZ2l2ZW5fbmFtZSI6IkRlZmF1bHQiLCJmYW1pbHlfbmFtZSI6IlRlc3RVc2VyIiwic3ViIjoiOWI4ODAzMjAtZDVmOC00NDg3LTkxN2MtYmMwZThjYzcwZDZmIiwic2NvcGUiOlsib3BlbmlkIiwiYnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTguRGlzcGxheUFsbEJ1c2luZXNzTG9ncyIsInVhYS51c2VyIl0sImNsaWVudF9pZCI6InNiLWFmYy1kZXYhYjU4NzR8YnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTgiLCJjaWQiOiJzYi1hZmMtZGV2IWI1ODc0fGJ1c2luZXNzbG9nZ2luZy1zYi1wcm9kIWIzNTk4IiwiYXpwIjoic2ItYWZjLWRldiFiNTg3NHxidXNpbmVzc2xvZ2dpbmctc2ItcHJvZCFiMzU5OCIsImdyYW50X3R5cGUiOiJwYXNzd29yZCIsInVzZXJfaWQiOiI5Yjg4MDMyMC1kNWY4LTQ0ODctOTE3Yy1iYzBlOGNjNzBkNmYiLCJvcmlnaW4iOiJzYXAuY3VzdG9tIiwidXNlcl9uYW1lIjoidGVzdHVzZXJAc2FwLmNvbSIsImVtYWlsIjoidGVzdHVzZXJAc2FwLmNvbSIsImF1dGhfdGltZSI6MTcwODA3Nzc5NiwicmV2X3NpZyI6Ijc0Y2MyZmJmIiwiaWF0IjoxNzA4MDc3Nzk2LCJleHAiOjE3MDgxMjA5OTYsImlzcyI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL29hdXRoL3Rva2VuIiwiemlkIjoiNWVjYzc0MTMtMmI3ZS00MTRhLTk0OTYtYWQ0YTYxZjZjY2NmIiwiYXVkIjpbInVhYSIsInNiLWFmYy1kZXYhYjU4NzR8YnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTgiLCJvcGVuaWQiLCJidXNpbmVzc2xvZ2dpbmctc2ItcHJvZCFiMzU5OCJdfQ.mgKzqg5kVuFiCtWQiC9oWwT8Ng0exL9ldkK0eAaLZKZERm2774CjwFoOPicuwGlzVBrU6adjztW-SdVnGA6GBzCRHUX7ce7okk20QVEKeHoZQFHvlZHJlHW93GP4K8kZ4R3vQPYgCIvNhRUwU7uz_TKdnJc68ffNnpFw_iu8LPjAX42_226dcLZbiWO4z3l0nr_mytCIm6ww6Y2GNZEJGxhwz-dU0JhtGQJkVohmy0zfKUtGs8X4Hc3AGXL65kL9Fh1fZPS5trYlU5VlFbf6d6i4WVPKuq969JZQM_-NXTCwiCdlYdsvG5zwzROOFmpc8hJPW1_3oczvbRTAC-DZDg
+
+User Info:
+{
+  "userStuff": "details"
+}"
+`;
+
+exports[`uaa tests service tokens saas service user default 1`] = `[]`;
+
+exports[`uaa tests service tokens saas service user default 2`] = `
+"Authorization:
+Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTEyNDY1MTM5OTAiLCJ0eXAiOiJKV1QiLCJqaWQiOiAiYWVYOE5lalRmbEplUXhBZVMxTFVnT1JNY2RFU0JCS1BZQXdXYW14bVljYz0ifQ.eyJqdGkiOiIyZGY3MjMzYzBkMTM0NjE0ODQyMjBhOGI3YTBjNzNjYiIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI1ZWNjNzQxMy0yYjdlLTQxNGEtOTQ5Ni1hZDRhNjFmNmNjY2YiLCJ6ZG4iOiJza3lmaW4tY29tcGFueSIsIm9pZGNJc3N1ZXIiOiJodHRwczovL2F3ZHNwOGVmNC5hY2NvdW50czQwMC5vbmRlbWFuZC5jb20iLCJzZXJ2aWNlaW5zdGFuY2VpZCI6IjNjNmU3MDQ4LWY0MTktNDVhYi04NjFiLTFkNTAwZWQ5YTg3MiJ9LCJ1c2VyX3V1aWQiOiJhYmI5ZGQ5Yi1iMDEyLTRkZjctYmNjZi00MWVkODY3NmNhYjMiLCJ4cy51c2VyLmF0dHJpYnV0ZXMiOnt9LCJ4cy5zeXN0ZW0uYXR0cmlidXRlcyI6eyJ4cy5yb2xlY29sbGVjdGlvbnMiOlsiQUZDX0FMTCJdfSwiZ2l2ZW5fbmFtZSI6IkRlZmF1bHQiLCJmYW1pbHlfbmFtZSI6IlRlc3RVc2VyIiwic3ViIjoiOWI4ODAzMjAtZDVmOC00NDg3LTkxN2MtYmMwZThjYzcwZDZmIiwic2NvcGUiOlsib3BlbmlkIiwiYnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTguRGlzcGxheUFsbEJ1c2luZXNzTG9ncyIsInVhYS51c2VyIl0sImNsaWVudF9pZCI6InNiLWFmYy1kZXYhYjU4NzR8YnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTgiLCJjaWQiOiJzYi1hZmMtZGV2IWI1ODc0fGJ1c2luZXNzbG9nZ2luZy1zYi1wcm9kIWIzNTk4IiwiYXpwIjoic2ItYWZjLWRldiFiNTg3NHxidXNpbmVzc2xvZ2dpbmctc2ItcHJvZCFiMzU5OCIsImdyYW50X3R5cGUiOiJwYXNzd29yZCIsInVzZXJfaWQiOiI5Yjg4MDMyMC1kNWY4LTQ0ODctOTE3Yy1iYzBlOGNjNzBkNmYiLCJvcmlnaW4iOiJzYXAuY3VzdG9tIiwidXNlcl9uYW1lIjoidGVzdHVzZXJAc2FwLmNvbSIsImVtYWlsIjoidGVzdHVzZXJAc2FwLmNvbSIsImF1dGhfdGltZSI6MTcwODA3Nzc5NiwicmV2X3NpZyI6Ijc0Y2MyZmJmIiwiaWF0IjoxNzA4MDc3Nzk2LCJleHAiOjE3MDgxMjA5OTYsImlzcyI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL29hdXRoL3Rva2VuIiwiemlkIjoiNWVjYzc0MTMtMmI3ZS00MTRhLTk0OTYtYWQ0YTYxZjZjY2NmIiwiYXVkIjpbInVhYSIsInNiLWFmYy1kZXYhYjU4NzR8YnVzaW5lc3Nsb2dnaW5nLXNiLXByb2QhYjM1OTgiLCJvcGVuaWQiLCJidXNpbmVzc2xvZ2dpbmctc2ItcHJvZCFiMzU5OCJdfQ.mgKzqg5kVuFiCtWQiC9oWwT8Ng0exL9ldkK0eAaLZKZERm2774CjwFoOPicuwGlzVBrU6adjztW-SdVnGA6GBzCRHUX7ce7okk20QVEKeHoZQFHvlZHJlHW93GP4K8kZ4R3vQPYgCIvNhRUwU7uz_TKdnJc68ffNnpFw_iu8LPjAX42_226dcLZbiWO4z3l0nr_mytCIm6ww6Y2GNZEJGxhwz-dU0JhtGQJkVohmy0zfKUtGs8X4Hc3AGXL65kL9Fh1fZPS5trYlU5VlFbf6d6i4WVPKuq969JZQM_-NXTCwiCdlYdsvG5zwzROOFmpc8hJPW1_3oczvbRTAC-DZDg"
+`;
+
+exports[`uaa tests without context uaaDecode 1`] = `
+"JWT Header:
+{"alg":"RS256","jku":"https://skyfin.authentication.sap.hana.ondemand.com/token_keys","kid":"key-id-1","typ":"JWT"}
+
+JWT Body:
+{
+  "jti": "549abeeeacc649f68af589cafe33a2c6",
+  "ext_attr": {
+    "enhancer": "XSUAA",
+    "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+    "zdn": "skyfin"
+  },
+  "sub": "sb-afc-dev!t5874",
+  "authorities": [
+    "uaa.resource",
+    "afc-dev!t5874.mtdeployment",
+    "afc-dev!t5874.mtcallback"
+  ],
+  "scope": [
+    "uaa.resource",
+    "afc-dev!t5874.mtdeployment",
+    "afc-dev!t5874.mtcallback"
+  ],
+  "client_id": "sb-afc-dev!t5874",
+  "cid": "sb-afc-dev!t5874",
+  "azp": "sb-afc-dev!t5874",
+  "grant_type": "client_credentials",
+  "rev_sig": "ab594f43",
+  "iat": 1621514359,
+  "exp": 1621557559,
+  "iss": "http://skyfin.localhost:8080/uaa/oauth/token",
+  "zid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+  "aud": [
+    "uaa",
+    "sb-afc-dev!t5874",
+    "afc-dev!t5874"
+  ]
+}"
+`;
+
+exports[`uaa tests xsuaa tokens paas client --decode 1`] = `
+[
+  "https://identityzone.authentication/oauth/token",
+  {
+    "body": "grant_type=client_credentials&client_id=clientid&client_secret=clientsecret",
+    "headers": {
+      "Accept": "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    "method": "POST",
+  },
+]
+`;
+
+exports[`uaa tests xsuaa tokens paas client --decode 2`] = `
+"JWT Header:
+{"alg":"RS256","jku":"https://skyfin.authentication.sap.hana.ondemand.com/token_keys","kid":"key-id-1","typ":"JWT"}
+
+JWT Body:
+{
+  "jti": "549abeeeacc649f68af589cafe33a2c6",
+  "ext_attr": {
+    "enhancer": "XSUAA",
+    "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+    "zdn": "skyfin"
+  },
+  "sub": "sb-afc-dev!t5874",
+  "authorities": [
+    "uaa.resource",
+    "afc-dev!t5874.mtdeployment",
+    "afc-dev!t5874.mtcallback"
+  ],
+  "scope": [
+    "uaa.resource",
+    "afc-dev!t5874.mtdeployment",
+    "afc-dev!t5874.mtcallback"
+  ],
+  "client_id": "sb-afc-dev!t5874",
+  "cid": "sb-afc-dev!t5874",
+  "azp": "sb-afc-dev!t5874",
+  "grant_type": "client_credentials",
+  "rev_sig": "ab594f43",
+  "iat": 1621514359,
+  "exp": 1621557559,
+  "iss": "http://skyfin.localhost:8080/uaa/oauth/token",
+  "zid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+  "aud": [
+    "uaa",
+    "sb-afc-dev!t5874",
+    "afc-dev!t5874"
+  ]
+}"
+`;
+
+exports[`uaa tests xsuaa tokens paas client default 1`] = `
+[
+  "https://identityzone.authentication/oauth/token",
+  {
+    "body": "grant_type=client_credentials&client_id=clientid&client_secret=clientsecret",
+    "headers": {
+      "Accept": "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    "method": "POST",
+  },
+]
+`;
+
+exports[`uaa tests xsuaa tokens paas client default 2`] = `
+"Authorization:
+Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vc2t5ZmluLmF1dGhlbnRpY2F0aW9uLnNhcC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoia2V5LWlkLTEiLCJ0eXAiOiJKV1QifQ.eyJqdGkiOiI1NDlhYmVlZWFjYzY0OWY2OGFmNTg5Y2FmZTMzYTJjNiIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI3YjIwNDA4ZS0zZmUwLTRhZGUtYWEyZS1hZDk3YmFhYzcyZTgiLCJ6ZG4iOiJza3lmaW4ifSwic3ViIjoic2ItYWZjLWRldiF0NTg3NCIsImF1dGhvcml0aWVzIjpbInVhYS5yZXNvdXJjZSIsImFmYy1kZXYhdDU4NzQubXRkZXBsb3ltZW50IiwiYWZjLWRldiF0NTg3NC5tdGNhbGxiYWNrIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSIsImFmYy1kZXYhdDU4NzQubXRkZXBsb3ltZW50IiwiYWZjLWRldiF0NTg3NC5tdGNhbGxiYWNrIl0sImNsaWVudF9pZCI6InNiLWFmYy1kZXYhdDU4NzQiLCJjaWQiOiJzYi1hZmMtZGV2IXQ1ODc0IiwiYXpwIjoic2ItYWZjLWRldiF0NTg3NCIsImdyYW50X3R5cGUiOiJjbGllbnRfY3JlZGVudGlhbHMiLCJyZXZfc2lnIjoiYWI1OTRmNDMiLCJpYXQiOjE2MjE1MTQzNTksImV4cCI6MTYyMTU1NzU1OSwiaXNzIjoiaHR0cDovL3NreWZpbi5sb2NhbGhvc3Q6ODA4MC91YWEvb2F1dGgvdG9rZW4iLCJ6aWQiOiI3YjIwNDA4ZS0zZmUwLTRhZGUtYWEyZS1hZDk3YmFhYzcyZTgiLCJhdWQiOlsidWFhIiwic2ItYWZjLWRldiF0NTg3NCIsImFmYy1kZXYhdDU4NzQiXX0.u5LbQ7T01RNOwovupuLqi2xv9Sq8QPizY1k9MB4iNTnE6PrEacVaYhZFjBGuqRU6RDjIdfB1drzSGm1MwtrRAYkwWthu9YAfgHVanujXpjkD6NOE6J4sMfmJoy7e9BewJwPZ6l8k6G_Jqnm-9vURMlzjXRXqr1UyAVxlcqc4ZMikVc-25_XvYJKgp_qnbX1kBUwxECeTWtIB80SbroCgbGMwKCck58JyLr2RrZ4ZEPApeE-rWXFGDPtpmECzPRRl2aptA2Nur3fdl5g8Sqih5i_sSmIWMeoeViMVAgbbTZ-graNzcWB8yHri8UNZVihcl5cRAXH9Gvw4kNcYhSxP-Q"
+`;
+
+exports[`uaa tests xsuaa tokens saas client --decode 1`] = `
 [
   "https://subdomain.authentication/oauth/token",
   {
@@ -33,7 +499,7 @@ exports[`uaa tests uaaClient with tenant 3`] = `
 ]
 `;
 
-exports[`uaa tests uaaClient with tenant 4`] = `
+exports[`uaa tests xsuaa tokens saas client --decode 2`] = `
 "JWT Header:
 {"alg":"RS256","jku":"https://skyfin-company.authentication.sap.hana.ondemand.com/token_keys","kid":"default-jwt-key--1246513990","typ":"JWT"}
 
@@ -73,9 +539,9 @@ JWT Body:
 }"
 `;
 
-exports[`uaa tests uaaClient without tenant 1`] = `
+exports[`uaa tests xsuaa tokens saas client default 1`] = `
 [
-  "https://identityzone.authentication/oauth/token",
+  "https://subdomain.authentication/oauth/token",
   {
     "body": "grant_type=client_credentials&client_id=clientid&client_secret=clientsecret",
     "headers": {
@@ -87,139 +553,121 @@ exports[`uaa tests uaaClient without tenant 1`] = `
 ]
 `;
 
-exports[`uaa tests uaaClient without tenant 2`] = `
+exports[`uaa tests xsuaa tokens saas client default 2`] = `
 "Authorization:
-Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vc2t5ZmluLmF1dGhlbnRpY2F0aW9uLnNhcC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoia2V5LWlkLTEiLCJ0eXAiOiJKV1QifQ.eyJqdGkiOiI1NDlhYmVlZWFjYzY0OWY2OGFmNTg5Y2FmZTMzYTJjNiIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI3YjIwNDA4ZS0zZmUwLTRhZGUtYWEyZS1hZDk3YmFhYzcyZTgiLCJ6ZG4iOiJza3lmaW4ifSwic3ViIjoic2ItYWZjLWRldiF0NTg3NCIsImF1dGhvcml0aWVzIjpbInVhYS5yZXNvdXJjZSIsImFmYy1kZXYhdDU4NzQubXRkZXBsb3ltZW50IiwiYWZjLWRldiF0NTg3NC5tdGNhbGxiYWNrIl0sInNjb3BlIjpbInVhYS5yZXNvdXJjZSIsImFmYy1kZXYhdDU4NzQubXRkZXBsb3ltZW50IiwiYWZjLWRldiF0NTg3NC5tdGNhbGxiYWNrIl0sImNsaWVudF9pZCI6InNiLWFmYy1kZXYhdDU4NzQiLCJjaWQiOiJzYi1hZmMtZGV2IXQ1ODc0IiwiYXpwIjoic2ItYWZjLWRldiF0NTg3NCIsImdyYW50X3R5cGUiOiJjbGllbnRfY3JlZGVudGlhbHMiLCJyZXZfc2lnIjoiYWI1OTRmNDMiLCJpYXQiOjE2MjE1MTQzNTksImV4cCI6MTYyMTU1NzU1OSwiaXNzIjoiaHR0cDovL3NreWZpbi5sb2NhbGhvc3Q6ODA4MC91YWEvb2F1dGgvdG9rZW4iLCJ6aWQiOiI3YjIwNDA4ZS0zZmUwLTRhZGUtYWEyZS1hZDk3YmFhYzcyZTgiLCJhdWQiOlsidWFhIiwic2ItYWZjLWRldiF0NTg3NCIsImFmYy1kZXYhdDU4NzQiXX0.u5LbQ7T01RNOwovupuLqi2xv9Sq8QPizY1k9MB4iNTnE6PrEacVaYhZFjBGuqRU6RDjIdfB1drzSGm1MwtrRAYkwWthu9YAfgHVanujXpjkD6NOE6J4sMfmJoy7e9BewJwPZ6l8k6G_Jqnm-9vURMlzjXRXqr1UyAVxlcqc4ZMikVc-25_XvYJKgp_qnbX1kBUwxECeTWtIB80SbroCgbGMwKCck58JyLr2RrZ4ZEPApeE-rWXFGDPtpmECzPRRl2aptA2Nur3fdl5g8Sqih5i_sSmIWMeoeViMVAgbbTZ-graNzcWB8yHri8UNZVihcl5cRAXH9Gvw4kNcYhSxP-Q"
+Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTEyNDY1MTM5OTAiLCJ0eXAiOiJKV1QifQ.eyJqdGkiOiI5OTQ0NmY2YzNmOWU0NWI1OTNhYWU0MDA0ODkwZjk3YSIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI1ZWNjNzQxMy0yYjdlLTQxNGEtOTQ5Ni1hZDRhNjFmNmNjY2YiLCJ6ZG4iOiJza3lmaW4tY29tcGFueSJ9LCJzdWIiOiJzYi1hZmMtZGV2IXQ1ODc0IiwiYXV0aG9yaXRpZXMiOlsidWFhLnJlc291cmNlIiwiYWZjLWRldiF0NTg3NC5tdGRlcGxveW1lbnQiLCJhZmMtZGV2IXQ1ODc0Lm10Y2FsbGJhY2siXSwic2NvcGUiOlsidWFhLnJlc291cmNlIiwiYWZjLWRldiF0NTg3NC5tdGRlcGxveW1lbnQiLCJhZmMtZGV2IXQ1ODc0Lm10Y2FsbGJhY2siXSwiY2xpZW50X2lkIjoic2ItYWZjLWRldiF0NTg3NCIsImNpZCI6InNiLWFmYy1kZXYhdDU4NzQiLCJhenAiOiJzYi1hZmMtZGV2IXQ1ODc0IiwiZ3JhbnRfdHlwZSI6ImNsaWVudF9jcmVkZW50aWFscyIsInJldl9zaWciOiI0ZDczMTQ4ZSIsImlhdCI6MTYyMTUxNTMyNiwiZXhwIjoxNjIxNTU4NTI2LCJpc3MiOiJodHRwczovL3NreWZpbi1jb21wYW55LmF1dGhlbnRpY2F0aW9uLnNhcC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjVlY2M3NDEzLTJiN2UtNDE0YS05NDk2LWFkNGE2MWY2Y2NjZiIsImF1ZCI6WyJ1YWEiLCJzYi1hZmMtZGV2IXQ1ODc0IiwiYWZjLWRldiF0NTg3NCJdfQ.fp3nMFh0NvqGqMNXPyeY9SCQBVvXbi2MgV6p3nQ9X8YXUjT758E0q405FY3dWxo5pqwAk75MHdr-A_PpxM4X99CGsjKe5Jm_-BlVjLs0bYOMbfo-pSTKb9iPBY_8ACsA1dn8XTDBH8ZRLtaz00v0Hc1a6dbpsABiXp_H1HYs8Q93XghtqBJegs5YK8vxLsvPiWS8fZKm577QYtIpx6e4p9ThPIxY3c5BPPARRKhrwWlSYeRxwcWd3uhDeC3O_PSomAeUV21KJym4_tLB4Pw35rbnNhVyCy1SklL7FMXPkhbC6vmlF7_ID17yhY8hsaLIVrpTrVksgKmjNXqkOguaQw"
 `;
 
-exports[`uaa tests uaaClient without tenant 3`] = `
+exports[`uaa tests xsuaa tokens saas passcode --decode --userinfo 1`] = `
 [
-  "https://identityzone.authentication/oauth/token",
-  {
-    "body": "grant_type=client_credentials&client_id=clientid&client_secret=clientsecret",
-    "headers": {
-      "Accept": "application/json",
-      "Content-Type": "application/x-www-form-urlencoded",
+  [
+    "https://subdomain.authentication/oauth/token",
+    {
+      "body": "grant_type=password&client_id=clientid&client_secret=clientsecret&passcode=passcode90",
+      "headers": {
+        "Accept": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      "method": "POST",
     },
-    "method": "POST",
-  },
+  ],
+  [
+    "https://skyfin-company.authentication/userinfo",
+    {
+      "headers": {
+        "Accept": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTEyNDY1MTM5OTAiLCJ0eXAiOiJKV1QifQ.eyJqdGkiOiI1NmJmMGYyODBiNzc0MTdiOTMxOTE3MTNmYWUwZGI2NSIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI1ZWNjNzQxMy0yYjdlLTQxNGEtOTQ5Ni1hZDRhNjFmNmNjY2YiLCJ6ZG4iOiJza3lmaW4tY29tcGFueSJ9LCJ4cy5zeXN0ZW0uYXR0cmlidXRlcyI6eyJ4cy5yb2xlY29sbGVjdGlvbnMiOlsiQUZDX0FMTCJdfSwiZ2l2ZW5fbmFtZSI6IlJpY2hhcmQiLCJ4cy51c2VyLmF0dHJpYnV0ZXMiOnt9LCJmYW1pbHlfbmFtZSI6IkxpbmRuZXIiLCJzdWIiOiJhOGEzN2FiNy0wMDU2LTRkNGItYjNkNy1mNzBlYWQ5MmM4MjkiLCJzY29wZSI6WyJhZmMtZGV2IXQ1ODc0LlByb3ZpZGVyIiwiYWZjLWRldiF0NTg3NC5Db25zdW1lciIsImFmYy1kZXYhdDU4NzQuQUZDX1JlcG9ydGluZyIsImFmYy1kZXYhdDU4NzQuQUZDX1VzZXIiLCJvcGVuaWQiLCJhZmMtZGV2IXQ1ODc0LkV4dGVuZENEU2RlbGV0ZSIsImFmYy1kZXYhdDU4NzQuS0VZVVNFUiIsImFmYy1kZXYhdDU4NzQuRXh0ZW5kQ0RTIiwiYWZjLWRldiF0NTg3NC5BRkNfQXBwcm92ZSIsImFmYy1kZXYhdDU4NzQuQUZDX1Byb2Nlc3MiLCJhZmMtZGV2IXQ1ODc0LkFGQ19Db25maWciLCJhZmMtZGV2IXQ1ODc0LkFGQ19TeXN0ZW1BZG1pbiIsInVhYS51c2VyIiwiYWZjLWRldiF0NTg3NC5BRkNfRGVmaW5lIiwiYWZjLWRldiF0NTg3NC5BRkNfVXNlck1hbmFnZW1lbnQiLCJhZmMtZGV2IXQ1ODc0LkFGQ19Db21wbGlhbmNlIl0sImNsaWVudF9pZCI6InNiLWFmYy1kZXYhdDU4NzQiLCJjaWQiOiJzYi1hZmMtZGV2IXQ1ODc0IiwiYXpwIjoic2ItYWZjLWRldiF0NTg3NCIsImdyYW50X3R5cGUiOiJwYXNzd29yZCIsInVzZXJfaWQiOiJhOGEzN2FiNy0wMDU2LTRkNGItYjNkNy1mNzBlYWQ5MmM4MjkiLCJvcmlnaW4iOiJzYXAuZGVmYXVsdCIsInVzZXJfbmFtZSI6InJpY2hhcmQubGluZG5lckBzYXAuY29tIiwiZW1haWwiOiJyaWNoYXJkLmxpbmRuZXJAc2FwLmNvbSIsInJldl9zaWciOiI1NzRmMDc1IiwiaWF0IjoxNjIxNTE2NTkzLCJleHAiOjE2MjE1NTk3OTMsImlzcyI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL29hdXRoL3Rva2VuIiwiemlkIjoiNWVjYzc0MTMtMmI3ZS00MTRhLTk0OTYtYWQ0YTYxZjZjY2NmIiwiYXVkIjpbInVhYSIsIm9wZW5pZCIsInNiLWFmYy1kZXYhdDU4NzQiLCJhZmMtZGV2IXQ1ODc0Il19.o-hXO2NWSaG3PQRfVdOVL93LoY2SJZ-grl2WLuY2UA94D09Obvg32EB-0yNwtfdEJb-eR2vkrwSh64n0J1u8b7JCPl_9ddQysXb_NsoUvxQXmi9kpTKwD6nQTwFc6mYz8dn4UeERkAbMWFHhF16iDRwmPT5v9l_57u-YRSUjW9azgB5Lf8X9NBzk0N94f_FWtZNnNNe_eK0uTkx8QP2T3w2fLtsSX2HMg4W5DCRaf-67XezHPOMYfcSz0rIb18dBSl6h9_nirl-Tjm8RcINytZLsQNA_iuZ18vvjJloTvmrdDMgh7EI70R3oCoaGovvagKg7WwXs3QFTqj6xj6ilNg",
+        "X-Zid": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+      },
+      "method": "GET",
+    },
+  ],
 ]
 `;
 
-exports[`uaa tests uaaClient without tenant 4`] = `
+exports[`uaa tests xsuaa tokens saas passcode --decode --userinfo 2`] = `
 "JWT Header:
-{"alg":"RS256","jku":"https://skyfin.authentication.sap.hana.ondemand.com/token_keys","kid":"key-id-1","typ":"JWT"}
+{"alg":"RS256","jku":"https://skyfin-company.authentication.sap.hana.ondemand.com/token_keys","kid":"default-jwt-key--1246513990","typ":"JWT"}
 
 JWT Body:
 {
-  "jti": "549abeeeacc649f68af589cafe33a2c6",
+  "jti": "56bf0f280b77417b93191713fae0db65",
   "ext_attr": {
     "enhancer": "XSUAA",
-    "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-    "zdn": "skyfin"
+    "subaccountid": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+    "zdn": "skyfin-company"
   },
-  "sub": "sb-afc-dev!t5874",
-  "authorities": [
-    "uaa.resource",
-    "afc-dev!t5874.mtdeployment",
-    "afc-dev!t5874.mtcallback"
-  ],
+  "xs.system.attributes": {
+    "xs.rolecollections": [
+      "AFC_ALL"
+    ]
+  },
+  "given_name": "Richard",
+  "xs.user.attributes": {},
+  "family_name": "Lindner",
+  "sub": "a8a37ab7-0056-4d4b-b3d7-f70ead92c829",
   "scope": [
-    "uaa.resource",
-    "afc-dev!t5874.mtdeployment",
-    "afc-dev!t5874.mtcallback"
+    "afc-dev!t5874.Provider",
+    "afc-dev!t5874.Consumer",
+    "afc-dev!t5874.AFC_Reporting",
+    "afc-dev!t5874.AFC_User",
+    "openid",
+    "afc-dev!t5874.ExtendCDSdelete",
+    "afc-dev!t5874.KEYUSER",
+    "afc-dev!t5874.ExtendCDS",
+    "afc-dev!t5874.AFC_Approve",
+    "afc-dev!t5874.AFC_Process",
+    "afc-dev!t5874.AFC_Config",
+    "afc-dev!t5874.AFC_SystemAdmin",
+    "uaa.user",
+    "afc-dev!t5874.AFC_Define",
+    "afc-dev!t5874.AFC_UserManagement",
+    "afc-dev!t5874.AFC_Compliance"
   ],
   "client_id": "sb-afc-dev!t5874",
   "cid": "sb-afc-dev!t5874",
   "azp": "sb-afc-dev!t5874",
-  "grant_type": "client_credentials",
-  "rev_sig": "ab594f43",
-  "iat": 1621514359,
-  "exp": 1621557559,
-  "iss": "http://skyfin.localhost:8080/uaa/oauth/token",
-  "zid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+  "grant_type": "password",
+  "user_id": "a8a37ab7-0056-4d4b-b3d7-f70ead92c829",
+  "origin": "sap.default",
+  "user_name": "richard.lindner@sap.com",
+  "email": "richard.lindner@sap.com",
+  "rev_sig": "574f075",
+  "iat": 1621516593,
+  "exp": 1621559793,
+  "iss": "https://skyfin-company.authentication.sap.hana.ondemand.com/oauth/token",
+  "zid": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
   "aud": [
     "uaa",
+    "openid",
     "sb-afc-dev!t5874",
     "afc-dev!t5874"
   ]
-}"
-`;
+}
 
-exports[`uaa tests uaaDecode 1`] = `
-"JWT Header:
-{"alg":"RS256","jku":"https://skyfin.authentication.sap.hana.ondemand.com/token_keys","kid":"key-id-1","typ":"JWT"}
-
-JWT Body:
+User Info:
 {
-  "jti": "549abeeeacc649f68af589cafe33a2c6",
-  "ext_attr": {
-    "enhancer": "XSUAA",
-    "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-    "zdn": "skyfin"
-  },
-  "sub": "sb-afc-dev!t5874",
-  "authorities": [
-    "uaa.resource",
-    "afc-dev!t5874.mtdeployment",
-    "afc-dev!t5874.mtcallback"
-  ],
-  "scope": [
-    "uaa.resource",
-    "afc-dev!t5874.mtdeployment",
-    "afc-dev!t5874.mtcallback"
-  ],
-  "client_id": "sb-afc-dev!t5874",
-  "cid": "sb-afc-dev!t5874",
-  "azp": "sb-afc-dev!t5874",
-  "grant_type": "client_credentials",
-  "rev_sig": "ab594f43",
-  "iat": 1621514359,
-  "exp": 1621557559,
-  "iss": "http://skyfin.localhost:8080/uaa/oauth/token",
-  "zid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-  "aud": [
-    "uaa",
-    "sb-afc-dev!t5874",
-    "afc-dev!t5874"
-  ]
+  "userStuff": "details"
 }"
 `;
 
-exports[`uaa tests uaaPasscode with tenant 1`] = `
+exports[`uaa tests xsuaa tokens saas passcode --decode 1`] = `
 [
-  "https://subdomain.authentication/oauth/token",
-  {
-    "body": "grant_type=password&client_id=clientid&client_secret=clientsecret&passcode=passcode90",
-    "headers": {
-      "Accept": "application/json",
-      "Content-Type": "application/x-www-form-urlencoded",
+  [
+    "https://subdomain.authentication/oauth/token",
+    {
+      "body": "grant_type=password&client_id=clientid&client_secret=clientsecret&passcode=passcode90",
+      "headers": {
+        "Accept": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      "method": "POST",
     },
-    "method": "POST",
-  },
+  ],
 ]
 `;
 
-exports[`uaa tests uaaPasscode with tenant 2`] = `
-"Authorization:
-Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTEyNDY1MTM5OTAiLCJ0eXAiOiJKV1QifQ.eyJqdGkiOiI1NmJmMGYyODBiNzc0MTdiOTMxOTE3MTNmYWUwZGI2NSIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI1ZWNjNzQxMy0yYjdlLTQxNGEtOTQ5Ni1hZDRhNjFmNmNjY2YiLCJ6ZG4iOiJza3lmaW4tY29tcGFueSJ9LCJ4cy5zeXN0ZW0uYXR0cmlidXRlcyI6eyJ4cy5yb2xlY29sbGVjdGlvbnMiOlsiQUZDX0FMTCJdfSwiZ2l2ZW5fbmFtZSI6IlJpY2hhcmQiLCJ4cy51c2VyLmF0dHJpYnV0ZXMiOnt9LCJmYW1pbHlfbmFtZSI6IkxpbmRuZXIiLCJzdWIiOiJhOGEzN2FiNy0wMDU2LTRkNGItYjNkNy1mNzBlYWQ5MmM4MjkiLCJzY29wZSI6WyJhZmMtZGV2IXQ1ODc0LlByb3ZpZGVyIiwiYWZjLWRldiF0NTg3NC5Db25zdW1lciIsImFmYy1kZXYhdDU4NzQuQUZDX1JlcG9ydGluZyIsImFmYy1kZXYhdDU4NzQuQUZDX1VzZXIiLCJvcGVuaWQiLCJhZmMtZGV2IXQ1ODc0LkV4dGVuZENEU2RlbGV0ZSIsImFmYy1kZXYhdDU4NzQuS0VZVVNFUiIsImFmYy1kZXYhdDU4NzQuRXh0ZW5kQ0RTIiwiYWZjLWRldiF0NTg3NC5BRkNfQXBwcm92ZSIsImFmYy1kZXYhdDU4NzQuQUZDX1Byb2Nlc3MiLCJhZmMtZGV2IXQ1ODc0LkFGQ19Db25maWciLCJhZmMtZGV2IXQ1ODc0LkFGQ19TeXN0ZW1BZG1pbiIsInVhYS51c2VyIiwiYWZjLWRldiF0NTg3NC5BRkNfRGVmaW5lIiwiYWZjLWRldiF0NTg3NC5BRkNfVXNlck1hbmFnZW1lbnQiLCJhZmMtZGV2IXQ1ODc0LkFGQ19Db21wbGlhbmNlIl0sImNsaWVudF9pZCI6InNiLWFmYy1kZXYhdDU4NzQiLCJjaWQiOiJzYi1hZmMtZGV2IXQ1ODc0IiwiYXpwIjoic2ItYWZjLWRldiF0NTg3NCIsImdyYW50X3R5cGUiOiJwYXNzd29yZCIsInVzZXJfaWQiOiJhOGEzN2FiNy0wMDU2LTRkNGItYjNkNy1mNzBlYWQ5MmM4MjkiLCJvcmlnaW4iOiJzYXAuZGVmYXVsdCIsInVzZXJfbmFtZSI6InJpY2hhcmQubGluZG5lckBzYXAuY29tIiwiZW1haWwiOiJyaWNoYXJkLmxpbmRuZXJAc2FwLmNvbSIsInJldl9zaWciOiI1NzRmMDc1IiwiaWF0IjoxNjIxNTE2NTkzLCJleHAiOjE2MjE1NTk3OTMsImlzcyI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL29hdXRoL3Rva2VuIiwiemlkIjoiNWVjYzc0MTMtMmI3ZS00MTRhLTk0OTYtYWQ0YTYxZjZjY2NmIiwiYXVkIjpbInVhYSIsIm9wZW5pZCIsInNiLWFmYy1kZXYhdDU4NzQiLCJhZmMtZGV2IXQ1ODc0Il19.o-hXO2NWSaG3PQRfVdOVL93LoY2SJZ-grl2WLuY2UA94D09Obvg32EB-0yNwtfdEJb-eR2vkrwSh64n0J1u8b7JCPl_9ddQysXb_NsoUvxQXmi9kpTKwD6nQTwFc6mYz8dn4UeERkAbMWFHhF16iDRwmPT5v9l_57u-YRSUjW9azgB5Lf8X9NBzk0N94f_FWtZNnNNe_eK0uTkx8QP2T3w2fLtsSX2HMg4W5DCRaf-67XezHPOMYfcSz0rIb18dBSl6h9_nirl-Tjm8RcINytZLsQNA_iuZ18vvjJloTvmrdDMgh7EI70R3oCoaGovvagKg7WwXs3QFTqj6xj6ilNg"
-`;
-
-exports[`uaa tests uaaPasscode with tenant 3`] = `
-[
-  "https://subdomain.authentication/oauth/token",
-  {
-    "body": "grant_type=password&client_id=clientid&client_secret=clientsecret&passcode=passcode90",
-    "headers": {
-      "Accept": "application/json",
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    "method": "POST",
-  },
-]
-`;
-
-exports[`uaa tests uaaPasscode with tenant 4`] = `
+exports[`uaa tests xsuaa tokens saas passcode --decode 2`] = `
 "JWT Header:
 {"alg":"RS256","jku":"https://skyfin-company.authentication.sap.hana.ondemand.com/token_keys","kid":"default-jwt-key--1246513990","typ":"JWT"}
 
@@ -280,91 +728,251 @@ JWT Body:
 }"
 `;
 
-exports[`uaa tests uaaPasscode without tenant 1`] = `
+exports[`uaa tests xsuaa tokens saas passcode --userinfo 1`] = `
 [
-  "https://identityzone.authentication/oauth/token",
-  {
-    "body": "grant_type=password&client_id=clientid&client_secret=clientsecret&passcode=passcode90",
-    "headers": {
-      "Accept": "application/json",
-      "Content-Type": "application/x-www-form-urlencoded",
+  [
+    "https://subdomain.authentication/oauth/token",
+    {
+      "body": "grant_type=password&client_id=clientid&client_secret=clientsecret&passcode=passcode90",
+      "headers": {
+        "Accept": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      "method": "POST",
     },
-    "method": "POST",
-  },
+  ],
+  [
+    "https://skyfin-company.authentication/userinfo",
+    {
+      "headers": {
+        "Accept": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTEyNDY1MTM5OTAiLCJ0eXAiOiJKV1QifQ.eyJqdGkiOiI1NmJmMGYyODBiNzc0MTdiOTMxOTE3MTNmYWUwZGI2NSIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI1ZWNjNzQxMy0yYjdlLTQxNGEtOTQ5Ni1hZDRhNjFmNmNjY2YiLCJ6ZG4iOiJza3lmaW4tY29tcGFueSJ9LCJ4cy5zeXN0ZW0uYXR0cmlidXRlcyI6eyJ4cy5yb2xlY29sbGVjdGlvbnMiOlsiQUZDX0FMTCJdfSwiZ2l2ZW5fbmFtZSI6IlJpY2hhcmQiLCJ4cy51c2VyLmF0dHJpYnV0ZXMiOnt9LCJmYW1pbHlfbmFtZSI6IkxpbmRuZXIiLCJzdWIiOiJhOGEzN2FiNy0wMDU2LTRkNGItYjNkNy1mNzBlYWQ5MmM4MjkiLCJzY29wZSI6WyJhZmMtZGV2IXQ1ODc0LlByb3ZpZGVyIiwiYWZjLWRldiF0NTg3NC5Db25zdW1lciIsImFmYy1kZXYhdDU4NzQuQUZDX1JlcG9ydGluZyIsImFmYy1kZXYhdDU4NzQuQUZDX1VzZXIiLCJvcGVuaWQiLCJhZmMtZGV2IXQ1ODc0LkV4dGVuZENEU2RlbGV0ZSIsImFmYy1kZXYhdDU4NzQuS0VZVVNFUiIsImFmYy1kZXYhdDU4NzQuRXh0ZW5kQ0RTIiwiYWZjLWRldiF0NTg3NC5BRkNfQXBwcm92ZSIsImFmYy1kZXYhdDU4NzQuQUZDX1Byb2Nlc3MiLCJhZmMtZGV2IXQ1ODc0LkFGQ19Db25maWciLCJhZmMtZGV2IXQ1ODc0LkFGQ19TeXN0ZW1BZG1pbiIsInVhYS51c2VyIiwiYWZjLWRldiF0NTg3NC5BRkNfRGVmaW5lIiwiYWZjLWRldiF0NTg3NC5BRkNfVXNlck1hbmFnZW1lbnQiLCJhZmMtZGV2IXQ1ODc0LkFGQ19Db21wbGlhbmNlIl0sImNsaWVudF9pZCI6InNiLWFmYy1kZXYhdDU4NzQiLCJjaWQiOiJzYi1hZmMtZGV2IXQ1ODc0IiwiYXpwIjoic2ItYWZjLWRldiF0NTg3NCIsImdyYW50X3R5cGUiOiJwYXNzd29yZCIsInVzZXJfaWQiOiJhOGEzN2FiNy0wMDU2LTRkNGItYjNkNy1mNzBlYWQ5MmM4MjkiLCJvcmlnaW4iOiJzYXAuZGVmYXVsdCIsInVzZXJfbmFtZSI6InJpY2hhcmQubGluZG5lckBzYXAuY29tIiwiZW1haWwiOiJyaWNoYXJkLmxpbmRuZXJAc2FwLmNvbSIsInJldl9zaWciOiI1NzRmMDc1IiwiaWF0IjoxNjIxNTE2NTkzLCJleHAiOjE2MjE1NTk3OTMsImlzcyI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL29hdXRoL3Rva2VuIiwiemlkIjoiNWVjYzc0MTMtMmI3ZS00MTRhLTk0OTYtYWQ0YTYxZjZjY2NmIiwiYXVkIjpbInVhYSIsIm9wZW5pZCIsInNiLWFmYy1kZXYhdDU4NzQiLCJhZmMtZGV2IXQ1ODc0Il19.o-hXO2NWSaG3PQRfVdOVL93LoY2SJZ-grl2WLuY2UA94D09Obvg32EB-0yNwtfdEJb-eR2vkrwSh64n0J1u8b7JCPl_9ddQysXb_NsoUvxQXmi9kpTKwD6nQTwFc6mYz8dn4UeERkAbMWFHhF16iDRwmPT5v9l_57u-YRSUjW9azgB5Lf8X9NBzk0N94f_FWtZNnNNe_eK0uTkx8QP2T3w2fLtsSX2HMg4W5DCRaf-67XezHPOMYfcSz0rIb18dBSl6h9_nirl-Tjm8RcINytZLsQNA_iuZ18vvjJloTvmrdDMgh7EI70R3oCoaGovvagKg7WwXs3QFTqj6xj6ilNg",
+        "X-Zid": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+      },
+      "method": "GET",
+    },
+  ],
 ]
 `;
 
-exports[`uaa tests uaaPasscode without tenant 2`] = `
+exports[`uaa tests xsuaa tokens saas passcode --userinfo 2`] = `
 "Authorization:
-Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vc2t5ZmluLmF1dGhlbnRpY2F0aW9uLnNhcC5oYW5hLm9uZGVtYW5kLmNvbS90b2tlbl9rZXlzIiwia2lkIjoia2V5LWlkLTEiLCJ0eXAiOiJKV1QifQ.eyJqdGkiOiI1NWJiY2NlM2FmNDA0YmUxYWQzMzIyOGE5NjYwYTFlZCIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI3YjIwNDA4ZS0zZmUwLTRhZGUtYWEyZS1hZDk3YmFhYzcyZTgiLCJ6ZG4iOiJza3lmaW4ifSwieHMuc3lzdGVtLmF0dHJpYnV0ZXMiOnsieHMucm9sZWNvbGxlY3Rpb25zIjpbIkFGQ19BTEwiXX0sImdpdmVuX25hbWUiOiJSaWNoYXJkIiwieHMudXNlci5hdHRyaWJ1dGVzIjp7fSwiZmFtaWx5X25hbWUiOiJMaW5kbmVyIiwic3ViIjoiMDMxMDk4MjgtNjIwZS00ZTk2LWEzZmUtMTI4NWJiYWJmZWI4Iiwic2NvcGUiOlsiYWZjLWRldiF0NTg3NC5Qcm92aWRlciIsImFmYy1kZXYhdDU4NzQuQUZDX1N5c3RlbUFkbWluIiwiYWZjLWRldiF0NTg3NC5Db25zdW1lciIsImFmYy1kZXYhdDU4NzQuQUZDX1JlcG9ydGluZyIsImFmYy1kZXYhdDU4NzQuQUZDX1VzZXIiLCJvcGVuaWQiLCJ1YWEudXNlciIsImFmYy1kZXYhdDU4NzQuRXh0ZW5kQ0RTZGVsZXRlIiwiYWZjLWRldiF0NTg3NC5BRkNfRGVmaW5lIiwiYWZjLWRldiF0NTg3NC5LRVlVU0VSIiwiYWZjLWRldiF0NTg3NC5FeHRlbmRDRFMiLCJhZmMtZGV2IXQ1ODc0LkFGQ19Vc2VyTWFuYWdlbWVudCIsImFmYy1kZXYhdDU4NzQuQUZDX0FwcHJvdmUiLCJhZmMtZGV2IXQ1ODc0LkFGQ19Db21wbGlhbmNlIiwiYWZjLWRldiF0NTg3NC5BRkNfUHJvY2VzcyIsImFmYy1kZXYhdDU4NzQuQUZDX0NvbmZpZyJdLCJjbGllbnRfaWQiOiJzYi1hZmMtZGV2IXQ1ODc0IiwiY2lkIjoic2ItYWZjLWRldiF0NTg3NCIsImF6cCI6InNiLWFmYy1kZXYhdDU4NzQiLCJncmFudF90eXBlIjoicGFzc3dvcmQiLCJ1c2VyX2lkIjoiMDMxMDk4MjgtNjIwZS00ZTk2LWEzZmUtMTI4NWJiYWJmZWI4Iiwib3JpZ2luIjoibGRhcCIsInVzZXJfbmFtZSI6InJpY2hhcmQubGluZG5lckBzYXAuY29tIiwiZW1haWwiOiJyaWNoYXJkLmxpbmRuZXJAc2FwLmNvbSIsInJldl9zaWciOiI5ZDdjNDRjNCIsImlhdCI6MTYyMTUxNjQ2MSwiZXhwIjoxNjIxNTU5NjYxLCJpc3MiOiJodHRwOi8vc2t5ZmluLmxvY2FsaG9zdDo4MDgwL3VhYS9vYXV0aC90b2tlbiIsInppZCI6IjdiMjA0MDhlLTNmZTAtNGFkZS1hYTJlLWFkOTdiYWFjNzJlOCIsImF1ZCI6WyJ1YWEiLCJvcGVuaWQiLCJzYi1hZmMtZGV2IXQ1ODc0IiwiYWZjLWRldiF0NTg3NCJdfQ.pJYyKHSYSnSMy2HIzb2Cp9IlXb0ntWj7tkcsuuI2mn3X4sHziuyUp_G8KemM9hLdh47bo-ZySoG_TaI5K0sHtULIOsH8g2lruNcyi9rzVpuRZE-M7WFPnrNuP85hZ5fKY0OGz4JAF9H9UHDtJk36cqXSV1UHUu2Rv0TaWDOW8GTY9wDfkPYEAVN7TQPyxTJN8GgpmtwOdaL_LgU3yECLEK7R3FY0xWV6JWCF526GQwDU-ZB_re3dKBzXDWdszXvNcaiN0f9zF8M1C2MBgop0LgUUQToqW0Zi5xEzBjYoVkZuMwtkHD54cPzLV5hp-XnuPryZUqWaYqhTYddCLOBgTA"
+Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTEyNDY1MTM5OTAiLCJ0eXAiOiJKV1QifQ.eyJqdGkiOiI1NmJmMGYyODBiNzc0MTdiOTMxOTE3MTNmYWUwZGI2NSIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI1ZWNjNzQxMy0yYjdlLTQxNGEtOTQ5Ni1hZDRhNjFmNmNjY2YiLCJ6ZG4iOiJza3lmaW4tY29tcGFueSJ9LCJ4cy5zeXN0ZW0uYXR0cmlidXRlcyI6eyJ4cy5yb2xlY29sbGVjdGlvbnMiOlsiQUZDX0FMTCJdfSwiZ2l2ZW5fbmFtZSI6IlJpY2hhcmQiLCJ4cy51c2VyLmF0dHJpYnV0ZXMiOnt9LCJmYW1pbHlfbmFtZSI6IkxpbmRuZXIiLCJzdWIiOiJhOGEzN2FiNy0wMDU2LTRkNGItYjNkNy1mNzBlYWQ5MmM4MjkiLCJzY29wZSI6WyJhZmMtZGV2IXQ1ODc0LlByb3ZpZGVyIiwiYWZjLWRldiF0NTg3NC5Db25zdW1lciIsImFmYy1kZXYhdDU4NzQuQUZDX1JlcG9ydGluZyIsImFmYy1kZXYhdDU4NzQuQUZDX1VzZXIiLCJvcGVuaWQiLCJhZmMtZGV2IXQ1ODc0LkV4dGVuZENEU2RlbGV0ZSIsImFmYy1kZXYhdDU4NzQuS0VZVVNFUiIsImFmYy1kZXYhdDU4NzQuRXh0ZW5kQ0RTIiwiYWZjLWRldiF0NTg3NC5BRkNfQXBwcm92ZSIsImFmYy1kZXYhdDU4NzQuQUZDX1Byb2Nlc3MiLCJhZmMtZGV2IXQ1ODc0LkFGQ19Db25maWciLCJhZmMtZGV2IXQ1ODc0LkFGQ19TeXN0ZW1BZG1pbiIsInVhYS51c2VyIiwiYWZjLWRldiF0NTg3NC5BRkNfRGVmaW5lIiwiYWZjLWRldiF0NTg3NC5BRkNfVXNlck1hbmFnZW1lbnQiLCJhZmMtZGV2IXQ1ODc0LkFGQ19Db21wbGlhbmNlIl0sImNsaWVudF9pZCI6InNiLWFmYy1kZXYhdDU4NzQiLCJjaWQiOiJzYi1hZmMtZGV2IXQ1ODc0IiwiYXpwIjoic2ItYWZjLWRldiF0NTg3NCIsImdyYW50X3R5cGUiOiJwYXNzd29yZCIsInVzZXJfaWQiOiJhOGEzN2FiNy0wMDU2LTRkNGItYjNkNy1mNzBlYWQ5MmM4MjkiLCJvcmlnaW4iOiJzYXAuZGVmYXVsdCIsInVzZXJfbmFtZSI6InJpY2hhcmQubGluZG5lckBzYXAuY29tIiwiZW1haWwiOiJyaWNoYXJkLmxpbmRuZXJAc2FwLmNvbSIsInJldl9zaWciOiI1NzRmMDc1IiwiaWF0IjoxNjIxNTE2NTkzLCJleHAiOjE2MjE1NTk3OTMsImlzcyI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL29hdXRoL3Rva2VuIiwiemlkIjoiNWVjYzc0MTMtMmI3ZS00MTRhLTk0OTYtYWQ0YTYxZjZjY2NmIiwiYXVkIjpbInVhYSIsIm9wZW5pZCIsInNiLWFmYy1kZXYhdDU4NzQiLCJhZmMtZGV2IXQ1ODc0Il19.o-hXO2NWSaG3PQRfVdOVL93LoY2SJZ-grl2WLuY2UA94D09Obvg32EB-0yNwtfdEJb-eR2vkrwSh64n0J1u8b7JCPl_9ddQysXb_NsoUvxQXmi9kpTKwD6nQTwFc6mYz8dn4UeERkAbMWFHhF16iDRwmPT5v9l_57u-YRSUjW9azgB5Lf8X9NBzk0N94f_FWtZNnNNe_eK0uTkx8QP2T3w2fLtsSX2HMg4W5DCRaf-67XezHPOMYfcSz0rIb18dBSl6h9_nirl-Tjm8RcINytZLsQNA_iuZ18vvjJloTvmrdDMgh7EI70R3oCoaGovvagKg7WwXs3QFTqj6xj6ilNg
+
+User Info:
+{
+  "userStuff": "details"
+}"
 `;
 
-exports[`uaa tests uaaPasscode without tenant 3`] = `
+exports[`uaa tests xsuaa tokens saas passcode default 1`] = `
 [
-  "https://identityzone.authentication/oauth/token",
-  {
-    "body": "grant_type=password&client_id=clientid&client_secret=clientsecret&passcode=passcode90",
-    "headers": {
-      "Accept": "application/json",
-      "Content-Type": "application/x-www-form-urlencoded",
+  [
+    "https://subdomain.authentication/oauth/token",
+    {
+      "body": "grant_type=password&client_id=clientid&client_secret=clientsecret&passcode=passcode90",
+      "headers": {
+        "Accept": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      "method": "POST",
     },
-    "method": "POST",
-  },
+  ],
 ]
 `;
 
-exports[`uaa tests uaaPasscode without tenant 4`] = `
+exports[`uaa tests xsuaa tokens saas passcode default 2`] = `
+"Authorization:
+Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTEyNDY1MTM5OTAiLCJ0eXAiOiJKV1QifQ.eyJqdGkiOiI1NmJmMGYyODBiNzc0MTdiOTMxOTE3MTNmYWUwZGI2NSIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI1ZWNjNzQxMy0yYjdlLTQxNGEtOTQ5Ni1hZDRhNjFmNmNjY2YiLCJ6ZG4iOiJza3lmaW4tY29tcGFueSJ9LCJ4cy5zeXN0ZW0uYXR0cmlidXRlcyI6eyJ4cy5yb2xlY29sbGVjdGlvbnMiOlsiQUZDX0FMTCJdfSwiZ2l2ZW5fbmFtZSI6IlJpY2hhcmQiLCJ4cy51c2VyLmF0dHJpYnV0ZXMiOnt9LCJmYW1pbHlfbmFtZSI6IkxpbmRuZXIiLCJzdWIiOiJhOGEzN2FiNy0wMDU2LTRkNGItYjNkNy1mNzBlYWQ5MmM4MjkiLCJzY29wZSI6WyJhZmMtZGV2IXQ1ODc0LlByb3ZpZGVyIiwiYWZjLWRldiF0NTg3NC5Db25zdW1lciIsImFmYy1kZXYhdDU4NzQuQUZDX1JlcG9ydGluZyIsImFmYy1kZXYhdDU4NzQuQUZDX1VzZXIiLCJvcGVuaWQiLCJhZmMtZGV2IXQ1ODc0LkV4dGVuZENEU2RlbGV0ZSIsImFmYy1kZXYhdDU4NzQuS0VZVVNFUiIsImFmYy1kZXYhdDU4NzQuRXh0ZW5kQ0RTIiwiYWZjLWRldiF0NTg3NC5BRkNfQXBwcm92ZSIsImFmYy1kZXYhdDU4NzQuQUZDX1Byb2Nlc3MiLCJhZmMtZGV2IXQ1ODc0LkFGQ19Db25maWciLCJhZmMtZGV2IXQ1ODc0LkFGQ19TeXN0ZW1BZG1pbiIsInVhYS51c2VyIiwiYWZjLWRldiF0NTg3NC5BRkNfRGVmaW5lIiwiYWZjLWRldiF0NTg3NC5BRkNfVXNlck1hbmFnZW1lbnQiLCJhZmMtZGV2IXQ1ODc0LkFGQ19Db21wbGlhbmNlIl0sImNsaWVudF9pZCI6InNiLWFmYy1kZXYhdDU4NzQiLCJjaWQiOiJzYi1hZmMtZGV2IXQ1ODc0IiwiYXpwIjoic2ItYWZjLWRldiF0NTg3NCIsImdyYW50X3R5cGUiOiJwYXNzd29yZCIsInVzZXJfaWQiOiJhOGEzN2FiNy0wMDU2LTRkNGItYjNkNy1mNzBlYWQ5MmM4MjkiLCJvcmlnaW4iOiJzYXAuZGVmYXVsdCIsInVzZXJfbmFtZSI6InJpY2hhcmQubGluZG5lckBzYXAuY29tIiwiZW1haWwiOiJyaWNoYXJkLmxpbmRuZXJAc2FwLmNvbSIsInJldl9zaWciOiI1NzRmMDc1IiwiaWF0IjoxNjIxNTE2NTkzLCJleHAiOjE2MjE1NTk3OTMsImlzcyI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL29hdXRoL3Rva2VuIiwiemlkIjoiNWVjYzc0MTMtMmI3ZS00MTRhLTk0OTYtYWQ0YTYxZjZjY2NmIiwiYXVkIjpbInVhYSIsIm9wZW5pZCIsInNiLWFmYy1kZXYhdDU4NzQiLCJhZmMtZGV2IXQ1ODc0Il19.o-hXO2NWSaG3PQRfVdOVL93LoY2SJZ-grl2WLuY2UA94D09Obvg32EB-0yNwtfdEJb-eR2vkrwSh64n0J1u8b7JCPl_9ddQysXb_NsoUvxQXmi9kpTKwD6nQTwFc6mYz8dn4UeERkAbMWFHhF16iDRwmPT5v9l_57u-YRSUjW9azgB5Lf8X9NBzk0N94f_FWtZNnNNe_eK0uTkx8QP2T3w2fLtsSX2HMg4W5DCRaf-67XezHPOMYfcSz0rIb18dBSl6h9_nirl-Tjm8RcINytZLsQNA_iuZ18vvjJloTvmrdDMgh7EI70R3oCoaGovvagKg7WwXs3QFTqj6xj6ilNg"
+`;
+
+exports[`uaa tests xsuaa tokens saas user --decode --userinfo 1`] = `
+[
+  [
+    "https://subdomain.authentication/oauth/token",
+    {
+      "body": "grant_type=password&client_id=clientid&client_secret=clientsecret&username=username&password=password90&login_hint=%7B%22origin%22%3A%22sap.custom%22%7D",
+      "headers": {
+        "Accept": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "https://skyfin-company.authentication/userinfo",
+    {
+      "headers": {
+        "Accept": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTEyNDY1MTM5OTAiLCJ0eXAiOiJKV1QiLCJqaWQiOiAiZitoQmFXbXZHTVlUZis3STFTaDVlNEpvS1hjN05QV2wrbGVhR0ZTS0hFST0ifQ.eyJqdGkiOiI1NTNiYjVkYmM1NzE0Y2FkOTAwY2I4MGFlZmNjODI4NCIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI1ZWNjNzQxMy0yYjdlLTQxNGEtOTQ5Ni1hZDRhNjFmNmNjY2YiLCJ6ZG4iOiJza3lmaW4tY29tcGFueSIsIm9pZGNJc3N1ZXIiOiJodHRwczovL2F3ZHNwOGVmNC5hY2NvdW50czQwMC5vbmRlbWFuZC5jb20ifSwidXNlcl91dWlkIjoiYWJiOWRkOWItYjAxMi00ZGY3LWJjY2YtNDFlZDg2NzZjYWIzIiwieHMudXNlci5hdHRyaWJ1dGVzIjp7fSwiY25mIjp7Ing1dCNTMjU2IjoiaVdWRDExOWRidnlhNW9LSW9UVWxXQ2lTOHF0SVRZSGFhVlUzN1o3aDBMMCJ9LCJ4cy5zeXN0ZW0uYXR0cmlidXRlcyI6eyJ4cy5yb2xlY29sbGVjdGlvbnMiOlsiQUZDX0FMTCJdfSwiZ2l2ZW5fbmFtZSI6IkRlZmF1bHQiLCJmYW1pbHlfbmFtZSI6IlRlc3RVc2VyIiwic3ViIjoiOWI4ODAzMjAtZDVmOC00NDg3LTkxN2MtYmMwZThjYzcwZDZmIiwic2NvcGUiOlsiYWZjLWRldiF0NTg3NC5Qcm92aWRlciIsImFmYy1kZXYhdDU4NzQuQ29uc3VtZXIiLCJhZmMtZGV2IXQ1ODc0LkFGQ19SZXBvcnRpbmciLCJhZmMtZGV2IXQ1ODc0LkFGQ19Vc2VyIiwib3BlbmlkIiwiYWZjLWRldiF0NTg3NC5FeHRlbmRDRFNkZWxldGUiLCJhZmMtZGV2IXQ1ODc0LkFGQ19SZXBvcnRpbmdUYXNrVmlldyIsImFmYy1kZXYhdDU4NzQuS0VZVVNFUiIsImFmYy1kZXYhdDU4NzQuRXh0ZW5kQ0RTIiwiYWZjLWRldiF0NTg3NC5BRkNfQVBJX0FjY2VzcyIsImFmYy1kZXYhdDU4NzQuQUZDX1JlcG9ydGluZ09yZ1VuaXRWaWV3IiwiYWZjLWRldiF0NTg3NC5BRkNfQXJjaGl2aW5nIiwiYWZjLWRldiF0NTg3NC5BRkNfQXBwcm92ZSIsImFmYy1kZXYhdDU4NzQuQUZDX1Byb2Nlc3MiLCJhZmMtZGV2IXQ1ODc0LkFGQ19Db25maWciLCJhZmMtZGV2IXQ1ODc0LkFGQ19Db21wYW55Q29kZUdyb3Vwc0FwcCIsImFmYy1kZXYhdDU4NzQuQUZDX1N5c3RlbUFkbWluIiwidXNlcl9hdHRyaWJ1dGVzIiwiYWZjLWRldiF0NTg3NC5BRkNfTWlncmF0aW9uIiwidWFhLnVzZXIiLCJhZmMtZGV2IXQ1ODc0LkFGQ19EZWZpbmUiLCJhZmMtZGV2IXQ1ODc0LkFGQ19Vc2VyTWFuYWdlbWVudCIsImFmYy1kZXYhdDU4NzQuQUZDX0NvbXBsaWFuY2UiXSwiY2xpZW50X2lkIjoic2ItYWZjLWRldiF0NTg3NCIsImNpZCI6InNiLWFmYy1kZXYhdDU4NzQiLCJhenAiOiJzYi1hZmMtZGV2IXQ1ODc0IiwiZ3JhbnRfdHlwZSI6InBhc3N3b3JkIiwidXNlcl9pZCI6IjliODgwMzIwLWQ1ZjgtNDQ4Ny05MTdjLWJjMGU4Y2M3MGQ2ZiIsIm9yaWdpbiI6InNhcC5jdXN0b20iLCJ1c2VyX25hbWUiOiJ0ZXN0dXNlckBzYXAuY29tIiwiZW1haWwiOiJ0ZXN0dXNlckBzYXAuY29tIiwiYXV0aF90aW1lIjoxNzA4MDAzNDYzLCJyZXZfc2lnIjoiNDQwOGRiNGYiLCJpYXQiOjE3MDgwMDM0NjMsImV4cCI6MTcwODAwNzA2MywiaXNzIjoiaHR0cHM6Ly9za3lmaW4tY29tcGFueS5hdXRoZW50aWNhdGlvbi5zYXAuaGFuYS5vbmRlbWFuZC5jb20vb2F1dGgvdG9rZW4iLCJ6aWQiOiI1ZWNjNzQxMy0yYjdlLTQxNGEtOTQ5Ni1hZDRhNjFmNmNjY2YiLCJhdWQiOlsidWFhIiwib3BlbmlkIiwic2ItYWZjLWRldiF0NTg3NCIsImFmYy1kZXYhdDU4NzQiXX0.PavhBjPw79BPwsq02hGXHqxzSKdFRjwvmwqJFKMNH2e1h6CqEeCzbUpK0depFsEwUr8iqo-C3Mo8Kdb07vj4sVOfltyyKrynsMv9MkTRX8MN8Je9tmLtTR3NJ92emGrN367ivT8rpuq_oFMlDjnbNVldYitP1azXhDALM64Um60InWE1zHX7fIdS00Du7CFmTQm4YKJ2gSD4u1MrwjzABdNuInyhU9Alr6koXSuzRLvpb4ALIxwH1pSnVS3BWzRDJ2yPCn02vha7W9MPtIbvSwgtecK0NscMXbJ4GFBcPbzLyW4W8T_n9jlKW3czL9yA5skbS5rfAHwo9YsecDI7hg",
+        "X-Zid": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+      },
+      "method": "GET",
+    },
+  ],
+]
+`;
+
+exports[`uaa tests xsuaa tokens saas user --decode --userinfo 2`] = `
 "JWT Header:
-{"alg":"RS256","jku":"https://skyfin.authentication.sap.hana.ondemand.com/token_keys","kid":"key-id-1","typ":"JWT"}
+{"alg":"RS256","jku":"https://skyfin-company.authentication.sap.hana.ondemand.com/token_keys","kid":"default-jwt-key--1246513990","typ":"JWT","jid":"f+hBaWmvGMYTf+7I1Sh5e4JoKXc7NPWl+leaGFSKHEI="}
 
 JWT Body:
 {
-  "jti": "55bbcce3af404be1ad33228a9660a1ed",
+  "jti": "553bb5dbc5714cad900cb80aefcc8284",
   "ext_attr": {
     "enhancer": "XSUAA",
-    "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-    "zdn": "skyfin"
+    "subaccountid": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+    "zdn": "skyfin-company",
+    "oidcIssuer": "https://awdsp8ef4.accounts400.ondemand.com"
+  },
+  "user_uuid": "abb9dd9b-b012-4df7-bccf-41ed8676cab3",
+  "xs.user.attributes": {},
+  "cnf": {
+    "x5t#S256": "iWVD119dbvya5oKIoTUlWCiS8qtITYHaaVU37Z7h0L0"
   },
   "xs.system.attributes": {
     "xs.rolecollections": [
       "AFC_ALL"
     ]
   },
-  "given_name": "Richard",
-  "xs.user.attributes": {},
-  "family_name": "Lindner",
-  "sub": "03109828-620e-4e96-a3fe-1285bbabfeb8",
+  "given_name": "Default",
+  "family_name": "TestUser",
+  "sub": "9b880320-d5f8-4487-917c-bc0e8cc70d6f",
   "scope": [
     "afc-dev!t5874.Provider",
-    "afc-dev!t5874.AFC_SystemAdmin",
     "afc-dev!t5874.Consumer",
     "afc-dev!t5874.AFC_Reporting",
     "afc-dev!t5874.AFC_User",
     "openid",
-    "uaa.user",
     "afc-dev!t5874.ExtendCDSdelete",
-    "afc-dev!t5874.AFC_Define",
+    "afc-dev!t5874.AFC_ReportingTaskView",
     "afc-dev!t5874.KEYUSER",
     "afc-dev!t5874.ExtendCDS",
-    "afc-dev!t5874.AFC_UserManagement",
+    "afc-dev!t5874.AFC_API_Access",
+    "afc-dev!t5874.AFC_ReportingOrgUnitView",
+    "afc-dev!t5874.AFC_Archiving",
     "afc-dev!t5874.AFC_Approve",
-    "afc-dev!t5874.AFC_Compliance",
     "afc-dev!t5874.AFC_Process",
-    "afc-dev!t5874.AFC_Config"
+    "afc-dev!t5874.AFC_Config",
+    "afc-dev!t5874.AFC_CompanyCodeGroupsApp",
+    "afc-dev!t5874.AFC_SystemAdmin",
+    "user_attributes",
+    "afc-dev!t5874.AFC_Migration",
+    "uaa.user",
+    "afc-dev!t5874.AFC_Define",
+    "afc-dev!t5874.AFC_UserManagement",
+    "afc-dev!t5874.AFC_Compliance"
   ],
   "client_id": "sb-afc-dev!t5874",
   "cid": "sb-afc-dev!t5874",
   "azp": "sb-afc-dev!t5874",
   "grant_type": "password",
-  "user_id": "03109828-620e-4e96-a3fe-1285bbabfeb8",
-  "origin": "ldap",
-  "user_name": "richard.lindner@sap.com",
-  "email": "richard.lindner@sap.com",
-  "rev_sig": "9d7c44c4",
-  "iat": 1621516461,
-  "exp": 1621559661,
-  "iss": "http://skyfin.localhost:8080/uaa/oauth/token",
-  "zid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+  "user_id": "9b880320-d5f8-4487-917c-bc0e8cc70d6f",
+  "origin": "sap.custom",
+  "user_name": "testuser@sap.com",
+  "email": "testuser@sap.com",
+  "auth_time": 1708003463,
+  "rev_sig": "4408db4f",
+  "iat": 1708003463,
+  "exp": 1708007063,
+  "iss": "https://skyfin-company.authentication.sap.hana.ondemand.com/oauth/token",
+  "zid": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+  "aud": [
+    "uaa",
+    "openid",
+    "sb-afc-dev!t5874",
+    "afc-dev!t5874"
+  ]
+}
+
+User Info:
+{
+  "userStuff": "details"
+}"
+`;
+
+exports[`uaa tests xsuaa tokens saas user --decode 1`] = `
+[
+  [
+    "https://subdomain.authentication/oauth/token",
+    {
+      "body": "grant_type=password&client_id=clientid&client_secret=clientsecret&username=username&password=password90&login_hint=%7B%22origin%22%3A%22sap.custom%22%7D",
+      "headers": {
+        "Accept": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      "method": "POST",
+    },
+  ],
+]
+`;
+
+exports[`uaa tests xsuaa tokens saas user --decode 2`] = `
+"JWT Header:
+{"alg":"RS256","jku":"https://skyfin-company.authentication.sap.hana.ondemand.com/token_keys","kid":"default-jwt-key--1246513990","typ":"JWT","jid":"f+hBaWmvGMYTf+7I1Sh5e4JoKXc7NPWl+leaGFSKHEI="}
+
+JWT Body:
+{
+  "jti": "553bb5dbc5714cad900cb80aefcc8284",
+  "ext_attr": {
+    "enhancer": "XSUAA",
+    "subaccountid": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+    "zdn": "skyfin-company",
+    "oidcIssuer": "https://awdsp8ef4.accounts400.ondemand.com"
+  },
+  "user_uuid": "abb9dd9b-b012-4df7-bccf-41ed8676cab3",
+  "xs.user.attributes": {},
+  "cnf": {
+    "x5t#S256": "iWVD119dbvya5oKIoTUlWCiS8qtITYHaaVU37Z7h0L0"
+  },
+  "xs.system.attributes": {
+    "xs.rolecollections": [
+      "AFC_ALL"
+    ]
+  },
+  "given_name": "Default",
+  "family_name": "TestUser",
+  "sub": "9b880320-d5f8-4487-917c-bc0e8cc70d6f",
+  "scope": [
+    "afc-dev!t5874.Provider",
+    "afc-dev!t5874.Consumer",
+    "afc-dev!t5874.AFC_Reporting",
+    "afc-dev!t5874.AFC_User",
+    "openid",
+    "afc-dev!t5874.ExtendCDSdelete",
+    "afc-dev!t5874.AFC_ReportingTaskView",
+    "afc-dev!t5874.KEYUSER",
+    "afc-dev!t5874.ExtendCDS",
+    "afc-dev!t5874.AFC_API_Access",
+    "afc-dev!t5874.AFC_ReportingOrgUnitView",
+    "afc-dev!t5874.AFC_Archiving",
+    "afc-dev!t5874.AFC_Approve",
+    "afc-dev!t5874.AFC_Process",
+    "afc-dev!t5874.AFC_Config",
+    "afc-dev!t5874.AFC_CompanyCodeGroupsApp",
+    "afc-dev!t5874.AFC_SystemAdmin",
+    "user_attributes",
+    "afc-dev!t5874.AFC_Migration",
+    "uaa.user",
+    "afc-dev!t5874.AFC_Define",
+    "afc-dev!t5874.AFC_UserManagement",
+    "afc-dev!t5874.AFC_Compliance"
+  ],
+  "client_id": "sb-afc-dev!t5874",
+  "cid": "sb-afc-dev!t5874",
+  "azp": "sb-afc-dev!t5874",
+  "grant_type": "password",
+  "user_id": "9b880320-d5f8-4487-917c-bc0e8cc70d6f",
+  "origin": "sap.custom",
+  "user_name": "testuser@sap.com",
+  "email": "testuser@sap.com",
+  "auth_time": 1708003463,
+  "rev_sig": "4408db4f",
+  "iat": 1708003463,
+  "exp": 1708007063,
+  "iss": "https://skyfin-company.authentication.sap.hana.ondemand.com/oauth/token",
+  "zid": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
   "aud": [
     "uaa",
     "openid",
@@ -374,55 +982,60 @@ JWT Body:
 }"
 `;
 
-exports[`uaa tests uaaService with tenant 1`] = `
-"Authorization:
-Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTEyNDY1MTM5OTAiLCJ0eXAiOiJKV1QifQ.eyJqdGkiOiJjMDZhODgxZjQzZDU0NDFhOTBjY2NhYmFjZWZmZmY4YyIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI1ZWNjNzQxMy0yYjdlLTQxNGEtOTQ5Ni1hZDRhNjFmNmNjY2YiLCJ6ZG4iOiJza3lmaW4tY29tcGFueSIsInNlcnZpY2VpbnN0YW5jZWlkIjoiYWZiNzIyZmItMTFjYS00ZmUyLWE0MzQtOWE3MTcyZGU5MmMzIn0sInN1YiI6InNiLWFmYjcyMmZiLTExY2EtNGZlMi1hNDM0LTlhNzE3MmRlOTJjMyFiNTg3NHxuYS05YWI4MzRjMi1iYzExLTQ3YTEtYjhjYi1kODNkN2E1YTU3NzQhYjgyMjMiLCJhdXRob3JpdGllcyI6WyJuYS05YWI4MzRjMi1iYzExLTQ3YTEtYjhjYi1kODNkN2E1YTU3NzQhYjgyMjMuQVBJTWFuYWdlIiwieGZzcnQtYXBwbGljYXRpb24hdDgyMjMuQ2FsbGJhY2siLCJuYS05YWI4MzRjMi1iYzExLTQ3YTEtYjhjYi1kODNkN2E1YTU3NzQhYjgyMjMuT0RQTWFuYWdlIiwidWFhLnJlc291cmNlIiwibmEtOWFiODM0YzItYmMxMS00N2ExLWI4Y2ItZDgzZDdhNWE1Nzc0IWI4MjIzLkFQSUZ1bGxBY2Nlc3MiLCJuYS05YWI4MzRjMi1iYzExLTQ3YTEtYjhjYi1kODNkN2E1YTU3NzQhYjgyMjMuT0RQQVBJQWNjZXNzIl0sInNjb3BlIjpbIm5hLTlhYjgzNGMyLWJjMTEtNDdhMS1iOGNiLWQ4M2Q3YTVhNTc3NCFiODIyMy5PRFBNYW5hZ2UiLCJ1YWEucmVzb3VyY2UiLCJuYS05YWI4MzRjMi1iYzExLTQ3YTEtYjhjYi1kODNkN2E1YTU3NzQhYjgyMjMuQVBJRnVsbEFjY2VzcyIsIm5hLTlhYjgzNGMyLWJjMTEtNDdhMS1iOGNiLWQ4M2Q3YTVhNTc3NCFiODIyMy5BUElNYW5hZ2UiLCJ4ZnNydC1hcHBsaWNhdGlvbiF0ODIyMy5DYWxsYmFjayIsIm5hLTlhYjgzNGMyLWJjMTEtNDdhMS1iOGNiLWQ4M2Q3YTVhNTc3NCFiODIyMy5PRFBBUElBY2Nlc3MiXSwiY2xpZW50X2lkIjoic2ItYWZiNzIyZmItMTFjYS00ZmUyLWE0MzQtOWE3MTcyZGU5MmMzIWI1ODc0fG5hLTlhYjgzNGMyLWJjMTEtNDdhMS1iOGNiLWQ4M2Q3YTVhNTc3NCFiODIyMyIsImNpZCI6InNiLWFmYjcyMmZiLTExY2EtNGZlMi1hNDM0LTlhNzE3MmRlOTJjMyFiNTg3NHxuYS05YWI4MzRjMi1iYzExLTQ3YTEtYjhjYi1kODNkN2E1YTU3NzQhYjgyMjMiLCJhenAiOiJzYi1hZmI3MjJmYi0xMWNhLTRmZTItYTQzNC05YTcxNzJkZTkyYzMhYjU4NzR8bmEtOWFiODM0YzItYmMxMS00N2ExLWI4Y2ItZDgzZDdhNWE1Nzc0IWI4MjIzIiwiZ3JhbnRfdHlwZSI6ImNsaWVudF9jcmVkZW50aWFscyIsInJldl9zaWciOiI3ZWY4MzlmNCIsImlhdCI6MTYyMTUxNjY1NiwiZXhwIjoxNjIxNTU5ODU2LCJpc3MiOiJodHRwczovL3NreWZpbi1jb21wYW55LmF1dGhlbnRpY2F0aW9uLnNhcC5oYW5hLm9uZGVtYW5kLmNvbS9vYXV0aC90b2tlbiIsInppZCI6IjVlY2M3NDEzLTJiN2UtNDE0YS05NDk2LWFkNGE2MWY2Y2NjZiIsImF1ZCI6WyJzYi1hZmI3MjJmYi0xMWNhLTRmZTItYTQzNC05YTcxNzJkZTkyYzMhYjU4NzR8bmEtOWFiODM0YzItYmMxMS00N2ExLWI4Y2ItZDgzZDdhNWE1Nzc0IWI4MjIzIiwidWFhIiwieGZzcnQtYXBwbGljYXRpb24hdDgyMjMiLCJuYS05YWI4MzRjMi1iYzExLTQ3YTEtYjhjYi1kODNkN2E1YTU3NzQhYjgyMjMiXX0.nCFyjFO9aIFqS2l5x9oi9t1knxhjxPrqmg-8lSjROCS1xXFF95ETEdGJGnz_a_xUldK278ajArtEicjpcIUL_AaUzR2VCgH6lJMz7yeGZPGWtn2zizVt59S35cfD0WqQPJ39J7kbI1qrz3WwJKwPUmwg7uej9tfWin_uHxK7Yp4EVwhMzw_iiygGsn_VHX2w4TV6bXperG_Xez5lxqzCOudLGPWqmbnxOTB_Q2RlKIJkAJhdYVgArkJWu5rtCOCmVu-eA-RcQVe_LPevTJpFSonCPyCYCP9UMFnAvJheGXbE0AkRoFjffyebU5e6k8Q384iXjTSPGVUNw6bkD68AXQ"
+exports[`uaa tests xsuaa tokens saas user --userinfo 1`] = `
+[
+  [
+    "https://subdomain.authentication/oauth/token",
+    {
+      "body": "grant_type=password&client_id=clientid&client_secret=clientsecret&username=username&password=password90&login_hint=%7B%22origin%22%3A%22sap.custom%22%7D",
+      "headers": {
+        "Accept": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      "method": "POST",
+    },
+  ],
+  [
+    "https://skyfin-company.authentication/userinfo",
+    {
+      "headers": {
+        "Accept": "application/json",
+        "Authorization": "Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTEyNDY1MTM5OTAiLCJ0eXAiOiJKV1QiLCJqaWQiOiAiZitoQmFXbXZHTVlUZis3STFTaDVlNEpvS1hjN05QV2wrbGVhR0ZTS0hFST0ifQ.eyJqdGkiOiI1NTNiYjVkYmM1NzE0Y2FkOTAwY2I4MGFlZmNjODI4NCIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI1ZWNjNzQxMy0yYjdlLTQxNGEtOTQ5Ni1hZDRhNjFmNmNjY2YiLCJ6ZG4iOiJza3lmaW4tY29tcGFueSIsIm9pZGNJc3N1ZXIiOiJodHRwczovL2F3ZHNwOGVmNC5hY2NvdW50czQwMC5vbmRlbWFuZC5jb20ifSwidXNlcl91dWlkIjoiYWJiOWRkOWItYjAxMi00ZGY3LWJjY2YtNDFlZDg2NzZjYWIzIiwieHMudXNlci5hdHRyaWJ1dGVzIjp7fSwiY25mIjp7Ing1dCNTMjU2IjoiaVdWRDExOWRidnlhNW9LSW9UVWxXQ2lTOHF0SVRZSGFhVlUzN1o3aDBMMCJ9LCJ4cy5zeXN0ZW0uYXR0cmlidXRlcyI6eyJ4cy5yb2xlY29sbGVjdGlvbnMiOlsiQUZDX0FMTCJdfSwiZ2l2ZW5fbmFtZSI6IkRlZmF1bHQiLCJmYW1pbHlfbmFtZSI6IlRlc3RVc2VyIiwic3ViIjoiOWI4ODAzMjAtZDVmOC00NDg3LTkxN2MtYmMwZThjYzcwZDZmIiwic2NvcGUiOlsiYWZjLWRldiF0NTg3NC5Qcm92aWRlciIsImFmYy1kZXYhdDU4NzQuQ29uc3VtZXIiLCJhZmMtZGV2IXQ1ODc0LkFGQ19SZXBvcnRpbmciLCJhZmMtZGV2IXQ1ODc0LkFGQ19Vc2VyIiwib3BlbmlkIiwiYWZjLWRldiF0NTg3NC5FeHRlbmRDRFNkZWxldGUiLCJhZmMtZGV2IXQ1ODc0LkFGQ19SZXBvcnRpbmdUYXNrVmlldyIsImFmYy1kZXYhdDU4NzQuS0VZVVNFUiIsImFmYy1kZXYhdDU4NzQuRXh0ZW5kQ0RTIiwiYWZjLWRldiF0NTg3NC5BRkNfQVBJX0FjY2VzcyIsImFmYy1kZXYhdDU4NzQuQUZDX1JlcG9ydGluZ09yZ1VuaXRWaWV3IiwiYWZjLWRldiF0NTg3NC5BRkNfQXJjaGl2aW5nIiwiYWZjLWRldiF0NTg3NC5BRkNfQXBwcm92ZSIsImFmYy1kZXYhdDU4NzQuQUZDX1Byb2Nlc3MiLCJhZmMtZGV2IXQ1ODc0LkFGQ19Db25maWciLCJhZmMtZGV2IXQ1ODc0LkFGQ19Db21wYW55Q29kZUdyb3Vwc0FwcCIsImFmYy1kZXYhdDU4NzQuQUZDX1N5c3RlbUFkbWluIiwidXNlcl9hdHRyaWJ1dGVzIiwiYWZjLWRldiF0NTg3NC5BRkNfTWlncmF0aW9uIiwidWFhLnVzZXIiLCJhZmMtZGV2IXQ1ODc0LkFGQ19EZWZpbmUiLCJhZmMtZGV2IXQ1ODc0LkFGQ19Vc2VyTWFuYWdlbWVudCIsImFmYy1kZXYhdDU4NzQuQUZDX0NvbXBsaWFuY2UiXSwiY2xpZW50X2lkIjoic2ItYWZjLWRldiF0NTg3NCIsImNpZCI6InNiLWFmYy1kZXYhdDU4NzQiLCJhenAiOiJzYi1hZmMtZGV2IXQ1ODc0IiwiZ3JhbnRfdHlwZSI6InBhc3N3b3JkIiwidXNlcl9pZCI6IjliODgwMzIwLWQ1ZjgtNDQ4Ny05MTdjLWJjMGU4Y2M3MGQ2ZiIsIm9yaWdpbiI6InNhcC5jdXN0b20iLCJ1c2VyX25hbWUiOiJ0ZXN0dXNlckBzYXAuY29tIiwiZW1haWwiOiJ0ZXN0dXNlckBzYXAuY29tIiwiYXV0aF90aW1lIjoxNzA4MDAzNDYzLCJyZXZfc2lnIjoiNDQwOGRiNGYiLCJpYXQiOjE3MDgwMDM0NjMsImV4cCI6MTcwODAwNzA2MywiaXNzIjoiaHR0cHM6Ly9za3lmaW4tY29tcGFueS5hdXRoZW50aWNhdGlvbi5zYXAuaGFuYS5vbmRlbWFuZC5jb20vb2F1dGgvdG9rZW4iLCJ6aWQiOiI1ZWNjNzQxMy0yYjdlLTQxNGEtOTQ5Ni1hZDRhNjFmNmNjY2YiLCJhdWQiOlsidWFhIiwib3BlbmlkIiwic2ItYWZjLWRldiF0NTg3NCIsImFmYy1kZXYhdDU4NzQiXX0.PavhBjPw79BPwsq02hGXHqxzSKdFRjwvmwqJFKMNH2e1h6CqEeCzbUpK0depFsEwUr8iqo-C3Mo8Kdb07vj4sVOfltyyKrynsMv9MkTRX8MN8Je9tmLtTR3NJ92emGrN367ivT8rpuq_oFMlDjnbNVldYitP1azXhDALM64Um60InWE1zHX7fIdS00Du7CFmTQm4YKJ2gSD4u1MrwjzABdNuInyhU9Alr6koXSuzRLvpb4ALIxwH1pSnVS3BWzRDJ2yPCn02vha7W9MPtIbvSwgtecK0NscMXbJ4GFBcPbzLyW4W8T_n9jlKW3czL9yA5skbS5rfAHwo9YsecDI7hg",
+        "X-Zid": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+      },
+      "method": "GET",
+    },
+  ],
+]
 `;
 
-exports[`uaa tests uaaService with tenant 2`] = `
-"JWT Header:
-{"alg":"RS256","jku":"https://skyfin-company.authentication.sap.hana.ondemand.com/token_keys","kid":"default-jwt-key--1246513990","typ":"JWT"}
+exports[`uaa tests xsuaa tokens saas user --userinfo 2`] = `
+"Authorization:
+Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTEyNDY1MTM5OTAiLCJ0eXAiOiJKV1QiLCJqaWQiOiAiZitoQmFXbXZHTVlUZis3STFTaDVlNEpvS1hjN05QV2wrbGVhR0ZTS0hFST0ifQ.eyJqdGkiOiI1NTNiYjVkYmM1NzE0Y2FkOTAwY2I4MGFlZmNjODI4NCIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI1ZWNjNzQxMy0yYjdlLTQxNGEtOTQ5Ni1hZDRhNjFmNmNjY2YiLCJ6ZG4iOiJza3lmaW4tY29tcGFueSIsIm9pZGNJc3N1ZXIiOiJodHRwczovL2F3ZHNwOGVmNC5hY2NvdW50czQwMC5vbmRlbWFuZC5jb20ifSwidXNlcl91dWlkIjoiYWJiOWRkOWItYjAxMi00ZGY3LWJjY2YtNDFlZDg2NzZjYWIzIiwieHMudXNlci5hdHRyaWJ1dGVzIjp7fSwiY25mIjp7Ing1dCNTMjU2IjoiaVdWRDExOWRidnlhNW9LSW9UVWxXQ2lTOHF0SVRZSGFhVlUzN1o3aDBMMCJ9LCJ4cy5zeXN0ZW0uYXR0cmlidXRlcyI6eyJ4cy5yb2xlY29sbGVjdGlvbnMiOlsiQUZDX0FMTCJdfSwiZ2l2ZW5fbmFtZSI6IkRlZmF1bHQiLCJmYW1pbHlfbmFtZSI6IlRlc3RVc2VyIiwic3ViIjoiOWI4ODAzMjAtZDVmOC00NDg3LTkxN2MtYmMwZThjYzcwZDZmIiwic2NvcGUiOlsiYWZjLWRldiF0NTg3NC5Qcm92aWRlciIsImFmYy1kZXYhdDU4NzQuQ29uc3VtZXIiLCJhZmMtZGV2IXQ1ODc0LkFGQ19SZXBvcnRpbmciLCJhZmMtZGV2IXQ1ODc0LkFGQ19Vc2VyIiwib3BlbmlkIiwiYWZjLWRldiF0NTg3NC5FeHRlbmRDRFNkZWxldGUiLCJhZmMtZGV2IXQ1ODc0LkFGQ19SZXBvcnRpbmdUYXNrVmlldyIsImFmYy1kZXYhdDU4NzQuS0VZVVNFUiIsImFmYy1kZXYhdDU4NzQuRXh0ZW5kQ0RTIiwiYWZjLWRldiF0NTg3NC5BRkNfQVBJX0FjY2VzcyIsImFmYy1kZXYhdDU4NzQuQUZDX1JlcG9ydGluZ09yZ1VuaXRWaWV3IiwiYWZjLWRldiF0NTg3NC5BRkNfQXJjaGl2aW5nIiwiYWZjLWRldiF0NTg3NC5BRkNfQXBwcm92ZSIsImFmYy1kZXYhdDU4NzQuQUZDX1Byb2Nlc3MiLCJhZmMtZGV2IXQ1ODc0LkFGQ19Db25maWciLCJhZmMtZGV2IXQ1ODc0LkFGQ19Db21wYW55Q29kZUdyb3Vwc0FwcCIsImFmYy1kZXYhdDU4NzQuQUZDX1N5c3RlbUFkbWluIiwidXNlcl9hdHRyaWJ1dGVzIiwiYWZjLWRldiF0NTg3NC5BRkNfTWlncmF0aW9uIiwidWFhLnVzZXIiLCJhZmMtZGV2IXQ1ODc0LkFGQ19EZWZpbmUiLCJhZmMtZGV2IXQ1ODc0LkFGQ19Vc2VyTWFuYWdlbWVudCIsImFmYy1kZXYhdDU4NzQuQUZDX0NvbXBsaWFuY2UiXSwiY2xpZW50X2lkIjoic2ItYWZjLWRldiF0NTg3NCIsImNpZCI6InNiLWFmYy1kZXYhdDU4NzQiLCJhenAiOiJzYi1hZmMtZGV2IXQ1ODc0IiwiZ3JhbnRfdHlwZSI6InBhc3N3b3JkIiwidXNlcl9pZCI6IjliODgwMzIwLWQ1ZjgtNDQ4Ny05MTdjLWJjMGU4Y2M3MGQ2ZiIsIm9yaWdpbiI6InNhcC5jdXN0b20iLCJ1c2VyX25hbWUiOiJ0ZXN0dXNlckBzYXAuY29tIiwiZW1haWwiOiJ0ZXN0dXNlckBzYXAuY29tIiwiYXV0aF90aW1lIjoxNzA4MDAzNDYzLCJyZXZfc2lnIjoiNDQwOGRiNGYiLCJpYXQiOjE3MDgwMDM0NjMsImV4cCI6MTcwODAwNzA2MywiaXNzIjoiaHR0cHM6Ly9za3lmaW4tY29tcGFueS5hdXRoZW50aWNhdGlvbi5zYXAuaGFuYS5vbmRlbWFuZC5jb20vb2F1dGgvdG9rZW4iLCJ6aWQiOiI1ZWNjNzQxMy0yYjdlLTQxNGEtOTQ5Ni1hZDRhNjFmNmNjY2YiLCJhdWQiOlsidWFhIiwib3BlbmlkIiwic2ItYWZjLWRldiF0NTg3NCIsImFmYy1kZXYhdDU4NzQiXX0.PavhBjPw79BPwsq02hGXHqxzSKdFRjwvmwqJFKMNH2e1h6CqEeCzbUpK0depFsEwUr8iqo-C3Mo8Kdb07vj4sVOfltyyKrynsMv9MkTRX8MN8Je9tmLtTR3NJ92emGrN367ivT8rpuq_oFMlDjnbNVldYitP1azXhDALM64Um60InWE1zHX7fIdS00Du7CFmTQm4YKJ2gSD4u1MrwjzABdNuInyhU9Alr6koXSuzRLvpb4ALIxwH1pSnVS3BWzRDJ2yPCn02vha7W9MPtIbvSwgtecK0NscMXbJ4GFBcPbzLyW4W8T_n9jlKW3czL9yA5skbS5rfAHwo9YsecDI7hg
 
-JWT Body:
+User Info:
 {
-  "jti": "c06a881f43d5441a90cccabaceffff8c",
-  "ext_attr": {
-    "enhancer": "XSUAA",
-    "subaccountid": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
-    "zdn": "skyfin-company",
-    "serviceinstanceid": "afb722fb-11ca-4fe2-a434-9a7172de92c3"
-  },
-  "sub": "sb-afb722fb-11ca-4fe2-a434-9a7172de92c3!b5874|na-9ab834c2-bc11-47a1-b8cb-d83d7a5a5774!b8223",
-  "authorities": [
-    "na-9ab834c2-bc11-47a1-b8cb-d83d7a5a5774!b8223.APIManage",
-    "xfsrt-application!t8223.Callback",
-    "na-9ab834c2-bc11-47a1-b8cb-d83d7a5a5774!b8223.ODPManage",
-    "uaa.resource",
-    "na-9ab834c2-bc11-47a1-b8cb-d83d7a5a5774!b8223.APIFullAccess",
-    "na-9ab834c2-bc11-47a1-b8cb-d83d7a5a5774!b8223.ODPAPIAccess"
-  ],
-  "scope": [
-    "na-9ab834c2-bc11-47a1-b8cb-d83d7a5a5774!b8223.ODPManage",
-    "uaa.resource",
-    "na-9ab834c2-bc11-47a1-b8cb-d83d7a5a5774!b8223.APIFullAccess",
-    "na-9ab834c2-bc11-47a1-b8cb-d83d7a5a5774!b8223.APIManage",
-    "xfsrt-application!t8223.Callback",
-    "na-9ab834c2-bc11-47a1-b8cb-d83d7a5a5774!b8223.ODPAPIAccess"
-  ],
-  "client_id": "sb-afb722fb-11ca-4fe2-a434-9a7172de92c3!b5874|na-9ab834c2-bc11-47a1-b8cb-d83d7a5a5774!b8223",
-  "cid": "sb-afb722fb-11ca-4fe2-a434-9a7172de92c3!b5874|na-9ab834c2-bc11-47a1-b8cb-d83d7a5a5774!b8223",
-  "azp": "sb-afb722fb-11ca-4fe2-a434-9a7172de92c3!b5874|na-9ab834c2-bc11-47a1-b8cb-d83d7a5a5774!b8223",
-  "grant_type": "client_credentials",
-  "rev_sig": "7ef839f4",
-  "iat": 1621516656,
-  "exp": 1621559856,
-  "iss": "https://skyfin-company.authentication.sap.hana.ondemand.com/oauth/token",
-  "zid": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
-  "aud": [
-    "sb-afb722fb-11ca-4fe2-a434-9a7172de92c3!b5874|na-9ab834c2-bc11-47a1-b8cb-d83d7a5a5774!b8223",
-    "uaa",
-    "xfsrt-application!t8223",
-    "na-9ab834c2-bc11-47a1-b8cb-d83d7a5a5774!b8223"
-  ]
+  "userStuff": "details"
 }"
+`;
+
+exports[`uaa tests xsuaa tokens saas user default 1`] = `
+[
+  [
+    "https://subdomain.authentication/oauth/token",
+    {
+      "body": "grant_type=password&client_id=clientid&client_secret=clientsecret&username=username&password=password90&login_hint=%7B%22origin%22%3A%22sap.custom%22%7D",
+      "headers": {
+        "Accept": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      "method": "POST",
+    },
+  ],
+]
+`;
+
+exports[`uaa tests xsuaa tokens saas user default 2`] = `
+"Authorization:
+Bearer eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vc2t5ZmluLWNvbXBhbnkuYXV0aGVudGljYXRpb24uc2FwLmhhbmEub25kZW1hbmQuY29tL3Rva2VuX2tleXMiLCJraWQiOiJkZWZhdWx0LWp3dC1rZXktLTEyNDY1MTM5OTAiLCJ0eXAiOiJKV1QiLCJqaWQiOiAiZitoQmFXbXZHTVlUZis3STFTaDVlNEpvS1hjN05QV2wrbGVhR0ZTS0hFST0ifQ.eyJqdGkiOiI1NTNiYjVkYmM1NzE0Y2FkOTAwY2I4MGFlZmNjODI4NCIsImV4dF9hdHRyIjp7ImVuaGFuY2VyIjoiWFNVQUEiLCJzdWJhY2NvdW50aWQiOiI1ZWNjNzQxMy0yYjdlLTQxNGEtOTQ5Ni1hZDRhNjFmNmNjY2YiLCJ6ZG4iOiJza3lmaW4tY29tcGFueSIsIm9pZGNJc3N1ZXIiOiJodHRwczovL2F3ZHNwOGVmNC5hY2NvdW50czQwMC5vbmRlbWFuZC5jb20ifSwidXNlcl91dWlkIjoiYWJiOWRkOWItYjAxMi00ZGY3LWJjY2YtNDFlZDg2NzZjYWIzIiwieHMudXNlci5hdHRyaWJ1dGVzIjp7fSwiY25mIjp7Ing1dCNTMjU2IjoiaVdWRDExOWRidnlhNW9LSW9UVWxXQ2lTOHF0SVRZSGFhVlUzN1o3aDBMMCJ9LCJ4cy5zeXN0ZW0uYXR0cmlidXRlcyI6eyJ4cy5yb2xlY29sbGVjdGlvbnMiOlsiQUZDX0FMTCJdfSwiZ2l2ZW5fbmFtZSI6IkRlZmF1bHQiLCJmYW1pbHlfbmFtZSI6IlRlc3RVc2VyIiwic3ViIjoiOWI4ODAzMjAtZDVmOC00NDg3LTkxN2MtYmMwZThjYzcwZDZmIiwic2NvcGUiOlsiYWZjLWRldiF0NTg3NC5Qcm92aWRlciIsImFmYy1kZXYhdDU4NzQuQ29uc3VtZXIiLCJhZmMtZGV2IXQ1ODc0LkFGQ19SZXBvcnRpbmciLCJhZmMtZGV2IXQ1ODc0LkFGQ19Vc2VyIiwib3BlbmlkIiwiYWZjLWRldiF0NTg3NC5FeHRlbmRDRFNkZWxldGUiLCJhZmMtZGV2IXQ1ODc0LkFGQ19SZXBvcnRpbmdUYXNrVmlldyIsImFmYy1kZXYhdDU4NzQuS0VZVVNFUiIsImFmYy1kZXYhdDU4NzQuRXh0ZW5kQ0RTIiwiYWZjLWRldiF0NTg3NC5BRkNfQVBJX0FjY2VzcyIsImFmYy1kZXYhdDU4NzQuQUZDX1JlcG9ydGluZ09yZ1VuaXRWaWV3IiwiYWZjLWRldiF0NTg3NC5BRkNfQXJjaGl2aW5nIiwiYWZjLWRldiF0NTg3NC5BRkNfQXBwcm92ZSIsImFmYy1kZXYhdDU4NzQuQUZDX1Byb2Nlc3MiLCJhZmMtZGV2IXQ1ODc0LkFGQ19Db25maWciLCJhZmMtZGV2IXQ1ODc0LkFGQ19Db21wYW55Q29kZUdyb3Vwc0FwcCIsImFmYy1kZXYhdDU4NzQuQUZDX1N5c3RlbUFkbWluIiwidXNlcl9hdHRyaWJ1dGVzIiwiYWZjLWRldiF0NTg3NC5BRkNfTWlncmF0aW9uIiwidWFhLnVzZXIiLCJhZmMtZGV2IXQ1ODc0LkFGQ19EZWZpbmUiLCJhZmMtZGV2IXQ1ODc0LkFGQ19Vc2VyTWFuYWdlbWVudCIsImFmYy1kZXYhdDU4NzQuQUZDX0NvbXBsaWFuY2UiXSwiY2xpZW50X2lkIjoic2ItYWZjLWRldiF0NTg3NCIsImNpZCI6InNiLWFmYy1kZXYhdDU4NzQiLCJhenAiOiJzYi1hZmMtZGV2IXQ1ODc0IiwiZ3JhbnRfdHlwZSI6InBhc3N3b3JkIiwidXNlcl9pZCI6IjliODgwMzIwLWQ1ZjgtNDQ4Ny05MTdjLWJjMGU4Y2M3MGQ2ZiIsIm9yaWdpbiI6InNhcC5jdXN0b20iLCJ1c2VyX25hbWUiOiJ0ZXN0dXNlckBzYXAuY29tIiwiZW1haWwiOiJ0ZXN0dXNlckBzYXAuY29tIiwiYXV0aF90aW1lIjoxNzA4MDAzNDYzLCJyZXZfc2lnIjoiNDQwOGRiNGYiLCJpYXQiOjE3MDgwMDM0NjMsImV4cCI6MTcwODAwNzA2MywiaXNzIjoiaHR0cHM6Ly9za3lmaW4tY29tcGFueS5hdXRoZW50aWNhdGlvbi5zYXAuaGFuYS5vbmRlbWFuZC5jb20vb2F1dGgvdG9rZW4iLCJ6aWQiOiI1ZWNjNzQxMy0yYjdlLTQxNGEtOTQ5Ni1hZDRhNjFmNmNjY2YiLCJhdWQiOlsidWFhIiwib3BlbmlkIiwic2ItYWZjLWRldiF0NTg3NCIsImFmYy1kZXYhdDU4NzQiXX0.PavhBjPw79BPwsq02hGXHqxzSKdFRjwvmwqJFKMNH2e1h6CqEeCzbUpK0depFsEwUr8iqo-C3Mo8Kdb07vj4sVOfltyyKrynsMv9MkTRX8MN8Je9tmLtTR3NJ92emGrN367ivT8rpuq_oFMlDjnbNVldYitP1azXhDALM64Um60InWE1zHX7fIdS00Du7CFmTQm4YKJ2gSD4u1MrwjzABdNuInyhU9Alr6koXSuzRLvpb4ALIxwH1pSnVS3BWzRDJ2yPCn02vha7W9MPtIbvSwgtecK0NscMXbJ4GFBcPbzLyW4W8T_n9jlKW3czL9yA5skbS5rfAHwo9YsecDI7hg"
 `;
