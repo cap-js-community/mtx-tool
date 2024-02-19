@@ -647,12 +647,13 @@ const hdiEnableAll = async (context, [tenantId]) => {
   const { sm_url } = credentials;
   const token = await context.getCachedUaaTokenFromCredentials(credentials);
 
-  // get all instances
+  // get all instances and bindings
   const instances = await _hdiInstancesServiceManager(context, { filterTenantId: tenantId });
+  const bindings = await _hdiBindingsServiceManager(context, { filterTenantId: tenantId });
+
+  // filter instances and bindings
   const migrationInstances = [];
   const alreadyMigratedTenants = [];
-
-  // filter instances that are already enabled
   await limiter(hdiRequestConcurrency, instances, async (instance) => {
     const parametersResponse = await request({
       url: sm_url,
@@ -668,6 +669,9 @@ const hdiEnableAll = async (context, [tenantId]) => {
     }
   });
   const migrationTenants = migrationInstances.map((instance) => instance.labels.tenant_id[0]);
+  const migrationBindings = bindings.filter((binding) =>
+    migrationInstances.some((instance) => instance.id === binding.service_instance_id)
+  );
 
   if (alreadyMigratedTenants.length) {
     console.log("skipping %i already enabled tenants", alreadyMigratedTenants.length);
@@ -679,10 +683,6 @@ const hdiEnableAll = async (context, [tenantId]) => {
   }
 
   // delete all bindings related to migration instances
-  const bindings = await _hdiBindingsServiceManager(context, { filterTenantId: tenantId });
-  const migrationBindings = bindings.filter((binding) =>
-    migrationInstances.some((instance) => instance.id === binding.service_instance_id)
-  );
   console.log("deleting %i bindings to protect enablement", migrationBindings.length);
   await limiter(
     hdiRequestConcurrency,
@@ -691,37 +691,41 @@ const hdiEnableAll = async (context, [tenantId]) => {
   );
 
   // send enable tenant patch request and poll until succeeded
-  await limiter(hdiRequestConcurrency, migrationInstances, async (instance) => {
-    const enableResponse = await request({
-      method: "PATCH",
-      url: sm_url,
-      pathname: `/v1/service_instances/${instance.id}`,
-      query: { async: false },
-      auth: { token },
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        parameters: {
-          enableTenant: true,
-        },
-      }),
-    });
-    let checkData = await enableResponse.json();
-    for (let attempt = 1; attempt <= 15; attempt++) {
-      if (checkData.last_operation?.state === "succeeded") {
-        break;
-      }
-      await sleep(POLL_FREQUENCY);
-      const pollDataResponse = await request({
+  try {
+    await limiter(hdiRequestConcurrency, migrationInstances, async (instance) => {
+      const enableResponse = await request({
+        method: "PATCH",
         url: sm_url,
         pathname: `/v1/service_instances/${instance.id}`,
+        query: { async: false },
         auth: { token },
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          parameters: {
+            enableTenant: true,
+          },
+        }),
       });
-      checkData = await pollDataResponse.json();
+      let checkData = await enableResponse.json();
+      for (let attempt = 1; attempt <= 15; attempt++) {
+        if (checkData.last_operation?.state === "succeeded") {
+          break;
+        }
+        await sleep(POLL_FREQUENCY);
+        const pollDataResponse = await request({
+          url: sm_url,
+          pathname: `/v1/service_instances/${instance.id}`,
+          auth: { token },
+        });
+        checkData = await pollDataResponse.json();
+      }
+    });
+  } finally {
+    // repair bindings for migrated tenants
+    if (migrationInstances.length) {
+      await _hdiRepairBindingsServiceManager(context, { instances: migrationInstances, bindings: [] });
     }
-  });
-
-  // repair bindings for migrated tenants
-  await _hdiRepairBindingsServiceManager(context, { instances: migrationInstances, bindings: [] });
+  }
 };
 
 module.exports = {
