@@ -682,11 +682,11 @@ const hdiEnableAll = async (context, [tenantId]) => {
     migrationBindings.length,
     migrationTenants.join(", ")
   );
-  // await limiter(
-  //   hdiRequestConcurrency,
-  //   migrationBindings,
-  //   async (binding) => await _deleteBindingServiceManager(sm_url, token, binding.id)
-  // );
+  await limiter(
+    hdiRequestConcurrency,
+    migrationBindings,
+    async (binding) => await _deleteBindingServiceManager(sm_url, token, binding.id)
+  );
 
   // send enable tenant patch request and poll until succeeded
   await limiter(hdiRequestConcurrency, migrationInstances, async (instance) => {
@@ -703,7 +703,7 @@ const hdiEnableAll = async (context, [tenantId]) => {
         },
       }),
     });
-    while (true) {
+    for (let attempt = 0; attempt <= 30; attempt++) {
       const pollDataResponse = await request({
         url: sm_url,
         pathname: `/v1/service_instances/${instance.id}`,
@@ -718,7 +718,7 @@ const hdiEnableAll = async (context, [tenantId]) => {
   });
 
   // repair bindings for migrated tenants
-  // await _hdiRepairBindingsServiceManager(context, { instances: migrationInstances, bindings: [] });
+  await _hdiRepairBindingsServiceManager(context, { instances: migrationInstances, bindings: [] });
 };
 
 module.exports = {
