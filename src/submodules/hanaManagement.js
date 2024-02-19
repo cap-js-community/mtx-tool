@@ -10,10 +10,12 @@ const {
   randomString,
   tryJsonParse,
   isObject,
+  sleep,
 } = require("../shared/static");
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
 
+const POLL_FREQUENCY = 1000;
 const TUNNEL_LOCAL_PORT = 30015;
 const HIDDEN_PASSWORD_TEXT = "*** show with --reveal ***";
 const SERVICE_MANAGER_REQUEST_CONCURRENCY_FALLBACK = 10;
@@ -655,20 +657,27 @@ const hdiEnableAll = async (context, [tenantId]) => {
 
   // get all instances
   const instances = await _hdiInstancesServiceManager(context, { filterTenantId: tenantId });
+  const migrationInstances = [];
+  const alreadyMigratedTenants = [];
 
   // filter instances that are already enabled
-  const migrationInstances = (
-    await limiter(hdiRequestConcurrency, instances, async (instance) => {
-      const parametersResponse = await request({
-        url: sm_url,
-        pathname: `/v1/service_instances/${instance.id}/parameters`,
-        auth: { token },
-        logged: false,
-      });
-      const parameters = await parametersResponse.json();
-      return parameters.enableTenant ? undefined : instance;
-    })
-  ).filter((instance) => instance);
+  await limiter(hdiRequestConcurrency, instances, async (instance) => {
+    const parametersResponse = await request({
+      url: sm_url,
+      pathname: `/v1/service_instances/${instance.id}/parameters`,
+      auth: { token },
+      logged: false,
+    });
+    const parameters = await parametersResponse.json();
+    if (parameters.enableTenant) {
+      alreadyMigratedTenants.push(instance.labels.tenant_id[0]);
+    } else {
+      migrationInstances.push(instance);
+    }
+  });
+  if (alreadyMigratedTenants.length) {
+    console.log("skipping already migrated tenants");
+  }
 
   // delete all bindings related to migration instances
   const bindings = await _hdiBindingsServiceManager(context, { filterTenantId: tenantId });
@@ -688,13 +697,34 @@ const hdiEnableAll = async (context, [tenantId]) => {
   // );
 
   // send enable tenant patch request and poll until succeeded
+  await limiter(hdiRequestConcurrency, migrationInstances, async (instance) => {
+    const enableResponse = await request({
+      method: "PATCH",
+      url: sm_url,
+      pathname: `/v1/service_instances/${instance.id}`,
+      auth: { token },
+      body: JSON.stringify({
+        parameters: {
+          enableTenant: true,
+        },
+      }),
+    });
+    while (true) {
+      const pollDataResponse = await request({
+        url: sm_url,
+        pathname: `/v1/service_instances/${instance.id}`,
+        auth: { token },
+      });
+      const pollData = await pollDataResponse.json();
+      if (pollData.last_operation?.state === "succeeded") {
+        break;
+      }
+      await sleep(POLL_FREQUENCY);
+    }
+  });
 
   // repair bindings for migrated tenants
-  await _hdiRepairBindingsServiceManager(context, { instances: migrationInstances, bindings: migrationBindings });
-
-  debugger;
-
-  // TODO code on
+  // await _hdiRepairBindingsServiceManager(context, { instances: migrationInstances, bindings: [] });
 };
 
 module.exports = {
