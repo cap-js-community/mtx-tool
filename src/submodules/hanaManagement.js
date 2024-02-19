@@ -451,8 +451,11 @@ function _getBindingsByInstance(bindings) {
 }
 
 const hdiListServiceManager = async (context, filterTenantId, doTimestamps) => {
-  const instances = await _hdiInstancesServiceManager(context, { filterTenantId });
-  const bindings = await _hdiBindingsServiceManager(context, { filterTenantId });
+  const [instances, bindings] = await Promise.all([
+    _hdiInstancesServiceManager(context, { filterTenantId }),
+    _hdiBindingsServiceManager(context, { filterTenantId }),
+  ]);
+
   const bindingsByInstance = _getBindingsByInstance(bindings);
   instances.sort(compareForServiceManagerTenantId);
 
@@ -497,8 +500,10 @@ const hdiList = async (context, [tenantId], [doTimestamps]) =>
     : hdiListInstanceManager(context, tenantId, doTimestamps);
 
 const _hdiLongListServiceManager = async (context, filterTenantId, doReveal) => {
-  const instances = await _hdiInstancesServiceManager(context, { filterTenantId, doEnsureTenantLabel: false });
-  const bindings = await _hdiBindingsServiceManager(context, { filterTenantId, doReveal, doEnsureTenantLabel: false });
+  const [instances, bindings] = await Promise.all([
+    _hdiInstancesServiceManager(context, { filterTenantId, doEnsureTenantLabel: false }),
+    _hdiBindingsServiceManager(context, { filterTenantId, doReveal, doEnsureTenantLabel: false }),
+  ]);
   return `
 === container instance${instances.length === 1 ? "" : "s"} ===
 
@@ -516,8 +521,10 @@ const hdiLongList = async (context, [filterTenantId], [doReveal]) =>
     : _formatOutput(await _hdiContainersInstanceManager(context, { filterTenantId, doReveal }));
 
 const _hdiListRelationsServiceManager = async (context, filterTenantId, doTimestamps) => {
-  const instances = await _hdiInstancesServiceManager(context, { filterTenantId });
-  const bindings = await _hdiBindingsServiceManager(context, { filterTenantId });
+  const [instances, bindings] = await Promise.all([
+    _hdiInstancesServiceManager(context, { filterTenantId }),
+    _hdiBindingsServiceManager(context, { filterTenantId }),
+  ]);
   const bindingsByInstance = _getBindingsByInstance(bindings);
   instances.sort(compareForServiceManagerTenantId);
 
@@ -649,8 +656,10 @@ const hdiEnableAll = async (context, [tenantId]) => {
   const token = await context.getCachedUaaTokenFromCredentials(credentials);
 
   // get all instances and bindings
-  const instances = await _hdiInstancesServiceManager(context, { filterTenantId: tenantId });
-  const bindings = await _hdiBindingsServiceManager(context, { filterTenantId: tenantId });
+  const [instances, bindings] = await Promise.all([
+    _hdiInstancesServiceManager(context, { filterTenantId: tenantId }),
+    _hdiBindingsServiceManager(context, { filterTenantId: tenantId }),
+  ]);
 
   // filter instances and bindings
   const migrationInstances = [];
