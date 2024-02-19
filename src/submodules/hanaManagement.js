@@ -458,18 +458,20 @@ const hdiListServiceManager = async (context, filterTenantId, doTimestamps) => {
   const bindingsByInstance = _getBindingsByInstance(bindings);
   instances.sort(compareForServiceManagerTenantId);
 
-  const headerRow = ["tenant_id", "db_tenant_id", "host", "schema", "ready"];
+  const doShowDbTenantColumn = bindings.some((binding) => binding.credentials?.tenantId);
+  const headerRow = ["tenant_id", "host", "schema", "ready"];
+  doShowDbTenantColumn && headerRow.splice(1, 0, "db_tenant_id");
   doTimestamps && headerRow.push("created_on", "updated_on");
   const nowDate = new Date();
   const instanceMap = (instance) => {
     const [binding] = bindingsByInstance[instance.id] || [];
     const row = [
       instance.labels.tenant_id[0],
-      binding ? binding.credentials?.tenantId ?? "" : "missing binding",
       binding ? binding.credentials?.host + ":" + binding.credentials?.port : "missing binding",
       binding ? binding.credentials?.schema : "",
       instance.ready,
     ];
+    doShowDbTenantColumn && row.splice(1, 0, binding ? binding.credentials?.tenantId ?? "" : "missing binding");
     doTimestamps && row.push(...formatTimestampsWithRelativeDays([instance.created_at, instance.updated_at], nowDate));
     return row;
   };
