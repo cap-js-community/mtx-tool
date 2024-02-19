@@ -647,6 +647,12 @@ const hdiEnableAll = async (context, [], [tenantId]) => {
   assert(await _isServiceManager(context), "enable tenant is only supported for service-manager");
   assert(!tenantId || isValidTenantId(tenantId), `argument "${tenantId}" is not a valid hdi tenant id`);
 
+  // get all instances
+  // filter instances that are already marked
+  // delete all bindings related to migration instances
+  // send enable tenant patch request and poll until succeeded
+  // repair bindings for migrated tenants
+
   debugger;
 
   // TODO code on
