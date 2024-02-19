@@ -10,12 +10,10 @@ const {
   randomString,
   tryJsonParse,
   isObject,
-  sleep,
 } = require("../shared/static");
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
 
-const POLL_FREQUENCY = 1000;
 const TUNNEL_LOCAL_PORT = 30015;
 const HIDDEN_PASSWORD_TEXT = "*** show with --reveal ***";
 const SERVICE_MANAGER_REQUEST_CONCURRENCY_FALLBACK = 10;
@@ -709,19 +707,12 @@ const hdiEnableAll = async (context, [tenantId]) => {
           },
         }),
       });
-      let checkData = await enableResponse.json();
-      for (let attempt = 1; attempt <= 15; attempt++) {
-        if (checkData.last_operation?.state === "succeeded") {
-          break;
-        }
-        await sleep(POLL_FREQUENCY);
-        const pollDataResponse = await request({
-          url: sm_url,
-          pathname: `/v1/service_instances/${instance.id}`,
-          auth: { token },
-        });
-        checkData = await pollDataResponse.json();
-      }
+      const checkData = await enableResponse.json();
+      assert(
+        checkData.last_operation?.state === "succeeded",
+        "enable tenant operation was not marked succeeded\n%j",
+        checkData
+      );
     });
   } finally {
     // repair bindings for migrated tenants
