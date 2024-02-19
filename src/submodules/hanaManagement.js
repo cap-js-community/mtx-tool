@@ -458,13 +458,14 @@ const hdiListServiceManager = async (context, filterTenantId, doTimestamps) => {
   const bindingsByInstance = _getBindingsByInstance(bindings);
   instances.sort(compareForServiceManagerTenantId);
 
-  const headerRow = ["tenant_id", "host", "schema", "ready"];
+  const headerRow = ["tenant_id", "db_tenant_id", "host", "schema", "ready"];
   doTimestamps && headerRow.push("created_on", "updated_on");
   const nowDate = new Date();
   const instanceMap = (instance) => {
     const [binding] = bindingsByInstance[instance.id] || [];
     const row = [
       instance.labels.tenant_id[0],
+      binding ? binding.credentials?.tenantId ?? "" : "missing binding",
       binding ? binding.credentials?.host + ":" + binding.credentials?.port : "missing binding",
       binding ? binding.credentials?.schema : "",
       instance.ready,
