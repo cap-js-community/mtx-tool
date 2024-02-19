@@ -62,13 +62,9 @@ const _createBindingServiceManager = async (
     method: "POST",
     url: sm_url,
     pathname: `/v1/service_bindings`,
-    query: {
-      async: false,
-    },
+    query: { async: false },
     auth: { token },
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       name,
       service_instance_id,
@@ -106,9 +102,7 @@ const _deleteBindingServiceManager = async (sm_url, token, id) => {
     method: "DELETE",
     url: sm_url,
     pathname: `/v1/service_bindings/${id}`,
-    query: {
-      async: false,
-    },
+    query: { async: false },
     auth: { token },
   });
 };
@@ -118,9 +112,7 @@ async function _deleteInstanceServiceManager(sm_url, token, id) {
     method: "DELETE",
     url: sm_url,
     pathname: `/v1/service_instances/${id}`,
-    query: {
-      async: false,
-    },
+    query: { async: false },
     auth: { token },
   });
 }
@@ -702,7 +694,9 @@ const hdiEnableAll = async (context, [tenantId]) => {
       method: "PATCH",
       url: sm_url,
       pathname: `/v1/service_instances/${instance.id}`,
+      query: { async: false },
       auth: { token },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         parameters: {
           enableTenant: true,
