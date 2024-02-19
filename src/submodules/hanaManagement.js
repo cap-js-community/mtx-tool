@@ -705,18 +705,18 @@ const hdiEnableAll = async (context, [tenantId]) => {
         },
       }),
     });
-    const enableData = await enableResponse.json();
-    for (let attempt = 0; attempt <= 30; attempt++) {
+    let checkData = await enableResponse.json();
+    for (let attempt = 1; attempt <= 15; attempt++) {
+      if (checkData.last_operation?.state === "succeeded") {
+        break;
+      }
+      await sleep(POLL_FREQUENCY);
       const pollDataResponse = await request({
         url: sm_url,
         pathname: `/v1/service_instances/${instance.id}`,
         auth: { token },
       });
-      const pollData = await pollDataResponse.json();
-      if (pollData.last_operation?.state === "succeeded") {
-        break;
-      }
-      await sleep(POLL_FREQUENCY);
+      checkData = await pollDataResponse.json();
     }
   });
 
