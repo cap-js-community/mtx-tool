@@ -257,15 +257,15 @@ const _hdiRebindAllServiceManager = async (context, parameters) => {
   );
 };
 
-const _hdiRepairBindingsServiceManager = async (context, parameters) => {
+const _hdiRepairBindingsServiceManager = async (context, { instances, bindings, parameters } = {}) => {
   const {
     cfService: { credentials },
   } = await context.getHdiInfo();
   const { sm_url } = credentials;
   const token = await context.getCachedUaaTokenFromCredentials(credentials);
 
-  const instances = await _hdiInstancesServiceManager(context);
-  const bindings = await _hdiBindingsServiceManager(context);
+  instances = instances ?? (await _hdiInstancesServiceManager(context));
+  bindings = bindings ?? (await _hdiBindingsServiceManager(context));
   const bindingsByInstance = _getBindingsByInstance(bindings);
   instances.sort(compareForServiceManagerTenantId);
 
@@ -584,7 +584,7 @@ const hdiRepairBindings = async (context, [rawParameters]) => {
   assert(await _isServiceManager(context), "repair bindings is only supported for service-manager");
   const parameters = tryJsonParse(rawParameters);
   assert(!rawParameters || isObject(parameters), `argument "${rawParameters}" needs to be a valid JSON object`);
-  return await _hdiRepairBindingsServiceManager(context, parameters);
+  return await _hdiRepairBindingsServiceManager(context, { parameters });
 };
 
 const hdiTunnelTenant = async (context, [tenantId], [doReveal]) => {
@@ -656,7 +656,7 @@ const hdiEnableAll = async (context, [tenantId]) => {
   // get all instances
   const instances = await _hdiInstancesServiceManager(context, { filterTenantId: tenantId });
 
-  // filter instances that are already marked
+  // filter instances that are already enabled
   const migrationInstances = (
     await limiter(hdiRequestConcurrency, instances, async (instance) => {
       const parametersResponse = await request({
@@ -672,9 +672,25 @@ const hdiEnableAll = async (context, [tenantId]) => {
 
   // delete all bindings related to migration instances
   const bindings = await _hdiBindingsServiceManager(context, { filterTenantId: tenantId });
+  const migrationBindings = bindings.filter((binding) =>
+    migrationInstances.some((instance) => instance.id === binding.service_instance_id)
+  );
+  const migrationTenants = migrationBindings.map((binding) => binding.labels.tenant_id[0]);
+  console.log(
+    "deleting %i bindings to protect tenant enablement for tenants %s",
+    migrationBindings.length,
+    migrationTenants.join(", ")
+  );
+  // await limiter(
+  //   hdiRequestConcurrency,
+  //   migrationBindings,
+  //   async (binding) => await _deleteBindingServiceManager(sm_url, token, binding.id)
+  // );
 
   // send enable tenant patch request and poll until succeeded
+
   // repair bindings for migrated tenants
+  await _hdiRepairBindingsServiceManager(context, { instances: migrationInstances, bindings: migrationBindings });
 
   debugger;
 
