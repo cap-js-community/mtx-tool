@@ -243,6 +243,12 @@ module.exports = {
     callback: hdi.hdiRepairBindings,
     useCache: false,
   },
+  HDI_ENABLE_ALL: {
+    commandVariants: ["--hdi-enable-all"],
+    optionalPassArgs: [PASS_ARG.TENANT_ID],
+    callback: hdi.hdiEnableAll,
+    useCache: false,
+  },
   HDI_DELETE_TENANT: {
     commandVariants: ["--hdi-delete-tenant"],
     requiredPassArgs: [PASS_ARG.TENANT_ID],
