@@ -70,7 +70,6 @@ commands:
    hdirt  --hdi-rebind-tenant TENANT_ID [PARAMS]  rebind tenant hdi container instances
    hdira  --hdi-rebind-all [PARAMS]               rebind all hdi container instances
           --hdi-repair-bindings [PARAMS]          create missing and delete ambiguous bindings
-          --hdi-migrate-all                       migrate all hdi containers to service-manager
 *         --hdi-delete-tenant TENANT_ID           delete hdi container instance and bindings for tenant
 *         --hdi-delete-all                        delete all hdi container instances and bindings
           ...    [TENANT_ID]                      filter list for tenant id

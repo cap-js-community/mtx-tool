@@ -95,7 +95,6 @@ commands:
    hdirt  --hdi-rebind-tenant TENANT_ID [PARAMS]  rebind tenant hdi container instances
    hdira  --hdi-rebind-all [PARAMS]               rebind all hdi container instances
           --hdi-repair-bindings [PARAMS]          create missing and delete ambiguous bindings
-          --hdi-migrate-all                       migrate all hdi containers to service-manager
 *         --hdi-delete-tenant TENANT_ID           delete hdi container instance and bindings for tenant
 *         --hdi-delete-all                        delete all hdi container instances and bindings
           ...    [TENANT_ID]                      filter list for tenant id
@@ -124,6 +123,4 @@ commands:
   either handle this gracefully or be restarted
 - `--server-start-debugger` will send SIGUSR1 to node process (requires ssh enabled on cf), which starts debugger _
   without restart_
-- `--hdi-migrate-all` will call the instance-manager's migration route and then lazily create missing service-bindings
-  on service-manager
 - `TENANT` means you can enter either the subdomain or tenant id and both will work

@@ -42,7 +42,6 @@ Commands for this area are:
    hdirt  --hdi-rebind-tenant TENANT_ID [PARAMS]  rebind tenant hdi container instances
    hdira  --hdi-rebind-all [PARAMS]               rebind all hdi container instances
           --hdi-repair-bindings [PARAMS]          create missing and delete ambiguous bindings
-          --hdi-migrate-all                       migrate all hdi containers to service-manager
 *         --hdi-delete-tenant TENANT_ID           delete hdi container instance and bindings for tenant
 *         --hdi-delete-all                        delete all hdi container instances and bindings
           ...    [TENANT_ID]                      filter list for tenant id
@@ -147,12 +146,6 @@ manager. In other words, `mtx hdirt <tenant_id> '{"special":true}'` corresponds 
 ```
 cf bind-service <service-manager> <hdi-shared service-instance of tenant_id> -c '{"special":true}'
 ```
-
-## HDI Migrate
-
-The migration command `mtx --hdi-migrate-all` is a convenience functionality for migrating instance manager maintained
-hdi containers and bindings to service manager. It will take care to not only migrate the underlying containers, but
-also create new bindings for all of them so they can be accessed like before.
 
 ## HDI Delete
 

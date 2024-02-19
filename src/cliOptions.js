@@ -243,11 +243,6 @@ module.exports = {
     callback: hdi.hdiRepairBindings,
     useCache: false,
   },
-  HDI_MIGRATE_ALL: {
-    commandVariants: ["--hdi-migrate-all"],
-    callback: hdi.hdiMigrateAll,
-    useCache: false,
-  },
   HDI_DELETE_TENANT: {
     commandVariants: ["--hdi-delete-tenant"],
     requiredPassArgs: [PASS_ARG.TENANT_ID],

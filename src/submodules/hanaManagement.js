@@ -643,106 +643,6 @@ const hdiDeleteAllInstanceManager = async (context) => {
 const hdiDeleteAll = async (context) =>
   (await _isServiceManager(context)) ? hdiDeleteAllServiceManager(context) : hdiDeleteAllInstanceManager(context);
 
-const _lazyCreateServiceBinding = async (tenant_id, sm_url, token) => {
-  const { items: bindings } = await (
-    await request({
-      url: sm_url,
-      pathname: `/v1/service_bindings`,
-      query: { labelQuery: `tenant_id eq '${tenant_id}'` },
-      auth: { token },
-      headers: {
-        "Content-Type": "application/json",
-      },
-      logged: false,
-    })
-  ).json();
-  if (bindings.length > 0) {
-    return "FOUND";
-  }
-
-  const { items: instances } = await (
-    await request({
-      url: sm_url,
-      pathname: `/v1/service_instances`,
-      query: { labelQuery: `tenant_id eq '${tenant_id}'` },
-      auth: { token },
-      headers: {
-        "Content-Type": "application/json",
-      },
-      logged: false,
-    })
-  ).json();
-  if (instances.length === 0) {
-    console.error("error: found no service instances for tenant %s--skipping migration for this tenant", tenant_id);
-    return "ERROR";
-  }
-  const [instance] = instances;
-
-  await _createBindingServiceManagerFromInstance(sm_url, token, instance);
-  return "BINDING_CREATED";
-};
-
-const hdiMigrateAll = async (context) => {
-  const { cfEnvServices } = await context.getHdiInfo();
-  const [serviceManager, instanceManager] = ["service-manager", "managed-hana"].map((name) => {
-    const services = cfEnvServices[name];
-    assert(Array.isArray(services), "could not find %s service binding", name);
-    assert(services.length === 1, "found multiple %s service bindings, expected just one", name);
-    return services[0];
-  });
-
-  const {
-    credentials: { get_all_managed_instances_url, migrate_managed_instance_url, user: username, password },
-  } = instanceManager;
-  assert(
-    migrate_managed_instance_url,
-    "cannot find 'migrate_managed_instance_url' property on instance-manager service"
-  );
-  const { credentials } = serviceManager;
-  const { sm_url } = credentials;
-  const token = await context.getCachedUaaTokenFromCredentials(credentials);
-
-  const containers = await (
-    await request({
-      url: get_all_managed_instances_url,
-      auth: { username, password },
-    })
-  ).json();
-
-  containers.sort(compareForInstanceManagerTenantId);
-
-  const headers = ["tenant_id", "instance_manager_migration_status", "service_manager_binding_status"];
-  const table = [headers];
-
-  // NOTE: we want to do this serially
-  for (const { tenant_id, managed_binding_id } of containers) {
-    let instance_manager_migration_status = "...";
-    let service_manager_binding_status = "...";
-    const response = await request({
-      method: "POST",
-      url: migrate_managed_instance_url
-        .replace("{tenant_id}", tenant_id)
-        .replace("{service-manager_container_id}", serviceManager.instance_guid),
-      auth: { username, password },
-      checkStatus: false,
-    });
-    if (!response.ok) {
-      console.error("got bad response for tenant %s: %s", tenant_id, await response.text());
-      instance_manager_migration_status = "FOUND";
-    } else {
-      const { migration_status } = await response.json();
-      instance_manager_migration_status = migration_status;
-    }
-
-    service_manager_binding_status = await _lazyCreateServiceBinding(tenant_id, sm_url, token, managed_binding_id);
-
-    table.push([tenant_id, instance_manager_migration_status, service_manager_binding_status]);
-  }
-
-  console.log();
-  return tableList(table);
-};
-
 module.exports = {
   hdiList,
   hdiLongList,
@@ -753,5 +653,4 @@ module.exports = {
   hdiTunnelTenant,
   hdiDeleteTenant,
   hdiDeleteAll,
-  hdiMigrateAll,
 };
