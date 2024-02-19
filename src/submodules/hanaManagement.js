@@ -667,8 +667,15 @@ const hdiEnableAll = async (context, [tenantId]) => {
       migrationInstances.push(instance);
     }
   });
+  const migrationTenants = migrationInstances.map((instance) => instance.labels.tenant_id[0]);
+
   if (alreadyMigratedTenants.length) {
-    console.log("skipping already migrated tenants");
+    console.log("skipping %i already enabled tenants", alreadyMigratedTenants.length);
+  }
+  if (migrationInstances.length && migrationTenants.length) {
+    console.log("enabling %i tenants %s", migrationTenants.length, migrationTenants.join(", "));
+  } else {
+    return;
   }
 
   // delete all bindings related to migration instances
@@ -676,12 +683,7 @@ const hdiEnableAll = async (context, [tenantId]) => {
   const migrationBindings = bindings.filter((binding) =>
     migrationInstances.some((instance) => instance.id === binding.service_instance_id)
   );
-  const migrationTenants = migrationBindings.map((binding) => binding.labels.tenant_id[0]);
-  console.log(
-    "deleting %i bindings to protect tenant enablement for tenants %s",
-    migrationBindings.length,
-    migrationTenants.join(", ")
-  );
+  console.log("deleting %i bindings to protect enablement", migrationBindings.length);
   await limiter(
     hdiRequestConcurrency,
     migrationBindings,
@@ -703,6 +705,7 @@ const hdiEnableAll = async (context, [tenantId]) => {
         },
       }),
     });
+    const enableData = await enableResponse.json();
     for (let attempt = 0; attempt <= 30; attempt++) {
       const pollDataResponse = await request({
         url: sm_url,
