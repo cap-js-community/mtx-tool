@@ -643,13 +643,36 @@ const hdiDeleteAllInstanceManager = async (context) => {
 const hdiDeleteAll = async (context) =>
   (await _isServiceManager(context)) ? hdiDeleteAllServiceManager(context) : hdiDeleteAllInstanceManager(context);
 
-const hdiEnableAll = async (context, [], [tenantId]) => {
+const hdiEnableAll = async (context, [tenantId]) => {
   assert(await _isServiceManager(context), "enable tenant is only supported for service-manager");
   assert(!tenantId || isValidTenantId(tenantId), `argument "${tenantId}" is not a valid hdi tenant id`);
 
+  const {
+    cfService: { credentials },
+  } = await context.getHdiInfo();
+  const { sm_url } = credentials;
+  const token = await context.getCachedUaaTokenFromCredentials(credentials);
+
   // get all instances
+  const instances = await _hdiInstancesServiceManager(context, { filterTenantId: tenantId });
+
   // filter instances that are already marked
+  const migrationInstances = (
+    await limiter(hdiRequestConcurrency, instances, async (instance) => {
+      const parametersResponse = await request({
+        url: sm_url,
+        pathname: `/v1/service_instances/${instance.id}/parameters`,
+        auth: { token },
+        logged: false,
+      });
+      const parameters = await parametersResponse.json();
+      return parameters.enableTenant ? undefined : instance;
+    })
+  ).filter((instance) => instance);
+
   // delete all bindings related to migration instances
+  const bindings = await _hdiBindingsServiceManager(context, { filterTenantId: tenantId });
+
   // send enable tenant patch request and poll until succeeded
   // repair bindings for migrated tenants
 
