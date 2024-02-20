@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## v0.8.0 - tbd
+
+### Removed
+
+- hdi: `--hdi-migrate-all` command is removed. Instance manager has been deprecated for a while, so migrations to
+  service-manager have happened by now.
+
+### Changed
+
+- uaa: `uaas  --uaa-service` command has been renamed to `uaasc  --uaa-service-client`. This fits better with the
+  pattern of new commands.
+
+### Added
+
+- uaa: new flexible commands, so that either the regular server or a trusted services can be accessed as a technical
+  client, as a user with passcode, or as a user with username and password. (fixes #62 by @soccermax)
+
+  ```
+  uaac   --uaa-client [TENANT]                                  obtain uaa token for generic client
+  uaap   --uaa-passcode PASSCODE [TENANT]                       obtain uaa token for one-time passcode
+  uaau   --uaa-user USERNAME PASSWORD [TENANT]                  obtain uaa token for username password
+  uaasc  --uaa-service-client SERVICE [TENANT]                  obtain service token for generic client
+  uaasp  --uaa-service-passcode SERVICE PASSCODE [TENANT]       obtain service token for one-time passcode
+  uaasu  --uaa-service-user SERVICE USERNAME PASSWORD [TENANT]  obtain service token for username password
+  ```
+
+- hdi: new `--hdi-enable-native` command to enable HANA native tenant capabilities. (fixes #58 by @andre68723)
+
+### Fixed
+
+- uaa: fix error with recommended passcode url when credential-type x509 is used. (fixes #59)
+
 ## v0.7.17 - 2024-01-24
 
 ### Changed
