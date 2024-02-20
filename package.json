@@ -1,6 +1,6 @@
 {
   "name": "@cap-js-community/mtx-tool",
-  "version": "0.7.17",
+  "version": "0.8.0",
   "description": "Multitenancy and Extensibility Tool is a cli to reduce operational overhead for multitenant Cloud Foundry applications",
   "bin": {
     "mtx": "bin/mtx.js"
@@ -42,10 +42,10 @@
   "devDependencies": {
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-jest": "^27.6.3",
+    "eslint-plugin-jest": "^27.9.0",
     "jest": "^29.7.0",
-    "nock": "^13.5.0",
-    "prettier": "^3.2.4",
+    "nock": "^13.5.3",
+    "prettier": "^3.2.5",
     "typescript": "^5.3.3"
   },
   "homepage": "https://cap-js-community.github.io/mtx-tool/",
