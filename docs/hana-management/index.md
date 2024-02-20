@@ -148,7 +148,7 @@ manager. In other words, `mtx hdirt <tenant_id> '{"special":true}'` corresponds 
 cf bind-service <service-manager> <hdi-shared service-instance of tenant_id> -c '{"special":true}'
 ```
 
-## HDI Enable
+## HDI Enable Native
 
 The enablement command `mtx --hdi-enable-native` is a convenience functionality for enabling HANA native tenant
 capabilities for all tenants or, if used with a TENANT_ID filter, for a single tenant. The enablement is split into two
