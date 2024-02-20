@@ -95,7 +95,7 @@ commands:
    hdirt  --hdi-rebind-tenant TENANT_ID [PARAMS]  rebind tenant hdi container instances
    hdira  --hdi-rebind-all [PARAMS]               rebind all hdi container instances
           --hdi-repair-bindings [PARAMS]          create missing and delete ambiguous bindings
-          --hdi-enable-all [TENANT_ID]            enable hana native tenants
+          --hdi-enable-native [TENANT_ID]         enable hana native tenants
 *         --hdi-delete-tenant TENANT_ID           delete hdi container instance and bindings for tenant
 *         --hdi-delete-all                        delete all hdi container instances and bindings
           ...    [TENANT_ID]                      filter for tenant id

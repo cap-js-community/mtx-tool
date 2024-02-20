@@ -645,7 +645,7 @@ const hdiDeleteAllInstanceManager = async (context) => {
 const hdiDeleteAll = async (context) =>
   (await _isServiceManager(context)) ? hdiDeleteAllServiceManager(context) : hdiDeleteAllInstanceManager(context);
 
-const hdiEnableAll = async (context, [tenantId]) => {
+const hdiEnableNative = async (context, [tenantId]) => {
   assert(await _isServiceManager(context), "enable tenant is only supported for service-manager");
   assert(!tenantId || isValidTenantId(tenantId), `argument "${tenantId}" is not a valid hdi tenant id`);
 
@@ -741,5 +741,5 @@ module.exports = {
   hdiTunnelTenant,
   hdiDeleteTenant,
   hdiDeleteAll,
-  hdiEnableAll,
+  hdiEnableNative,
 };
