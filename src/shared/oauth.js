@@ -5,7 +5,10 @@ const { isDashedWord, isUUID } = require("./static");
 const { assert } = require("./error");
 const { request } = require("./request");
 
-const getUaaTokenFromCredentials = async (credentials, { subdomain, tenantId, passcode, username, password } = {}) => {
+const getUaaTokenFromCredentials = async (
+  credentials,
+  { subdomain, identityZone, tenantId, passcode, username, password } = {}
+) => {
   subdomain && assert(isDashedWord(subdomain), `argument "${subdomain}" is not a valid subdomain`);
   tenantId && assert(isUUID(tenantId), `argument "${tenantId}" is not a valid tenantId`);
 
@@ -16,8 +19,9 @@ const getUaaTokenFromCredentials = async (credentials, { subdomain, tenantId, pa
     certurl: certUrlPaas,
     certificate,
     key,
-    identityzone: identityZone,
+    identityzone: credentialIdentityZone,
   } = credentials;
+  identityZone = identityZone ?? credentialIdentityZone;
   const isX509Enabled = !clientSecret && certUrlPaas;
   const serviceUrl = subdomain ? serviceUrlPaas.replace(identityZone, subdomain) : serviceUrlPaas;
   const certUrl = subdomain && certUrlPaas ? certUrlPaas.replace(identityZone, subdomain) : certUrlPaas;

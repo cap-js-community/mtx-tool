@@ -59,9 +59,10 @@ const _uaaSaasServiceToken = async (context, service, options = undefined) => {
     )?.credentials;
   }
   serviceCredentials = serviceCredentials?.uaa ?? serviceCredentials;
-  serviceCredentials.identityzone = serviceCredentials.identityzone ?? uaaCredentials.identityzone;
   assert(serviceCredentials, "service %s not bound to xsuaa app %s", service, appName);
-  return context.getCachedUaaTokenFromCredentials(serviceCredentials, options);
+
+  const identityZone = serviceCredentials?.identityzone ?? uaaCredentials.identityzone;
+  return context.getCachedUaaTokenFromCredentials(serviceCredentials, { identityZone, ...options });
 };
 
 const uaaDecode = async ([token]) => {
