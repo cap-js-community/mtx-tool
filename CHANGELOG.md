@@ -31,8 +31,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   uaasu  --uaa-service-user SERVICE USERNAME PASSWORD [TENANT]  obtain service token for username password
   ```
 
-- hdi: new `--hdi-enable-native` command to enable HANA native tenant capabilities. (fixes #58 by @andre68723)
-
 ### Fixed
 
 - uaa: fix error with recommended passcode url when credential-type x509 is used. (fixes #59)

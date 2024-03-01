@@ -8,7 +8,10 @@ const { join } = require("path");
 
 const { USAGE, GENERIC_CLI_OPTIONS } = require("../src/cli");
 
-const appCliOptions = require("../src/cliOptions");
+const HIDDEN_COMMANDS = ["--hdi-enable-native"];
+const appCliOptions = Object.values(require("../src/cliOptions")).filter((option) =>
+  option.commandVariants.every((command) => !HIDDEN_COMMANDS.includes(command))
+);
 
 /*
  NOTE: Just internal consistency tests for now.
@@ -70,7 +73,7 @@ describe("cli tests", () => {
   };
 
   test("programmatic options/ cli usage consistency check", async () => {
-    const cliOptions = [].concat(Object.values(GENERIC_CLI_OPTIONS), Object.values(appCliOptions));
+    const cliOptions = [].concat(Object.values(GENERIC_CLI_OPTIONS), appCliOptions);
     const usageOptionsArea = /[\s\S]*commands:\s*\n([\s\S]+\S)/.exec(USAGE)[1];
     _validateOptions(cliOptions, usageOptionsArea, expect);
   });
@@ -96,7 +99,7 @@ describe("cli tests", () => {
     ];
 
     for (const { commandPrefix, readmePath } of areas) {
-      const cliOptions = Object.values(appCliOptions).filter(
+      const cliOptions = appCliOptions.filter(
         ({ commandVariants }) =>
           commandVariants[0].startsWith(commandPrefix) || commandVariants[0].startsWith(`--${commandPrefix}`)
       );

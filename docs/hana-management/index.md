@@ -42,7 +42,6 @@ Commands for this area are:
    hdirt  --hdi-rebind-tenant TENANT_ID [PARAMS]  rebind tenant hdi container instances
    hdira  --hdi-rebind-all [PARAMS]               rebind all hdi container instances
           --hdi-repair-bindings [PARAMS]          create missing and delete ambiguous bindings
-          --hdi-enable-native [TENANT_ID]         enable hana native tenants
 *         --hdi-delete-tenant TENANT_ID           delete hdi container instance and bindings for tenant
 *         --hdi-delete-all                        delete all hdi container instances and bindings
           ...    [TENANT_ID]                      filter for tenant id
@@ -147,21 +146,6 @@ manager. In other words, `mtx hdirt <tenant_id> '{"special":true}'` corresponds 
 ```
 cf bind-service <service-manager> <hdi-shared service-instance of tenant_id> -c '{"special":true}'
 ```
-
-## HDI Enable Native
-
-The enablement command `mtx --hdi-enable-native` is a convenience functionality for enabling HANA native tenant
-capabilities for all tenants or, if used with a TENANT_ID filter, for a single tenant.
-
-On HANA side, this enablement is split into two parts. The first part happens synchronously and in it the database is
-actually set up to support these new capabilities. The second part happens asynchronously and in it the tenant data is
-(re-)encrypted in the background. In other words, during the first part the tenant data is not accessible and during
-the second part the database can be used normally.
-
-The enablement command will temporarily remove the relevant bindings, to protect the database from application accesses
-during the first part of the enablement. When the command finishes, only the first part of the enablement process is
-finished. The second part will still happen in the background for a while, depending on how many tenants and data the
-database needs to process. The temporarily removed bindings will be restored automatically.
 
 ## HDI Delete
 
