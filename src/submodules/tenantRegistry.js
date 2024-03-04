@@ -81,7 +81,7 @@ const registryListSubscriptions = async (context, [tenant], [doTimestamps]) => {
     createdOn,
     changedOn,
   }) => {
-    const row = [consumerTenantId, globalAccountId, subdomain, code, state, url];
+    const row = [consumerTenantId, globalAccountId, subdomain, code ?? "", state, url];
     doTimestamps && row.push(...formatTimestampsWithRelativeDays([createdOn, changedOn], nowDate));
     return row;
   };
