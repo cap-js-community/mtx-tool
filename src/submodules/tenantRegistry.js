@@ -146,22 +146,25 @@ const _registryCallForTenant = async (
     doJobPoll = true,
   } = {}
 ) => {
-  assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
+  const { consumerTenantId: tenantId, subscriptionGUID: subscriptionId } = subscription;
   const {
     cfService: { plan, credentials },
   } = await context.getRegInfo();
   const { saas_registry_url } = credentials;
-  const query = {
-    ...(noCallbacksAppNames && { noCallbacksAppNames }),
-    ...(updateApplicationURL && { updateApplicationURL }),
-    ...(skipUnchangedDependencies && { skipUnchangedDependencies }),
-    ...(skipUpdatingDependencies && { skipUpdatingDependencies }),
-  };
-  const token = await context.getCachedUaaTokenFromCredentials(credentials);
+  const query =
+    plan === "service"
+      ? {}
+      : {
+          ...(noCallbacksAppNames && { noCallbacksAppNames }),
+          ...(updateApplicationURL && { updateApplicationURL }),
+          ...(skipUnchangedDependencies && { skipUnchangedDependencies }),
+          ...(skipUpdatingDependencies && { skipUpdatingDependencies }),
+        };
   const pathname =
     plan === "service"
-      ? `/saas-manager/v1/${plan}/tenants/${tenantId}/service-instance/${serviceInstanceId}/subscriptions`
+      ? `/saas-manager/v1/${plan}/subscriptions/${subscriptionId}`
       : `/saas-manager/v1/${plan}/tenants/${tenantId}/subscriptions`;
+  const token = await context.getCachedUaaTokenFromCredentials(credentials);
   const response = await request({
     method,
     url: saas_registry_url,
@@ -194,6 +197,7 @@ const _registryCallForTenants = async (context, method, options = {}) => {
 };
 
 const registryUpdateDependencies = async (context, [tenantId], [doSkipUnchanged]) => {
+  assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
   const { subscriptions } = await _registrySubscriptionsPaged(context, tenantId);
   return await _registryCallForTenant(context, subscriptions[0], "PATCH", {
     skipUnchangedDependencies: doSkipUnchanged,
@@ -205,6 +209,7 @@ const registryUpdateAllDependencies = async (context, _, [doSkipUnchanged]) =>
 
 const registryUpdateApplicationURL = async (context, [tenantId]) => {
   if (tenantId) {
+    assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
     const { subscriptions } = await _registrySubscriptionsPaged(context, tenantId);
     return await _registryCallForTenant(context, subscriptions[0], "PATCH", {
       updateApplicationURL: true,
@@ -221,11 +226,13 @@ const registryUpdateApplicationURL = async (context, [tenantId]) => {
 };
 
 const registryOffboardSubscription = async (context, [tenantId]) => {
+  assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
   const { subscriptions } = await _registrySubscriptionsPaged(context, tenantId);
   return await _registryCallForTenant(context, subscriptions[0], "DELETE");
 };
 
 const registryOffboardSubscriptionSkip = async (context, [tenantId, skipApps]) => {
+  assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
   const { subscriptions } = await _registrySubscriptionsPaged(context, tenantId);
   return await _registryCallForTenant(context, subscriptions[0], "DELETE", { noCallbacksAppNames: skipApps });
 };
