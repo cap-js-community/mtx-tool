@@ -136,7 +136,7 @@ const registryJob = async (context, [jobId]) => {
 // https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/9c4f927011db4bd0a53b23a1b33b36d0.html
 const _registryCallForTenant = async (
   context,
-  tenantId,
+  subscription,
   method,
   {
     noCallbacksAppNames,
@@ -158,10 +158,14 @@ const _registryCallForTenant = async (
     ...(skipUpdatingDependencies && { skipUpdatingDependencies }),
   };
   const token = await context.getCachedUaaTokenFromCredentials(credentials);
+  const pathname =
+    plan === "service"
+      ? `/saas-manager/v1/${plan}/tenants/${tenantId}/service-instance/${serviceInstanceId}/subscriptions`
+      : `/saas-manager/v1/${plan}/tenants/${tenantId}/subscriptions`;
   const response = await request({
     method,
     url: saas_registry_url,
-    pathname: `/saas-manager/v1/${plan}/tenants/${tenantId}/subscriptions`,
+    pathname,
     ...(Object.keys(query).length !== 0 && { query }),
     auth: { token },
   });
@@ -183,35 +187,48 @@ const _registryCallForTenants = async (context, method, options = {}) => {
   const { subscriptions } = await _registrySubscriptionsPaged(context);
   const result = [];
   // NOTE: we do this serially, so the logging output is understandable for users and the endpoint is not overloaded
-  for (const { consumerTenantId } of subscriptions.filter(({ state }) => TENANT_UPDATABLE_STATES.includes(state))) {
-    result.push(await _registryCallForTenant(context, consumerTenantId, method, options));
+  for (const subscription of subscriptions.filter(({ state }) => TENANT_UPDATABLE_STATES.includes(state))) {
+    result.push(await _registryCallForTenant(context, subscription, method, options));
   }
   return result;
 };
 
-const registryUpdateDependencies = async (context, [tenantId], [doSkipUnchanged]) =>
-  _registryCallForTenant(context, tenantId, "PATCH", { skipUnchangedDependencies: doSkipUnchanged });
+const registryUpdateDependencies = async (context, [tenantId], [doSkipUnchanged]) => {
+  const { subscriptions } = await _registrySubscriptionsPaged(context, tenantId);
+  return await _registryCallForTenant(context, subscriptions[0], "PATCH", {
+    skipUnchangedDependencies: doSkipUnchanged,
+  });
+};
 
 const registryUpdateAllDependencies = async (context, _, [doSkipUnchanged]) =>
   _registryCallForTenants(context, "PATCH", { skipUnchangedDependencies: doSkipUnchanged });
 
-const registryUpdateApplicationURL = async (context, [tenantId]) =>
-  tenantId
-    ? _registryCallForTenant(context, tenantId, "PATCH", {
-        updateApplicationURL: true,
-        skipUpdatingDependencies: true,
-        doJobPoll: false,
-      })
-    : _registryCallForTenants(context, "PATCH", {
-        updateApplicationURL: true,
-        skipUpdatingDependencies: true,
-        doJobPoll: false,
-      });
+const registryUpdateApplicationURL = async (context, [tenantId]) => {
+  if (tenantId) {
+    const { subscriptions } = await _registrySubscriptionsPaged(context, tenantId);
+    return await _registryCallForTenant(context, subscriptions[0], "PATCH", {
+      updateApplicationURL: true,
+      skipUpdatingDependencies: true,
+      doJobPoll: false,
+    });
+  } else {
+    return _registryCallForTenants(context, "PATCH", {
+      updateApplicationURL: true,
+      skipUpdatingDependencies: true,
+      doJobPoll: false,
+    });
+  }
+};
 
-const registryOffboardSubscription = async (context, [tenantId]) => _registryCallForTenant(context, tenantId, "DELETE");
+const registryOffboardSubscription = async (context, [tenantId]) => {
+  const { subscriptions } = await _registrySubscriptionsPaged(context, tenantId);
+  return await _registryCallForTenant(context, subscriptions[0], "DELETE");
+};
 
-const registryOffboardSubscriptionSkip = async (context, [tenantId, skipApps]) =>
-  _registryCallForTenant(context, tenantId, "DELETE", { noCallbacksAppNames: skipApps });
+const registryOffboardSubscriptionSkip = async (context, [tenantId, skipApps]) => {
+  const { subscriptions } = await _registrySubscriptionsPaged(context, tenantId);
+  return await _registryCallForTenant(context, subscriptions[0], "DELETE", { noCallbacksAppNames: skipApps });
+};
 
 module.exports = {
   registryListSubscriptions,
