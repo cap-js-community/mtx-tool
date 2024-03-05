@@ -18,6 +18,15 @@ npm install --global @cap-js-community/mtx-tool
 npm install --save-dev @cap-js-community/mtx-tool
 ```
 
+You can also not install the tool and use it ad-hoc.
+
+```bash
+# ad-hoc
+npx @cap-js-community/mtx-tool
+# ad-hoc with fixed version, e.g. for stable pipelines
+npx @cap-js-community/mtx-tool@v0.8.1
+```
+
 ## Support, Feedback, Contributing
 
 This project is open to feature requests/suggestions, bug reports etc. via [GitHub issues](https://github.com/cap-js-community/mtx-tool/issues). Contribution and feedback are encouraged and always welcome. For more information about how to contribute, the project structure, as well as additional contribution information, see our [Contribution Guidelines](CONTRIBUTING.md).
