@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
-- reg: better `regl` and `--registry-update` support for instances with `service` plan.
+- reg: improved `regl` and `--registry-update` support for instances with `service` plan. (proposal and provisioning
+  support by @andre68723)
 
 ## v0.8.0 - 2024-02-20
 
@@ -176,8 +177,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- hdi: new command `--hdi-list-relations` to show mapping of service-manager containers to their bindings.
-  makes it easy to see if some containers have too many or no binding, or conversely, if some bindings have no container.
+- hdi: new command `--hdi-list-relations` to show mapping of service-manager containers to their bindings. makes it
+  easy to see if some containers have too many or no binding, or conversely, if some bindings have no container.
 
 - hdi: new command `--hdi-repair-bindings` to harmonize service-manager containers and bindings, so they are 1-to-1
 
