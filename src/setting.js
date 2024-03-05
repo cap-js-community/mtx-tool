@@ -36,7 +36,7 @@ const SETTING = {
     name: "saas-registry app",
     envVariable: ENV.REGISTRY_APP,
     question: "cf app bound to saas-registry service (optional)?",
-    failMessage: "option requires configured app bound to service label:saas-registry plan:application",
+    failMessage: "option requires configured app bound to service label:saas-registry plan:application or plan:service",
     requireServices: [
       {
         label: "saas-registry",
