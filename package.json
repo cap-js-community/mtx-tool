@@ -1,6 +1,6 @@
 {
   "name": "@cap-js-community/mtx-tool",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "Multitenancy and Extensibility Tool is a cli to reduce operational overhead for multitenant Cloud Foundry applications",
   "bin": {
     "mtx": "bin/mtx.js"
@@ -11,8 +11,8 @@
     "src"
   ],
   "scripts": {
+    "postinstall": "npx patch-package",
     "test": "jest",
-    "test:patch": "npx patch-package",
     "test:remove-inline-snapshots": "npx replace '\\.toMatchInlineSnapshot\\(\\s*`[\\s\\S]*?`\\s*\\);' '.toMatchInlineSnapshot();' test -r --include='*.test.js'",
     "test:record": "npm run test:record:reg && npm run test:record:cds && npm run test:record:hdi",
     "test:update": "jest --updateSnapshot",
@@ -40,11 +40,11 @@
     "node-fetch": "^2.7.0"
   },
   "devDependencies": {
-    "eslint": "^8.56.0",
+    "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-jest": "^27.9.0",
     "jest": "^29.7.0",
-    "nock": "^13.5.3",
+    "nock": "^13.5.4",
     "prettier": "^3.2.5",
     "typescript": "^5.3.3"
   },
