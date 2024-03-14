@@ -19,6 +19,7 @@ const HIDDEN_PASSWORD_TEXT = "*** show with --reveal ***";
 const SERVICE_MANAGER_REQUEST_CONCURRENCY_FALLBACK = 10;
 const SERVICE_MANAGER_IDEAL_BINDING_COUNT = 1;
 const SENSITIVE_CREDENTIAL_FIELDS = ["password", "hdi_password"];
+const HDI_SHARED = "hdi-shared";
 
 const hdiRequestConcurrency = process.env[ENV.HDI_CONCURRENCY]
   ? parseInt(process.env[ENV.HDI_CONCURRENCY])
@@ -121,10 +122,16 @@ const _hdiInstancesServiceManager = async (context, { filterTenantId, doEnsureTe
   } = await context.getHdiInfo();
   const { sm_url } = credentials;
   const token = await context.getCachedUaaTokenFromCredentials(credentials);
+  const servicePlanId = await _smGetServicePlanId(context, {filterName: HDI_SHARED});
+  let query = {};
+  if (filterTenantId) {
+    query.labelQuery = `tenant_id eq '${filterTenantId}'`;
+  }
+  query.fieldQuery = `service_plan_id eq '${servicePlanId}'`;
   const response = await request({
     url: sm_url,
     pathname: "/v1/service_instances",
-    ...(filterTenantId && { query: { labelQuery: `tenant_id eq '${filterTenantId}'` } }),
+    query: query,
     auth: { token },
   });
   const responseData = (await response.json()) || {};
@@ -133,6 +140,26 @@ const _hdiInstancesServiceManager = async (context, { filterTenantId, doEnsureTe
     instances = instances.filter((instance) => instance.labels.tenant_id !== undefined);
   }
   return instances;
+};
+
+const _smGetServicePlanId = async (context, {filterName}) => {
+  const {
+    cfService: { credentials },
+  } = await context.getHdiInfo();
+  const { sm_url } = credentials;
+  const token = await context.getCachedUaaTokenFromCredentials(credentials);
+  const servicePlanResponse = await request({
+    url: sm_url,
+    pathname: "/v1/service_plans",
+    ...(filterName && { query: { fieldQuery: `name eq '${filterName}'` } }),
+    auth: { token },
+  });
+
+  const responseData = (await servicePlanResponse.json()) || {};
+  let plans = responseData.items || [];
+  assert(Array.isArray(plans) && plans.length == 1, `could not find service plan for ${filterName}`);
+  assert(plans[0].id, `could not find id for service plan for ${filterName}`);
+  return plans[0].id;
 };
 
 const _hdiBindingsServiceManager = async (
@@ -144,10 +171,16 @@ const _hdiBindingsServiceManager = async (
   } = await context.getHdiInfo();
   const { sm_url } = credentials;
   const token = await context.getCachedUaaTokenFromCredentials(credentials);
+  const servicePlanId = await _smGetServicePlanId(context, {filterName: HDI_SHARED});
+  let query = {};
+  if (filterTenantId) {
+    query.labelQuery = `tenant_id eq '${filterTenantId}'`;
+  }
+  query.labelQuery = (query.labelQuery ? query.labelQuery + " and " : "") + `service_plan_id eq '${servicePlanId}'`;
   const getBindingsResponse = await request({
     url: sm_url,
     pathname: "/v1/service_bindings",
-    ...(filterTenantId && { query: { labelQuery: `tenant_id eq '${filterTenantId}'` } }),
+    query: query,
     auth: { token },
   });
   const responseData = (await getBindingsResponse.json()) || {};
