@@ -10,6 +10,7 @@ const {
   randomString,
   tryJsonParse,
   isObject,
+  makeOneTime,
 } = require("../shared/static");
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
@@ -20,8 +21,6 @@ const SERVICE_MANAGER_REQUEST_CONCURRENCY_FALLBACK = 10;
 const SERVICE_MANAGER_IDEAL_BINDING_COUNT = 1;
 const SENSITIVE_CREDENTIAL_FIELDS = ["password", "hdi_password"];
 const HDI_SHARED_SERVICE_PLAN_NAME = "hdi-shared";
-
-let hdiSharedPlanIdPromise;
 
 const hdiRequestConcurrency = process.env[ENV.HDI_CONCURRENCY]
   ? parseInt(process.env[ENV.HDI_CONCURRENCY])
@@ -140,12 +139,9 @@ const _getServicePlanId = async (sm_url, token, servicePlanName) => {
   return servicePlanId;
 };
 
-const _getHdiSharedPlanId = async (sm_url, token) => {
-  if (!hdiSharedPlanIdPromise) {
-    hdiSharedPlanIdPromise = _getServicePlanId(sm_url, token, HDI_SHARED_SERVICE_PLAN_NAME);
-  }
-  return await hdiSharedPlanIdPromise;
-};
+const _getHdiSharedPlanId = makeOneTime(
+  async (sm_url, token) => await _getServicePlanId(sm_url, token, HDI_SHARED_SERVICE_PLAN_NAME)
+);
 
 const _hdiInstancesServiceManager = async (context, { filterTenantId, doEnsureTenantLabel = true } = {}) => {
   const {
