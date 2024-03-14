@@ -11,7 +11,7 @@
     "src"
   ],
   "scripts": {
-    "postinstall": "npx patch-package",
+    "patch": "npx patch-package",
     "test": "jest",
     "test:remove-inline-snapshots": "npx replace '\\.toMatchInlineSnapshot\\(\\s*`[\\s\\S]*?`\\s*\\);' '.toMatchInlineSnapshot();' test -r --include='*.test.js'",
     "test:record": "npm run test:record:reg && npm run test:record:cds && npm run test:record:hdi",
@@ -31,7 +31,7 @@
     "pack": "npm pack",
     "docs": "cd docs && bundle exec jekyll serve",
     "docs:install": "cd docs && npx shx rm -rf vendor Gemfile.lock && bundle install",
-    "upgrade-lock": "npx shx rm -rf package-lock.json node_modules && npm i --package-lock"
+    "upgrade-lock": "npx shx rm -rf package-lock.json node_modules && npm i --package-lock && npm run patch"
   },
   "engines": {
     "node": ">=16.0.0"
