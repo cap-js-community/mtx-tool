@@ -18,6 +18,22 @@ const appCliOptions = Object.values(require("../src/cliOptions")).filter((option
  */
 
 describe("cli tests", () => {
+  test("readme version is up-to-date", async () => {
+    const readme = readFileSync(join(__dirname, "..", "README.md")).toString();
+    const readmeInstall = /(## Install or Upgrade\n\n[\s\S]*?)\n##/g.exec(readme)[1];
+    const readmeVersion = /@cap-js-community\/mtx-tool@v(\d+\.\d+\.\d+)/g.exec(readmeInstall)[1];
+    const packageInfo = JSON.parse(readFileSync(join(__dirname, "..", "package.json")).toString());
+    expect(readmeVersion).toEqual(packageInfo.version);
+  });
+
+  test("readme install matches docs", async () => {
+    const readme = readFileSync(join(__dirname, "..", "README.md")).toString();
+    const readmeInstall = /(## Install or Upgrade\n\n[\s\S]*?)\n##/g.exec(readme)[1];
+    const docs = readFileSync(join(__dirname, "..", "docs", "index.md")).toString();
+    const docsInstall = /(## Install or Upgrade\n\n[\s\S]*?)\n##/g.exec(docs)[1];
+    expect(readmeInstall).toEqual(docsInstall);
+  });
+
   test("documentation quickstart usage / cli usage consistency check", async () => {
     const readme = readFileSync(join(__dirname, "..", "docs", "index.md")).toString();
     const readmeUsage = /## Quickstart\n\n```\n([\s\S]*?)```/g.exec(readme)[1];

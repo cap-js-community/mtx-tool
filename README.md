@@ -24,7 +24,7 @@ You can also not install the tool and use it ad-hoc.
 # ad-hoc
 npx @cap-js-community/mtx-tool
 # ad-hoc with fixed version, e.g. for stable pipelines
-npx @cap-js-community/mtx-tool@v0.8.1
+npx @cap-js-community/mtx-tool@v0.8.2
 ```
 
 ## Support, Feedback, Contributing
