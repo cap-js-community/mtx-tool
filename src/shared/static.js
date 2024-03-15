@@ -356,6 +356,18 @@ const escapeRegExp = (input) => {
   return input && reHasRegExpChar.test(input) ? input.replace(reRegExpChar, "\\$&") : input;
 };
 
+const makeOneTime = (cb) => {
+  let result;
+  let firstRun = true;
+  return async (...args) => {
+    if (firstRun) {
+      firstRun = false;
+      result = cb(...args);
+    }
+    return await result;
+  };
+};
+
 module.exports = {
   ENV,
   isPortFree,
@@ -382,4 +394,5 @@ module.exports = {
   isObject,
   safeUnshift,
   escapeRegExp,
+  makeOneTime,
 };
