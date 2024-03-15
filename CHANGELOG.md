@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## v0.8.2 - 2024-03-15
+
+### Fixed
+
+- removed npm `postinstall` script
+
+### Changed
+
+- hdi: all accesses to service instances and bindings now filter for the service-plan `hdi-shared`. this change allows
+  the service-manager to be used with other services, e.g. `redis-cache`, alongside HANA containers.
+
 ## v0.8.1 - 2024-03-05
 
 ### Fixed
