@@ -21,6 +21,8 @@ const { request, requestTry } = require("../shared/request");
 const POLL_FREQUENCY = 15000;
 const CDS_UPGRADE_APP_INSTANCE = 0;
 const CDS_REQUEST_CONCURRENCY_FALLBACK = 10;
+const CDS_CHANGE_TIMEOUT = 30 * 60 * 1000;
+const CDS_CHANGE_TIMEOUT_TEXT = "30min";
 
 const writeFileAsync = promisify(writeFile);
 const cdsRequestConcurrency = process.env[ENV.CDS_CONCURRENCY]
@@ -201,6 +203,8 @@ const _cdsUpgrade = async (
   console.log("started upgrade on server with jobId %s polling interval %isec", jobId, POLL_FREQUENCY / 1000);
 
   while (true) {
+    let lastTaskSummary;
+    let lastTimeOfChange;
     await sleep(POLL_FREQUENCY);
     const pollJobResponse = await request({
       url: cfRouteUrl,
@@ -214,8 +218,18 @@ const _cdsUpgrade = async (
 
     console.log("polled status %s for jobId %s", status, jobId);
     if (isMtxs) {
-      const [queued, running, finished] = _getTaskSummary(tasks ?? []);
+      const taskSummary = _getTaskSummary(tasks ?? []);
+      const [queued, running, finished] = taskSummary;
       console.log("task progress is queued/running/finished: %i/%i/%i", queued, running, finished);
+      if (!lastTaskSummary || lastTaskSummary.some((index, value) => taskSummary[index] !== value)) {
+        const currentTime = Date.now();
+        assert(
+          currentTime - (lastTimeOfChange ?? currentTime) < CDS_CHANGE_TIMEOUT,
+          "no task progress after %s",
+          CDS_CHANGE_TIMEOUT_TEXT
+        );
+        lastTimeOfChange = currentTime;
+      }
     }
 
     if (status !== "RUNNING") {
