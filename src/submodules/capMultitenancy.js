@@ -184,9 +184,6 @@ const _cdsUpgrade = async (
       url: cfRouteUrl,
       pathname: isMtxs ? `/-/cds/jobs/pollJob(ID='${jobId}')` : `/mtx/v1/model/status/${jobId}`,
       auth: { token: await context.getCachedUaaToken() },
-      headers: {
-        "X-Cf-App-Instance": `${cfAppGuid}:${appInstance}`,
-      },
     });
     const pollJobResponseData = await _safeMaterializeJson(pollJobResponse, "poll job");
 
@@ -205,9 +202,6 @@ const _cdsUpgrade = async (
               url: cfRouteUrl,
               pathname: `/-/cds/jobs/pollTask(ID='${taskId}')`,
               auth: { token: await context.getCachedUaaToken() },
-              headers: {
-                "X-Cf-App-Instance": `${cfAppGuid}:${appInstance}`,
-              },
             });
             const pollTaskResponseData = await _safeMaterializeJson(pollTaskResponse, "poll task");
             const { status, error } = pollTaskResponseData || {};
