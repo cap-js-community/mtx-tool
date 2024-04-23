@@ -136,6 +136,28 @@ const _safeMaterializeJson = async (response, description) => {
   return responseData;
 };
 
+const _getTaskSummary = (tasks) =>
+  (tasks ?? []).reduce(
+    (accumulator, { status }) => {
+      switch (status) {
+        case "QUEUED": {
+          accumulator[0]++;
+          break;
+        }
+        case "RUNNING": {
+          accumulator[1]++;
+          break;
+        }
+        case "FINISHED": {
+          accumulator[2]++;
+          break;
+        }
+      }
+      return accumulator;
+    },
+    [0, 0, 0]
+  );
+
 const _cdsUpgrade = async (
   context,
   { tenants, doAutoUndeploy = false, appInstance = CDS_UPGRADE_APP_INSTANCE } = {}
@@ -187,9 +209,15 @@ const _cdsUpgrade = async (
     });
     const pollJobResponseData = await _safeMaterializeJson(pollJobResponse, "poll job");
 
-    const { status } = pollJobResponseData || {};
+    const { status, tasks } = pollJobResponseData || {};
     assert(status, "no status retrieved for jobId %s", jobId);
+
     console.log("polled status %s for jobId %s", status, jobId);
+    if (isMtxs) {
+      const [queued, running, finished] = _getTaskSummary(tasks);
+      console.log("task progress is queued/running/finished: %i/%i/%i", queued, running, finished);
+    }
+
     if (status !== "RUNNING") {
       if (isMtxs) {
         const tenants = upgradeResponseData.tenants;
