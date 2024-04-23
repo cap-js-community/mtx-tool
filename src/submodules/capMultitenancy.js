@@ -137,7 +137,7 @@ const _safeMaterializeJson = async (response, description) => {
 };
 
 const _getTaskSummary = (tasks) =>
-  (tasks ?? []).reduce(
+  tasks.reduce(
     (accumulator, { status }) => {
       switch (status) {
         case "QUEUED": {
@@ -214,7 +214,7 @@ const _cdsUpgrade = async (
 
     console.log("polled status %s for jobId %s", status, jobId);
     if (isMtxs) {
-      const [queued, running, finished] = _getTaskSummary(tasks);
+      const [queued, running, finished] = _getTaskSummary(tasks ?? []);
       console.log("task progress is queued/running/finished: %i/%i/%i", queued, running, finished);
     }
 
@@ -222,21 +222,20 @@ const _cdsUpgrade = async (
       if (isMtxs) {
         const tenants = upgradeResponseData.tenants;
         assert(tenants, "no tenants found in response for upgrade\n%j", upgradeResponseData);
+        const taskMap = (tasks ?? []).reduce((accumulator, task) => {
+          const { ID } = task;
+          accumulator[ID] = task;
+          return accumulator;
+        }, {});
         let allSuccess = true;
         const table = [["tenantId", "status", "message"]].concat(
-          await limiter(cdsRequestConcurrency, Object.entries(tenants), async ([tenantId, { ID: taskId }]) => {
-            const pollTaskResponse = await requestTry({
-              checkStatus: false,
-              url: cfRouteUrl,
-              pathname: `/-/cds/jobs/pollTask(ID='${taskId}')`,
-              auth: { token: await context.getCachedUaaToken() },
-            });
-            const pollTaskResponseData = await _safeMaterializeJson(pollTaskResponse, "poll task");
-            const { status, error } = pollTaskResponseData || {};
+          Object.entries(tenants).map(([tenantId, { ID: taskId }]) => {
+            const { status, error } = taskMap[taskId];
             allSuccess &= status && !error;
             return [tenantId, status, error || ""];
           })
         );
+
         console.log(tableList(table) + "\n");
         assert(allSuccess, "upgrade tenant failed");
       } else {
