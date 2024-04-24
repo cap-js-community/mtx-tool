@@ -228,7 +228,7 @@ const _cdsUpgrade = async (
     console.log("polled status %s for jobId %s", status, jobId);
     if (isMtxs) {
       const taskSummary = _getTaskSummary(tasks ?? []);
-      const countLength = String(upgradeTenantEntries.length - 1).length;
+      const countLength = String(upgradeTenantEntries.length).length;
       const [queued, running, failed, finished] = taskSummary.map((count) => String(count).padStart(countLength, "0"));
       console.log("task progress is queued/running: %s/%s | failed/finished: %s/%s", queued, running, failed, finished);
       if (!lastTaskSummary || lastTaskSummary.some((index, value) => taskSummary[index] !== value)) {
