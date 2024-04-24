@@ -150,14 +150,18 @@ const _getTaskSummary = (tasks) =>
           accumulator[1]++;
           break;
         }
-        case "FINISHED": {
+        case "FAILED": {
           accumulator[2]++;
+          break;
+        }
+        case "FINISHED": {
+          accumulator[3]++;
           break;
         }
       }
       return accumulator;
     },
-    [0, 0, 0]
+    [0, 0, 0, 0]
   );
 
 const _cdsUpgrade = async (
@@ -222,8 +226,14 @@ const _cdsUpgrade = async (
     console.log("polled status %s for jobId %s", status, jobId);
     if (isMtxs) {
       const taskSummary = _getTaskSummary(tasks ?? []);
-      const [queued, running, finished] = taskSummary;
-      console.log("task progress is queued/running/finished: %i/%i/%i", queued, running, finished);
+      const [queued, running, failed, finished] = taskSummary;
+      console.log(
+        "task progress is queued/running => failed/finished: %i/%i => %i/%i",
+        queued,
+        running,
+        failed,
+        finished
+      );
       if (!lastTaskSummary || lastTaskSummary.some((index, value) => taskSummary[index] !== value)) {
         const currentTime = Date.now();
         if (currentTime - (lastTimeOfChange ?? currentTime) >= CDS_CHANGE_TIMEOUT) {
