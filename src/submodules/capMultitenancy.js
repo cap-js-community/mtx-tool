@@ -164,66 +164,47 @@ const _getTaskSummary = (tasks) =>
     [0, 0, 0, 0]
   );
 
-const _cdsUpgrade = async (
+const _cdsUpgradeMtxs = async (
   context,
   { tenants, doAutoUndeploy = false, appInstance = CDS_UPGRADE_APP_INSTANCE } = {}
 ) => {
-  const isMtxs = await _isMtxs(context);
   if (tenants === undefined) {
-    tenants = isMtxs ? ["*"] : ["all"];
+    tenants = ["*"];
   }
-
   if (tenants.length === 0) {
     return;
   }
-  const autoUndeployOptions = isMtxs
-    ? {
-        options: {
-          _: {
-            hdi: {
-              deploy: {
-                auto_undeploy: true,
-              },
-            },
-          },
-        },
-      }
-    : { autoUndeploy: true };
+  const autoUndeployOptions = { options: { _: { hdi: { deploy: { auto_undeploy: true } } } } };
   const { cfAppGuid, cfRouteUrl } = await context.getCdsInfo();
   const upgradeResponse = await request({
     method: "POST",
     url: cfRouteUrl,
-    pathname: isMtxs ? "/-/cds/saas-provisioning/upgrade" : "/mtx/v1/model/asyncUpgrade",
+    pathname: "/-/cds/saas-provisioning/upgrade",
     auth: { token: await context.getCachedUaaToken() },
     headers: {
       "Content-Type": "application/json",
       "X-Cf-App-Instance": `${cfAppGuid}:${appInstance}`,
-      ...(isMtxs && { Prefer: "respond-async" }),
+      Prefer: "respond-async",
     },
     body: JSON.stringify({ tenants, ...(doAutoUndeploy && autoUndeployOptions) }),
   });
   const upgradeResponseData = await _safeMaterializeJson(upgradeResponse, "upgrade");
-  const jobId = isMtxs ? upgradeResponseData.ID : upgradeResponseData.jobID;
+  const jobId = upgradeResponseData.ID;
   console.log("started upgrade on server with jobId %s polling interval %isec", jobId, POLL_FREQUENCY / 1000);
+  const upgradeTenantEntries = upgradeResponseData.tenants && Object.entries(upgradeResponseData.tenants);
+  assert(upgradeTenantEntries, "no tenants found in response for upgrade\n%j", upgradeResponseData);
+  const countLength = String(upgradeTenantEntries.length).length;
 
   let pollJobResponseData;
   let lastTaskSummary;
   let lastTimeOfChange;
-  let upgradeTenantEntries;
-  let countLength;
   let hasChangeTimeout = false;
-
-  if (isMtxs) {
-    upgradeTenantEntries = upgradeResponseData.tenants && Object.entries(upgradeResponseData.tenants);
-    assert(upgradeTenantEntries, "no tenants found in response for upgrade\n%j", upgradeResponseData);
-    countLength = String(upgradeTenantEntries.length).length;
-  }
 
   while (true) {
     await sleep(POLL_FREQUENCY);
     const pollJobResponse = await request({
       url: cfRouteUrl,
-      pathname: isMtxs ? `/-/cds/jobs/pollJob(ID='${jobId}')` : `/mtx/v1/model/status/${jobId}`,
+      pathname: `/-/cds/jobs/pollJob(ID='${jobId}')`,
       auth: { token: await context.getCachedUaaToken() },
     });
     pollJobResponseData = await _safeMaterializeJson(pollJobResponse, "poll job");
@@ -231,18 +212,16 @@ const _cdsUpgrade = async (
     const { status, tasks } = pollJobResponseData || {};
     assert(status, "no status retrieved for jobId %s", jobId);
     console.log("polled status %s for jobId %s", status, jobId);
-    if (isMtxs) {
-      const taskSummary = _getTaskSummary(tasks ?? []);
-      const [queued, running, failed, finished] = taskSummary.map((count) => String(count).padStart(countLength, "0"));
-      console.log("task progress is queued/running: %s/%s | failed/finished: %s/%s", queued, running, failed, finished);
-      if (!lastTaskSummary || lastTaskSummary.some((index, value) => taskSummary[index] !== value)) {
-        const currentTime = Date.now();
-        if (currentTime - (lastTimeOfChange ?? currentTime) >= CDS_CHANGE_TIMEOUT) {
-          hasChangeTimeout = true;
-          break;
-        }
-        lastTimeOfChange = currentTime;
+    const taskSummary = _getTaskSummary(tasks ?? []);
+    const [queued, running, failed, finished] = taskSummary.map((count) => String(count).padStart(countLength, "0"));
+    console.log("task progress is queued/running: %s/%s | failed/finished: %s/%s", queued, running, failed, finished);
+    if (!lastTaskSummary || lastTaskSummary.some((index, value) => taskSummary[index] !== value)) {
+      const currentTime = Date.now();
+      if (currentTime - (lastTimeOfChange ?? currentTime) >= CDS_CHANGE_TIMEOUT) {
+        hasChangeTimeout = true;
+        break;
       }
+      lastTimeOfChange = currentTime;
     }
 
     if (status !== "RUNNING") {
@@ -250,52 +229,100 @@ const _cdsUpgrade = async (
     }
   }
 
-  if (isMtxs) {
-    const { tasks } = pollJobResponseData || {};
-    const taskMap = (tasks ?? []).reduce((accumulator, task) => {
-      const { ID } = task;
-      accumulator[ID] = task;
-      return accumulator;
-    }, {});
-    let hasError = false;
-    const table = [["tenantId", "status", "message"]].concat(
-      upgradeTenantEntries.map(([tenantId, { ID: taskId }]) => {
-        const { status, error } = taskMap[taskId];
-        hasError |= !status || error;
-        return [tenantId, status, error || ""];
-      })
-    );
+  const { tasks } = pollJobResponseData || {};
+  const taskMap = (tasks ?? []).reduce((accumulator, task) => {
+    const { ID } = task;
+    accumulator[ID] = task;
+    return accumulator;
+  }, {});
+  let hasError = false;
+  const table = [["tenantId", "status", "message"]].concat(
+    upgradeTenantEntries.map(([tenantId, { ID: taskId }]) => {
+      const { status, error } = taskMap[taskId];
+      hasError |= !status || error;
+      return [tenantId, status, error || ""];
+    })
+  );
 
-    console.log(tableList(table) + "\n");
-    assert(!hasError, "error happened during tenant upgrade");
-    assert(!hasChangeTimeout, "no task progress after %s", CDS_CHANGE_TIMEOUT_TEXT);
-  } else {
-    // is cds-mtx
-    const { error, result } = pollJobResponseData || {};
-    assert(!error, "upgrade tenant failed\n%j", error);
-    const { tenants } = result;
-    assert(tenants, "no tenants found in result\n%j", result);
-
-    const failedTenants = [];
-    const table = [["tenantId", "status", "message", "logfile"]].concat(
-      await Promise.all(
-        Object.entries(tenants).map(async ([tenantId, { status, message, buildLogs }]) => {
-          let logfile = "";
-          if (buildLogs) {
-            logfile = _cdsUpgradeBuildLogFilepath(tenantId);
-            await writeFileAsync(logfile, buildLogs);
-          }
-          if (status !== "SUCCESS") {
-            failedTenants.push(tenantId);
-          }
-          return [tenantId, status, message, logfile];
-        })
-      )
-    );
-    console.log(tableList(table) + "\n");
-    assert(failedTenants.length === 0, "upgrade tenant not successful for", failedTenants.join(", "));
-  }
+  console.log(tableList(table) + "\n");
+  assert(!hasError, "error happened during tenant upgrade");
+  assert(!hasChangeTimeout, "no task progress after %s", CDS_CHANGE_TIMEOUT_TEXT);
 };
+
+const _cdsUpgradeMtx = async (
+  context,
+  { tenants, doAutoUndeploy = false, appInstance = CDS_UPGRADE_APP_INSTANCE } = {}
+) => {
+  if (tenants === undefined) {
+    tenants = ["all"];
+  }
+  if (tenants.length === 0) {
+    return;
+  }
+  const autoUndeployOptions = { autoUndeploy: true };
+  const { cfAppGuid, cfRouteUrl } = await context.getCdsInfo();
+  const upgradeResponse = await request({
+    method: "POST",
+    url: cfRouteUrl,
+    pathname: "/mtx/v1/model/asyncUpgrade",
+    auth: { token: await context.getCachedUaaToken() },
+    headers: {
+      "Content-Type": "application/json",
+      "X-Cf-App-Instance": `${cfAppGuid}:${appInstance}`,
+    },
+    body: JSON.stringify({ tenants, ...(doAutoUndeploy && autoUndeployOptions) }),
+  });
+  const upgradeResponseData = await _safeMaterializeJson(upgradeResponse, "upgrade");
+  const jobId = upgradeResponseData.jobID;
+  console.log("started upgrade on server with jobId %s polling interval %isec", jobId, POLL_FREQUENCY / 1000);
+
+  let pollJobResponseData;
+
+  while (true) {
+    await sleep(POLL_FREQUENCY);
+    const pollJobResponse = await request({
+      url: cfRouteUrl,
+      pathname: `/mtx/v1/model/status/${jobId}`,
+      auth: { token: await context.getCachedUaaToken() },
+    });
+    pollJobResponseData = await _safeMaterializeJson(pollJobResponse, "poll job");
+
+    const { status } = pollJobResponseData || {};
+    assert(status, "no status retrieved for jobId %s", jobId);
+    console.log("polled status %s for jobId %s", status, jobId);
+
+    if (status !== "RUNNING") {
+      break;
+    }
+  }
+
+  const { error, result } = pollJobResponseData || {};
+  assert(!error, "upgrade tenant failed\n%j", error);
+  const resultTenantEntries = result.tenants && Object.entries(result.tenants);
+  assert(resultTenantEntries, "no tenants found in result\n%j", result);
+
+  const failedTenants = [];
+  const table = [["tenantId", "status", "message", "logfile"]].concat(
+    await Promise.all(
+      resultTenantEntries.map(async ([tenantId, { status, message, buildLogs }]) => {
+        let logfile = "";
+        if (buildLogs) {
+          logfile = _cdsUpgradeBuildLogFilepath(tenantId);
+          await writeFileAsync(logfile, buildLogs);
+        }
+        if (status !== "SUCCESS") {
+          failedTenants.push(tenantId);
+        }
+        return [tenantId, status, message, logfile];
+      })
+    )
+  );
+  console.log(tableList(table) + "\n");
+  assert(failedTenants.length === 0, "upgrade tenant not successful for", failedTenants.join(", "));
+};
+
+const _cdsUpgrade = async (context, options) =>
+  (await _isMtxs(context)) ? await _cdsUpgradeMtxs(context, options) : await _cdsUpgradeMtx(context, options);
 
 const cdsUpgradeTenant = async (context, [tenantId], [doAutoUndeploy]) => {
   assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
