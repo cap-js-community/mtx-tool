@@ -208,10 +208,17 @@ const _cdsUpgradeMtxs = async (
 
     const { status, tasks } = pollJobResponseData || {};
     assert(status, "no status retrieved for jobId %s", jobId);
-    console.log("polled status %s for jobId %s", status, jobId);
     const taskSummary = _getTaskSummary(tasks ?? []);
-    const [queued, running, failed, finished] = taskSummary.map((count) => String(count).padStart(countLength, "0"));
-    console.log("task progress is queued/running: %s/%s | failed/finished: %s/%s", queued, running, failed, finished);
+    const [queued, running, failed, finished] = taskSummary.map((count) => String(count).padStart(countLength));
+    console.log(
+      "job %s is %s with tasks queued/running: %s/%s | failed/finished: %s/%s",
+      jobId,
+      status,
+      queued,
+      running,
+      failed,
+      finished
+    );
     if (!lastTaskSummary || lastTaskSummary.some((index, value) => taskSummary[index] !== value)) {
       const currentTime = Date.now();
       if (currentTime - (lastTimeOfChange ?? currentTime) >= CDS_CHANGE_TIMEOUT) {
@@ -283,7 +290,7 @@ const _cdsUpgradeMtx = async (
 
     const { status } = pollJobResponseData || {};
     assert(status, "no status retrieved for jobId %s", jobId);
-    console.log("polled status %s for jobId %s", status, jobId);
+    console.log("job %s is %s", jobId, status);
 
     if (status !== "RUNNING") {
       break;

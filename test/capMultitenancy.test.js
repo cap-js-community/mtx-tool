@@ -165,12 +165,9 @@ describe("cds tests", () => {
     expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
       started upgrade on server with jobId e85db10b-c269-4897-bd78-dde0d36f72cc polling interval 15sec
-      polled status RUNNING for jobId e85db10b-c269-4897-bd78-dde0d36f72cc
-      task progress is queued/running: 0/1 | failed/finished: 0/0
-      polled status RUNNING for jobId e85db10b-c269-4897-bd78-dde0d36f72cc
-      task progress is queued/running: 0/1 | failed/finished: 0/0
-      polled status FINISHED for jobId e85db10b-c269-4897-bd78-dde0d36f72cc
-      task progress is queued/running: 0/0 | failed/finished: 0/1
+      job e85db10b-c269-4897-bd78-dde0d36f72cc is RUNNING with tasks queued/running: 0/1 | failed/finished: 0/0
+      job e85db10b-c269-4897-bd78-dde0d36f72cc is RUNNING with tasks queued/running: 0/1 | failed/finished: 0/0
+      job e85db10b-c269-4897-bd78-dde0d36f72cc is FINISHED with tasks queued/running: 0/0 | failed/finished: 0/1
       #  tenantId                              status    message
       1  5ecc7413-2b7e-414a-9496-ad4a61f6cccf  FINISHED         
 
@@ -185,10 +182,8 @@ describe("cds tests", () => {
     expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
       started upgrade on server with jobId 00e7cfd9-b5aa-4485-b6c7-ab79b8f08e0c polling interval 15sec
-      polled status RUNNING for jobId 00e7cfd9-b5aa-4485-b6c7-ab79b8f08e0c
-      task progress is queued/running: 0/1 | failed/finished: 0/0
-      polled status FINISHED for jobId 00e7cfd9-b5aa-4485-b6c7-ab79b8f08e0c
-      task progress is queued/running: 0/0 | failed/finished: 0/1
+      job 00e7cfd9-b5aa-4485-b6c7-ab79b8f08e0c is RUNNING with tasks queued/running: 0/1 | failed/finished: 0/0
+      job 00e7cfd9-b5aa-4485-b6c7-ab79b8f08e0c is FINISHED with tasks queued/running: 0/0 | failed/finished: 0/1
       #  tenantId                              status    message
       1  5ecc7413-2b7e-414a-9496-ad4a61f6cccf  FINISHED         
 
@@ -214,11 +209,11 @@ describe("cds tests", () => {
     expect(outputFromLoggerPartitionFetch(infoCallsFiltered)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
       started upgrade on server with jobId 83499cfe-548a-4245-9eae-f25aa06d879c polling interval 15sec
-      task progress is queued/running: 1/5 | failed/finished: 0/0
-      task progress is queued/running: 1/4 | failed/finished: 0/1
-      task progress is queued/running: 0/1 | failed/finished: 0/5
-      task progress is queued/running: 0/1 | failed/finished: 0/5
-      task progress is queued/running: 0/0 | failed/finished: 0/6
+      job 83499cfe-548a-4245-9eae-f25aa06d879c is RUNNING with tasks queued/running: 1/5 | failed/finished: 0/0
+      job 83499cfe-548a-4245-9eae-f25aa06d879c is RUNNING with tasks queued/running: 1/4 | failed/finished: 0/1
+      job 83499cfe-548a-4245-9eae-f25aa06d879c is RUNNING with tasks queued/running: 0/1 | failed/finished: 0/5
+      job 83499cfe-548a-4245-9eae-f25aa06d879c is RUNNING with tasks queued/running: 0/1 | failed/finished: 0/5
+      job 83499cfe-548a-4245-9eae-f25aa06d879c is FINISHED with tasks queued/running: 0/0 | failed/finished: 0/6
       #  tenantId                              status    message
       1  4c0909b1-a84e-4763-a26e-532fdb9e40fa  FINISHED         
       2  5ecc7413-2b7e-414a-9496-ad4a61f6cccf  FINISHED         
