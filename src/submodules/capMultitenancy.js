@@ -224,7 +224,6 @@ const _cdsUpgrade = async (
 
     const { status, tasks } = pollJobResponseData || {};
     assert(status, "no status retrieved for jobId %s", jobId);
-
     console.log("polled status %s for jobId %s", status, jobId);
     if (isMtxs) {
       const taskSummary = _getTaskSummary(tasks ?? []);
