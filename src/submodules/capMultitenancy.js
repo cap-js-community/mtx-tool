@@ -203,15 +203,21 @@ const _cdsUpgrade = async (
     body: JSON.stringify({ tenants, ...(doAutoUndeploy && autoUndeployOptions) }),
   });
   const upgradeResponseData = await _safeMaterializeJson(upgradeResponse, "upgrade");
-  const upgradeTenantEntries = upgradeResponseData.tenants && Object.entries(upgradeResponseData.tenants);
-  assert(upgradeTenantEntries, "no tenants found in response for upgrade\n%j", upgradeResponseData);
   const jobId = isMtxs ? upgradeResponseData.ID : upgradeResponseData.jobID;
   console.log("started upgrade on server with jobId %s polling interval %isec", jobId, POLL_FREQUENCY / 1000);
 
+  let pollJobResponseData;
   let lastTaskSummary;
   let lastTimeOfChange;
-  let pollJobResponseData;
+  let upgradeTenantEntries;
+  let countLength;
   let hasChangeTimeout = false;
+
+  if (isMtxs) {
+    upgradeTenantEntries = upgradeResponseData.tenants && Object.entries(upgradeResponseData.tenants);
+    assert(upgradeTenantEntries, "no tenants found in response for upgrade\n%j", upgradeResponseData);
+    countLength = String(upgradeTenantEntries.length).length;
+  }
 
   while (true) {
     await sleep(POLL_FREQUENCY);
@@ -227,7 +233,6 @@ const _cdsUpgrade = async (
     console.log("polled status %s for jobId %s", status, jobId);
     if (isMtxs) {
       const taskSummary = _getTaskSummary(tasks ?? []);
-      const countLength = String(upgradeTenantEntries.length).length;
       const [queued, running, failed, finished] = taskSummary.map((count) => String(count).padStart(countLength, "0"));
       console.log("task progress is queued/running: %s/%s | failed/finished: %s/%s", queued, running, failed, finished);
       if (!lastTaskSummary || lastTaskSummary.some((index, value) => taskSummary[index] !== value)) {
