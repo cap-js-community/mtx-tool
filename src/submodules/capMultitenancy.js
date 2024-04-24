@@ -227,13 +227,7 @@ const _cdsUpgrade = async (
     if (isMtxs) {
       const taskSummary = _getTaskSummary(tasks ?? []);
       const [queued, running, failed, finished] = taskSummary;
-      console.log(
-        "task progress is queued/running => failed/finished: %i/%i => %i/%i",
-        queued,
-        running,
-        failed,
-        finished
-      );
+      console.log("task progress is queued/running: %i/%i | failed/finished: %i/%i", queued, running, failed, finished);
       if (!lastTaskSummary || lastTaskSummary.some((index, value) => taskSummary[index] !== value)) {
         const currentTime = Date.now();
         if (currentTime - (lastTimeOfChange ?? currentTime) >= CDS_CHANGE_TIMEOUT) {
