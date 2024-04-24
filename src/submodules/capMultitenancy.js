@@ -16,7 +16,7 @@ const {
   isObject,
 } = require("../shared/static");
 const { assert, assertAll } = require("../shared/error");
-const { request, requestTry } = require("../shared/request");
+const { request } = require("../shared/request");
 
 const POLL_FREQUENCY = 15000;
 const CDS_UPGRADE_APP_INSTANCE = 0;
