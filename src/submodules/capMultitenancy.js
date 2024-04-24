@@ -166,11 +166,8 @@ const _getTaskSummary = (tasks) =>
 
 const _cdsUpgradeMtxs = async (
   context,
-  { tenants, doAutoUndeploy = false, appInstance = CDS_UPGRADE_APP_INSTANCE } = {}
+  { tenants = ["*"], doAutoUndeploy = false, appInstance = CDS_UPGRADE_APP_INSTANCE } = {}
 ) => {
-  if (tenants === undefined) {
-    tenants = ["*"];
-  }
   if (tenants.length === 0) {
     return;
   }
@@ -251,11 +248,8 @@ const _cdsUpgradeMtxs = async (
 
 const _cdsUpgradeMtx = async (
   context,
-  { tenants, doAutoUndeploy = false, appInstance = CDS_UPGRADE_APP_INSTANCE } = {}
+  { tenants = ["all"], doAutoUndeploy = false, appInstance = CDS_UPGRADE_APP_INSTANCE } = {}
 ) => {
-  if (tenants === undefined) {
-    tenants = ["all"];
-  }
   if (tenants.length === 0) {
     return;
   }
