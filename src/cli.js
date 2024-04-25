@@ -31,9 +31,12 @@ const checkOption = async (cliOption, args) => {
   if (!firstArg || !commandVariants.includes(firstArg)) {
     return false;
   }
+  const allPassArgs = [].concat(requiredPassArgs, optionalPassArgs);
   const command = commandVariants[commandVariants.length - 1];
   let flagValues = null;
-  const allPassArgs = [].concat(requiredPassArgs, optionalPassArgs);
+
+  // NOTE: this mixes in (required and optional) positional arguments that can
+  //   be replaced by env variables.
   for (const [index, passArg] of allPassArgs.entries()) {
     const envVariable = PASS_ARG_META[passArg]?.envVariable;
     const value = envVariable && process.env[envVariable];
