@@ -33,6 +33,14 @@ const checkOption = async (cliOption, args) => {
   }
   const command = commandVariants[commandVariants.length - 1];
   let flagValues = null;
+  const allPassArgs = [].concat(requiredPassArgs, optionalPassArgs);
+  for (const [index, passArg] of allPassArgs.entries()) {
+    const envVariable = PASS_ARG_META[passArg]?.envVariable;
+    const value = envVariable && process.env[envVariable];
+    if (envVariable && value) {
+      passArgs.splice(index, 0, value);
+    }
+  }
   assert(
     passArgs.length >= requiredPassArgs.length,
     'command "%s" requires %s %s',
@@ -40,7 +48,6 @@ const checkOption = async (cliOption, args) => {
     requiredPassArgs.length === 1 ? "argument" : "arguments",
     requiredPassArgs.join(", ")
   );
-  const allPassArgs = [].concat(requiredPassArgs, optionalPassArgs);
   assert(
     passArgs.length <= allPassArgs.length,
     'command "%s" takes %s %s',

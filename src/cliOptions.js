@@ -30,8 +30,9 @@ const PASS_ARG = Object.freeze({
 });
 const PASS_ARG_META = Object.freeze({
   [PASS_ARG.TOKEN]: { sensitive: true },
-  [PASS_ARG.PASSCODE]: { sensitive: true },
-  [PASS_ARG.PASSWORD]: { sensitive: true },
+  [PASS_ARG.PASSCODE]: { sensitive: true, envVariable: "UAA_PASSCODE" },
+  [PASS_ARG.USERNAME]: { envVariable: "UAA_USERNAME" },
+  [PASS_ARG.PASSWORD]: { sensitive: true, envVariable: "UAA_PASSWORD" },
 });
 
 const FLAG_ARG = Object.freeze({
