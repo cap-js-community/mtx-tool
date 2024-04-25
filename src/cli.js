@@ -104,7 +104,5 @@ const cli = async (args) => {
 };
 
 module.exports = {
-  GENERIC_CLI_OPTIONS,
-  USAGE,
   cli,
 };
