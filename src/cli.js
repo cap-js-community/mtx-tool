@@ -1,109 +1,10 @@
 "use strict";
 // https://apidocs.cloudfoundry.org/12.36.0/service_bindings/list_all_service_bindings.html
 
-const { parse } = require("path");
 const { sleep, partition, question } = require("./shared/static");
 const { assert, fail, ApplicationError } = require("./shared/error");
 const { newContext } = require("./context");
-
-const appCliOptions = require("./cliOptions");
-
-const { name: NAME } = parse(process.argv[1]);
-const { version: VERSION } = require("../package.json");
-const FORCE_FLAG = "--force";
-const USAGE = `usage: ${NAME} [command]
-
-commands:
-   h  -h  --help     show complete help
-   v  -v  --version  show version
-
-   === tool setup (set) ===
-~  setl    --setup-list   list runtime config
-   set     --setup        interactive setup for global config
-   setcwd  --setup-local  interactive setup for local config
-   setcc   --clean-cache  clean all app caches
-
-   === user authentication (uaa) ===
-~  uaad   --uaa-decode TOKEN                                     decode JSON web token
-~  uaac   --uaa-client [TENANT]                                  obtain uaa token for generic client
-~  uaap   --uaa-passcode PASSCODE [TENANT]                       obtain uaa token for one-time passcode
-~  uaau   --uaa-user USERNAME PASSWORD [TENANT]                  obtain uaa token for username password
-~  uaasc  --uaa-service-client SERVICE [TENANT]                  obtain service token for generic client
-~  uaasp  --uaa-service-passcode SERVICE PASSCODE [TENANT]       obtain service token for one-time passcode
-~  uaasu  --uaa-service-user SERVICE USERNAME PASSWORD [TENANT]  obtain service token for username password
-          ...    [TENANT]                                        obtain token for tenant, fallback to paas tenant
-          ...    --decode                                        decode result token
-          ...    --userinfo                                      add detailed user info for passcode or username
-
-   === tenant registry (reg) ===
-~  regl   --registry-list [TENANT]                      list all subscribed subaccount names
-~  regll  --registry-long-list [TENANT]                 long list all subscribed subaccounts
-~  regs   --registry-service-config                     show registry service config
-~  regj   --registry-job JOB_ID                         show registry job
-          --registry-update TENANT_ID                   update tenant dependencies
-          --registry-update-all                         update dependencies for all subscribed tenants
-          --registry-update-url [TENANT_ID]             update all subscribed application URL
-*         --registry-offboard TENANT_ID                 offboard tenant subscription
-*         --registry-offboard-skip TENANT_ID SKIP_APPS  offboard tenant subscription skipping apps
-          ...    [TENANT]                               filter list for tenant id or subdomain
-          ...    --time                                 list includes timestamps
-          ...    --skip-unchanged                       skip update for unchanged dependencies
-
-   === cap multitenancy (cds) ===
-~  cdsl   --cds-list [TENANT]                        list all cds-mtx tenant names
-~  cdsll  --cds-long-list [TENANT]                   long list all cds-mtx tenants
-   cdsot  --cds-onboard-tenant TENANT_ID [METADATA]  onboard specific tenant
-   cdsut  --cds-upgrade-tenant TENANT_ID             upgrade specific tenant
-   cdsua  --cds-upgrade-all                          upgrade all tenants
-*         --cds-offboard-tenant TENANT_ID            offboard specific tenant
-*         --cds-offboard-all                         offboard all tenants
-          ...    [METADATA]                          onboard subscription metadata
-          ...    [TENANT]                            filter list for tenant id or subdomain
-          ...    --auto-undeploy                     upgrade with auto undeploy
-          ...    --time                              list includes timestamps
-
-   === hana management (hdi) ===
-~  hdil   --hdi-list [TENANT_ID]                  list all hdi container instances
-~  hdill  --hdi-long-list [TENANT_ID]             long list all hdi container instances and bindings
-~  hdilr  --hdi-list-relations [TENANT_ID]        list all hdi container instance and binding relations
-~  hditt  --hdi-tunnel-tenant TENANT_ID           open ssh tunnel to tenant db
-   hdirt  --hdi-rebind-tenant TENANT_ID [PARAMS]  rebind tenant hdi container instances
-   hdira  --hdi-rebind-all [PARAMS]               rebind all hdi container instances
-          --hdi-repair-bindings [PARAMS]          create missing and delete ambiguous bindings
-*         --hdi-delete-tenant TENANT_ID           delete hdi container instance and bindings for tenant
-*         --hdi-delete-all                        delete all hdi container instances and bindings
-          ...    [TENANT_ID]                      filter for tenant id
-          ...    [PARAMS]                         create binding with custom parameters
-          ...    --reveal                         show passwords
-          ...    --time                           list includes timestamps
-
-   === server diagnostic (srv) ===
-~  srv     --server-info                                      call server /info
-~  srvd    --server-debug [APP_NAME] [APP_INSTANCE]           open ssh tunnel to port /info {debugPort}
-~  srvenv  --server-env [APP_NAME]                            dump system environment
-~  srvcrt  --server-certificates [APP_NAME] [APP_INSTANCE]    dump instance certificates
-*          --server-start-debugger [APP_NAME] [APP_INSTANCE]  start debugger on server node process
-           ...    [APP_NAME]                                  run server commands for a specific app
-           ...    [APP_INSTANCE]                              tunnel to specific app instance, fallback to 0
-
-~  are read-only commands
-*  are potentially _dangerous_ commands
-`;
-
-const GENERIC_CLI_OPTIONS = {
-  HELP: {
-    commandVariants: ["h", "-h", "--help"],
-    silent: true,
-    passContext: false,
-    callback: () => USAGE,
-  },
-  VERSION: {
-    commandVariants: ["v", "-v", "--version"],
-    silent: true,
-    passContext: false,
-    callback: () => [NAME, VERSION],
-  },
-};
+const { FORCE_FLAG, PASS_ARG_META, USAGE, GENERIC_CLI_OPTIONS, APP_CLI_OPTIONS } = require("./cliOptions");
 
 const _dangerGuard = async () => {
   console.log('this is a dangerous operation, wait for 15sec and then enter "yes" if you are sure.');
@@ -158,7 +59,8 @@ const checkOption = async (cliOption, args) => {
     });
     flagValues = optionalFlagArgs.map((flag) => flagArgs.includes(flag));
   }
-  !silent && console.log("running", command, ...passArgs, ...flagArgs);
+  const maskedPassArgs = passArgs.map((arg, index) => (PASS_ARG_META[allPassArgs[index]]?.sensitive ? "***" : arg));
+  !silent && console.log("running", command, ...maskedPassArgs, ...flagArgs);
   const context = passContext ? await newContext({ usePersistedCache: useCache, isReadonlyCommand: readonly }) : null;
   danger && !flagArgs.includes(FORCE_FLAG) && (await _dangerGuard());
   const result = context ? await callback(context, passArgs, flagValues) : await callback(passArgs, flagValues);
@@ -182,7 +84,7 @@ const cli = async (args) => {
 
     for (const appCliOption of [].concat(
       [GENERIC_CLI_OPTIONS.HELP, GENERIC_CLI_OPTIONS.VERSION],
-      Object.values(appCliOptions)
+      Object.values(APP_CLI_OPTIONS)
     )) {
       if (await checkOption(appCliOption, args)) {
         return;
