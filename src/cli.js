@@ -31,8 +31,19 @@ const checkOption = async (cliOption, args) => {
   if (!firstArg || !commandVariants.includes(firstArg)) {
     return false;
   }
+  const allPassArgs = [].concat(requiredPassArgs, optionalPassArgs);
   const command = commandVariants[commandVariants.length - 1];
   let flagValues = null;
+
+  // NOTE: this mixes in (required and optional) positional arguments that can
+  //   be replaced by env variables.
+  for (const [index, passArg] of allPassArgs.entries()) {
+    const envVariable = PASS_ARG_META[passArg]?.envVariable;
+    const value = envVariable && process.env[envVariable];
+    if (envVariable && value) {
+      passArgs.splice(index, 0, value);
+    }
+  }
   assert(
     passArgs.length >= requiredPassArgs.length,
     'command "%s" requires %s %s',
@@ -40,7 +51,6 @@ const checkOption = async (cliOption, args) => {
     requiredPassArgs.length === 1 ? "argument" : "arguments",
     requiredPassArgs.join(", ")
   );
-  const allPassArgs = [].concat(requiredPassArgs, optionalPassArgs);
   assert(
     passArgs.length <= allPassArgs.length,
     'command "%s" takes %s %s',
@@ -59,7 +69,7 @@ const checkOption = async (cliOption, args) => {
     });
     flagValues = optionalFlagArgs.map((flag) => flagArgs.includes(flag));
   }
-  const maskedPassArgs = passArgs.map((arg, index) => (PASS_ARG_META[allPassArgs[index]]?.sensitive ? "***" : arg));
+  const maskedPassArgs = passArgs.map((arg, index) => (PASS_ARG_META[allPassArgs[index]]?.sensitive ? "*****" : arg));
   !silent && console.log("running", command, ...maskedPassArgs, ...flagArgs);
   const context = passContext ? await newContext({ usePersistedCache: useCache, isReadonlyCommand: readonly }) : null;
   danger && !flagArgs.includes(FORCE_FLAG) && (await _dangerGuard());
