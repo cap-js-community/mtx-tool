@@ -146,6 +146,18 @@ exports[`cli tests uaa user via env with tenant 2`] = `
 ]
 `;
 
+exports[`cli tests uaa user with too few variables 1`] = `
+[
+  "error: command "--uaa-user" requires arguments USERNAME, PASSWORD",
+]
+`;
+
+exports[`cli tests uaa user with too many variables 1`] = `
+[
+  "error: command "--uaa-user" takes arguments USERNAME, PASSWORD, TENANT",
+]
+`;
+
 exports[`cli tests uaa user with username password 1`] = `
 [
   [

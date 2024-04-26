@@ -8,7 +8,9 @@ jest.mock("../src/context", () => ({
 const { cli } = require("../src/cli");
 const { APP_CLI_OPTIONS } = require("../src/cliOptions");
 
-const logSpy = jest.spyOn(console, "log").mockReturnValue();
+const consoleLogSpy = jest.spyOn(console, "log").mockReturnValue();
+const consoleErrorSpy = jest.spyOn(console, "error").mockReturnValue();
+const processExitSpy = jest.spyOn(process, "exit").mockReturnValue();
 
 const uaaUserCallbackSpy = jest.spyOn(APP_CLI_OPTIONS.UAA_USER, "callback").mockReturnValue();
 const uaaServiceUserCallbackSpy = jest.spyOn(APP_CLI_OPTIONS.UAA_SERVICE_USER, "callback").mockReturnValue();
@@ -21,6 +23,22 @@ const mockTenant = "troll_tenant";
 describe("cli tests", () => {
   afterEach(() => {
     jest.clearAllMocks();
+  });
+
+  test("uaa user with too few variables", async () => {
+    await cli(["--uaa-user", mockUsername]);
+    expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+    expect(consoleErrorSpy.mock.calls[0]).toMatchSnapshot();
+    expect(processExitSpy).toHaveBeenCalledTimes(1);
+    expect(processExitSpy).toHaveBeenCalledWith(-1);
+  });
+
+  test("uaa user with too many variables", async () => {
+    await cli(["--uaa-user", mockUsername, mockPassword, mockTenant, mockService]);
+    expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+    expect(consoleErrorSpy.mock.calls[0]).toMatchSnapshot();
+    expect(processExitSpy).toHaveBeenCalledTimes(1);
+    expect(processExitSpy).toHaveBeenCalledWith(-1);
   });
 
   test.each([
@@ -44,8 +62,9 @@ describe("cli tests", () => {
     await cli(args);
     expect(callbackSpy).toHaveBeenCalledTimes(1);
     expect(callbackSpy.mock.calls[0]).toMatchSnapshot();
-    expect(logSpy).toHaveBeenCalledTimes(1);
-    expect(logSpy.mock.calls[0]).toMatchSnapshot();
+    expect(consoleErrorSpy).toHaveBeenCalledTimes(0);
+    expect(consoleLogSpy).toHaveBeenCalledTimes(1);
+    expect(consoleLogSpy.mock.calls[0]).toMatchSnapshot();
   });
 
   test.each([
@@ -65,7 +84,8 @@ describe("cli tests", () => {
     process.env = envBackup;
     expect(callbackSpy).toHaveBeenCalledTimes(1);
     expect(callbackSpy.mock.calls[0]).toMatchSnapshot();
-    expect(logSpy).toHaveBeenCalledTimes(1);
-    expect(logSpy.mock.calls[0]).toMatchSnapshot();
+    expect(consoleErrorSpy).toHaveBeenCalledTimes(0);
+    expect(consoleLogSpy).toHaveBeenCalledTimes(1);
+    expect(consoleLogSpy.mock.calls[0]).toMatchSnapshot();
   });
 });
