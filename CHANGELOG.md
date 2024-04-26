@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+<!-- order is REMOVED, CHANGED, ADDED, FIXED -->
+
+## v0.8.3 - 2024-04-26
+
+### Changed
+
+- cds: tenant upgrade now logs progress of individual tasks (`@sap/cds-mtxs` uses one task per tenant) for every poll.
+  the logs will look something like:
+  ```
+  GET https://my-server-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='d2f560dc-542c-4091-a632-919c941210b4') 200 OK (163ms)
+  job d2f560dc-542c-4091-a632-919c941210b4 is RUNNING with tasks queued/running:  5/ 5 | failed/finished:  0/ 0
+  GET https://my-server-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='d2f560dc-542c-4091-a632-919c941210b4') 200 OK (98ms)
+  job d2f560dc-542c-4091-a632-919c941210b4 is RUNNING with tasks queued/running:  4/ 5 | failed/finished:  0/ 1
+  GET https://my-server-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='d2f560dc-542c-4091-a632-919c941210b4') 200 OK (98ms)
+  job d2f560dc-542c-4091-a632-919c941210b4 is RUNNING with tasks queued/running:  1/ 4 | failed/finished:  0/ 5
+  ...
+  ```
+- cds: tenant upgrade now tracks that task progress is still happening. if no progress is detected for 30 minutes, it
+  will show the final status for each tenant and fail.
+
+### Added
+
+- uaa: some arguments can be passed in via environment variable instead of the commandline. this behavior is expected
+  by Jenkins and Github Actions. for example, the following is now possible:
+  ```
+  UAA_USERNAME=user UAA_PASSWORD=pass mtx --uaa-user
+  ```
+
+### Fixed
+
+- sensitive input arguments are now masked in the running console output
+
 ## v0.8.2 - 2024-03-15
 
 ### Fixed
