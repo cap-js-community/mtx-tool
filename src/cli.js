@@ -69,7 +69,7 @@ const checkOption = async (cliOption, args) => {
     });
     flagValues = optionalFlagArgs.map((flag) => flagArgs.includes(flag));
   }
-  const maskedPassArgs = passArgs.map((arg, index) => (PASS_ARG_META[allPassArgs[index]]?.sensitive ? "***" : arg));
+  const maskedPassArgs = passArgs.map((arg, index) => (PASS_ARG_META[allPassArgs[index]]?.sensitive ? "*****" : arg));
   !silent && console.log("running", command, ...maskedPassArgs, ...flagArgs);
   const context = passContext ? await newContext({ usePersistedCache: useCache, isReadonlyCommand: readonly }) : null;
   danger && !flagArgs.includes(FORCE_FLAG) && (await _dangerGuard());
