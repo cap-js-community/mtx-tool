@@ -17,7 +17,7 @@ const appCliOptions = Object.values(APP_CLI_OPTIONS).filter((option) =>
  NOTE: Just internal consistency tests for now.
  */
 
-describe("cli tests", () => {
+describe("consistency tests", () => {
   test("readme version is up-to-date", async () => {
     const readme = readFileSync(join(__dirname, "..", "README.md")).toString();
     const readmeInstall = /(## Install or Upgrade\n\n[\s\S]*?)\n##/g.exec(readme)[1];

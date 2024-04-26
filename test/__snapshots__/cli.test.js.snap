@@ -1,0 +1,193 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`cli tests uaa service user via env with service 1`] = `
+[
+  [
+    "command_and_control",
+    "freddy",
+    "is_ready",
+  ],
+  [
+    false,
+    false,
+  ],
+]
+`;
+
+exports[`cli tests uaa service user via env with service 2`] = `
+[
+  "running",
+  "--uaa-service-user",
+  "command_and_control",
+  "freddy",
+  "*****",
+]
+`;
+
+exports[`cli tests uaa service user via env with service tenant 1`] = `
+[
+  [
+    "command_and_control",
+    "freddy",
+    "is_ready",
+    "troll_tenant",
+  ],
+  [
+    false,
+    false,
+  ],
+]
+`;
+
+exports[`cli tests uaa service user via env with service tenant 2`] = `
+[
+  "running",
+  "--uaa-service-user",
+  "command_and_control",
+  "freddy",
+  "*****",
+  "troll_tenant",
+]
+`;
+
+exports[`cli tests uaa service user with service username password 1`] = `
+[
+  [
+    "command_and_control",
+    "freddy",
+    "is_ready",
+  ],
+  [
+    false,
+    false,
+  ],
+]
+`;
+
+exports[`cli tests uaa service user with service username password 2`] = `
+[
+  "running",
+  "--uaa-service-user",
+  "command_and_control",
+  "freddy",
+  "*****",
+]
+`;
+
+exports[`cli tests uaa service user with service username password tenant 1`] = `
+[
+  [
+    "command_and_control",
+    "freddy",
+    "is_ready",
+    "troll_tenant",
+  ],
+  [
+    false,
+    false,
+  ],
+]
+`;
+
+exports[`cli tests uaa service user with service username password tenant 2`] = `
+[
+  "running",
+  "--uaa-service-user",
+  "command_and_control",
+  "freddy",
+  "*****",
+  "troll_tenant",
+]
+`;
+
+exports[`cli tests uaa user via env 1`] = `
+[
+  [
+    "freddy",
+    "is_ready",
+  ],
+  [
+    false,
+    false,
+  ],
+]
+`;
+
+exports[`cli tests uaa user via env 2`] = `
+[
+  "running",
+  "--uaa-user",
+  "freddy",
+  "*****",
+]
+`;
+
+exports[`cli tests uaa user via env with tenant 1`] = `
+[
+  [
+    "freddy",
+    "is_ready",
+    "troll_tenant",
+  ],
+  [
+    false,
+    false,
+  ],
+]
+`;
+
+exports[`cli tests uaa user via env with tenant 2`] = `
+[
+  "running",
+  "--uaa-user",
+  "freddy",
+  "*****",
+  "troll_tenant",
+]
+`;
+
+exports[`cli tests uaa user with username password 1`] = `
+[
+  [
+    "freddy",
+    "is_ready",
+  ],
+  [
+    false,
+    false,
+  ],
+]
+`;
+
+exports[`cli tests uaa user with username password 2`] = `
+[
+  "running",
+  "--uaa-user",
+  "freddy",
+  "*****",
+]
+`;
+
+exports[`cli tests uaa user with username password tenant 1`] = `
+[
+  [
+    "freddy",
+    "is_ready",
+    "troll_tenant",
+  ],
+  [
+    false,
+    false,
+  ],
+]
+`;
+
+exports[`cli tests uaa user with username password tenant 2`] = `
+[
+  "running",
+  "--uaa-user",
+  "freddy",
+  "*****",
+  "troll_tenant",
+]
+`;
