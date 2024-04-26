@@ -66,10 +66,10 @@ privileges that particular user has. In order to achieve this:
 If your server exposes an endpoint with JWT authentication, which is the default in CAP, then you can
 access these endpoint with a generic client JWT that mtx can get for you.
 
-| purpose                                           | command                             |
-| :------------------------------------------------ | :---------------------------------- |
-| obtain client JWT of provider subaccount (paas)   | `mtx uaac`                          |
-| obtain client JWT of subscriber subaccount (saas) | `mtx uaac <subdomain or tenant id>` |
+| purpose                                    | command                             |
+| :----------------------------------------- | :---------------------------------- |
+| client JWT of provider subaccount (paas)   | `mtx uaac`                          |
+| client JWT of subscriber subaccount (saas) | `mtx uaac <subdomain or tenant id>` |
 
 Set the `Authorization` header as `Bearer <jwt>` in HTTP requests for the endpoints to pass validation. We use
 [curl](https://curl.se) for this, but any other HTTP client works as well.
@@ -86,10 +86,11 @@ then they can obtain their passcode by logging in at
 Using this one-time passcode, you can either get a regular JWT for accesses _as that user_, or their extended user
 info:
 
-| purpose                     | command                                                   |
-| :-------------------------- | :-------------------------------------------------------- |
-| obtain user JWT             | `mtx uaap <passcode> <subdomain or tenant id>`            |
-| obtain user JWT + user info | `mtx uaap <passcode> <subdomain or tenant id> --userinfo` |
+| purpose               | command                                                     |
+| :-------------------- | :---------------------------------------------------------- |
+| user JWT              | `mtx uaap <passcode> <subdomain or tenant id>`              |
+| user JWT via&nbsp;env | `UAA_PASSCODE=<passcode> mtx uaap <subdomain or tenant id>` |
+| user JWT + user info  | `mtx uaap <passcode> <subdomain or tenant id> --userinfo`   |
 
 Like before, if the command is run without the `subdomain or tenant_id` parameter, the tool will assume you mean the
 provider subaccount (paas).
@@ -110,21 +111,24 @@ information.
 Similarly to using a one-time passcode, you can access APIs as some user if you have both the username and password of
 that user.
 
-| purpose                     | command                                                              |
-| :-------------------------- | :------------------------------------------------------------------- |
-| obtain user JWT             | `mtx uaau <username> <password> <subdomain or tenant id>`            |
-| obtain user JWT + user info | `mtx uaau <username> <password> <subdomain or tenant id> --userinfo` |
+| purpose               | command                                                                             |
+| :-------------------- | :---------------------------------------------------------------------------------- |
+| user JWT              | `mtx uaau <username> <password> <subdomain or tenant id>`                           |
+| user JWT via&nbsp;env | `UAA_USERNAME=<username> UAA_PASSWORD=<password> mtx uaau <subdomain or tenant id>` |
+| user JWT + user info  | `mtx uaau <username> <password> <subdomain or tenant id> --userinfo`                |
 
 ## Accessing Service APIs
 
 You can access services in the same way that the server accesses them, usually for debugging purposes. You will
 need to know the label of the service and it needs to be bound to the app which is configured for user authentication.
 
-| purpose                       | command                                                              |
-| :---------------------------- | :------------------------------------------------------------------- |
-| obtain client JWT for service | `mtx uaasc <service> <subdomain or tenant id>`                       |
-| obtain user JWT for service   | `mtx uaasp <service> <passcode> <subdomain or tenant id>`            |
-| obtain user JWT for service   | `mtx uaasu <service> <username> <password> <subdomain or tenant id>` |
+| purpose               | command                                                                                        |
+| :-------------------- | :--------------------------------------------------------------------------------------------- |
+| client JWT            | `mtx uaasc <service> <subdomain or tenant id>`                                                 |
+| user JWT              | `mtx uaasp <service> <passcode> <subdomain or tenant id>`                                      |
+| user JWT via&nbsp;env | `UAA_PASSCODE=<passcode> mtx uaasp <service> <subdomain or tenant id>`                         |
+| user JWT              | `mtx uaasu <service> <username> <password> <subdomain or tenant id>`                           |
+| user JWT via&nbsp;env | `UAA_USERNAME=<username> UAA_PASSWORD=<password> mtx uaasu <service> <subdomain or tenant id>` |
 
 For example `destination` is the label of the [BTP destination service](https://help.sap.com/docs/CP_CONNECTIVITY).
 You will also need to choose a trusted subdomain to use, for example `skyfin-company`.
