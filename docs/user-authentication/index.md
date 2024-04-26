@@ -48,16 +48,18 @@ Commands for this area are:
 ~  are read-only commands
 ```
 
+## Environment
+
+| environment variable | effect                                       |
+| :------------------- | :------------------------------------------- |
+| `MTX_UAA_APP`        | override configured app for `xsuaa` accesses |
+| `UAA_PASSCODE`       | override argument `PASSCODE`                 |
+| `UAA_USERNAME`       | override argument `USERNAME`                 |
+| `UAA_PASSWORD`       | override argument `PASSWORD`                 |
+
 It can be beneficial to pass _credentials_, especially long-term credentials like a password, along through environment
 variables instead of commandline arguments. This is, for example, the default approach in pipeline solutions like
-Jenkins and Github Actions. To enable this, you can replace the following arguments with their corresponding
-environment variable for all `uaa` commands.
-
-| argument   | environment variable |
-| :--------- | :------------------- |
-| `USERNAME` | `UAA_USERNAME`       |
-| `PASSWORD` | `UAA_PASSWORD`       |
-| `PASSCODE` | `UAA_PASSCODE`       |
+Jenkins and Github Actions.
 
 ## Decoding JWTs
 

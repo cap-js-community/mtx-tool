@@ -53,6 +53,13 @@ Commands for this area are:
 *  are potentially _dangerous_ commands
 ```
 
+## Environment
+
+| environment variable  | effect                                                   |
+| :-------------------- | :------------------------------------------------------- |
+| `MTX_HDI_APP`         | override configured app for `service-manager` accesses   |
+| `MTX_HDI_CONCURRENCY` | change concurrency used in service calls (default is 10) |
+
 ## List and Long List
 
 The list command `mtx hdil` is the most common entry point and will show a table of all hdi container bindings their

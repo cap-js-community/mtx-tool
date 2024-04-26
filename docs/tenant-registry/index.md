@@ -53,6 +53,12 @@ Commands for this area are:
 *  are potentially _dangerous_ commands
 ```
 
+## Environment
+
+| environment variable | effect                                               |
+| :------------------- | :--------------------------------------------------- |
+| `MTX_REG_APP`        | override configured app for `saas-registry` accesses |
+
 ## List and Long List
 
 The list command `mtx regl` is the most common entry point and will show a table of all registered subacconts with
