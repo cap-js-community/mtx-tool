@@ -48,6 +48,17 @@ Commands for this area are:
 ~  are read-only commands
 ```
 
+It can be beneficial to pass _credentials_, especially long-term credentials like a password, along through environment
+variables instead of commandline arguments. This is, for example, the default approach in pipeline solutions like
+Jenkins and Github Actions. To enable this, you can replace the following arguments with their corresponding
+environment variable for all `uaa` commands.
+
+| argument   | environment variable |
+| :--------- | :------------------- |
+| `USERNAME` | `UAA_USERNAME`       |
+| `PASSWORD` | `UAA_PASSWORD`       |
+| `PASSCODE` | `UAA_PASSCODE`       |
+
 ## Decoding JWTs
 
 Without even setting up MTX Tool, you can always take any web token you have in your clipboard and run `mtx uaad <jwt>`.
