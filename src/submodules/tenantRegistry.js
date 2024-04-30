@@ -43,9 +43,10 @@ const _registrySubscriptionsPaged = async (context, tenant) => {
     ...(filterTenantId && { tenantId: filterTenantId }),
     ...(plan === "service" && { includeIndirectSubscriptions: true }),
     size: REGISTRY_PAGE_SIZE,
-    page: ++pageIndex,
+    page: pageIndex,
   };
   while (true) {
+    query.page = ++pageIndex;
     const response = await request({
       url: saas_registry_url,
       pathname: `/saas-manager/v1/${plan}/subscriptions`,
