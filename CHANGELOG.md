@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- order is REMOVED, CHANGED, ADDED, FIXED -->
 
+## v0.8.4 - 2024-05-01
+
+### Fixed
+
+- reg: fixed a paging bug where most registry commands had an infinite loop if more than 200 tenants are handled. (reported by @cgaillydetaurines)
+
 ## v0.8.3 - 2024-04-26
 
 ### Changed
