@@ -8,23 +8,30 @@
 "use strict";
 
 const {
+  ENV,
   isUUID,
   isDashedWord,
   sleep,
   tableList,
   formatTimestampsWithRelativeDays,
   resolveTenantArg,
+  limiter,
 } = require("../shared/static");
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
 
 const REGISTRY_PAGE_SIZE = 200;
-const POLL_FREQUENCY = 10000;
+const REGISTRY_JOB_POLL_FREQUENCY = 20000;
+const REGISTRY_REQUEST_CONCURRENCY_FALLBACK = 10;
 const TENANT_UPDATABLE_STATES = ["SUBSCRIBED", "UPDATE_FAILED"];
 const RESPONSE_STATE = Object.freeze({
   SUCCEEDED: "SUCCEEDED",
   FAILED: "FAILED",
 });
+
+const regRequestConcurrency = process.env[ENV.REG_CONCURRENCY]
+  ? parseInt(process.env[ENV.REG_CONCURRENCY])
+  : REGISTRY_REQUEST_CONCURRENCY_FALLBACK;
 
 const _registrySubscriptionsPaged = async (context, tenant) => {
   const { subdomain: filterSubdomain, tenantId: filterTenantId } = resolveTenantArg(tenant);
@@ -112,7 +119,7 @@ const _registryJobPoll = async (context, location, { skipFirst = false } = {}) =
   const { saas_registry_url } = credentials;
   while (true) {
     if (!skipFirst) {
-      await sleep(POLL_FREQUENCY);
+      await sleep(REGISTRY_JOB_POLL_FREQUENCY);
       skipFirst = false;
     }
     const token = await context.getCachedUaaTokenFromCredentials(credentials);
@@ -183,19 +190,19 @@ const _registryCallForTenant = async (
   const [location] = response.headers.raw().location;
   const responseText = await response.text();
   console.log("response: %s", responseText);
-  console.log("polling job %s with interval %isec", location, POLL_FREQUENCY / 1000);
+  console.log("polling job %s with interval %isec", location, REGISTRY_JOB_POLL_FREQUENCY / 1000);
 
   return _registryJobPoll(context, location);
 };
 
 const _registryCallForTenants = async (context, method, options = {}) => {
   const { subscriptions } = await _registrySubscriptionsPaged(context);
-  const result = [];
-  // NOTE: we do this serially, so the logging output is understandable for users and the endpoint is not overloaded
-  for (const subscription of subscriptions.filter(({ state }) => TENANT_UPDATABLE_STATES.includes(state))) {
-    result.push(await _registryCallForTenant(context, subscription, method, options));
-  }
-  return result;
+  const updatableSubscriptions = subscriptions.filter(({ state }) => TENANT_UPDATABLE_STATES.includes(state));
+  return await limiter(
+    regRequestConcurrency,
+    updatableSubscriptions,
+    async (subscription) => await _registryCallForTenant(context, subscription, method, options)
+  );
 };
 
 const registryUpdateDependencies = async (context, [tenantId], [doSkipUnchanged]) => {
@@ -207,7 +214,7 @@ const registryUpdateDependencies = async (context, [tenantId], [doSkipUnchanged]
 };
 
 const registryUpdateAllDependencies = async (context, _, [doSkipUnchanged]) =>
-  _registryCallForTenants(context, "PATCH", { skipUnchangedDependencies: doSkipUnchanged });
+  await _registryCallForTenants(context, "PATCH", { skipUnchangedDependencies: doSkipUnchanged });
 
 const registryUpdateApplicationURL = async (context, [tenantId]) => {
   if (tenantId) {
@@ -219,7 +226,7 @@ const registryUpdateApplicationURL = async (context, [tenantId]) => {
       doJobPoll: false,
     });
   } else {
-    return _registryCallForTenants(context, "PATCH", {
+    return await _registryCallForTenants(context, "PATCH", {
       updateApplicationURL: true,
       skipUpdatingDependencies: true,
       doJobPoll: false,
