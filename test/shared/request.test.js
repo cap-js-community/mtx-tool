@@ -1,13 +1,13 @@
 "use strict";
 
 jest.mock("node-fetch", () => jest.fn());
-jest.mock("../src/shared/static", () => ({
+jest.mock("../../src/shared/static", () => ({
   sleep: jest.fn(),
 }));
 const mockFetchLib = require("node-fetch");
-const mockShared = require("../src/shared/static");
+const mockShared = require("../../src/shared/static");
 
-const { request } = require("../src/shared/request");
+const { request } = require("../../src/shared/request");
 
 let loggerSpy = {
   info: jest.spyOn(console, "log").mockImplementation(),
