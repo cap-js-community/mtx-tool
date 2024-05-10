@@ -184,7 +184,7 @@ const _registryCallForTenant = async (
 
   if (!doJobPoll) {
     const state = response.status === 200 ? RESPONSE_STATE.SUCCEEDED : RESPONSE_STATE.FAILED;
-    console.log("Subscription Operation with method %s for tenant %s finished with state %s", method, tenantId, state);
+    console.log("subscription operation with method %s for tenant %s finished with state %s", method, tenantId, state);
     return JSON.stringify({ tenantId, state }, null, 2);
   }
   const [location] = response.headers.raw().location;
@@ -198,11 +198,12 @@ const _registryCallForTenant = async (
 const _registryCallForTenants = async (context, method, options = {}) => {
   const { subscriptions } = await _registrySubscriptionsPaged(context);
   const updatableSubscriptions = subscriptions.filter(({ state }) => TENANT_UPDATABLE_STATES.includes(state));
-  return await limiter(
+  const result = await limiter(
     regRequestConcurrency,
     updatableSubscriptions,
     async (subscription) => await _registryCallForTenant(context, subscription, method, options)
   );
+  return result;
 };
 
 const registryUpdateDependencies = async (context, [tenantId], [doSkipUnchanged]) => {
