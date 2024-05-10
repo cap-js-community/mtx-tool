@@ -6,7 +6,7 @@ const fetchlib = require("node-fetch");
 const { sleep } = require("./static");
 const { fail } = require("./error");
 
-const TOO_MANY_POLL_FREQUENCIES = [6000, 120000, 24000, 48000]; // SUM = 90000
+const TOO_MANY_POLL_FREQUENCIES = [6000, 12000, 24000, 48000]; // SUM = 90000
 const STOP_SLEEPING_TIME = -1;
 const SLEEP_TIMES = [].concat(TOO_MANY_POLL_FREQUENCIES, [STOP_SLEEPING_TIME]); // -1 is to stop sleeping
 
