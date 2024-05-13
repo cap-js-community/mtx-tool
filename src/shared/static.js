@@ -297,7 +297,7 @@ const limiter = async (limit, payloads, iterator) => {
   return results.map(({ value }) => value);
 };
 
-const CHARPOINTS = Object.freeze({
+const CHAR_POINTS = Object.freeze({
   // 33 -- 47 are 15 symbols
   // 58 -- 64 are 7 symbols again
   // 91 -- 96 are 6 symbols again
@@ -321,10 +321,10 @@ const randomString = (
   { doNumbers = true, doUpperCaseLetters = true, doLowerCaseLetters = true, doSymbols = false } = {}
 ) => {
   const alphabet = [].concat(
-    doNumbers ? CHARPOINTS.NUMBERS : [],
-    doUpperCaseLetters ? CHARPOINTS.UPPER_CASE_LETTERS : [],
-    doLowerCaseLetters ? CHARPOINTS.LOWER_CASE_LETTERS : [],
-    doSymbols ? CHARPOINTS.SYMBOLS : []
+    doNumbers ? CHAR_POINTS.NUMBERS : [],
+    doUpperCaseLetters ? CHAR_POINTS.UPPER_CASE_LETTERS : [],
+    doLowerCaseLetters ? CHAR_POINTS.LOWER_CASE_LETTERS : [],
+    doSymbols ? CHAR_POINTS.SYMBOLS : []
   );
   return alphabet.length === 0
     ? []
