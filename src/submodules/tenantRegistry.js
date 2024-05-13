@@ -21,7 +21,7 @@ const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
 
 const REGISTRY_PAGE_SIZE = 200;
-const REGISTRY_JOB_POLL_FREQUENCY = 20000;
+const REGISTRY_JOB_POLL_FREQUENCY = 15000;
 const REGISTRY_REQUEST_CONCURRENCY_FALLBACK = 10;
 const TENANT_UPDATABLE_STATES = ["SUBSCRIBED", "UPDATE_FAILED"];
 const JOB_STATE = Object.freeze({
