@@ -199,16 +199,6 @@ const _registryCallForTenant = async (
   return { tenantId, jobId: jobResult.id, state: jobResult.state };
 };
 
-const _registryCallForTenants = async (context, method, options = {}) => {
-  const { subscriptions } = await _registrySubscriptionsPaged(context);
-  const updatableSubscriptions = subscriptions.filter(({ state }) => TENANT_UPDATABLE_STATES.includes(state));
-  return await limiter(
-    regRequestConcurrency,
-    updatableSubscriptions,
-    async (subscription) => await _registryCallForTenant(context, subscription, method, options)
-  );
-};
-
 const _registryCall = async (context, method, tenantId, options) => {
   let results;
   if (tenantId) {
@@ -217,7 +207,13 @@ const _registryCall = async (context, method, tenantId, options) => {
     assert(subscriptions.length >= 1, "could not find tenant %s", tenantId);
     results = [await _registryCallForTenant(context, subscriptions[0], method, options)];
   } else {
-    results = await _registryCallForTenants(context, method, options);
+    const { subscriptions } = await _registrySubscriptionsPaged(context);
+    const updatableSubscriptions = subscriptions.filter(({ state }) => TENANT_UPDATABLE_STATES.includes(state));
+    results = await limiter(
+      regRequestConcurrency,
+      updatableSubscriptions,
+      async (subscription) => await _registryCallForTenant(context, subscription, method, options)
+    );
   }
   assert(Array.isArray(results), "got invalid results from registry %s call with %j", method, options);
   console.log(JSON.stringify(results.length === 1 ? results[0] : results, null, 2));
