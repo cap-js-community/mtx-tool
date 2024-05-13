@@ -6,6 +6,12 @@ const fetchlib = require("node-fetch");
 const { sleep } = require("./static");
 const { fail } = require("./error");
 
+// NOTE: These times add up to 90sec in total and give an exponential falloff
+const TOO_MANY_POLL_FREQUENCIES = [6000, 12000, 24000, 48000];
+
+const STOP_SLEEPING_TIME = -1;
+const SLEEP_TIMES = [].concat(TOO_MANY_POLL_FREQUENCIES, [STOP_SLEEPING_TIME]);
+
 const _request = async ({
   // https://nodejs.org/docs/latest-v10.x/api/url.html
   url,
@@ -56,8 +62,7 @@ const _request = async ({
   const _bearerAuthHeader = auth && Object.prototype.hasOwnProperty.call(auth, "token") ? "Bearer " + auth.token : null;
   const _authHeader = _basicAuthHeader || _bearerAuthHeader;
   const _method = method || "GET";
-  const startTime = Date.now();
-  const response = await fetchlib(_url, {
+  const _options = {
     method: _method,
     headers: {
       ...headers,
@@ -66,10 +71,26 @@ const _request = async ({
     ...(agent && { agent }),
     ...(body && { body }),
     ...(redirect && { redirect }),
-  });
-  if (logged) {
-    console.log(`${_method} ${_url} ${response.status} ${response.statusText} (${Date.now() - startTime}ms)`);
+  };
+
+  let response;
+  for (const sleepTime of SLEEP_TIMES) {
+    const startTime = Date.now();
+    response = await fetchlib(_url, _options);
+    const isFinalRetry = response.status !== 429 || sleepTime === STOP_SLEEPING_TIME;
+    if (logged) {
+      console.log(
+        isFinalRetry
+          ? `${_method} ${_url} ${response.status} ${response.statusText} (${Date.now() - startTime}ms)`
+          : `${_method} ${_url} ${response.status} ${response.statusText} (${Date.now() - startTime}ms) retrying in ${sleepTime / 1000}sec`
+      );
+    }
+    if (isFinalRetry) {
+      break;
+    }
+    await sleep(sleepTime);
   }
+
   if (checkStatus) {
     if (!response.ok) {
       throw new Error(`got bad response ${response.status} from ${_url}\n${await response.text()}`);
@@ -86,29 +107,6 @@ const request = async (options) => {
   }
 };
 
-const requestTry = async (options) => {
-  try {
-    return await _request(options);
-  } catch (err) {
-    console.error(err.message);
-    return null;
-  }
-};
-
-const requestRetry = async (options, tries = 10, timeout = 3000) => {
-  for (let i = 0; i < tries; i++) {
-    try {
-      return await _request(options);
-    } catch (err) {
-      console.error(err.message);
-      await sleep(timeout);
-    }
-  }
-  return null;
-};
-
 module.exports = {
   request,
-  requestTry,
-  requestRetry,
 };
