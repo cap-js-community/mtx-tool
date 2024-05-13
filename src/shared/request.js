@@ -6,9 +6,11 @@ const fetchlib = require("node-fetch");
 const { sleep } = require("./static");
 const { fail } = require("./error");
 
-const TOO_MANY_POLL_FREQUENCIES = [6000, 12000, 24000, 48000]; // SUM = 90000
+// NOTE: These times add up to 90sec in total and give an exponential falloff
+const TOO_MANY_POLL_FREQUENCIES = [6000, 12000, 24000, 48000];
+
 const STOP_SLEEPING_TIME = -1;
-const SLEEP_TIMES = [].concat(TOO_MANY_POLL_FREQUENCIES, [STOP_SLEEPING_TIME]); // -1 is to stop sleeping
+const SLEEP_TIMES = [].concat(TOO_MANY_POLL_FREQUENCIES, [STOP_SLEEPING_TIME]);
 
 const _request = async ({
   // https://nodejs.org/docs/latest-v10.x/api/url.html
@@ -75,16 +77,16 @@ const _request = async ({
   for (const sleepTime of SLEEP_TIMES) {
     const startTime = Date.now();
     response = await fetchlib(_url, _options);
-    if (response.status !== 429 || sleepTime === STOP_SLEEPING_TIME) {
-      if (logged) {
-        console.log(`${_method} ${_url} ${response.status} ${response.statusText} (${Date.now() - startTime}ms)`);
-      }
-      break;
-    }
+    const doRetry = response.status !== 429 || sleepTime === STOP_SLEEPING_TIME;
     if (logged) {
       console.log(
-        `${_method} ${_url} ${response.status} ${response.statusText} (${Date.now() - startTime}ms) retrying in ${sleepTime / 1000}sec`
+        doRetry
+          ? `${_method} ${_url} ${response.status} ${response.statusText} (${Date.now() - startTime}ms) retrying in ${sleepTime / 1000}sec`
+          : `${_method} ${_url} ${response.status} ${response.statusText} (${Date.now() - startTime}ms)`
       );
+    }
+    if (!doRetry) {
+      break;
     }
     await sleep(sleepTime);
   }
