@@ -141,8 +141,6 @@ const registryJob = async (context, [jobId]) => {
   return _registryJobPoll(context, `/api/v2.0/jobs/${jobId}`, { skipFirst: true });
 };
 
-// https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/4a8b63678cf24d5b8b36bd1957391ce3.html
-// https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/9c4f927011db4bd0a53b23a1b33b36d0.html
 const _registryCallForTenant = async (
   context,
   subscription,
