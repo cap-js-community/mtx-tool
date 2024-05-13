@@ -7,6 +7,9 @@ exports[`reg tests reg list paging 1`] = `
       "auth": {
         "token": "token",
       },
+      "headers": {
+        "Accept": "application/json",
+      },
       "pathname": "/saas-manager/v1/plan/subscriptions",
       "query": {
         "appName": "appName",
@@ -20,6 +23,9 @@ exports[`reg tests reg list paging 1`] = `
     {
       "auth": {
         "token": "token",
+      },
+      "headers": {
+        "Accept": "application/json",
       },
       "pathname": "/saas-manager/v1/plan/subscriptions",
       "query": {
