@@ -77,15 +77,15 @@ const _request = async ({
   for (const sleepTime of SLEEP_TIMES) {
     const startTime = Date.now();
     response = await fetchlib(_url, _options);
-    const doRetry = response.status !== 429 || sleepTime === STOP_SLEEPING_TIME;
+    const isFinalRetry = response.status !== 429 || sleepTime === STOP_SLEEPING_TIME;
     if (logged) {
       console.log(
-        doRetry
-          ? `${_method} ${_url} ${response.status} ${response.statusText} (${Date.now() - startTime}ms) retrying in ${sleepTime / 1000}sec`
-          : `${_method} ${_url} ${response.status} ${response.statusText} (${Date.now() - startTime}ms)`
+        isFinalRetry
+          ? `${_method} ${_url} ${response.status} ${response.statusText} (${Date.now() - startTime}ms)`
+          : `${_method} ${_url} ${response.status} ${response.statusText} (${Date.now() - startTime}ms) retrying in ${sleepTime / 1000}sec`
       );
     }
-    if (!doRetry) {
+    if (isFinalRetry) {
       break;
     }
     await sleep(sleepTime);
