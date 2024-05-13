@@ -174,7 +174,7 @@ describe("reg tests", () => {
     expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
       response: Job for update subscription of application: afc-dev and tenant: 5ecc7413-2b7e-414a-9496-ad4a61f6cccf, was created
-      polling job /api/v2.0/jobs/4520b25d-29fc-4bbd-9403-4a76acebbfcd with interval 20sec
+      polling job /api/v2.0/jobs/4520b25d-29fc-4bbd-9403-4a76acebbfcd with interval 15sec
       {
         "tenantId": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
         "jobId": "4520b25d-29fc-4bbd-9403-4a76acebbfcd",
@@ -197,25 +197,25 @@ describe("reg tests", () => {
     expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
       response: Job for update subscription of application: afc-dev and tenant: 5ecc7413-2b7e-414a-9496-ad4a61f6cccf, was created
-      polling job /api/v2.0/jobs/a6334e8e-6b69-46c6-97cc-94a02c4965e5 with interval 20sec
+      polling job /api/v2.0/jobs/a6334e8e-6b69-46c6-97cc-94a02c4965e5 with interval 15sec
       response: Job for update subscription of application: afc-dev and tenant: 6917dfd6-7590-4033-af2a-140b75263b0d, was created
-      polling job /api/v2.0/jobs/eba2a96a-3de7-4f75-a3cf-af6821d0c826 with interval 20sec
+      polling job /api/v2.0/jobs/eba2a96a-3de7-4f75-a3cf-af6821d0c826 with interval 15sec
       response: Job for update subscription of application: afc-dev and tenant: cb9158ce-f8fd-441b-b443-17219e8f79fa, was created
-      polling job /api/v2.0/jobs/ef9575a0-d3f9-4347-b792-24d60756bcdc with interval 20sec
+      polling job /api/v2.0/jobs/ef9575a0-d3f9-4347-b792-24d60756bcdc with interval 15sec
       response: Job for update subscription of application: afc-dev and tenant: 848a0f14-792d-4bd2-821c-7c6280780ca3, was created
-      polling job /api/v2.0/jobs/cf60da54-382d-48dd-bd5a-0e4eae14ceb7 with interval 20sec
+      polling job /api/v2.0/jobs/cf60da54-382d-48dd-bd5a-0e4eae14ceb7 with interval 15sec
       response: Job for update subscription of application: afc-dev and tenant: 4c0909b1-a84e-4763-a26e-532fdb9e40fa, was created
-      polling job /api/v2.0/jobs/17889327-5c21-4056-8d7c-ac75ede93088 with interval 20sec
+      polling job /api/v2.0/jobs/17889327-5c21-4056-8d7c-ac75ede93088 with interval 15sec
       response: Job for update subscription of application: afc-dev and tenant: 288393a7-972c-4fa8-acfd-12299c4db374, was created
-      polling job /api/v2.0/jobs/a8d43a70-80f4-4ed5-bf1f-0cb6b9e51463 with interval 20sec
+      polling job /api/v2.0/jobs/a8d43a70-80f4-4ed5-bf1f-0cb6b9e51463 with interval 15sec
       response: Job for update subscription of application: afc-dev and tenant: dde70ec5-983d-4848-b50c-fb2cdac7d359, was created
-      polling job /api/v2.0/jobs/bb2c6cc7-6432-4def-b2fa-e97375268e00 with interval 20sec
+      polling job /api/v2.0/jobs/bb2c6cc7-6432-4def-b2fa-e97375268e00 with interval 15sec
       response: Job for update subscription of application: afc-dev and tenant: cf528063-6a43-4bf2-8ccc-ca4e6d75d88e, was created
-      polling job /api/v2.0/jobs/d47be903-50f9-425b-94e1-b464d987087f with interval 20sec
+      polling job /api/v2.0/jobs/d47be903-50f9-425b-94e1-b464d987087f with interval 15sec
       response: Job for update subscription of application: afc-dev and tenant: 6ef2372b-d256-4fef-8b01-6eeb18f2eefe, was created
-      polling job /api/v2.0/jobs/cd27bfbc-3f18-4297-a24c-cbc92035b80d with interval 20sec
+      polling job /api/v2.0/jobs/cd27bfbc-3f18-4297-a24c-cbc92035b80d with interval 15sec
       response: Job for update subscription of application: afc-dev and tenant: 34d6259c-41bc-4f6b-8220-018ace187813, was created
-      polling job /api/v2.0/jobs/78ff106a-3a26-4246-a4db-6da81cecc0fa with interval 20sec
+      polling job /api/v2.0/jobs/78ff106a-3a26-4246-a4db-6da81cecc0fa with interval 15sec
       [
         {
           "tenantId": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
