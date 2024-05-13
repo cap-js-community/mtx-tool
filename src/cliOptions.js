@@ -241,7 +241,7 @@ const APP_CLI_OPTIONS = Object.freeze({
     optionalFlagArgs: [FLAG_ARG.SKIP_UNCHANGED],
     callback: reg.registryUpdateAllDependencies,
   },
-  REGISTRY_UPDATE_APPURL: {
+  REGISTRY_UPDATE_APP_URL: {
     commandVariants: ["--registry-update-url"],
     optionalPassArgs: [PASS_ARG.TENANT_ID],
     callback: reg.registryUpdateApplicationURL,
