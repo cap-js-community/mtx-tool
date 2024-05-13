@@ -21,10 +21,11 @@ const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
 
 const REGISTRY_PAGE_SIZE = 200;
-const REGISTRY_JOB_POLL_FREQUENCY = 20000;
+const REGISTRY_JOB_POLL_FREQUENCY = 2000;
 const REGISTRY_REQUEST_CONCURRENCY_FALLBACK = 10;
 const TENANT_UPDATABLE_STATES = ["SUBSCRIBED", "UPDATE_FAILED"];
-const RESPONSE_STATE = Object.freeze({
+const JOB_STATE = Object.freeze({
+  STARTED: "STARTED",
   SUCCEEDED: "SUCCEEDED",
   FAILED: "FAILED",
 });
@@ -59,6 +60,7 @@ const _registrySubscriptionsPaged = async (context, tenant) => {
         ...query,
         page: page++,
       },
+      headers: { Accept: "application/json" },
       auth: { token },
     });
     const { subscriptions: pageSubscriptions, morePages } = await response.json();
@@ -126,11 +128,13 @@ const _registryJobPoll = async (context, location, { skipFirst = false } = {}) =
     const response = await request({
       url: saas_registry_url,
       pathname: location,
+      headers: { Accept: "application/json" },
       auth: { token },
     });
     const responseBody = await response.json();
     const { state } = responseBody;
-    if (!state || state === RESPONSE_STATE.SUCCEEDED || state === RESPONSE_STATE.FAILED) {
+    assert(state, "got job poll response without state\n%j", responseBody);
+    if (state !== JOB_STATE.STARTED) {
       return JSON.stringify(responseBody, null, 2);
     }
   }
@@ -138,7 +142,8 @@ const _registryJobPoll = async (context, location, { skipFirst = false } = {}) =
 
 const registryJob = async (context, [jobId]) => {
   assert(isUUID(jobId), "JOB_ID is not a uuid", jobId);
-  return _registryJobPoll(context, `/api/v2.0/jobs/${jobId}`, { skipFirst: true });
+  const result = _registryJobPoll(context, `/api/v2.0/jobs/${jobId}`, { skipFirst: true });
+  return JSON.stringify(result, null, 2);
 };
 
 const _registryCallForTenant = async (
@@ -182,7 +187,7 @@ const _registryCallForTenant = async (
 
   if (!doJobPoll) {
     // NOTE: with checkStatus being true by default, the above request only returns for successful changes
-    const state = RESPONSE_STATE.SUCCEEDED;
+    const state = JOB_STATE.SUCCEEDED;
     console.log("subscription operation with method %s for tenant %s finished with state %s", method, tenantId, state);
     return { tenantId, state };
   }
@@ -197,59 +202,47 @@ const _registryCallForTenant = async (
 const _registryCallForTenants = async (context, method, options = {}) => {
   const { subscriptions } = await _registrySubscriptionsPaged(context);
   const updatableSubscriptions = subscriptions.filter(({ state }) => TENANT_UPDATABLE_STATES.includes(state));
-  const result = await limiter(
+  return await limiter(
     regRequestConcurrency,
     updatableSubscriptions,
     async (subscription) => await _registryCallForTenant(context, subscription, method, options)
   );
-  return result;
 };
 
-const registryUpdateDependencies = async (context, [tenantId], [doSkipUnchanged]) => {
-  assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
-  const { subscriptions } = await _registrySubscriptionsPaged(context, tenantId);
-  return await _registryCallForTenant(context, subscriptions[0], "PATCH", {
-    skipUnchangedDependencies: doSkipUnchanged,
-  });
-};
-
-const registryUpdateAllDependencies = async (context, _, [doSkipUnchanged]) =>
-  await _registryCallForTenants(context, "PATCH", { skipUnchangedDependencies: doSkipUnchanged });
-
-const _registryUpdateApplicationUrl = async (context, tenantId) => {
-  const options = {
-    updateApplicationURL: true,
-    skipUpdatingDependencies: true,
-    doJobPoll: false,
-  };
+const _registryCall = async (context, method, tenantId, options) => {
+  let results;
   if (tenantId) {
     assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
     const { subscriptions } = await _registrySubscriptionsPaged(context, tenantId);
-    return [await _registryCallForTenant(context, subscriptions[0], "PATCH", options)];
+    assert(subscriptions.length >= 1, "could not find tenant %s", tenantId);
+    results = [await _registryCallForTenant(context, subscriptions[0], "PATCH", options)];
+  } else {
+    results = await _registryCallForTenants(context, "PATCH", options);
   }
-  return await _registryCallForTenants(context, "PATCH", options);
-};
-
-const registryUpdateApplicationURL = async (context, [tenantId]) => {
-  const results = await _registryUpdateApplicationUrl(context, tenantId);
   console.log(JSON.stringify(results, null, 2));
   assert(
-    results.every(({ state }) => state === RESPONSE_STATE.SUCCEEDED),
-    "registry update failed for some tenants"
+    results.every(({ state }) => state === JOB_STATE.SUCCEEDED),
+    "registry %s failed for some tenant",
+    method
   );
 };
 
-const registryOffboardSubscription = async (context, [tenantId]) => {
-  assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
-  const { subscriptions } = await _registrySubscriptionsPaged(context, tenantId);
-  return await _registryCallForTenant(context, subscriptions[0], "DELETE");
-};
+const registryUpdateDependencies = async (context, [tenantId], [doSkipUnchanged]) =>
+  await _registryCall(context, "PATCH", tenantId, { skipUnchangedDependencies: doSkipUnchanged });
 
-const registryOffboardSubscriptionSkip = async (context, [tenantId, skipApps]) => {
-  assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
-  const { subscriptions } = await _registrySubscriptionsPaged(context, tenantId);
-  return await _registryCallForTenant(context, subscriptions[0], "DELETE", { noCallbacksAppNames: skipApps });
-};
+const registryUpdateAllDependencies = async (context, _, [doSkipUnchanged]) =>
+  await _registryCall(context, "PATCH", undefined, { skipUnchangedDependencies: doSkipUnchanged });
+
+const registryUpdateApplicationURL = async (context, [tenantId]) =>
+  await _registryCall(context, "PATCH", tenantId, {
+    updateApplicationURL: true,
+    skipUpdatingDependencies: true,
+    doJobPoll: false,
+  });
+const registryOffboardSubscription = async (context, [tenantId]) => await _registryCall(context, "DELETE", tenantId);
+
+const registryOffboardSubscriptionSkip = async (context, [tenantId, skipApps]) =>
+  await _registryCall(context, "DELETE", tenantId, { noCallbacksAppNames: skipApps });
 
 module.exports = {
   registryListSubscriptions,
