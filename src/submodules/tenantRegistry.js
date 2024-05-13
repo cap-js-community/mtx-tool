@@ -181,9 +181,10 @@ const _registryCallForTenant = async (
   });
 
   if (!doJobPoll) {
-    const state = response.status === 200 ? RESPONSE_STATE.SUCCEEDED : RESPONSE_STATE.FAILED;
+    // NOTE: with checkStatus being true by default, the above request only returns for successful changes
+    const state = RESPONSE_STATE.SUCCEEDED;
     console.log("subscription operation with method %s for tenant %s finished with state %s", method, tenantId, state);
-    return JSON.stringify({ tenantId, state }, null, 2);
+    return { tenantId, state };
   }
   const [location] = response.headers.raw().location;
   const responseText = await response.text();
@@ -215,22 +216,27 @@ const registryUpdateDependencies = async (context, [tenantId], [doSkipUnchanged]
 const registryUpdateAllDependencies = async (context, _, [doSkipUnchanged]) =>
   await _registryCallForTenants(context, "PATCH", { skipUnchangedDependencies: doSkipUnchanged });
 
-const registryUpdateApplicationURL = async (context, [tenantId]) => {
+const _registryUpdateApplicationUrl = async (context, tenantId) => {
+  const options = {
+    updateApplicationURL: true,
+    skipUpdatingDependencies: true,
+    doJobPoll: false,
+  };
   if (tenantId) {
     assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
     const { subscriptions } = await _registrySubscriptionsPaged(context, tenantId);
-    return await _registryCallForTenant(context, subscriptions[0], "PATCH", {
-      updateApplicationURL: true,
-      skipUpdatingDependencies: true,
-      doJobPoll: false,
-    });
-  } else {
-    return await _registryCallForTenants(context, "PATCH", {
-      updateApplicationURL: true,
-      skipUpdatingDependencies: true,
-      doJobPoll: false,
-    });
+    return [await _registryCallForTenant(context, subscriptions[0], "PATCH", options)];
   }
+  return await _registryCallForTenants(context, "PATCH", options);
+};
+
+const registryUpdateApplicationURL = async (context, [tenantId]) => {
+  const results = await _registryUpdateApplicationUrl(context, tenantId);
+  console.log(JSON.stringify(results, null, 2));
+  assert(
+    results.every(({ state }) => state === RESPONSE_STATE.SUCCEEDED),
+    "registry update failed for some tenants"
+  );
 };
 
 const registryOffboardSubscription = async (context, [tenantId]) => {
