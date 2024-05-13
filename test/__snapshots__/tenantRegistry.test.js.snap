@@ -38,3 +38,54 @@ exports[`reg tests reg list paging 1`] = `
   ],
 ]
 `;
+
+exports[`reg tests reg update with request failed 2`] = `
+[
+  [
+    15000,
+  ],
+  [
+    15000,
+  ],
+  [
+    15000,
+  ],
+  [
+    15000,
+  ],
+]
+`;
+
+exports[`reg tests reg update with state failed 2`] = `
+[
+  [
+    15000,
+  ],
+  [
+    15000,
+  ],
+  [
+    15000,
+  ],
+  [
+    15000,
+  ],
+]
+`;
+
+exports[`reg tests reg update without failure 1`] = `
+[
+  [
+    15000,
+  ],
+  [
+    15000,
+  ],
+  [
+    15000,
+  ],
+  [
+    15000,
+  ],
+]
+`;
