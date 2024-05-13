@@ -142,7 +142,7 @@ const _registryJobPoll = async (context, location, { skipFirst = false } = {}) =
 
 const registryJob = async (context, [jobId]) => {
   assert(isUUID(jobId), "JOB_ID is not a uuid", jobId);
-  const result = _registryJobPoll(context, `/api/v2.0/jobs/${jobId}`, { skipFirst: true });
+  const result = await _registryJobPoll(context, `/api/v2.0/jobs/${jobId}`, { skipFirst: true });
   return JSON.stringify(result, null, 2);
 };
 
