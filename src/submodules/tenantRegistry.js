@@ -215,9 +215,9 @@ const _registryCall = async (context, method, tenantId, options) => {
     assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
     const { subscriptions } = await _registrySubscriptionsPaged(context, tenantId);
     assert(subscriptions.length >= 1, "could not find tenant %s", tenantId);
-    results = [await _registryCallForTenant(context, subscriptions[0], "PATCH", options)];
+    results = [await _registryCallForTenant(context, subscriptions[0], method, options)];
   } else {
-    results = await _registryCallForTenants(context, "PATCH", options);
+    results = await _registryCallForTenants(context, method, options);
   }
   assert(Array.isArray(results), "got invalid results from registry %s call with %j", method, options);
   console.log(JSON.stringify(results.length === 1 ? results[0] : results, null, 2));
