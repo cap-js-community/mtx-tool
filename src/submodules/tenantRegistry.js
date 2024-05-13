@@ -21,7 +21,7 @@ const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
 
 const REGISTRY_PAGE_SIZE = 200;
-const REGISTRY_JOB_POLL_FREQUENCY = 2000;
+const REGISTRY_JOB_POLL_FREQUENCY = 20000;
 const REGISTRY_REQUEST_CONCURRENCY_FALLBACK = 10;
 const TENANT_UPDATABLE_STATES = ["SUBSCRIBED", "UPDATE_FAILED"];
 const JOB_STATE = Object.freeze({
@@ -135,7 +135,7 @@ const _registryJobPoll = async (context, location, { skipFirst = false } = {}) =
     const { state } = responseBody;
     assert(state, "got job poll response without state\n%j", responseBody);
     if (state !== JOB_STATE.STARTED) {
-      return JSON.stringify(responseBody, null, 2);
+      return responseBody;
     }
   }
 };
@@ -187,16 +187,16 @@ const _registryCallForTenant = async (
 
   if (!doJobPoll) {
     // NOTE: with checkStatus being true by default, the above request only returns for successful changes
-    const state = JOB_STATE.SUCCEEDED;
-    console.log("subscription operation with method %s for tenant %s finished with state %s", method, tenantId, state);
-    return { tenantId, state };
+    return { tenantId, state: JOB_STATE.SUCCEEDED };
   }
   const [location] = response.headers.raw().location;
   const responseText = await response.text();
   console.log("response: %s", responseText);
   console.log("polling job %s with interval %isec", location, REGISTRY_JOB_POLL_FREQUENCY / 1000);
 
-  return _registryJobPoll(context, location);
+  const jobResult = await _registryJobPoll(context, location);
+
+  return { tenantId, jobId: jobResult.id, state: jobResult.state };
 };
 
 const _registryCallForTenants = async (context, method, options = {}) => {
