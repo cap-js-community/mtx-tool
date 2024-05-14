@@ -11,6 +11,7 @@ const {
   tryJsonParse,
   isObject,
   makeOneTime,
+  parseIntWithFallback,
 } = require("../shared/static");
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
@@ -22,9 +23,10 @@ const SERVICE_MANAGER_IDEAL_BINDING_COUNT = 1;
 const SENSITIVE_CREDENTIAL_FIELDS = ["password", "hdi_password"];
 const HDI_SHARED_SERVICE_PLAN_NAME = "hdi-shared";
 
-const hdiRequestConcurrency = process.env[ENV.HDI_CONCURRENCY]
-  ? parseInt(process.env[ENV.HDI_CONCURRENCY])
-  : SERVICE_MANAGER_REQUEST_CONCURRENCY_FALLBACK;
+const hdiRequestConcurrency = parseIntWithFallback(
+  process.env[ENV.HDI_CONCURRENCY],
+  SERVICE_MANAGER_REQUEST_CONCURRENCY_FALLBACK
+);
 
 const isValidTenantId = (input) => input && /^[0-9a-z-_/]+$/i.test(input);
 

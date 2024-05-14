@@ -14,20 +14,20 @@ const {
   limiter,
   formatTimestampsWithRelativeDays,
   isObject,
+  parseIntWithFallback,
 } = require("../shared/static");
 const { assert, assertAll } = require("../shared/error");
 const { request } = require("../shared/request");
 
 const CDS_UPGRADE_APP_INSTANCE = 0;
-const CDS_JOB_POLL_FREQUENCY = 15000;
 const CDS_REQUEST_CONCURRENCY_FALLBACK = 10;
+const CDS_JOB_POLL_FREQUENCY_FALLBACK = 15000;
 const CDS_CHANGE_TIMEOUT = 30 * 60 * 1000;
 const CDS_CHANGE_TIMEOUT_TEXT = "30min";
 
 const writeFileAsync = promisify(writeFile);
-const cdsRequestConcurrency = process.env[ENV.CDS_CONCURRENCY]
-  ? parseInt(process.env[ENV.CDS_CONCURRENCY])
-  : CDS_REQUEST_CONCURRENCY_FALLBACK;
+const cdsRequestConcurrency = parseIntWithFallback(process.env[ENV.CDS_CONCURRENCY], CDS_REQUEST_CONCURRENCY_FALLBACK);
+const cdsPollFrequency = parseIntWithFallback(process.env[ENV.CDS_FREQUENCY], CDS_JOB_POLL_FREQUENCY_FALLBACK);
 
 const _isMtxs = async (context) => {
   if (_isMtxs._result === undefined) {
@@ -187,7 +187,7 @@ const _cdsUpgradeMtxs = async (
   });
   const upgradeResponseData = await _safeMaterializeJson(upgradeResponse, "upgrade");
   const jobId = upgradeResponseData.ID;
-  console.log("started upgrade on server with jobId %s polling interval %isec", jobId, CDS_JOB_POLL_FREQUENCY / 1000);
+  console.log("started upgrade on server with jobId %s polling interval %isec", jobId, cdsPollFrequency / 1000);
   const upgradeTenantEntries = upgradeResponseData.tenants && Object.entries(upgradeResponseData.tenants);
   assert(upgradeTenantEntries, "no tenants found in response for upgrade\n%j", upgradeResponseData);
   const countLength = String(upgradeTenantEntries.length).length;
@@ -198,7 +198,7 @@ const _cdsUpgradeMtxs = async (
   let hasChangeTimeout = false;
 
   while (true) {
-    await sleep(CDS_JOB_POLL_FREQUENCY);
+    await sleep(cdsPollFrequency);
     const pollJobResponse = await request({
       url: cfRouteUrl,
       pathname: `/-/cds/jobs/pollJob(ID='${jobId}')`,
@@ -275,12 +275,12 @@ const _cdsUpgradeMtx = async (
   });
   const upgradeResponseData = await _safeMaterializeJson(upgradeResponse, "upgrade");
   const jobId = upgradeResponseData.jobID;
-  console.log("started upgrade on server with jobId %s polling interval %isec", jobId, CDS_JOB_POLL_FREQUENCY / 1000);
+  console.log("started upgrade on server with jobId %s polling interval %isec", jobId, cdsPollFrequency / 1000);
 
   let pollJobResponseData;
 
   while (true) {
-    await sleep(CDS_JOB_POLL_FREQUENCY);
+    await sleep(cdsPollFrequency);
     const pollJobResponse = await request({
       url: cfRouteUrl,
       pathname: `/mtx/v1/model/status/${jobId}`,

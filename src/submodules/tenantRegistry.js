@@ -16,12 +16,13 @@ const {
   formatTimestampsWithRelativeDays,
   resolveTenantArg,
   limiter,
+  parseIntWithFallback,
 } = require("../shared/static");
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
 
 const REGISTRY_PAGE_SIZE = 200;
-const REGISTRY_JOB_POLL_FREQUENCY = 15000;
+const REGISTRY_JOB_POLL_FREQUENCY_FALLBACK = 15000;
 const REGISTRY_REQUEST_CONCURRENCY_FALLBACK = 10;
 const TENANT_UPDATABLE_STATES = ["SUBSCRIBED", "UPDATE_FAILED"];
 const JOB_STATE = Object.freeze({
@@ -30,9 +31,11 @@ const JOB_STATE = Object.freeze({
   FAILED: "FAILED",
 });
 
-const regRequestConcurrency = process.env[ENV.REG_CONCURRENCY]
-  ? parseInt(process.env[ENV.REG_CONCURRENCY])
-  : REGISTRY_REQUEST_CONCURRENCY_FALLBACK;
+const regRequestConcurrency = parseIntWithFallback(
+  process.env[ENV.REG_CONCURRENCY],
+  REGISTRY_REQUEST_CONCURRENCY_FALLBACK
+);
+const regPollFrequency = parseIntWithFallback(process.env[ENV.REG_FREQUENCY], REGISTRY_JOB_POLL_FREQUENCY_FALLBACK);
 
 const _registrySubscriptionsPaged = async (context, tenant) => {
   const { subdomain: filterSubdomain, tenantId: filterTenantId } = resolveTenantArg(tenant);
@@ -121,7 +124,7 @@ const _registryJobPoll = async (context, location, { skipFirst = false } = {}) =
   const { saas_registry_url } = credentials;
   while (true) {
     if (!skipFirst) {
-      await sleep(REGISTRY_JOB_POLL_FREQUENCY);
+      await sleep(regPollFrequency);
       skipFirst = false;
     }
     const token = await context.getCachedUaaTokenFromCredentials(credentials);
@@ -192,7 +195,7 @@ const _registryCallForTenant = async (
   const [location] = response.headers.raw().location;
   const responseText = await response.text();
   console.log("response: %s", responseText);
-  console.log("polling job %s with interval %isec", location, REGISTRY_JOB_POLL_FREQUENCY / 1000);
+  console.log("polling job %s with interval %isec", location, regPollFrequency / 1000);
 
   const jobResult = await _registryJobPoll(context, location);
 
