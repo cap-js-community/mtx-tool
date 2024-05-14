@@ -19,7 +19,9 @@ const ENV = Object.freeze({
   SERVER_APP: "MTX_SRV_APP",
   APP_SUFFIX: "MTX_APP_SUFFIX",
   REG_CONCURRENCY: "MTX_REG_CONCURRENCY",
+  REG_FREQUENCY: "MTX_REG_FREQUENCY",
   CDS_CONCURRENCY: "MTX_CDS_CONCURRENCY",
+  CDS_FREQUENCY: "MTX_CDS_FREQUENCY",
   HDI_CONCURRENCY: "MTX_HDI_CONCURRENCY",
 });
 
@@ -369,6 +371,14 @@ const makeOneTime = (cb) => {
   };
 };
 
+const parseIntWithFallback = (input, fallback) => {
+  if (typeof input !== "string") {
+    return fallback;
+  }
+  const result = parseInt(input);
+  return isNaN(result) ? fallback : result;
+};
+
 module.exports = {
   ENV,
   isPortFree,
@@ -396,4 +406,5 @@ module.exports = {
   safeUnshift,
   escapeRegExp,
   makeOneTime,
+  parseIntWithFallback,
 };

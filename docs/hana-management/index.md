@@ -55,10 +55,10 @@ Commands for this area are:
 
 ## Environment
 
-| environment variable  | effect                                                   |
-| :-------------------- | :------------------------------------------------------- |
-| `MTX_HDI_APP`         | override configured app for `service-manager` accesses   |
-| `MTX_HDI_CONCURRENCY` | change concurrency used in service calls (default is 10) |
+| environment variable  | effect                                                    |
+| :-------------------- | :-------------------------------------------------------- |
+| `MTX_HDI_APP`         | override configured app for `service-manager` accesses    |
+| `MTX_HDI_CONCURRENCY` | change concurrency used for service calls (default is 10) |
 
 ## List and Long List
 
