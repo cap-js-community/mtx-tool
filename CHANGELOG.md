@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- order is REMOVED, CHANGED, ADDED, FIXED -->
 
+## v0.8.5 - 2024-05-15
+
+### Changed
+
+- reg: registry service calls now happen concurrently where appropriate similar to hdi and cds interactions.
+
+### Added
+
+- added environment variables to control polling frequency for interactions:
+
+  | environment variable | effect                                                                               |
+  | :------------------- | :----------------------------------------------------------------------------------- |
+  | `MTX_CDS_FREQUENCY`  | change polling frequency milliseconds for server async job calls (default is 15000)  |
+  | `MTX_REG_FREQUENCY`  | change polling frequency milliseconds for service async job calls (default is 15000) |
+
+### Fixed
+
+- reg: better error handling for registry updates
+
 ## v0.8.4 - 2024-05-01
 
 ### Fixed

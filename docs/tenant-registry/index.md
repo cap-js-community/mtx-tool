@@ -55,11 +55,11 @@ Commands for this area are:
 
 ## Environment
 
-| environment variable  | effect                                                                     |
-| :-------------------- | :------------------------------------------------------------------------- |
-| `MTX_REG_APP`         | override configured app for `saas-registry` accesses                       |
-| `MTX_REG_CONCURRENCY` | change concurrency used for service calls (default is 10)                  |
-| `MTX_REG_FREQUENCY`   | change polling frequency milliseconds for service calls (default is 15000) |
+| environment variable  | effect                                                                               |
+| :-------------------- | :----------------------------------------------------------------------------------- |
+| `MTX_REG_APP`         | override configured app for `saas-registry` accesses                                 |
+| `MTX_REG_CONCURRENCY` | change concurrency used for service calls (default is 10)                            |
+| `MTX_REG_FREQUENCY`   | change polling frequency milliseconds for service async job calls (default is 15000) |
 
 ## List and Long List
 

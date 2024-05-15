@@ -51,11 +51,11 @@ Commands for this area are:
 
 ## Environment
 
-| environment variable  | effect                                                                    |
-| :-------------------- | :------------------------------------------------------------------------ |
-| `MTX_CDS_APP`         | override configured app for server (running `@sap/cds-mtxs`) accesses     |
-| `MTX_CDS_CONCURRENCY` | change concurrency used for server calls (default is 10)                  |
-| `MTX_CDS_FREQUENCY`   | change polling frequency milliseconds for server calls (default is 15000) |
+| environment variable  | effect                                                                              |
+| :-------------------- | :---------------------------------------------------------------------------------- |
+| `MTX_CDS_APP`         | override configured app for server (running `@sap/cds-mtxs`) accesses               |
+| `MTX_CDS_CONCURRENCY` | change concurrency used for server calls (default is 10)                            |
+| `MTX_CDS_FREQUENCY`   | change polling frequency milliseconds for server async job calls (default is 15000) |
 
 ## List and Long List
 
