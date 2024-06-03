@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- order is REMOVED, CHANGED, ADDED, FIXED -->
 
+## v0.8.6 - 2024-06-03
+
+### Fixed
+
+- cds: upgrade now fails with a non-zero error code if an underlying task fails
+
 ## v0.8.5 - 2024-05-15
 
 ### Changed
@@ -227,7 +233,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- cds: mtxs cds-upgrade error did not cause a non-zero exit code
+- cds: mtxs cds-upgrade error did not cause a non-zero error code
 
 ## v0.7.5 - 2023-01-12
 
@@ -604,7 +610,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- cds: failing upgrade-tenant should cause a non-zero errorcode
+- cds: failing upgrade-tenant should cause a non-zero error code
 
 ## v0.5.18 - 2020-05-25
 
