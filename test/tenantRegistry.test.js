@@ -7,7 +7,6 @@ jest.mock("../src/shared/static", () => {
   const staticLib = jest.requireActual("../src/shared/static");
   return {
     ...staticLib,
-    // sleep: jest.fn(async () => new Promise((resolve) => setImmediate(resolve))),
     sleep: jest.fn(),
   };
 });
