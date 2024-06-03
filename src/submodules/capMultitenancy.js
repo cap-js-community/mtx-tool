@@ -25,6 +25,14 @@ const CDS_JOB_POLL_FREQUENCY_FALLBACK = 15000;
 const CDS_CHANGE_TIMEOUT = 30 * 60 * 1000;
 const CDS_CHANGE_TIMEOUT_TEXT = "30min";
 
+const JOB_STATUS = Object.freeze({
+  QUEUED: "QUEUED",
+  RUNNING: "RUNNING",
+  FAILED: "FAILED",
+  FINISHED: "FINISHED",
+});
+const TASK_STATUS = JOB_STATUS;
+
 const writeFileAsync = promisify(writeFile);
 const cdsRequestConcurrency = parseIntWithFallback(process.env[ENV.CDS_CONCURRENCY], CDS_REQUEST_CONCURRENCY_FALLBACK);
 const cdsPollFrequency = parseIntWithFallback(process.env[ENV.CDS_FREQUENCY], CDS_JOB_POLL_FREQUENCY_FALLBACK);
@@ -142,19 +150,19 @@ const _getTaskSummary = (tasks) =>
   tasks.reduce(
     (accumulator, { status }) => {
       switch (status) {
-        case "QUEUED": {
+        case TASK_STATUS.QUEUED: {
           accumulator[0]++;
           break;
         }
-        case "RUNNING": {
+        case TASK_STATUS.RUNNING: {
           accumulator[1]++;
           break;
         }
-        case "FAILED": {
+        case TASK_STATUS.FAILED: {
           accumulator[2]++;
           break;
         }
-        case "FINISHED": {
+        case TASK_STATUS.FINISHED: {
           accumulator[3]++;
           break;
         }
@@ -228,7 +236,7 @@ const _cdsUpgradeMtxs = async (
       lastTimeOfChange = currentTime;
     }
 
-    if (status !== "RUNNING") {
+    if (status !== JOB_STATUS.RUNNING) {
       break;
     }
   }
@@ -243,7 +251,7 @@ const _cdsUpgradeMtxs = async (
   const table = [["tenantId", "status", "message"]].concat(
     upgradeTenantEntries.map(([tenantId, { ID: taskId }]) => {
       const { status, error } = taskMap[taskId];
-      hasError |= !status || error;
+      hasError ||= !status || error;
       return [tenantId, status, error || ""];
     })
   );
@@ -292,7 +300,7 @@ const _cdsUpgradeMtx = async (
     assert(status, "no status retrieved for jobId %s", jobId);
     console.log("job %s is %s", jobId, status);
 
-    if (status !== "RUNNING") {
+    if (status !== JOB_STATUS.RUNNING) {
       break;
     }
   }
