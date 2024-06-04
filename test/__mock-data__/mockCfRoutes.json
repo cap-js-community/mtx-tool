@@ -1,0 +1,40 @@
+{
+  "pagination": {
+    "total_results": 1,
+    "total_pages": 1,
+    "first": {
+      "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/routes?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&page=1&per_page=50"
+    },
+    "last": {
+      "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/routes?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&page=1&per_page=50"
+    },
+    "next": null,
+    "previous": null
+  },
+  "resources": [
+    {
+      "guid": "819b3465-aa66-4ade-b29e-35530951b66e",
+      "created_at": "2020-04-22T16:43:09Z",
+      "updated_at": "2020-04-22T16:43:09Z",
+      "protocol": "http",
+      "host": "org-space-uaa-app",
+      "path": "",
+      "port": null,
+      "url": "org-space-uaa-app.cfapps.sap.hana.ondemand.com",
+      "destinations": [
+        {
+          "guid": "50be1a90-823b-498f-a7e4-11111d6987b0",
+          "app": {
+            "guid": "f84d681e-7123-442f-b8ea-2c747c11e145",
+            "process": {
+              "type": "web"
+            }
+          },
+          "weight": null,
+          "port": 8080,
+          "protocol": "http1"
+        }
+      ]
+    }
+  ]
+}
