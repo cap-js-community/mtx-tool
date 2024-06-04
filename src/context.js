@@ -363,7 +363,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
 
     let cfService = null;
     if (Array.isArray(requireServices)) {
-      const cfEnvServicesFlat = [].concat(...Object.values(cfEnvServices));
+      const cfEnvServicesFlat = cfEnvServices ? [].concat(...Object.values(cfEnvServices)) : [];
       const matchingServices = requireServices
         .map(({ label: aLabel, plan: aPlan }) =>
           cfEnvServicesFlat.find(({ label: bLabel, plan: bPlan }) => aLabel === bLabel && aPlan === bPlan)
