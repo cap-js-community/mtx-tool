@@ -34,6 +34,10 @@ const mockRuntimeConfig = {
   hdiAppName: "hdi-app",
   srvAppName: "srv-app",
 };
+
+jest.spyOn(console, "log").mockImplementation();
+jest.spyOn(console, "error").mockImplementation();
+
 describe("context tests", () => {
   afterEach(() => {
     jest.clearAllMocks();
