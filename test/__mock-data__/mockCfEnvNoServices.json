@@ -4,9 +4,7 @@
     "VCAP_APPLICATION": {
       "application_id": "ddfe7427-afaf-4198-b1d1-7bebfd824a2c",
       "application_name": "uaa-app",
-      "application_uris": [
-        "org-space-uaa-app.cfapps.sap.hana.ondemand.com"
-      ],
+      "application_uris": ["org-space-uaa-app.cfapps.sap.hana.ondemand.com"],
       "cf_api": "https://api.cf.sap.hana.ondemand.com",
       "limits": {
         "fds": 32768
@@ -16,9 +14,7 @@
       "organization_name": "cf-org",
       "space_id": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
       "space_name": "cf-space",
-      "uris": [
-        "org-space-uaa-app.cfapps.sap.hana.ondemand.com"
-      ],
+      "uris": ["org-space-uaa-app.cfapps.sap.hana.ondemand.com"],
       "users": null
     }
   }

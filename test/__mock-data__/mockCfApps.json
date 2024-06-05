@@ -21,9 +21,7 @@
       "lifecycle": {
         "type": "buildpack",
         "data": {
-          "buildpacks": [
-            "https://github.com/cloudfoundry/nodejs-buildpack.git#v1.8.24"
-          ],
+          "buildpacks": ["https://github.com/cloudfoundry/nodejs-buildpack.git#v1.8.24"],
           "stack": "cflinuxfs4"
         }
       },
