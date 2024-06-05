@@ -363,6 +363,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
 
     let cfService = null;
     if (Array.isArray(requireServices)) {
+      assert(cfEnvServices, "no vcap service information in environment, check cf user permissions");
       const cfEnvServicesFlat = [].concat(...Object.values(cfEnvServices));
       const matchingServices = requireServices
         .map(({ label: aLabel, plan: aPlan }) =>
