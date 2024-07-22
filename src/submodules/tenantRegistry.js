@@ -221,7 +221,7 @@ const _registryCall = async (context, method, tenantId, options) => {
     const processableSubscriptions = subscriptions.filter(({ state, changedOn }) => {
       let result = failedSubscriptions ? state === JOB_STATE.FAILED : TENANT_UPDATABLE_STATES.includes(state);
       if (staleSubscriptions) {
-        result &&= dateDiffInDays(changedOn, new Date()) > 0;
+        result &&= dateDiffInDays(new Date(changedOn), new Date()) > 0;
       }
       return result;
     });
