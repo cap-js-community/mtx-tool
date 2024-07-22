@@ -85,7 +85,7 @@ commands:
           ...    [TENANT]                               filter list for tenant id or subdomain
           ...    --time                                 list includes timestamps
           ...    --skip-unchanged                       skip update for unchanged dependencies
-          ...    --only-stale                           only update subscriptions that have not been changed today
+          ...    --only-stale                           only update subscriptions that have not changed today
           ...    --only-failed                          only update subscriptions with FAILED state
 
    === cap multitenancy (cds) ===
