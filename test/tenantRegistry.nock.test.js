@@ -193,7 +193,9 @@ describe("reg tests", () => {
   test("reg update tenant all", async () => {
     const { nockDone } = await nockBack("reg-update-tenant-all.json", { afterRecord: anonymizeNock });
 
-    expect(await reg.registryUpdateAllDependencies(await freshContext(), undefined, [false])).toBeUndefined();
+    expect(
+      await reg.registryUpdateAllDependencies(await freshContext(), undefined, [false, false, false])
+    ).toBeUndefined();
     expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
       response: Job for update subscription of application: afc-dev and tenant: 5ecc7413-2b7e-414a-9496-ad4a61f6cccf, was created
@@ -307,7 +309,7 @@ describe("reg tests", () => {
   test("reg update tenant application url all", async () => {
     const { nockDone } = await nockBack("reg-update-tenant-appurl-all.json", { afterRecord: anonymizeNock });
 
-    expect(await reg.registryUpdateApplicationURL(await freshContext(), [])).toBeUndefined();
+    expect(await reg.registryUpdateApplicationURL(await freshContext(), [], [])).toBeUndefined();
     expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
       [
@@ -374,7 +376,7 @@ describe("reg tests", () => {
   test("reg update tenant application url with tenant", async () => {
     const { nockDone } = await nockBack("req-update-tenant-appurl.json", { afterRecord: anonymizeNock });
 
-    expect(await reg.registryUpdateApplicationURL(await freshContext(), [testTenantId])).toBeUndefined();
+    expect(await reg.registryUpdateApplicationURL(await freshContext(), [testTenantId], [])).toBeUndefined();
     expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
       {
