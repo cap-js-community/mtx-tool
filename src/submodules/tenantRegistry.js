@@ -210,7 +210,7 @@ const _registryCallForTenant = async (
 
 const _registryCall = async (context, method, tenantId, options) => {
   let results;
-  const { failedSubscriptions, staleSubscriptions } = options ?? {};
+  const { staleSubscriptions, failedSubscriptions } = options ?? {};
   if (tenantId) {
     assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
     const { subscriptions } = await _registrySubscriptionsPaged(context, tenantId);
@@ -246,8 +246,8 @@ const registryUpdateDependencies = async (context, [tenantId], [doSkipUnchanged]
 const registryUpdateAllDependencies = async (context, _, [doSkipUnchanged, doOnlyStale, doOnlyFailed]) =>
   await _registryCall(context, "PATCH", undefined, {
     skipUnchangedDependencies: doSkipUnchanged,
-    failedSubscriptions: doOnlyFailed,
     staleSubscriptions: doOnlyStale,
+    failedSubscriptions: doOnlyFailed,
   });
 
 const registryUpdateApplicationURL = async (context, [tenantId]) =>
