@@ -213,13 +213,14 @@ const APP_CLI_OPTIONS = Object.freeze({
   REGISTRY_LIST: {
     commandVariants: ["regl", "--registry-list"],
     optionalPassArgs: [PASS_ARG.TENANT],
-    optionalFlagArgs: [FLAG_ARG.TIMESTAMPS],
+    optionalFlagArgs: [FLAG_ARG.TIMESTAMPS, FLAG_ARG.ONLY_STALE, FLAG_ARG.ONLY_FAILED],
     callback: reg.registryListSubscriptions,
     readonly: true,
   },
   REGISTRY_LONG_LIST: {
     commandVariants: ["regll", "--registry-long-list"],
     optionalPassArgs: [PASS_ARG.TENANT],
+    optionalFlagArgs: [FLAG_ARG.ONLY_STALE, FLAG_ARG.ONLY_FAILED],
     callback: reg.registryLongListSubscriptions,
     readonly: true,
   },

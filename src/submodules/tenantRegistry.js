@@ -25,12 +25,16 @@ const { request } = require("../shared/request");
 const REGISTRY_PAGE_SIZE = 200;
 const REGISTRY_JOB_POLL_FREQUENCY_FALLBACK = 15000;
 const REGISTRY_REQUEST_CONCURRENCY_FALLBACK = 10;
-const TENANT_UPDATABLE_STATES = ["SUBSCRIBED", "UPDATE_FAILED"];
 const JOB_STATE = Object.freeze({
   STARTED: "STARTED",
   SUCCEEDED: "SUCCEEDED",
   FAILED: "FAILED",
 });
+const SUBSCRIPTION_STATE = Object.freeze({
+  SUBSCRIBED: "SUBSCRIBED",
+  UPDATE_FAILED: "UPDATE_FAILED",
+});
+const UPDATABLE_STATES = [SUBSCRIPTION_STATE.SUBSCRIBED, SUBSCRIPTION_STATE.UPDATE_FAILED];
 
 const regRequestConcurrency = parseIntWithFallback(
   process.env[ENV.REG_CONCURRENCY],
@@ -38,7 +42,7 @@ const regRequestConcurrency = parseIntWithFallback(
 );
 const regPollFrequency = parseIntWithFallback(process.env[ENV.REG_FREQUENCY], REGISTRY_JOB_POLL_FREQUENCY_FALLBACK);
 
-const _registrySubscriptionsPaged = async (context, tenant) => {
+const _registrySubscriptionsPaged = async (context, { tenant, onlyFailed, onlyStale, onlyUpdatable } = {}) => {
   const { subdomain: filterSubdomain, tenantId: filterTenantId } = resolveTenantArg(tenant);
   filterSubdomain && assert(isDashedWord(filterSubdomain), `argument "${filterSubdomain}" is not a valid subdomain`);
 
@@ -74,15 +78,32 @@ const _registrySubscriptionsPaged = async (context, tenant) => {
     }
   }
 
-  if (filterSubdomain) {
-    subscriptions = subscriptions.filter(({ subdomain }) => subdomain === filterSubdomain);
-  }
+  subscriptions = subscriptions.filter(({ state, subdomain, changedOn }) => {
+    let result = true;
+    if (filterSubdomain) {
+      result &&= subdomain === filterSubdomain;
+    }
+    if (onlyFailed) {
+      result &&= state === SUBSCRIPTION_STATE.UPDATE_FAILED;
+    }
+    if (onlyUpdatable) {
+      result &&= UPDATABLE_STATES.includes(state);
+    }
+    if (onlyStale) {
+      result &&= dateDiffInDays(new Date(changedOn), new Date()) > 0;
+    }
+    return result;
+  });
 
   return { subscriptions };
 };
 
-const registryListSubscriptions = async (context, [tenant], [doTimestamps]) => {
-  const { subscriptions } = await _registrySubscriptionsPaged(context, tenant);
+const registryListSubscriptions = async (context, [tenant], [doTimestamps, doOnlyStale, doOnlyFailed]) => {
+  const { subscriptions } = await _registrySubscriptionsPaged(context, {
+    tenant,
+    onlyStale: doOnlyStale,
+    onlyFailed: doOnlyFailed,
+  });
   const headerRow = ["consumerTenantId", "globalAccountId", "subdomain", "plan", "state", "url"];
   doTimestamps && headerRow.push("created_on", "updated_on");
   const nowDate = new Date();
@@ -104,8 +125,8 @@ const registryListSubscriptions = async (context, [tenant], [doTimestamps]) => {
   return tableList(table, { withRowNumber: !tenant });
 };
 
-const registryLongListSubscriptions = async (context, [tenant]) => {
-  const data = await _registrySubscriptionsPaged(context, tenant);
+const registryLongListSubscriptions = async (context, [tenant], [doOnlyStale, doOnlyFailed]) => {
+  const data = await _registrySubscriptionsPaged(context, { tenant, onlyStale: doOnlyStale, onlyFailed: doOnlyFailed });
   return JSON.stringify(data, null, 2);
 };
 
@@ -210,24 +231,23 @@ const _registryCallForTenant = async (
 
 const _registryCall = async (context, method, tenantId, options) => {
   let results;
-  const { staleSubscriptions, failedSubscriptions } = options ?? {};
   if (tenantId) {
     assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
-    const { subscriptions } = await _registrySubscriptionsPaged(context, tenantId);
+    const { subscriptions } = await _registrySubscriptionsPaged(context, {
+      tenant: tenantId,
+    });
     assert(subscriptions.length >= 1, "could not find tenant %s", tenantId);
     results = [await _registryCallForTenant(context, subscriptions[0], method, options)];
   } else {
-    const { subscriptions } = await _registrySubscriptionsPaged(context);
-    const processableSubscriptions = subscriptions.filter(({ state, changedOn }) => {
-      let result = failedSubscriptions ? state === JOB_STATE.FAILED : TENANT_UPDATABLE_STATES.includes(state);
-      if (staleSubscriptions) {
-        result &&= dateDiffInDays(new Date(changedOn), new Date()) > 0;
-      }
-      return result;
+    const { onlyStaleSubscriptions, onlyFailedSubscriptions } = options ?? {};
+    const { subscriptions } = await _registrySubscriptionsPaged(context, {
+      onlyFailed: onlyFailedSubscriptions,
+      onlyStale: onlyStaleSubscriptions,
+      onlyUpdatable: true,
     });
     results = await limiter(
       regRequestConcurrency,
-      processableSubscriptions,
+      subscriptions,
       async (subscription) => await _registryCallForTenant(context, subscription, method, options)
     );
   }
@@ -246,8 +266,8 @@ const registryUpdateDependencies = async (context, [tenantId], [doSkipUnchanged]
 const registryUpdateAllDependencies = async (context, _, [doSkipUnchanged, doOnlyStale, doOnlyFailed]) =>
   await _registryCall(context, "PATCH", undefined, {
     skipUnchangedDependencies: doSkipUnchanged,
-    staleSubscriptions: doOnlyStale,
-    failedSubscriptions: doOnlyFailed,
+    onlyStaleSubscriptions: doOnlyStale,
+    onlyFailedSubscriptions: doOnlyFailed,
   });
 
 const registryUpdateApplicationURL = async (context, [tenantId], [doOnlyStale, doOnlyFailed]) =>
@@ -255,8 +275,8 @@ const registryUpdateApplicationURL = async (context, [tenantId], [doOnlyStale, d
     updateApplicationURL: true,
     skipUpdatingDependencies: true,
     doJobPoll: false,
-    staleSubscriptions: doOnlyStale,
-    failedSubscriptions: doOnlyFailed,
+    onlyStaleSubscriptions: doOnlyStale,
+    onlyFailedSubscriptions: doOnlyFailed,
   });
 const registryOffboardSubscription = async (context, [tenantId]) => await _registryCall(context, "DELETE", tenantId);
 
