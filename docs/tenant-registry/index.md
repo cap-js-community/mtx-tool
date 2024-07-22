@@ -48,6 +48,8 @@ Commands for this area are:
           ...    [TENANT]                               filter list for tenant id or subdomain
           ...    --time                                 list includes timestamps
           ...    --skip-unchanged                       skip update for unchanged dependencies
+          ...    --only-stale                           only update subscriptions that have not changed today
+          ...    --only-failed                          only update subscriptions with FAILED state
 
 ~  are read-only commands
 *  are potentially _dangerous_ commands
