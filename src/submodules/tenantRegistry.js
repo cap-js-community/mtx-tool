@@ -250,11 +250,13 @@ const registryUpdateAllDependencies = async (context, _, [doSkipUnchanged, doOnl
     failedSubscriptions: doOnlyFailed,
   });
 
-const registryUpdateApplicationURL = async (context, [tenantId]) =>
+const registryUpdateApplicationURL = async (context, [tenantId], [doOnlyStale, doOnlyFailed]) =>
   await _registryCall(context, "PATCH", tenantId, {
     updateApplicationURL: true,
     skipUpdatingDependencies: true,
     doJobPoll: false,
+    staleSubscriptions: doOnlyStale,
+    failedSubscriptions: doOnlyFailed,
   });
 const registryOffboardSubscription = async (context, [tenantId]) => await _registryCall(context, "DELETE", tenantId);
 

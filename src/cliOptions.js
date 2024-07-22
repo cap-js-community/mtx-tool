@@ -85,6 +85,8 @@ commands:
           ...    [TENANT]                               filter list for tenant id or subdomain
           ...    --time                                 list includes timestamps
           ...    --skip-unchanged                       skip update for unchanged dependencies
+          ...    --only-stale                           only update subscriptions that have not been changed today
+          ...    --only-failed                          only update subscriptions with FAILED state
 
    === cap multitenancy (cds) ===
 ~  cdsl   --cds-list [TENANT]                        list all cds-mtx tenant names
@@ -246,6 +248,7 @@ const APP_CLI_OPTIONS = Object.freeze({
   REGISTRY_UPDATE_APP_URL: {
     commandVariants: ["--registry-update-url"],
     optionalPassArgs: [PASS_ARG.TENANT_ID],
+    optionalFlagArgs: [FLAG_ARG.ONLY_STALE, FLAG_ARG.ONLY_FAILED],
     callback: reg.registryUpdateApplicationURL,
   },
   REGISTRY_OFFBOARD_SUBSCRIPTION: {
