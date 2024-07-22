@@ -78,22 +78,13 @@ const _registrySubscriptionsPaged = async (context, { tenant, onlyFailed, onlySt
     }
   }
 
-  subscriptions = subscriptions.filter(({ state, subdomain, changedOn }) => {
-    let result = true;
-    if (filterSubdomain) {
-      result &&= subdomain === filterSubdomain;
-    }
-    if (onlyFailed) {
-      result &&= state === SUBSCRIPTION_STATE.UPDATE_FAILED;
-    }
-    if (onlyUpdatable) {
-      result &&= UPDATABLE_STATES.includes(state);
-    }
-    if (onlyStale) {
-      result &&= dateDiffInDays(new Date(changedOn), new Date()) > 0;
-    }
-    return result;
-  });
+  subscriptions = subscriptions.filter(
+    ({ state, subdomain, changedOn }) =>
+      (!filterSubdomain || subdomain === filterSubdomain) &&
+      (!onlyFailed || state === SUBSCRIPTION_STATE.UPDATE_FAILED) &&
+      (!onlyUpdatable || UPDATABLE_STATES.includes(state)) &&
+      (!onlyStale || dateDiffInDays(new Date(changedOn), new Date()) > 0)
+  );
 
   return { subscriptions };
 };
