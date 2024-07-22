@@ -15,7 +15,7 @@ const mockRequest = require("../src/shared/request");
 const mockShared = require("../src/shared/static");
 
 const reg = require("../src/submodules/tenantRegistry");
-const { anonymizeListTimestamps, outputFromLoggerPartitionFetch } = require("./util/static");
+const { outputFromLoggerPartitionFetch } = require("./util/static");
 
 let loggerSpy = {
   info: jest.spyOn(console, "log").mockImplementation(),
