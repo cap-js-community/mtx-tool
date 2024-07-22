@@ -180,13 +180,18 @@ const _registryCallForTenant = async (
       ? `/saas-manager/v1/${plan}/subscriptions/${subscriptionId}`
       : `/saas-manager/v1/${plan}/tenants/${tenantId}/subscriptions`;
   const token = await context.getCachedUaaTokenFromCredentials(credentials);
-  const response = await request({
-    method,
-    url: saas_registry_url,
-    pathname,
-    ...(Object.keys(query).length !== 0 && { query }),
-    auth: { token },
-  });
+  let response;
+  try {
+    response = await request({
+      method,
+      url: saas_registry_url,
+      pathname,
+      ...(Object.keys(query).length !== 0 && { query }),
+      auth: { token },
+    });
+  } catch (err) {
+    return { tenantId, state: JOB_STATE.FAILED, message: err.message };
+  }
 
   if (!doJobPoll) {
     // NOTE: with checkStatus being true by default, the above request only returns for successful changes
