@@ -93,7 +93,7 @@ describe("reg tests", () => {
       GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?appName=afc-dev&size=200&page=1 200 OK (88ms)"
     `);
     loggerSpy.info.mockClear();
-    expect(await reg.registryLongListSubscriptions(await freshContext(), [])).toMatchSnapshot();
+    expect(await reg.registryLongListSubscriptions(await freshContext(), [], [])).toMatchSnapshot();
     expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
 
@@ -129,7 +129,7 @@ describe("reg tests", () => {
       GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?appName=afc-dev&tenantId=5ecc7413-2b7e-414a-9496-ad4a61f6cccf&size=200&page=1 200 OK (88ms)"
     `);
     loggerSpy.info.mockClear();
-    const result = await reg.registryLongListSubscriptions(await freshContext(), [testTenantId]);
+    const result = await reg.registryLongListSubscriptions(await freshContext(), [testTenantId], []);
     expect(JSON.parse(result).subscriptions).toHaveLength(1);
     expect(result).toMatchSnapshot();
     expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
