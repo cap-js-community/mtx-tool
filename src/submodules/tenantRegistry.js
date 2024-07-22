@@ -13,6 +13,7 @@ const {
   isDashedWord,
   sleep,
   tableList,
+  dateDiffInDays,
   formatTimestampsWithRelativeDays,
   resolveTenantArg,
   limiter,
@@ -209,6 +210,7 @@ const _registryCallForTenant = async (
 
 const _registryCall = async (context, method, tenantId, options) => {
   let results;
+  const { failedSubscriptions, staleSubscriptions } = options ?? {};
   if (tenantId) {
     assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
     const { subscriptions } = await _registrySubscriptionsPaged(context, tenantId);
@@ -216,10 +218,16 @@ const _registryCall = async (context, method, tenantId, options) => {
     results = [await _registryCallForTenant(context, subscriptions[0], method, options)];
   } else {
     const { subscriptions } = await _registrySubscriptionsPaged(context);
-    const updatableSubscriptions = subscriptions.filter(({ state }) => TENANT_UPDATABLE_STATES.includes(state));
+    const processableSubscriptions = subscriptions.filter(({ state, changedOn }) => {
+      let result = failedSubscriptions ? state === JOB_STATE.FAILED : TENANT_UPDATABLE_STATES.includes(state);
+      if (staleSubscriptions) {
+        result &&= dateDiffInDays(changedOn, new Date()) > 0;
+      }
+      return result;
+    });
     results = await limiter(
       regRequestConcurrency,
-      updatableSubscriptions,
+      processableSubscriptions,
       async (subscription) => await _registryCallForTenant(context, subscription, method, options)
     );
   }

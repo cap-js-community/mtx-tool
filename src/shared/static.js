@@ -209,7 +209,7 @@ const nextFreePort = async (port) => {
   }
 };
 
-const _dateDiffInDays = (from, to) => {
+const dateDiffInDays = (from, to) => {
   const fromDate = Date.UTC(from.getFullYear(), from.getMonth(), from.getDate());
   const toDate = Date.UTC(to.getFullYear(), to.getMonth(), to.getDate());
   return Math.floor((toDate - fromDate) / 1000 / 60 / 60 / 24);
@@ -220,7 +220,7 @@ const formatTimestampWithRelativeDays = (input, nowDate = new Date()) => {
     return "";
   }
   const inputDate = new Date(input);
-  const daysAgo = _dateDiffInDays(inputDate, nowDate);
+  const daysAgo = dateDiffInDays(inputDate, nowDate);
   const outputAbsolute = inputDate.toISOString().replace(/\.[0-9]{3}/, "");
   return `${outputAbsolute} (${daysAgo} ${daysAgo === 1 ? "day" : "days"} ago)`;
 };
@@ -396,6 +396,7 @@ module.exports = {
   compareFor,
   partition,
   spawnAsync,
+  dateDiffInDays,
   formatTimestampWithRelativeDays,
   formatTimestampsWithRelativeDays,
   resolveTenantArg,
