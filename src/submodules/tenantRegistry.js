@@ -243,8 +243,12 @@ const _registryCall = async (context, method, tenantId, options) => {
 const registryUpdateDependencies = async (context, [tenantId], [doSkipUnchanged]) =>
   await _registryCall(context, "PATCH", tenantId, { skipUnchangedDependencies: doSkipUnchanged });
 
-const registryUpdateAllDependencies = async (context, _, [doSkipUnchanged]) =>
-  await _registryCall(context, "PATCH", undefined, { skipUnchangedDependencies: doSkipUnchanged });
+const registryUpdateAllDependencies = async (context, _, [doSkipUnchanged, doOnlyStale, doOnlyFailed]) =>
+  await _registryCall(context, "PATCH", undefined, {
+    skipUnchangedDependencies: doSkipUnchanged,
+    failedSubscriptions: doOnlyFailed,
+    staleSubscriptions: doOnlyStale,
+  });
 
 const registryUpdateApplicationURL = async (context, [tenantId]) =>
   await _registryCall(context, "PATCH", tenantId, {

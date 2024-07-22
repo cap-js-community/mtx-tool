@@ -42,6 +42,8 @@ const FLAG_ARG = Object.freeze({
   USER_INFO: "--userinfo",
   AUTO_UNDEPLOY: "--auto-undeploy",
   SKIP_UNCHANGED: "--skip-unchanged",
+  ONLY_STALE: "--only-stale",
+  ONLY_FAILED: "--only-failed",
 });
 
 const FORCE_FLAG = "--force";
@@ -238,7 +240,7 @@ const APP_CLI_OPTIONS = Object.freeze({
   },
   REGISTRY_UPDATE_ALL_DEPENDENCIES: {
     commandVariants: ["--registry-update-all"],
-    optionalFlagArgs: [FLAG_ARG.SKIP_UNCHANGED],
+    optionalFlagArgs: [FLAG_ARG.SKIP_UNCHANGED, FLAG_ARG.ONLY_STALE, FLAG_ARG.ONLY_FAILED],
     callback: reg.registryUpdateAllDependencies,
   },
   REGISTRY_UPDATE_APP_URL: {
