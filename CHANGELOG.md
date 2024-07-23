@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- order is REMOVED, CHANGED, ADDED, FIXED -->
 
+## v0.8.7 - 2024-07-23
+
+### Added
+
+- reg: new `--only-stale` and `--only-failed` filter options for most registry commands.
+  stale here means that the last changed on day is older than the invocation day.
+
+### Fixed
+
+- reg: `--registry-update-all` is more resilient for failing calls
+
+- better error message for users with access restrictions due to new btp space supporter role
+
 ## v0.8.6 - 2024-06-03
 
 ### Fixed
