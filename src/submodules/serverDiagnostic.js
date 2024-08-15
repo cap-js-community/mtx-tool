@@ -26,10 +26,12 @@ const _serverDebug = async (context, { appName, appInstance = 0 } = {}) => {
   const { cfBuildpack, cfAppGuid, cfRouteUrl, cfSsh } = appName
     ? await context.getAppNameInfoCached(appName)
     : await context.getSrvInfo();
-  const cfBuildpackInfoKey = Object.keys(BUILDPACK_INFO).find(
-    (cfBuildpackName) =>
-      cfBuildpack.includes(cfBuildpackName) || cfBuildpack.includes(cfBuildpackName.replace(/_/g, "-"))
-  );
+  const cfBuildpackInfoKey =
+    cfBuildpack &&
+    Object.keys(BUILDPACK_INFO).find(
+      (cfBuildpackName) =>
+        cfBuildpack.includes(cfBuildpackName) || cfBuildpack.includes(cfBuildpackName.replace(/_/g, "-"))
+    );
   const { runtime, debugPort: inferredPort } = (cfBuildpackInfoKey && BUILDPACK_INFO[cfBuildpackInfoKey]) || {};
   const localPort = inferredPort || 8000;
 
