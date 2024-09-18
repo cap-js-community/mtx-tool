@@ -1,8 +1,13 @@
 source "https://rubygems.org"
 
+# https://pages.github.com/versions/
+
+# https://github.com/ruby/ruby
+ruby "~> 3.3.0"
+
 # NOTE: this fixes the relevant jekyll version
 # https://github.com/github/pages-gem/releases
-gem "github-pages", "~> 231", group: :jekyll_plugins
+gem "github-pages", "~> 232", group: :jekyll_plugins
 
 # https://github.com/just-the-docs/just-the-docs/releases
-gem "just-the-docs", "~> 0.8.1"
+gem "just-the-docs", "~> 0.10.0"

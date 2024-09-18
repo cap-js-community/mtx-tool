@@ -24,9 +24,8 @@ description: >-
   Multitenancy and Extensibility Tool
 
 # Build settings
-baseurl: /mtx-tool
 markdown: kramdown
-remote_theme: just-the-docs/just-the-docs@v0.4.0
+theme: just-the-docs
 
 # Exclude from processing.
 # The following items will not be processed, by default.
@@ -38,16 +37,11 @@ remote_theme: just-the-docs/just-the-docs@v0.4.0
 #
 exclude:
   - README.md
+  - vendor/
   - .sass-cache/
   - .jekyll-cache/
-  - gemfiles/
   - Gemfile
   - Gemfile.lock
-  - node_modules/
-  - vendor/bundle/
-  - vendor/cache/
-  - vendor/gems/
-  - vendor/ruby/
 
 callouts:
   info:
