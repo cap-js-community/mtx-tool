@@ -1,10 +1,11 @@
 # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
 # This workflow will publish any new release to the npmjs registry
 
-name: Publish
+name: Publish Release
 
 # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#release
 on:
+  workflow_dispatch:
   release:
     types: [released]
 
@@ -17,6 +18,7 @@ jobs:
         with:
           node-version: 18
           cache: npm
+          # NOTE: the explicit registry-url is currently needed for the auth token to work
           registry-url: https://registry.npmjs.org/
       - run: npm ci --package-lock
       - run: npm test

@@ -3,11 +3,11 @@
 version: 2
 updates:
   - package-ecosystem: npm
-    directory: "/"
+    directory: /
     schedule:
       interval: daily
       time: "11:00"
-      timezone: "Europe/Berlin"
+      timezone: Europe/Berlin
     allow:
       - dependency-type: production
     ignore:
@@ -16,17 +16,18 @@ updates:
       - dependency-name: node-fetch
         versions: ["3.x"]
 
-  - package-ecosystem: github-actions
-    directory: "/"
+  - package-ecosystem: bundler
+    directory: /docs
     schedule:
       interval: daily
       time: "11:00"
-      timezone: "Europe/Berlin"
+      timezone: Europe/Berlin
+    allow:
+      - dependency-type: direct
 
-  # NOTE: excluding directories does not work
-  # https://github.com/dependabot/dependabot-core/issues/4364
-  # the bundler in /docs is only used locally for validating documentation changes
-  #  - package-ecosystem: bundler
-  #    directory: "/docs"
-  #    ignore:
-  #      - dependency-name: "*"
+  - package-ecosystem: github-actions
+    directory: /.github
+    schedule:
+      interval: daily
+      time: "11:00"
+      timezone: Europe/Berlin
