@@ -1,13 +1,12 @@
 # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
-# This workflow will protect the main branch by testing and linting new PRs and commits
+# This workflow will protect the main branch by testing and linting new PRs
 
 name: Main PR
 
 # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request
 on:
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   test:
@@ -15,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16, 18, 20]
+        node-version: [18, 20]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     name: test - node.js ${{ matrix.node-version }}
@@ -24,7 +23,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
+          cache: npm
       - run: npm ci --package-lock
       - run: npm test
 
@@ -35,6 +34,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: "npm"
+          cache: npm
       - run: npm ci --package-lock
       - run: npm run lint:ci
