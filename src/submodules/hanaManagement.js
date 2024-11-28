@@ -555,7 +555,7 @@ ${_formatOutput(bindings)}
 `;
 };
 
-const hdiLongList = async (context, [filterTenantId], [doReveal]) =>
+const hdiLongList = async (context, [filterTenantId], [doJsonOutput, doReveal]) =>
   (await _isServiceManager(context))
     ? await _hdiLongListServiceManager(context, filterTenantId, doReveal)
     : _formatOutput(await _hdiContainersInstanceManager(context, { filterTenantId, doReveal }));

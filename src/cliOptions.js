@@ -39,6 +39,7 @@ const FLAG_ARG = Object.freeze({
   DECODE: "--decode",
   REVEAL: "--reveal",
   TIMESTAMPS: "--time",
+  JSON: "--json",
   USER_INFO: "--userinfo",
   AUTO_UNDEPLOY: "--auto-undeploy",
   SKIP_UNCHANGED: "--skip-unchanged",
@@ -220,7 +221,7 @@ const APP_CLI_OPTIONS = Object.freeze({
   REGISTRY_LONG_LIST: {
     commandVariants: ["regll", "--registry-long-list"],
     optionalPassArgs: [PASS_ARG.TENANT],
-    optionalFlagArgs: [FLAG_ARG.ONLY_STALE, FLAG_ARG.ONLY_FAILED],
+    optionalFlagArgs: [FLAG_ARG.JSON, FLAG_ARG.ONLY_STALE, FLAG_ARG.ONLY_FAILED],
     callback: reg.registryLongListSubscriptions,
     readonly: true,
   },
@@ -275,7 +276,7 @@ const APP_CLI_OPTIONS = Object.freeze({
   CDS_LONG_LIST: {
     commandVariants: ["cdsll", "--cds-long-list"],
     optionalPassArgs: [PASS_ARG.TENANT],
-
+    optionalFlagArgs: [FLAG_ARG.JSON],
     callback: cds.cdsLongList,
     readonly: true,
   },
@@ -316,7 +317,7 @@ const APP_CLI_OPTIONS = Object.freeze({
   HDI_LONG_LIST: {
     commandVariants: ["hdill", "--hdi-long-list"],
     optionalPassArgs: [PASS_ARG.TENANT_ID],
-    optionalFlagArgs: [FLAG_ARG.REVEAL],
+    optionalFlagArgs: [FLAG_ARG.JSON, FLAG_ARG.REVEAL],
     callback: hdi.hdiLongList,
     useCache: false,
     readonly: true,

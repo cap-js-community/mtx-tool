@@ -116,7 +116,7 @@ const registryListSubscriptions = async (context, [tenant], [doTimestamps, doOnl
   return tableList(table, { withRowNumber: !tenant });
 };
 
-const registryLongListSubscriptions = async (context, [tenant], [doOnlyStale, doOnlyFailed]) => {
+const registryLongListSubscriptions = async (context, [tenant], [doJsonOutput, doOnlyStale, doOnlyFailed]) => {
   const data = await _registrySubscriptionsPaged(context, { tenant, onlyStale: doOnlyStale, onlyFailed: doOnlyFailed });
   return JSON.stringify(data, null, 2);
 };

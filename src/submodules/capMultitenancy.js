@@ -105,7 +105,7 @@ const cdsList = async (context, [tenant], [doTimestamps]) => {
   return tableList(table, { withRowNumber: !tenant });
 };
 
-const cdsLongList = async (context, [tenant]) => {
+const cdsLongList = async (context, [tenant], [doJsonOutput]) => {
   const data = await _cdsTenants(context, tenant);
   return JSON.stringify(data, null, 2);
 };
