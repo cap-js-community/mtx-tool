@@ -12,14 +12,6 @@ const LEVEL = Object.freeze({
   TRACE: "TRACE", // SILLY: "SILLY"
 });
 
-const LEVEL_NAME = Object.freeze({
-  [LEVEL.ERROR]: "error",
-  [LEVEL.WARNING]: "warn", // NOTE: cf-nodejs-logging-support started using warn instead of warning, and now we cannot change it
-  [LEVEL.INFO]: "info",
-  [LEVEL.DEBUG]: "debug",
-  [LEVEL.TRACE]: "trace",
-});
-
 const LEVEL_NUMBER = Object.freeze({
   [LEVEL.OFF]: 0,
   [LEVEL.ERROR]: 100,
@@ -34,9 +26,6 @@ const FIELD = Object.freeze({
   WRITTEN_TIME: "written_ts",
   MESSAGE: "msg",
 });
-
-const MILLIS_IN_NANOS_NUMBER = 1000000;
-const MILLIS_IN_NANOS_BIGINT = BigInt(MILLIS_IN_NANOS_NUMBER);
 
 /**
  * Logger is an implementation of a logger that simultaneously produces natural human-readable logs locally and, in
@@ -75,32 +64,10 @@ class Logger {
       }
     }
 
-    // NOTE: the start time of Date's milliseconds is the epoch and the start time for hrtime is an arbitrary time
-    //   close to the process startup, so it may look odd to add them here. however, we can use the sub-millisecond
-    //   offset of hrtime to keep logs with the same Date-millisecond in chronological order.
-    const now = new Date();
-    const nowNanos = now.getTime() * MILLIS_IN_NANOS_NUMBER + Number(process.hrtime.bigint() % MILLIS_IN_NANOS_BIGINT);
     const invocationData = {
-      [FIELD.LEVEL]: LEVEL_NAME[level],
-      [FIELD.WRITTEN_TIME]: nowNanos,
       [FIELD.MESSAGE]: message ?? "",
     };
     return Object.assign({}, ...this.__dataList, invocationData);
-  }
-
-  static _readableOutput(data) {
-    const writtenTime = new Date(Math.floor(data[FIELD.WRITTEN_TIME] / MILLIS_IN_NANOS_NUMBER));
-    const timestamp = util.format(
-      "%s:%s:%s.%s",
-      ("0" + writtenTime.getHours()).slice(-2),
-      ("0" + writtenTime.getMinutes()).slice(-2),
-      ("0" + writtenTime.getSeconds()).slice(-2),
-      ("00" + writtenTime.getMilliseconds()).slice(-3)
-    );
-    const level = data[FIELD.LEVEL].toUpperCase();
-    const message = data[FIELD.MESSAGE];
-    const parts = [timestamp, level, message];
-    return parts.join(" | ");
   }
 
   _log(level, args) {
@@ -109,7 +76,7 @@ class Logger {
     }
     const streamOut = level === LEVEL.ERROR ? process.stderr : process.stdout;
     const data = this._logData(level, args);
-    streamOut.write(Logger._readableOutput(data) + "\n");
+    streamOut.write(data[FIELD.MESSAGE] + "\n");
   }
 
   error(...args) {

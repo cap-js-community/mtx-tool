@@ -23,6 +23,7 @@ const { request } = require("./shared/request");
 const { getUaaTokenFromCredentials: sharedUaaTokenFromCredentials } = require("./shared/oauth");
 const { LazyCache, ExpiringLazyCache } = require("./shared/cache");
 const { SETTING_TYPE, SETTING } = require("./setting");
+const { Logger } = require("./shared/logger");
 
 const APP_SUFFIXES = safeUnshift(["", "-{UUID}", "-blue", "-green"], process.env[ENV.APP_SUFFIX]);
 const APP_SUFFIXES_READONLY = APP_SUFFIXES.concat(["-live"]);
@@ -47,6 +48,8 @@ const FILENAME = Object.freeze({
 
 const CACHE_GAP = 43200000; // 12 hours in milliseconds
 const UAA_TOKEN_CACHE_EXPIRY_GAP = 60000; // 1 minute
+
+const logger = Logger.getInstance();
 
 const _run = async (command, ...args) => {
   return spawnAsync(command, args, {
@@ -123,7 +126,7 @@ const _readCfConfig = () => {
   ) {
     return fail("no cf org/space targeted");
   }
-  console.log(`targeting cf api ${Target} / org "${OrganizationFields.Name}" / space "${SpaceFields.Name}"`);
+  logger.info(`targeting cf api ${Target} / org "${OrganizationFields.Name}" / space "${SpaceFields.Name}"`);
   return cfConfig;
 };
 
@@ -152,7 +155,7 @@ const _readRuntimeConfig = (filepath, { logged = false, checkConfig = true } = {
     return fail(`failed reading runtime configuration, run setup`);
   }
   if (logged && filepath) {
-    console.log("using runtime config", filepath);
+    logger.info("using runtime config", filepath);
   }
 
   return rawRuntimeConfig
@@ -166,7 +169,7 @@ const _readRuntimeConfig = (filepath, { logged = false, checkConfig = true } = {
 const _writeRuntimeConfig = async (runtimeConfig, filepath) => {
   try {
     writeFileSync(filepath, JSON.stringify(runtimeConfig, null, 2) + "\n");
-    console.log("wrote runtime config");
+    logger.info("wrote runtime config");
   } catch (err) {
     fail("caught error while writing runtime config:", err.message);
   }
@@ -186,7 +189,7 @@ const _readRawAppPersistedCache = (location, filepath, orgGuid, spaceGuid, appNa
   if (appCache.version !== version) {
     return null;
   }
-  console.log(`using ${location.toLowerCase()} cache for "${appName}"`);
+  logger.info(`using ${location.toLowerCase()} cache for "${appName}"`);
   return appCache;
 };
 
@@ -207,7 +210,7 @@ const _setup = async (location) => {
   const runtimeConfig = _readRuntimeConfig(filepath, { logged: true, checkConfig: false });
 
   const newRuntimeConfig = {};
-  console.log("hit enter to skip a question. re-using the same app for multiple questions is possible.");
+  logger.info("hit enter to skip a question. re-using the same app for multiple questions is possible.");
   try {
     const settings = Object.values(SETTING);
     for (let i = 0; i < settings.length; i++) {
@@ -251,7 +254,7 @@ const setupCleanCache = async () => {
     }
     try {
       unlinkSync(filepath);
-      console.log(`removed ${location.toLowerCase()} cache`, filepath);
+      logger.info(`removed ${location.toLowerCase()} cache`, filepath);
     } catch (err) {
       fail(`could not remove ${filepath}`);
     }
@@ -274,7 +277,7 @@ const _cfSsh = async (appName, { localPort, remotePort, remoteHostname, appInsta
   if (command !== undefined && command !== null) {
     args.push("--command", command);
   }
-  console.log("running", args.join(" "));
+  logger.info("running", args.join(" "));
   try {
     return await _run(...args);
   } catch (err) {
@@ -415,7 +418,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
       const envAppName = (setting.envVariable && process.env[setting.envVariable]) || null;
       if (envAppName && configAppName !== envAppName) {
         if (configAppName) {
-          console.log(
+          logger.info(
             'overriding configured %s "%s" with "%s" from environment variable %s',
             setting.name,
             configAppName,
@@ -423,7 +426,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
             setting.envVariable
           );
         } else {
-          console.log('using %s "%s" from environment variable %s', setting.name, envAppName, setting.envVariable);
+          logger.info('using %s "%s" from environment variable %s', setting.name, envAppName, setting.envVariable);
         }
       }
       const appName = envAppName || configAppName;
@@ -474,7 +477,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
         `no cf app found for name "${appName}", tried candidates "${appNameCandidates.map(({ label }) => label)}"`
       );
       if (appName !== cfApp.name) {
-        console.log('using app "%s" based on suffix "%s"', cfApp.name, cfAppSuffix);
+        logger.info('using app "%s" based on suffix "%s"', cfApp.name, cfAppSuffix);
       }
       return cfApp;
     });

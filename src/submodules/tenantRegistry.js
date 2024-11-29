@@ -21,6 +21,7 @@ const {
 } = require("../shared/static");
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
+const { Logger } = require("../shared/logger");
 
 const REGISTRY_PAGE_SIZE = 200;
 const REGISTRY_JOB_POLL_FREQUENCY_FALLBACK = 15000;
@@ -35,6 +36,8 @@ const SUBSCRIPTION_STATE = Object.freeze({
   UPDATE_FAILED: "UPDATE_FAILED",
 });
 const UPDATABLE_STATES = [SUBSCRIPTION_STATE.SUBSCRIBED, SUBSCRIPTION_STATE.UPDATE_FAILED];
+
+const logger = Logger.getInstance();
 
 const regRequestConcurrency = parseIntWithFallback(
   process.env[ENV.REG_CONCURRENCY],
@@ -212,8 +215,8 @@ const _registryCallForTenant = async (
   }
   const [location] = response.headers.raw().location;
   const responseText = await response.text();
-  console.log("response: %s", responseText);
-  console.log("polling job %s with interval %isec", location, regPollFrequency / 1000);
+  logger.info("response: %s", responseText);
+  logger.info("polling job %s with interval %isec", location, regPollFrequency / 1000);
 
   const jobResult = await _registryJobPoll(context, location);
 
@@ -243,7 +246,7 @@ const _registryCall = async (context, method, tenantId, options) => {
     );
   }
   assert(Array.isArray(results), "got invalid results from registry %s call with %j", method, options);
-  console.log(JSON.stringify(results.length === 1 ? results[0] : results, null, 2));
+  logger.info(JSON.stringify(results.length === 1 ? results[0] : results, null, 2));
   assert(
     results.every(({ state }) => state === JOB_STATE.SUCCEEDED),
     "registry %s failed for some tenant",

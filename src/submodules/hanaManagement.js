@@ -15,6 +15,7 @@ const {
 } = require("../shared/static");
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
+const { Logger } = require("../shared/logger");
 
 const TUNNEL_LOCAL_PORT = 30015;
 const HIDDEN_PASSWORD_TEXT = "*** show with --reveal ***";
@@ -22,6 +23,8 @@ const SERVICE_MANAGER_REQUEST_CONCURRENCY_FALLBACK = 10;
 const SERVICE_MANAGER_IDEAL_BINDING_COUNT = 1;
 const SENSITIVE_CREDENTIAL_FIELDS = ["password", "hdi_password"];
 const HDI_SHARED_SERVICE_PLAN_NAME = "hdi-shared";
+
+const logger = Logger.getInstance();
 
 const hdiRequestConcurrency = parseIntWithFallback(
   process.env[ENV.HDI_CONCURRENCY],
@@ -280,7 +283,7 @@ const _hdiRebindAllServiceManager = async (context, parameters) => {
       },
     }) => tenant_id
   );
-  console.log("rebinding tenants %s", tenantIds.join(", "));
+  logger.info("rebinding tenants %s", tenantIds.join(", "));
 
   await limiter(
     hdiRequestConcurrency,
@@ -311,7 +314,7 @@ const _hdiRepairBindingsServiceManager = async (context, { instances, bindings, 
       for (let i = 0; i < missingBindingCount; i++) {
         changes.push(async () => {
           await _createBindingServiceManagerFromInstance(sm_url, token, instance, { parameters });
-          console.log(
+          logger.info(
             "created %i missing binding%s for tenant %s",
             missingBindingCount,
             missingBindingCount === 1 ? "" : "s",
@@ -324,7 +327,7 @@ const _hdiRepairBindingsServiceManager = async (context, { instances, bindings, 
       for (const { id } of ambivalentBindings) {
         changes.push(async () => {
           await _deleteBindingServiceManager(sm_url, token, id);
-          console.log(
+          logger.info(
             "deleted %i ambivalent binding%s for tenant %s",
             ambivalentBindings.length,
             ambivalentBindings.length === 1 ? "" : "s",
@@ -336,7 +339,7 @@ const _hdiRepairBindingsServiceManager = async (context, { instances, bindings, 
   }
 
   await limiter(hdiRequestConcurrency, changes, async (fn) => await fn());
-  changes.length === 0 && console.log("found exactly one binding for %i instances, all is well", instances.length);
+  changes.length === 0 && logger.info("found exactly one binding for %i instances, all is well", instances.length);
 };
 
 const _hdiRebindTenantInstanceManager = async (context, tenantId) => {
@@ -364,7 +367,7 @@ const _nextFreeSidPort = async () => {
 };
 
 const _hdiTunnelHanaCloudWarning = () => {
-  console.warn(
+  logger.warning(
     "warning: detected port 443, which is used by HANA Cloud. SSH port forwarding, which is required for tunneling, will not work with HANA Cloud."
   );
 };
@@ -390,7 +393,7 @@ const _hdiTunnel = async (context, filterTenantId, doReveal = false) => {
 
   const localPort = await _nextFreeSidPort();
   if (localPort !== TUNNEL_LOCAL_PORT) {
-    console.warn("warning: using local port %i, because %i was not free", localPort, TUNNEL_LOCAL_PORT);
+    logger.warning("warning: using local port %i, because %i was not free", localPort, TUNNEL_LOCAL_PORT);
   }
   assert(localPort !== null, "could not find free sid port 3xx15");
 
@@ -423,16 +426,16 @@ const _hdiTunnel = async (context, filterTenantId, doReveal = false) => {
     ];
 
     if (credentials.length > 1) {
-      console.log();
-      console.log("binding #%i", credentialIndex + 1);
+      logger.info();
+      logger.info("binding #%i", credentialIndex + 1);
     }
-    console.log();
-    console.log("runtime");
-    console.log(tableList(runtimeTable, { sortCol: null, noHeader: true, withRowNumber: false }));
-    console.log();
-    console.log("designtime");
-    console.log(tableList(designtimeTable, { sortCol: null, noHeader: true, withRowNumber: false }));
-    console.log();
+    logger.info();
+    logger.info("runtime");
+    logger.info(tableList(runtimeTable, { sortCol: null, noHeader: true, withRowNumber: false }));
+    logger.info();
+    logger.info("designtime");
+    logger.info(tableList(designtimeTable, { sortCol: null, noHeader: true, withRowNumber: false }));
+    logger.info();
   }
 
   if (port === "443") {
@@ -728,16 +731,16 @@ const hdiEnableNative = async (context, [tenantId]) => {
   );
 
   if (alreadyMigratedTenants.length) {
-    console.log("skipping %i already enabled tenants", alreadyMigratedTenants.length);
+    logger.info("skipping %i already enabled tenants", alreadyMigratedTenants.length);
   }
   if (migrationInstances.length && migrationTenants.length) {
-    console.log("enabling %i tenants %s", migrationTenants.length, migrationTenants.join(", "));
+    logger.info("enabling %i tenants %s", migrationTenants.length, migrationTenants.join(", "));
   } else {
     return;
   }
 
   // delete all bindings related to migration instances
-  console.log("deleting %i bindings to protect enablement", migrationBindings.length);
+  logger.info("deleting %i bindings to protect enablement", migrationBindings.length);
   await limiter(
     hdiRequestConcurrency,
     migrationBindings,

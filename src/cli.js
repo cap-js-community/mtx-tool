@@ -5,9 +5,12 @@ const { sleep, partition, question } = require("./shared/static");
 const { assert, fail, ApplicationError } = require("./shared/error");
 const { newContext } = require("./context");
 const { FORCE_FLAG, PASS_ARG_META, USAGE, GENERIC_CLI_OPTIONS, APP_CLI_OPTIONS } = require("./cliOptions");
+const { Logger } = require("./shared/logger");
+
+const logger = Logger.getInstance();
 
 const _dangerGuard = async () => {
-  console.log('this is a dangerous operation, wait for 15sec and then enter "yes" if you are sure.');
+  logger.info('this is a dangerous operation, wait for 15sec and then enter "yes" if you are sure.');
   await sleep(15000);
   const answer = await question("do you want to proceed?");
   assert(answer === "yes", "failed danger guard check");
@@ -70,15 +73,15 @@ const checkOption = async (cliOption, args) => {
     flagValues = optionalFlagArgs.map((flag) => flagArgs.includes(flag));
   }
   const maskedPassArgs = passArgs.map((arg, index) => (PASS_ARG_META[allPassArgs[index]]?.sensitive ? "*****" : arg));
-  !silent && console.log("running", command, ...maskedPassArgs, ...flagArgs);
+  !silent && logger.info("running", command, ...maskedPassArgs, ...flagArgs);
   const context = passContext ? await newContext({ usePersistedCache: useCache, isReadonlyCommand: readonly }) : null;
   danger && !flagArgs.includes(FORCE_FLAG) && (await _dangerGuard());
   const result = context ? await callback(context, passArgs, flagValues) : await callback(passArgs, flagValues);
 
   if (typeof result === "string") {
-    console.log(result);
+    logger.info(result);
   } else if (Array.isArray(result)) {
-    console.log(...result);
+    logger.info(...result);
   }
   return true;
 };
@@ -88,7 +91,7 @@ const cli = async (args) => {
     const [firstArg] = args;
 
     if (!firstArg) {
-      console.log(USAGE);
+      logger.info(USAGE);
       return;
     }
 
@@ -107,7 +110,7 @@ const cli = async (args) => {
       throw err;
     }
     if (err.message) {
-      console.error("error: " + err.message);
+      logger.error("error: " + err.message);
     }
     process.exit(-1);
   }
