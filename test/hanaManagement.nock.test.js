@@ -33,14 +33,14 @@ jest.mock("../src/shared/static", () =>
     ? jest.requireActual("../src/shared/static")
     : require("./__mocks/sharedNockPlayback/static")
 );
+const { Logger: MockLogger } = require("../src/shared/logger");
+const mockLogger = MockLogger.getInstance();
+jest.mock("../src/shared/logger", () => require("./__mocks/shared/logger"));
+
 process.env.NOCK_MODE === NOCK_MODE.RECORD && jest.setTimeout(240000);
 
 const testTenantId = "5ecc7413-2b7e-414a-9496-ad4a61f6cccf";
 
-let loggerSpy = {
-  info: jest.spyOn(console, "log").mockImplementation(),
-  error: jest.spyOn(console, "error").mockImplementation(),
-};
 const freshContext = async () => await newContext({ usePersistedCache: false, isReadonlyCommand: false });
 
 describe("hdi tests", () => {
@@ -69,14 +69,14 @@ describe("hdi tests", () => {
       10  dde70ec5-983d-4848-b50c-fb2cdac7d359  88270385-1de5-4d40-8ff9-544fcea38df7  service-manager-items-7-credentials-host:443   service-manager-items-7-credentials-schema   true   2024-02-23T15:35:27Z (x days ago)  2024-02-23T15:35:37Z (x days ago)  
       11  t0                                    6e96ba0f-d345-43ef-a5be-b7d0de85d58b  service-manager-items-5-credentials-host:443   service-manager-items-5-credentials-schema   true   2023-01-30T20:19:09Z (x days ago)  2024-02-07T11:36:53Z (x days ago)  "
     `);
-    expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
+    expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
 
       GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_plans?fieldQuery=name%20eq%20'hdi-shared' 200 OK (88ms)
       GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances?fieldQuery=service_plan_id%20eq%20'1b702f36-bd66-4fad-b4d8-75cf0a0b8347' 200 OK (88ms)
       GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings?labelQuery=service_plan_id%20eq%20'1b702f36-bd66-4fad-b4d8-75cf0a0b8347' 200 OK (88ms)"
     `);
-    loggerSpy.info.mockClear();
+    mockLogger.info.mockClear();
     expect(await hdi.hdiList(await freshContext(), [], [false])).toMatchInlineSnapshot(`
       "#   tenant_id                             db_tenant_id                          host                                           schema                                       ready
       1   00000000-0000-4000-8000-000000000001  6a7dee0c-14a4-4374-9999-82d8b24162ab  service-manager-items-10-credentials-host:443  service-manager-items-10-credentials-schema  true 
@@ -91,15 +91,15 @@ describe("hdi tests", () => {
       10  dde70ec5-983d-4848-b50c-fb2cdac7d359  88270385-1de5-4d40-8ff9-544fcea38df7  service-manager-items-7-credentials-host:443   service-manager-items-7-credentials-schema   true 
       11  t0                                    6e96ba0f-d345-43ef-a5be-b7d0de85d58b  service-manager-items-5-credentials-host:443   service-manager-items-5-credentials-schema   true "
     `);
-    expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
+    expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
 
       GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances?fieldQuery=service_plan_id%20eq%20'1b702f36-bd66-4fad-b4d8-75cf0a0b8347' 200 OK (88ms)
       GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings?labelQuery=service_plan_id%20eq%20'1b702f36-bd66-4fad-b4d8-75cf0a0b8347' 200 OK (88ms)"
     `);
-    loggerSpy.info.mockClear();
-    expect(await hdi.hdiLongList(await freshContext(), [], [true])).toMatchSnapshot();
-    expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
+    mockLogger.info.mockClear();
+    expect(await hdi.hdiLongList(await freshContext(), [], [false, true])).toMatchSnapshot();
+    expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
 
       GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances?fieldQuery=service_plan_id%20eq%20'1b702f36-bd66-4fad-b4d8-75cf0a0b8347' 200 OK (88ms)
@@ -107,7 +107,7 @@ describe("hdi tests", () => {
     `);
 
     nockDone();
-    expect(loggerSpy.error.mock.calls).toHaveLength(0);
+    expect(mockLogger.error.mock.calls).toHaveLength(0);
   });
 
   test("hdi list and longlist filtered", async () => {
@@ -118,26 +118,26 @@ describe("hdi tests", () => {
       "tenant_id                             db_tenant_id                          host                                          schema                                      ready  created_on  updated_on
       5ecc7413-2b7e-414a-9496-ad4a61f6cccf  cd0dd852-4045-4bff-82b5-909d0948c6fb  service-manager-items-0-credentials-host:443  service-manager-items-0-credentials-schema  true   2022-04-26T18:05:44Z (x days ago)  2024-02-07T11:36:53Z (x days ago)  "
     `);
-    expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
+    expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
 
       GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances?fieldQuery=service_plan_id%20eq%20'1b702f36-bd66-4fad-b4d8-75cf0a0b8347'&labelQuery=tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)
       GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings?labelQuery=service_plan_id%20eq%20'1b702f36-bd66-4fad-b4d8-75cf0a0b8347'%20and%20tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)"
     `);
-    loggerSpy.info.mockClear();
+    mockLogger.info.mockClear();
     expect(await hdi.hdiList(await freshContext(), [testTenantId], [false])).toMatchInlineSnapshot(`
       "tenant_id                             db_tenant_id                          host                                          schema                                      ready
       5ecc7413-2b7e-414a-9496-ad4a61f6cccf  cd0dd852-4045-4bff-82b5-909d0948c6fb  service-manager-items-0-credentials-host:443  service-manager-items-0-credentials-schema  true "
     `);
-    expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
+    expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
 
       GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances?fieldQuery=service_plan_id%20eq%20'1b702f36-bd66-4fad-b4d8-75cf0a0b8347'&labelQuery=tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)
       GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings?labelQuery=service_plan_id%20eq%20'1b702f36-bd66-4fad-b4d8-75cf0a0b8347'%20and%20tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)"
     `);
-    loggerSpy.info.mockClear();
-    expect(await hdi.hdiLongList(await freshContext(), [testTenantId], [true])).toMatchSnapshot();
-    expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
+    mockLogger.info.mockClear();
+    expect(await hdi.hdiLongList(await freshContext(), [testTenantId], [false, true])).toMatchSnapshot();
+    expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
 
       GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances?fieldQuery=service_plan_id%20eq%20'1b702f36-bd66-4fad-b4d8-75cf0a0b8347'&labelQuery=tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)
@@ -145,6 +145,6 @@ describe("hdi tests", () => {
     `);
 
     nockDone();
-    expect(loggerSpy.error.mock.calls).toHaveLength(0);
+    expect(mockLogger.error.mock.calls).toHaveLength(0);
   });
 });
