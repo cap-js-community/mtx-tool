@@ -4,14 +4,7 @@
 const { sleep, partition, question, isObject } = require("./shared/static");
 const { assert, fail, ApplicationError } = require("./shared/error");
 const { newContext } = require("./context");
-const {
-  FORCE_FLAG,
-  JSON_OUTPUT_FLAG,
-  PASS_ARG_META,
-  USAGE,
-  GENERIC_CLI_OPTIONS,
-  APP_CLI_OPTIONS,
-} = require("./cliOptions");
+const { PASS_ARG_META, FLAG_ARG, USAGE, GENERIC_CLI_OPTIONS, APP_CLI_OPTIONS } = require("./cliOptions");
 const { LEVEL, Logger } = require("./shared/logger");
 
 const logger = Logger.getInstance();
@@ -74,8 +67,8 @@ const checkOption = async (cliOption, args) => {
     });
     flagValues = optionalFlagArgs.map((flag) => flagArgs.includes(flag));
   }
-  const doForce = flagArgs.includes(FORCE_FLAG);
-  const doJsonOutput = flagArgs.includes(JSON_OUTPUT_FLAG);
+  const doForce = flagArgs.includes(FLAG_ARG.FORCE);
+  const doJsonOutput = flagArgs.includes(FLAG_ARG.JSON_OUTPUT);
   const maskedPassArgs = passArgs.map((arg, index) => (PASS_ARG_META[allPassArgs[index]]?.sensitive ? "*****" : arg));
 
   doJsonOutput && logger.setMaxLevel(LEVEL.ERROR);

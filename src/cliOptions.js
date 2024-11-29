@@ -48,9 +48,6 @@ const FLAG_ARG = Object.freeze({
   ONLY_FAILED: "--only-failed",
 });
 
-const FORCE_FLAG = FLAG_ARG.FORCE;
-const JSON_OUTPUT_FLAG = FLAG_ARG.JSON_OUTPUT;
-
 const USAGE = `usage: ${NAME} [command]
 
 commands:
@@ -405,8 +402,7 @@ const APP_CLI_OPTIONS = Object.freeze({
 
 module.exports = {
   PASS_ARG_META,
-  FORCE_FLAG,
-  JSON_OUTPUT_FLAG,
+  FLAG_ARG,
   USAGE,
   GENERIC_CLI_OPTIONS,
   APP_CLI_OPTIONS,
