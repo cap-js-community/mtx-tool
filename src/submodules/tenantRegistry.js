@@ -119,9 +119,8 @@ const registryListSubscriptions = async (context, [tenant], [doTimestamps, doOnl
   return tableList(table, { withRowNumber: !tenant });
 };
 
-const registryLongListSubscriptions = async (context, [tenant], [doJsonOutput, doOnlyStale, doOnlyFailed]) => {
-  const data = await _registrySubscriptionsPaged(context, { tenant, onlyStale: doOnlyStale, onlyFailed: doOnlyFailed });
-  return JSON.stringify(data, null, 2);
+const registryLongListSubscriptions = async (context, [tenant], [doOnlyStale, doOnlyFailed]) => {
+  return await _registrySubscriptionsPaged(context, { tenant, onlyStale: doOnlyStale, onlyFailed: doOnlyFailed });
 };
 
 const registryServiceConfig = async (context) => {
@@ -130,7 +129,7 @@ const registryServiceConfig = async (context) => {
       credentials: { appUrls },
     },
   } = await context.getRegInfo();
-  return JSON.stringify(JSON.parse(appUrls), null, 2);
+  return JSON.parse(appUrls);
 };
 
 const _registryJobPoll = async (context, location, { skipFirst = false } = {}) => {
@@ -161,8 +160,7 @@ const _registryJobPoll = async (context, location, { skipFirst = false } = {}) =
 
 const registryJob = async (context, [jobId]) => {
   assert(isUUID(jobId), "JOB_ID is not a uuid", jobId);
-  const result = await _registryJobPoll(context, `/api/v2.0/jobs/${jobId}`, { skipFirst: true });
-  return JSON.stringify(result, null, 2);
+  return await _registryJobPoll(context, `/api/v2.0/jobs/${jobId}`, { skipFirst: true });
 };
 
 const _registryCallForTenant = async (

@@ -20,7 +20,7 @@ const serverInfo = async (context) => {
     pathname: "/info",
     auth: { token },
   });
-  return JSON.stringify(await response.json(), null, 2);
+  return await response.json();
 };
 
 const logger = Logger.getInstance();
