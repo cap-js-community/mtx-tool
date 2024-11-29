@@ -36,4 +36,4 @@ jobs:
           node-version: 18
           cache: npm
       - run: npm ci --package-lock
-      - run: npm run lint:ci
+      - run: npm run lint
