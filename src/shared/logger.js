@@ -38,6 +38,10 @@ class Logger {
     this.__maxLevelNumber = LEVEL_NUMBER[maxLevel];
   }
 
+  setMaxLevel(maxLevel) {
+    this.__maxLevelNumber = LEVEL_NUMBER[maxLevel];
+  }
+
   /**
    * @returns {Logger}
    */

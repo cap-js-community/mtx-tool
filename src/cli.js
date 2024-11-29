@@ -4,8 +4,15 @@
 const { sleep, partition, question } = require("./shared/static");
 const { assert, fail, ApplicationError } = require("./shared/error");
 const { newContext } = require("./context");
-const { FORCE_FLAG, PASS_ARG_META, USAGE, GENERIC_CLI_OPTIONS, APP_CLI_OPTIONS } = require("./cliOptions");
-const { Logger } = require("./shared/logger");
+const {
+  FORCE_FLAG,
+  JSON_OUTPUT_FLAG,
+  PASS_ARG_META,
+  USAGE,
+  GENERIC_CLI_OPTIONS,
+  APP_CLI_OPTIONS,
+} = require("./cliOptions");
+const { LEVEL, Logger } = require("./shared/logger");
 
 const logger = Logger.getInstance();
 
@@ -63,21 +70,21 @@ const checkOption = async (cliOption, args) => {
   );
   if (optionalFlagArgs) {
     flagArgs.forEach((flagArg) => {
-      assert(
-        flagArg === FORCE_FLAG || optionalFlagArgs.includes(flagArg),
-        'flag argument "%s" not valid for command "%s"',
-        flagArg,
-        command
-      );
+      assert(optionalFlagArgs.includes(flagArg), 'flag argument "%s" not valid for command "%s"', flagArg, command);
     });
     flagValues = optionalFlagArgs.map((flag) => flagArgs.includes(flag));
   }
+  const doForce = flagArgs.includes(FORCE_FLAG);
+  const doJsonOutput = flagArgs.includes(JSON_OUTPUT_FLAG);
   const maskedPassArgs = passArgs.map((arg, index) => (PASS_ARG_META[allPassArgs[index]]?.sensitive ? "*****" : arg));
+
+  doJsonOutput && logger.setMaxLevel(LEVEL.ERROR);
   !silent && logger.info("running", command, ...maskedPassArgs, ...flagArgs);
   const context = passContext ? await newContext({ usePersistedCache: useCache, isReadonlyCommand: readonly }) : null;
-  danger && !flagArgs.includes(FORCE_FLAG) && (await _dangerGuard());
+  danger && !doForce && (await _dangerGuard());
   const result = context ? await callback(context, passArgs, flagValues) : await callback(passArgs, flagValues);
 
+  doJsonOutput && logger.setMaxLevel(LEVEL.INFO);
   if (typeof result === "string") {
     logger.info(result);
   } else if (Array.isArray(result)) {
