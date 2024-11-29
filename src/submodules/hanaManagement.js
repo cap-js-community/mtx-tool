@@ -549,7 +549,7 @@ const _hdiLongListServiceManager = async (context, { filterTenantId, doJsonOutpu
   ]);
 
   if (doJsonOutput) {
-    return JSON.stringify({ instances, bindings }, null, 2);
+    return { instances, bindings };
   }
   return `
 === container instance${instances.length === 1 ? "" : "s"} ===

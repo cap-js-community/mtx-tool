@@ -87,8 +87,6 @@ const checkOption = async (cliOption, args) => {
   doJsonOutput && logger.setMaxLevel(LEVEL.INFO);
   if (typeof result === "string") {
     logger.info(result);
-  } else if (Array.isArray(result)) {
-    logger.info(...result);
   } else if (isObject(result)) {
     logger.info(JSON.stringify(result, null, 2));
   }
