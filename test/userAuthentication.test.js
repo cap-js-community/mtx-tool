@@ -1,5 +1,6 @@
 "use strict";
 
+jest.mock("../src/shared/logger", () => require("./__mocks/shared/logger"));
 const fetchMock = require("node-fetch");
 jest.mock("node-fetch");
 const sharedStaticMock = require("../src/shared/static");
@@ -63,9 +64,6 @@ const contextMock = {
       .then(({ access_token }) => access_token);
   }),
 };
-
-jest.spyOn(console, "log").mockImplementation();
-jest.spyOn(console, "error").mockImplementation();
 
 describe("uaa tests", () => {
   afterEach(() => {

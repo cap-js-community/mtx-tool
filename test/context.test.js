@@ -2,6 +2,9 @@
 
 const { newContext } = require("../src/context");
 
+jest.mock("../src/shared/logger", () => require("./__mocks/shared/logger"));
+
+const mockStatic = require("../src/shared/static");
 jest.mock("../src/shared/static", () => {
   const { ENV, safeUnshift, escapeRegExp } = jest.requireActual("../src/shared/static");
   return {
@@ -13,14 +16,13 @@ jest.mock("../src/shared/static", () => {
     spawnAsync: jest.fn(),
   };
 });
-const mockStatic = require("../src/shared/static");
 
+const { request: mockRequest } = require("../src/shared/request");
 jest.mock("../src/shared/request", () => {
   return {
     request: jest.fn(),
   };
 });
-const { request: mockRequest } = require("../src/shared/request");
 
 const mockCfConfig = require("./__mock-data__/mockCfConfig.json");
 const mockCfEnvNoServices = require("./__mock-data__/mockCfEnvNoServices.json");
@@ -34,9 +36,6 @@ const mockRuntimeConfig = {
   hdiAppName: "hdi-app",
   srvAppName: "srv-app",
 };
-
-jest.spyOn(console, "log").mockImplementation();
-jest.spyOn(console, "error").mockImplementation();
 
 describe("context tests", () => {
   afterEach(() => {
