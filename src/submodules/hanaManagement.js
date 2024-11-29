@@ -539,11 +539,15 @@ const hdiList = async (context, [tenantId], [doTimestamps]) =>
     ? hdiListServiceManager(context, tenantId, doTimestamps)
     : hdiListInstanceManager(context, tenantId, doTimestamps);
 
-const _hdiLongListServiceManager = async (context, filterTenantId, doReveal) => {
+const _hdiLongListServiceManager = async (context, { filterTenantId, doJsonOutput, doReveal } = {}) => {
   const [instances, bindings] = await Promise.all([
     _hdiInstancesServiceManager(context, { filterTenantId, doEnsureTenantLabel: false }),
     _hdiBindingsServiceManager(context, { filterTenantId, doReveal, doEnsureTenantLabel: false }),
   ]);
+
+  if (doJsonOutput) {
+    return JSON.stringify({ instances, bindings }, null, 2);
+  }
   return `
 === container instance${instances.length === 1 ? "" : "s"} ===
 
@@ -557,7 +561,7 @@ ${_formatOutput(bindings)}
 
 const hdiLongList = async (context, [filterTenantId], [doJsonOutput, doReveal]) =>
   (await _isServiceManager(context))
-    ? await _hdiLongListServiceManager(context, filterTenantId, doReveal)
+    ? await _hdiLongListServiceManager(context, { filterTenantId, doJsonOutput, doReveal })
     : _formatOutput(await _hdiContainersInstanceManager(context, { filterTenantId, doReveal }));
 
 const _hdiListRelationsServiceManager = async (context, filterTenantId, doTimestamps) => {
