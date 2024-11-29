@@ -1,7 +1,7 @@
 "use strict";
 // https://apidocs.cloudfoundry.org/12.36.0/service_bindings/list_all_service_bindings.html
 
-const { sleep, partition, question } = require("./shared/static");
+const { sleep, partition, question, isObject } = require("./shared/static");
 const { assert, fail, ApplicationError } = require("./shared/error");
 const { newContext } = require("./context");
 const {
@@ -89,6 +89,8 @@ const checkOption = async (cliOption, args) => {
     logger.info(result);
   } else if (Array.isArray(result)) {
     logger.info(...result);
+  } else if (isObject(result)) {
+    logger.info(JSON.stringify(result, null, 2));
   }
   return true;
 };

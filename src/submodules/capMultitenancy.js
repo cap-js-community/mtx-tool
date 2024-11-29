@@ -258,7 +258,7 @@ const _cdsUpgradeMtxs = async (
     })
   );
 
-  logger.info(tableList(table) + "\n");
+  logger.info(tableList(table));
   assert(!hasError, "error happened during tenant upgrade");
   assert(!hasChangeTimeout, "no task progress after %s", CDS_CHANGE_TIMEOUT_TEXT);
 };
@@ -328,7 +328,7 @@ const _cdsUpgradeMtx = async (
       })
     )
   );
-  logger.info(tableList(table) + "\n");
+  logger.info(tableList(table));
   assert(failedTenants.length === 0, "upgrade tenant not successful for", failedTenants.join(", "));
 };
 
