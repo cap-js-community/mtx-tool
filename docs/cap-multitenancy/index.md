@@ -44,7 +44,7 @@ Commands for this area are:
           ...    [TENANT]                            filter list for tenant id or subdomain
           ...    --auto-undeploy                     upgrade with auto undeploy
           ...    --time                              list includes timestamps
-          ...    --json                              list is in json
+          ...    --json                              list in json
 
 ~  are read-only commands
 *  are potentially _dangerous_ commands

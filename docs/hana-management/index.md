@@ -48,7 +48,7 @@ Commands for this area are:
           ...    [PARAMS]                         create binding with custom parameters
           ...    --reveal                         show passwords
           ...    --time                           list includes timestamps
-          ...    --json                           list is in json
+          ...    --json                           list in json
 
 ~  are read-only commands
 *  are potentially _dangerous_ commands
