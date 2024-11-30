@@ -112,7 +112,7 @@ describe("reg tests", () => {
       json: () => ({ subscriptions: fakeSubscriptions.slice(10) }),
     });
 
-    const regListOutput = await reg.registryListSubscriptions(fakeContext, [], [false, doOnlyStale, doOnlyFail]);
+    const regListOutput = await reg.registryListSubscriptions(fakeContext, [], [false, false, doOnlyStale, doOnlyFail]);
     expect(mockRequest.request.mock.calls).toMatchSnapshot();
     expect(regListOutput).toMatchSnapshot();
     expect(mockLogger.info).toHaveBeenCalledTimes(0);

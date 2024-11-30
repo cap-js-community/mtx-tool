@@ -115,6 +115,7 @@ commands:
           ...    [PARAMS]                         create binding with custom parameters
           ...    --reveal                         show passwords
           ...    --time                           list includes timestamps
+          ...    --json                           list is in json
 
    === server diagnostic (srv) ===
 ~  srv     --server-info                                      call server /info
