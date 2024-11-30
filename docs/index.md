@@ -67,8 +67,8 @@ commands:
 ~  uaasu  --uaa-service-user SERVICE USERNAME PASSWORD [TENANT]  obtain service token for username password
           ...    [TENANT]                                        obtain token for tenant, fallback to paas tenant
           ...    --decode                                        decode result token
+          ...    --json                                          result is in json
           ...    --userinfo                                      add detailed user info for passcode or username
-          ...    --json                                          uaa response in json
 
    === tenant registry (reg) ===
 ~  regl   --registry-list [TENANT]                      list all subscribed subaccount names
