@@ -71,6 +71,7 @@ commands:
           ...    [TENANT]                                        obtain token for tenant, fallback to paas tenant
           ...    --decode                                        decode result token
           ...    --userinfo                                      add detailed user info for passcode or username
+          ...    --json                                          uaa response in json
 
    === tenant registry (reg) ===
 ~  regl   --registry-list [TENANT]                      list all subscribed subaccount names
@@ -84,6 +85,7 @@ commands:
 *         --registry-offboard-skip TENANT_ID SKIP_APPS  offboard tenant subscription skipping apps
           ...    [TENANT]                               filter list for tenant id or subdomain
           ...    --time                                 list includes timestamps
+          ...    --json                                 list is in json
           ...    --skip-unchanged                       skip update for unchanged dependencies
           ...    --only-stale                           only update subscriptions that have not changed today
           ...    --only-failed                          only update subscriptions with UPDATE_FAILED state
@@ -100,6 +102,7 @@ commands:
           ...    [TENANT]                            filter list for tenant id or subdomain
           ...    --auto-undeploy                     upgrade with auto undeploy
           ...    --time                              list includes timestamps
+          ...    --json                              list is in json
 
    === hana management (hdi) ===
 ~  hdil   --hdi-list [TENANT_ID]                  list all hdi container instances
@@ -115,6 +118,7 @@ commands:
           ...    [PARAMS]                         create binding with custom parameters
           ...    --reveal                         show passwords
           ...    --time                           list includes timestamps
+          ...    --json                           list is in json
 
    === server diagnostic (srv) ===
 ~  srv     --server-info                                      call server /info
@@ -213,7 +217,7 @@ const APP_CLI_OPTIONS = Object.freeze({
   REGISTRY_LIST: {
     commandVariants: ["regl", "--registry-list"],
     optionalPassArgs: [PASS_ARG.TENANT],
-    optionalFlagArgs: [FLAG_ARG.TIMESTAMPS, FLAG_ARG.ONLY_STALE, FLAG_ARG.ONLY_FAILED],
+    optionalFlagArgs: [FLAG_ARG.TIMESTAMPS, FLAG_ARG.JSON_OUTPUT, FLAG_ARG.ONLY_STALE, FLAG_ARG.ONLY_FAILED],
     callback: reg.registryListSubscriptions,
     readonly: true,
   },
@@ -268,7 +272,7 @@ const APP_CLI_OPTIONS = Object.freeze({
   CDS_LIST: {
     commandVariants: ["cdsl", "--cds-list"],
     optionalPassArgs: [PASS_ARG.TENANT],
-    optionalFlagArgs: [FLAG_ARG.TIMESTAMPS],
+    optionalFlagArgs: [FLAG_ARG.TIMESTAMPS, FLAG_ARG.JSON_OUTPUT],
     callback: cds.cdsList,
     readonly: true,
   },
@@ -308,7 +312,7 @@ const APP_CLI_OPTIONS = Object.freeze({
   HDI_LIST: {
     commandVariants: ["hdil", "--hdi-list"],
     optionalPassArgs: [PASS_ARG.TENANT_ID],
-    optionalFlagArgs: [FLAG_ARG.TIMESTAMPS],
+    optionalFlagArgs: [FLAG_ARG.TIMESTAMPS, FLAG_ARG.JSON_OUTPUT],
     callback: hdi.hdiList,
     useCache: false,
     readonly: true,

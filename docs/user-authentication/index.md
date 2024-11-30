@@ -44,6 +44,7 @@ Commands for this area are:
           ...    [TENANT]                                        obtain token for tenant, fallback to paas tenant
           ...    --decode                                        decode result token
           ...    --userinfo                                      add detailed user info for passcode or username
+          ...    --json                                          uaa response in json
 
 ~  are read-only commands
 ```

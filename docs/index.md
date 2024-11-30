@@ -68,6 +68,7 @@ commands:
           ...    [TENANT]                                        obtain token for tenant, fallback to paas tenant
           ...    --decode                                        decode result token
           ...    --userinfo                                      add detailed user info for passcode or username
+          ...    --json                                          uaa response in json
 
    === tenant registry (reg) ===
 ~  regl   --registry-list [TENANT]                      list all subscribed subaccount names
@@ -81,6 +82,7 @@ commands:
 *         --registry-offboard-skip TENANT_ID SKIP_APPS  offboard tenant subscription skipping apps
           ...    [TENANT]                               filter list for tenant id or subdomain
           ...    --time                                 list includes timestamps
+          ...    --json                                 list is in json
           ...    --skip-unchanged                       skip update for unchanged dependencies
           ...    --only-stale                           only update subscriptions that have not changed today
           ...    --only-failed                          only update subscriptions with UPDATE_FAILED state
@@ -97,6 +99,7 @@ commands:
           ...    [TENANT]                            filter list for tenant id or subdomain
           ...    --auto-undeploy                     upgrade with auto undeploy
           ...    --time                              list includes timestamps
+          ...    --json                              list is in json
 
    === hana management (hdi) ===
 ~  hdil   --hdi-list [TENANT_ID]                  list all hdi container instances
