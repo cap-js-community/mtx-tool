@@ -493,11 +493,15 @@ function _getBindingsByInstance(bindings) {
   }, {});
 }
 
-const hdiListServiceManager = async (context, filterTenantId, doTimestamps) => {
+const hdiListServiceManager = async (context, { filterTenantId, doTimestamps, doJsonOutput } = {}) => {
   const [instances, bindings] = await Promise.all([
     _hdiInstancesServiceManager(context, { filterTenantId }),
     _hdiBindingsServiceManager(context, { filterTenantId }),
   ]);
+
+  if (doJsonOutput) {
+    return { instances, bindings };
+  }
 
   const bindingsByInstance = _getBindingsByInstance(bindings);
   instances.sort(compareForServiceManagerTenantId);
@@ -537,10 +541,10 @@ const hdiListInstanceManager = async (context, filterTenantId, doTimestamps) => 
   return tableList(table, { withRowNumber: !filterTenantId });
 };
 
-const hdiList = async (context, [tenantId], [doTimestamps]) =>
+const hdiList = async (context, [filterTenantId], [doTimestamps, doJsonOutput]) =>
   (await _isServiceManager(context))
-    ? hdiListServiceManager(context, tenantId, doTimestamps)
-    : hdiListInstanceManager(context, tenantId, doTimestamps);
+    ? hdiListServiceManager(context, { filterTenantId, doTimestamps, doJsonOutput })
+    : hdiListInstanceManager(context, filterTenantId, doTimestamps);
 
 const _hdiLongListServiceManager = async (context, { filterTenantId, doJsonOutput, doReveal } = {}) => {
   const [instances, bindings] = await Promise.all([

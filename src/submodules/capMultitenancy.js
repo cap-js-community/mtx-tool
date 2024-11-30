@@ -87,10 +87,16 @@ const _cdsTenants = async (context, tenant) => {
   return result;
 };
 
-const cdsList = async (context, [tenant], [doTimestamps]) => {
+const cdsList = async (context, [tenant], [doTimestamps, doJsonOutput]) => {
+  const tenants = await _cdsTenants(context, tenant);
+
+  if (doJsonOutput) {
+    return tenants;
+  }
+
+  const nowDate = new Date();
   const headerRow = ["subscribedTenantId", "subscribedSubdomain", "subscriptionAppName", "eventType"];
   doTimestamps && headerRow.push("created_on", "updated_on");
-  const nowDate = new Date();
 
   const tenantRow = (tenant) => {
     const row = [
@@ -102,7 +108,6 @@ const cdsList = async (context, [tenant], [doTimestamps]) => {
     doTimestamps && row.push(...formatTimestampsWithRelativeDays([tenant.createdAt, tenant.modifiedAt], nowDate));
     return row;
   };
-  const tenants = await _cdsTenants(context, tenant);
   const table = tenants && tenants.length ? [headerRow].concat(tenants.map(tenantRow)) : null;
   return tableList(table, { withRowNumber: !tenant });
 };

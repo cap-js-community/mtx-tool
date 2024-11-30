@@ -92,12 +92,22 @@ const _registrySubscriptionsPaged = async (context, { tenant, onlyFailed, onlySt
   return { subscriptions };
 };
 
-const registryListSubscriptions = async (context, [tenant], [doTimestamps, doOnlyStale, doOnlyFailed]) => {
-  const { subscriptions } = await _registrySubscriptionsPaged(context, {
+const registryListSubscriptions = async (
+  context,
+  [tenant],
+  [doTimestamps, doJsonOutput, doOnlyStale, doOnlyFailed]
+) => {
+  const subscriptionInfos = await _registrySubscriptionsPaged(context, {
     tenant,
     onlyStale: doOnlyStale,
     onlyFailed: doOnlyFailed,
   });
+  const { subscriptions } = subscriptionInfos;
+
+  if (doJsonOutput) {
+    return subscriptionInfos;
+  }
+
   const headerRow = ["consumerTenantId", "globalAccountId", "subdomain", "plan", "state", "url"];
   doTimestamps && headerRow.push("created_on", "updated_on");
   const nowDate = new Date();
