@@ -31,7 +31,15 @@ const _uaaUserInfo = async (context, token) => {
   return await uaaResponse.json();
 };
 
-const _uaaOutput = (token, { doDecode = false, userInfo } = {}) => {
+const _uaaOutput = (token, { doDecode = false, doJsonOutput, userInfo } = {}) => {
+  if (doJsonOutput) {
+    if (doDecode) {
+      const [header, body] = _tokenDecode(token);
+      return { header, body };
+    }
+    return { token };
+  }
+
   let result;
   if (doDecode) {
     const [jwtHeader, jwtBody] = _tokenDecode(token);
@@ -65,45 +73,53 @@ const _uaaSaasServiceToken = async (context, service, options = undefined) => {
   return context.getCachedUaaTokenFromCredentials(serviceCredentials, { identityZone, ...options });
 };
 
-const uaaDecode = async ([token]) => {
+const uaaDecode = async ([token], [doJsonOutput]) => {
   assert(isJWT(token), "argument is not a json web token", token);
-  return _uaaOutput(token, { doDecode: true });
+  return _uaaOutput(token, { doDecode: true, doJsonOutput });
 };
 
-const uaaClient = async (context, [tenant], [doDecode]) =>
-  _uaaOutput(await context.getCachedUaaToken(resolveTenantArg(tenant)), { doDecode });
+const uaaClient = async (context, [tenant], [doDecode, doJsonOutput]) =>
+  _uaaOutput(await context.getCachedUaaToken(resolveTenantArg(tenant)), { doDecode, doJsonOutput });
 
-const uaaPasscode = async (context, [passcode, tenant], [doDecode, doAddUserInfo]) => {
+const uaaPasscode = async (context, [passcode, tenant], [doDecode, doJsonOutput, doAddUserInfo]) => {
   const token = await context.getCachedUaaToken({ ...resolveTenantArg(tenant), passcode });
   return _uaaOutput(token, {
     doDecode,
+    doJsonOutput,
     ...(doAddUserInfo && { userInfo: await _uaaUserInfo(context, token) }),
   });
 };
 
-const uaaUser = async (context, [username, password, tenant], [doDecode, doAddUserInfo]) => {
+const uaaUser = async (context, [username, password, tenant], [doDecode, doJsonOutput, doAddUserInfo]) => {
   const token = await context.getCachedUaaToken({ ...resolveTenantArg(tenant), username, password });
   return _uaaOutput(token, {
     doDecode,
+    doJsonOutput,
     ...(doAddUserInfo && { userInfo: await _uaaUserInfo(context, token) }),
   });
 };
 
-const uaaServiceClient = async (context, [service, tenant], [doDecode]) =>
-  _uaaOutput(await _uaaSaasServiceToken(context, service, { ...resolveTenantArg(tenant) }), { doDecode });
+const uaaServiceClient = async (context, [service, tenant], [doDecode, doJsonOutput]) =>
+  _uaaOutput(await _uaaSaasServiceToken(context, service, { ...resolveTenantArg(tenant) }), { doDecode, doJsonOutput });
 
-const uaaServicePasscode = async (context, [service, passcode, tenant], [doDecode, doAddUserInfo]) => {
+const uaaServicePasscode = async (context, [service, passcode, tenant], [doDecode, doJsonOutput, doAddUserInfo]) => {
   const token = await _uaaSaasServiceToken(context, service, { ...resolveTenantArg(tenant), passcode });
   return _uaaOutput(token, {
     doDecode,
+    doJsonOutput,
     ...(doAddUserInfo && { userInfo: await _uaaUserInfo(context, token) }),
   });
 };
 
-const uaaServiceUser = async (context, [service, username, password, tenant], [doDecode, doAddUserInfo]) => {
+const uaaServiceUser = async (
+  context,
+  [service, username, password, tenant],
+  [doDecode, doJsonOutput, doAddUserInfo]
+) => {
   const token = await _uaaSaasServiceToken(context, service, { ...resolveTenantArg(tenant), username, password });
   return _uaaOutput(token, {
     doDecode,
+    doJsonOutput,
     ...(doAddUserInfo && { userInfo: await _uaaUserInfo(context, token) }),
   });
 };

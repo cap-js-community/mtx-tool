@@ -70,8 +70,8 @@ commands:
 ~  uaasu  --uaa-service-user SERVICE USERNAME PASSWORD [TENANT]  obtain service token for username password
           ...    [TENANT]                                        obtain token for tenant, fallback to paas tenant
           ...    --decode                                        decode result token
+          ...    --json                                          result is in json
           ...    --userinfo                                      add detailed user info for passcode or username
-          ...    --json                                          uaa response in json
 
    === tenant registry (reg) ===
 ~  regl   --registry-list [TENANT]                      list all subscribed subaccount names
@@ -162,6 +162,7 @@ const APP_CLI_OPTIONS = Object.freeze({
   UAA_DECODE: {
     commandVariants: ["uaad", "--uaa-decode"],
     requiredPassArgs: [PASS_ARG.TOKEN],
+    optionalFlagArgs: [FLAG_ARG.JSON_OUTPUT],
     callback: uaa.uaaDecode,
     passContext: false,
     readonly: true,
@@ -169,7 +170,7 @@ const APP_CLI_OPTIONS = Object.freeze({
   UAA_CLIENT: {
     commandVariants: ["uaac", "--uaa-client"],
     optionalPassArgs: [PASS_ARG.TENANT],
-    optionalFlagArgs: [FLAG_ARG.DECODE],
+    optionalFlagArgs: [FLAG_ARG.DECODE, FLAG_ARG.JSON_OUTPUT],
     callback: uaa.uaaClient,
     readonly: true,
   },
@@ -177,7 +178,7 @@ const APP_CLI_OPTIONS = Object.freeze({
     commandVariants: ["uaap", "--uaa-passcode"],
     requiredPassArgs: [PASS_ARG.PASSCODE],
     optionalPassArgs: [PASS_ARG.TENANT],
-    optionalFlagArgs: [FLAG_ARG.DECODE, FLAG_ARG.USER_INFO],
+    optionalFlagArgs: [FLAG_ARG.DECODE, FLAG_ARG.JSON_OUTPUT, FLAG_ARG.USER_INFO],
     callback: uaa.uaaPasscode,
     readonly: true,
   },
@@ -185,7 +186,7 @@ const APP_CLI_OPTIONS = Object.freeze({
     commandVariants: ["uaau", "--uaa-user"],
     requiredPassArgs: [PASS_ARG.USERNAME, PASS_ARG.PASSWORD],
     optionalPassArgs: [PASS_ARG.TENANT],
-    optionalFlagArgs: [FLAG_ARG.DECODE, FLAG_ARG.USER_INFO],
+    optionalFlagArgs: [FLAG_ARG.DECODE, FLAG_ARG.JSON_OUTPUT, FLAG_ARG.USER_INFO],
     callback: uaa.uaaUser,
     readonly: true,
   },
@@ -193,7 +194,7 @@ const APP_CLI_OPTIONS = Object.freeze({
     commandVariants: ["uaasc", "--uaa-service-client"],
     requiredPassArgs: [PASS_ARG.SERVICE],
     optionalPassArgs: [PASS_ARG.TENANT],
-    optionalFlagArgs: [FLAG_ARG.DECODE],
+    optionalFlagArgs: [FLAG_ARG.DECODE, FLAG_ARG.JSON_OUTPUT],
     callback: uaa.uaaServiceClient,
     readonly: true,
   },
@@ -201,7 +202,7 @@ const APP_CLI_OPTIONS = Object.freeze({
     commandVariants: ["uaasp", "--uaa-service-passcode"],
     requiredPassArgs: [PASS_ARG.SERVICE, PASS_ARG.PASSCODE],
     optionalPassArgs: [PASS_ARG.TENANT],
-    optionalFlagArgs: [FLAG_ARG.DECODE, FLAG_ARG.USER_INFO],
+    optionalFlagArgs: [FLAG_ARG.DECODE, FLAG_ARG.JSON_OUTPUT, FLAG_ARG.USER_INFO],
     callback: uaa.uaaServicePasscode,
     readonly: true,
   },
@@ -209,7 +210,7 @@ const APP_CLI_OPTIONS = Object.freeze({
     commandVariants: ["uaasu", "--uaa-service-user"],
     requiredPassArgs: [PASS_ARG.SERVICE, PASS_ARG.USERNAME, PASS_ARG.PASSWORD],
     optionalPassArgs: [PASS_ARG.TENANT],
-    optionalFlagArgs: [FLAG_ARG.DECODE, FLAG_ARG.USER_INFO],
+    optionalFlagArgs: [FLAG_ARG.DECODE, FLAG_ARG.JSON_OUTPUT, FLAG_ARG.USER_INFO],
     callback: uaa.uaaServiceUser,
     readonly: true,
   },
