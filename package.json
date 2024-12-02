@@ -20,7 +20,7 @@
     "test:cds": "jest test/capMultitenancy.nock.test.js",
     "test:hdi": "jest test/hanaManagement.nock.test.js",
     "test:record:reg": "jest --runInBand --config jest-nock-record.config.js test-nock-record/tenantRegistry.nock.test.js",
-    "test:record:cds": "npx cross-env NOCK_MODE=record jest test/capMultitenancy.nock.test.js --runInBand --updateSnapshot && jest test/capMultitenancy.nock.test.js --runInBand --updateSnapshot",
+    "test:record:cds": "jest --runInBand --config jest-nock-record.config.js test-nock-record/capMultitenancy.nock.test.js",
     "test:record:hdi": "jest --runInBand --config jest-nock-record.config.js test-nock-record/hanaManagement.nock.test.js",
     "lint": "npm run prettier && npm run eslint",
     "lint:fix": "npm run prettier:fix && npm run eslint:fix",

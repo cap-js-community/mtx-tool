@@ -21,9 +21,9 @@ const testTenantId = "5ecc7413-2b7e-414a-9496-ad4a61f6cccf";
 const freshContext = async () => await newContext({ usePersistedCache: false, isReadonlyCommand: false });
 
 describe("hdi tests", () => {
-  beforeEach(() => {
-    nock.restore();
+  afterEach(() => {
     hdi._._reset();
+    nock.restore();
     jest.clearAllMocks();
   });
 

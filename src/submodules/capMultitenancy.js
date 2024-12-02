@@ -15,6 +15,8 @@ const {
   formatTimestampsWithRelativeDays,
   isObject,
   parseIntWithFallback,
+  makeOneTime,
+  resetOneTime,
 } = require("../shared/static");
 const { assert, assertAll } = require("../shared/error");
 const { request } = require("../shared/request");
@@ -39,26 +41,23 @@ const writeFileAsync = promisify(writeFile);
 const cdsRequestConcurrency = parseIntWithFallback(process.env[ENV.CDS_CONCURRENCY], CDS_REQUEST_CONCURRENCY_FALLBACK);
 const cdsPollFrequency = parseIntWithFallback(process.env[ENV.CDS_FREQUENCY], CDS_JOB_POLL_FREQUENCY_FALLBACK);
 
-const _isMtxs = async (context) => {
-  if (_isMtxs._result === undefined) {
-    const { cfRouteUrl } = await context.getCdsInfo();
-    const response = await request({
-      method: "HEAD",
-      url: cfRouteUrl,
-      pathname: `/-/cds/saas-provisioning`,
-      logged: false,
-      checkStatus: false,
-    });
-    const result = response.status !== 404;
-    _isMtxs._result = result;
-    if (result) {
-      logger.info("using cds-mtxs apis");
-    } else {
-      logger.info("using legacy cds-mtx apis, consider upgrading to cds-mtxs");
-    }
+const _isMtxs = makeOneTime(async (context) => {
+  const { cfRouteUrl } = await context.getCdsInfo();
+  const response = await request({
+    method: "HEAD",
+    url: cfRouteUrl,
+    pathname: `/-/cds/saas-provisioning`,
+    logged: false,
+    checkStatus: false,
+  });
+  const result = response.status !== 404;
+  if (result) {
+    logger.info("using cds-mtxs apis");
+  } else {
+    logger.info("using legacy cds-mtx apis, consider upgrading to cds-mtxs");
   }
-  return _isMtxs._result;
-};
+  return result;
+});
 
 const _cdsTenants = async (context, tenant) => {
   const isMtxs = await _isMtxs(context);
@@ -407,4 +406,10 @@ module.exports = {
   cdsUpgradeAll,
   cdsOffboardTenant,
   cdsOffboardAll,
+
+  _: {
+    _reset() {
+      resetOneTime(_isMtxs);
+    },
+  },
 };
