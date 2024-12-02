@@ -129,7 +129,7 @@ const registryListSubscriptions = async (
   return tableList(table, { withRowNumber: !tenant });
 };
 
-const registryLongListSubscriptions = async (context, [tenant], [doOnlyStale, doOnlyFailed]) => {
+const registryLongListSubscriptions = async (context, [tenant], [, doOnlyStale, doOnlyFailed]) => {
   return await _registrySubscriptionsPaged(context, { tenant, onlyStale: doOnlyStale, onlyFailed: doOnlyFailed });
 };
 
