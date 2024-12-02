@@ -12,6 +12,7 @@ const {
   isObject,
   makeOneTime,
   parseIntWithFallback,
+  resetOneTime,
 } = require("../shared/static");
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
@@ -147,8 +148,6 @@ const _getServicePlanId = async (sm_url, token, servicePlanName) => {
 const _getHdiSharedPlanId = makeOneTime(
   async (sm_url, token) => await _getServicePlanId(sm_url, token, HDI_SHARED_SERVICE_PLAN_NAME)
 );
-
-const _resetGetHdiSharedPlanId = () => Reflect.deleteProperty(_getHdiSharedPlanId, "__result");
 
 const _hdiInstancesServiceManager = async (context, { filterTenantId, doEnsureTenantLabel = true } = {}) => {
   const {
@@ -797,6 +796,8 @@ module.exports = {
   hdiEnableNative,
 
   _: {
-    _resetGetHdiSharedPlanId,
+    _reset() {
+      resetOneTime(_getHdiSharedPlanId);
+    },
   },
 };

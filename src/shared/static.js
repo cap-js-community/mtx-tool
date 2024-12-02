@@ -369,6 +369,8 @@ const makeOneTime = (cb) => {
   return oneTimeCb;
 };
 
+const resetOneTime = (cb) => Reflect.deleteProperty(cb, "__result");
+
 const parseIntWithFallback = (input, fallback) => {
   if (typeof input !== "string") {
     return fallback;
@@ -405,5 +407,6 @@ module.exports = {
   safeUnshift,
   escapeRegExp,
   makeOneTime,
+  resetOneTime,
   parseIntWithFallback,
 };
