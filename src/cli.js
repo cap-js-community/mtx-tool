@@ -63,7 +63,12 @@ const checkOption = async (cliOption, args) => {
   );
   if (optionalFlagArgs) {
     flagArgs.forEach((flagArg) => {
-      assert(optionalFlagArgs.includes(flagArg), 'flag argument "%s" not valid for command "%s"', flagArg, command);
+      assert(
+        flagArg === FLAG_ARG.FORCE || optionalFlagArgs.includes(flagArg),
+        'flag argument "%s" not valid for command "%s"',
+        flagArg,
+        command
+      );
     });
     flagValues = optionalFlagArgs.map((flag) => flagArgs.includes(flag));
   }
