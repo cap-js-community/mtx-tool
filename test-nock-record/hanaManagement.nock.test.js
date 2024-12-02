@@ -10,11 +10,10 @@ const { anonymizeNock } = require("./util/anonymizeNock");
 nock.back.fixtures = pathlib.resolve(`${__dirname}/__nock-fixtures__`);
 nock.back.setMode("update");
 
-const { Logger: MockLogger } = require("../src/shared/logger");
-const mockLogger = MockLogger.getInstance();
-jest.mock("../src/shared/logger", () => require("../test/__mocks/shared/logger"));
-
 jest.setTimeout(240000);
+
+const { Logger } = require("../src/shared/logger");
+const errorLoggerSpy = jest.spyOn(Logger.getInstance(), "error");
 
 const testTenantId = "5ecc7413-2b7e-414a-9496-ad4a61f6cccf";
 
@@ -31,27 +30,27 @@ describe("hdi nock", () => {
     const { nockDone } = await nock.back("hdi-list.json", { afterRecord: anonymizeNock });
     await hdi.hdiList(await freshContext(), [], [false, false]);
     nockDone();
-    expect(mockLogger.error).toHaveBeenCalledTimes(0);
+    expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
 
   test("record hdi list filtered", async () => {
     const { nockDone } = await nock.back("hdi-list-filtered.json", { afterRecord: anonymizeNock });
     await hdi.hdiList(await freshContext(), [testTenantId], [false, false]);
     nockDone();
-    expect(mockLogger.error).toHaveBeenCalledTimes(0);
+    expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
 
   test("record hdi long list basic", async () => {
     const { nockDone } = await nock.back("hdi-long-list.json", { afterRecord: anonymizeNock });
     await hdi.hdiLongList(await freshContext(), [], [false, false]);
     nockDone();
-    expect(mockLogger.error).toHaveBeenCalledTimes(0);
+    expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
 
   test("record hdi long list filtered", async () => {
     const { nockDone } = await nock.back("hdi-long-list-filtered.json", { afterRecord: anonymizeNock });
     await hdi.hdiLongList(await freshContext(), [testTenantId], [false, false]);
     nockDone();
-    expect(mockLogger.error).toHaveBeenCalledTimes(0);
+    expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
 });
