@@ -148,6 +148,8 @@ const _getHdiSharedPlanId = makeOneTime(
   async (sm_url, token) => await _getServicePlanId(sm_url, token, HDI_SHARED_SERVICE_PLAN_NAME)
 );
 
+const _resetGetHdiSharedPlanId = () => Reflect.deleteProperty(_getHdiSharedPlanId, "__result");
+
 const _hdiInstancesServiceManager = async (context, { filterTenantId, doEnsureTenantLabel = true } = {}) => {
   const {
     cfService: { credentials },
@@ -793,4 +795,8 @@ module.exports = {
   hdiDeleteTenant,
   hdiDeleteAll,
   hdiEnableNative,
+
+  _: {
+    _resetGetHdiSharedPlanId,
+  },
 };

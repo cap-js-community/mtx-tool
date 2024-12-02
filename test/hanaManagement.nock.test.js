@@ -10,6 +10,12 @@
  * npm t
  */
 
+/**
+ * TODO the recording and playback "tests" should be split up.
+ * The recording needs the reset the modules for each file to work around "makeOneTime" style functions
+ * that keep state and make requests superfluous.
+ */
+
 const pathlib = require("path");
 const nock = require("nock");
 
@@ -44,9 +50,7 @@ const testTenantId = "5ecc7413-2b7e-414a-9496-ad4a61f6cccf";
 const freshContext = async () => await newContext({ usePersistedCache: false, isReadonlyCommand: false });
 
 describe("hdi tests", () => {
-  beforeAll(async () => {});
-
-  afterEach(() => {
+  beforeEach(() => {
     nock.restore();
     jest.clearAllMocks();
   });
@@ -110,6 +114,23 @@ describe("hdi tests", () => {
     expect(mockLogger.error.mock.calls).toHaveLength(0);
   });
 
+  test("hdi list and longlist with json output", async () => {
+    const { nockDone } = await nockBack("hdi-list.json", { afterRecord: anonymizeNock });
+
+    const hdiListOutput = await hdi.hdiList(await freshContext(), [], [true, true]);
+    expect(hdiListOutput).toMatchSnapshot();
+    mockLogger.info.mockClear();
+
+    const hdiListOutputWithoutTimestamps = await hdi.hdiList(await freshContext(), [], [false, true]);
+    expect(hdiListOutputWithoutTimestamps).toMatchObject(hdiListOutput);
+
+    const hdiLongListOutput = await hdi.hdiLongList(await freshContext(), [], [true, false]);
+    expect(hdiLongListOutput).toMatchObject(hdiListOutput);
+
+    nockDone();
+    expect(mockLogger.error.mock.calls).toHaveLength(0);
+  });
+
   test("hdi list and longlist filtered", async () => {
     const { nockDone } = await nockBack("hdi-list-filtered.json", { afterRecord: anonymizeNock });
 
@@ -143,6 +164,23 @@ describe("hdi tests", () => {
       GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances?fieldQuery=service_plan_id%20eq%20'1b702f36-bd66-4fad-b4d8-75cf0a0b8347'&labelQuery=tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)
       GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings?labelQuery=service_plan_id%20eq%20'1b702f36-bd66-4fad-b4d8-75cf0a0b8347'%20and%20tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)"
     `);
+
+    nockDone();
+    expect(mockLogger.error.mock.calls).toHaveLength(0);
+  });
+
+  test("hdi list and longlist filtered with json", async () => {
+    const { nockDone } = await nockBack("hdi-list-filtered.json", { afterRecord: anonymizeNock });
+
+    const hdiListOutput = await hdi.hdiList(await freshContext(), [testTenantId], [true, true]);
+    expect(hdiListOutput).toMatchSnapshot();
+    mockLogger.info.mockClear();
+
+    const hdiListOutputWithoutTimestamps = await hdi.hdiList(await freshContext(), [testTenantId], [false, true]);
+    expect(hdiListOutputWithoutTimestamps).toMatchObject(hdiListOutput);
+
+    const hdiLongListOutput = await hdi.hdiLongList(await freshContext(), [testTenantId], [true, false]);
+    expect(hdiLongListOutput).toMatchObject(hdiListOutput);
 
     nockDone();
     expect(mockLogger.error.mock.calls).toHaveLength(0);

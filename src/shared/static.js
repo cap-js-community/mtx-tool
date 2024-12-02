@@ -360,15 +360,13 @@ const escapeRegExp = (input) => {
 };
 
 const makeOneTime = (cb) => {
-  let result;
-  let firstRun = true;
-  return async (...args) => {
-    if (firstRun) {
-      firstRun = false;
-      result = cb(...args);
+  const oneTimeCb = async (...args) => {
+    if (!Object.prototype.hasOwnProperty.call(oneTimeCb, "__result")) {
+      oneTimeCb.__result = cb(...args);
     }
-    return await result;
+    return await oneTimeCb.__result;
   };
+  return oneTimeCb;
 };
 
 const parseIntWithFallback = (input, fallback) => {

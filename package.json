@@ -21,7 +21,7 @@
     "test:hdi": "jest test/hanaManagement.nock.test.js",
     "test:record:reg": "npx cross-env NOCK_MODE=record jest test/tenantRegistry.nock.test.js --runInBand --updateSnapshot && jest test/tenantRegistry.nock.test.js --runInBand --updateSnapshot",
     "test:record:cds": "npx cross-env NOCK_MODE=record jest test/capMultitenancy.nock.test.js --runInBand --updateSnapshot && jest test/capMultitenancy.nock.test.js --runInBand --updateSnapshot",
-    "test:record:hdi": "npx cross-env NOCK_MODE=record jest test/hanaManagement.nock.test.js --runInBand --updateSnapshot && jest test/hanaManagement.nock.test.js --runInBand --updateSnapshot",
+    "test:record:hdi": "jest test-nock-record/hanaManagement.nock.test.js --runInBand",
     "lint": "npm run prettier && npm run eslint",
     "lint:fix": "npm run prettier:fix && npm run eslint:fix",
     "eslint": "eslint .",
