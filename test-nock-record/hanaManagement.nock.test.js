@@ -27,31 +27,31 @@ describe("hdi nock", () => {
     jest.clearAllMocks();
   });
 
-  test("record hdi list", async () => {
+  test("record hdi list basic", async () => {
     const { nockDone } = await nock.back("hdi-list.json", { afterRecord: anonymizeNock });
-    await hdi.hdiList(await freshContext(), [], [true, false]);
+    await hdi.hdiList(await freshContext(), [], [false, false]);
     nockDone();
-    expect(mockLogger.error.mock.calls).toHaveLength(0);
+    expect(mockLogger.error).toHaveBeenCalledTimes(0);
   });
 
   test("record hdi list filtered", async () => {
     const { nockDone } = await nock.back("hdi-list-filtered.json", { afterRecord: anonymizeNock });
-    await hdi.hdiList(await freshContext(), [testTenantId], [true, false]);
+    await hdi.hdiList(await freshContext(), [testTenantId], [false, false]);
     nockDone();
-    expect(mockLogger.error.mock.calls).toHaveLength(0);
+    expect(mockLogger.error).toHaveBeenCalledTimes(0);
   });
 
-  test("record hdi long list", async () => {
+  test("record hdi long list basic", async () => {
     const { nockDone } = await nock.back("hdi-long-list.json", { afterRecord: anonymizeNock });
-    await hdi.hdiLongList(await freshContext(), [], [false, true]);
+    await hdi.hdiLongList(await freshContext(), [], [false, false]);
     nockDone();
-    expect(mockLogger.error.mock.calls).toHaveLength(0);
+    expect(mockLogger.error).toHaveBeenCalledTimes(0);
   });
 
   test("record hdi long list filtered", async () => {
     const { nockDone } = await nock.back("hdi-long-list-filtered.json", { afterRecord: anonymizeNock });
-    await hdi.hdiLongList(await freshContext(), [testTenantId], [false, true]);
+    await hdi.hdiLongList(await freshContext(), [testTenantId], [false, false]);
     nockDone();
-    expect(mockLogger.error.mock.calls).toHaveLength(0);
+    expect(mockLogger.error).toHaveBeenCalledTimes(0);
   });
 });
