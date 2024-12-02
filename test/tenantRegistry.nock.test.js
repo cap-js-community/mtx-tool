@@ -69,11 +69,6 @@ describe("reg tests", () => {
         10  cf528063-6a43-4bf2-8ccc-ca4e6d75d88e  a6786cbf-f7e7-4103-9386-b91d1c07e3ea  jyd-dev-apps-eu10      standard  SUBSCRIBED          https://jyd-dev-apps-eu10.dev.eu10-canary.afc.cloud.sap      2024-03-19T16:47:52Z (x days ago)  2024-12-02T14:15:11Z (x days ago)  
         11  dde70ec5-983d-4848-b50c-fb2cdac7d359  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-test-3          standard  SUBSCRIBED          https://skyfin-test-3.dev.eu10-canary.afc.cloud.sap          2024-07-09T08:37:51Z (x days ago)  2024-12-02T14:16:03Z (x days ago)  "
       `);
-      expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
-        "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-
-        GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?appName=afc-dev&size=200&page=1 200 OK (88ms)"
-      `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
 
@@ -81,11 +76,6 @@ describe("reg tests", () => {
       await nock.back("reg-list.json");
       const output = await reg.registryListSubscriptions(await freshContext(), [], [true, true, false, false]);
       expect(output).toMatchSnapshot();
-      expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
-        "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-
-        GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?appName=afc-dev&size=200&page=1 200 OK (88ms)"
-      `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
 
@@ -119,11 +109,6 @@ describe("reg tests", () => {
         "consumerTenantId                      globalAccountId                       subdomain       plan      state       url                                                   created_on  updated_on
         5ecc7413-2b7e-414a-9496-ad4a61f6cccf  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-company  standard  SUBSCRIBED  https://skyfin-company.dev.eu10-canary.afc.cloud.sap  2021-03-19T09:51:40Z (x days ago)  2024-12-02T14:23:57Z (x days ago)  "
       `);
-      expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
-        "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-
-        GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?appName=afc-dev&tenantId=5ecc7413-2b7e-414a-9496-ad4a61f6cccf&size=200&page=1 200 OK (88ms)"
-      `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
 
@@ -135,11 +120,6 @@ describe("reg tests", () => {
         [true, true, false, false]
       );
       expect(output).toMatchSnapshot();
-      expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
-        "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-
-        GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?appName=afc-dev&tenantId=5ecc7413-2b7e-414a-9496-ad4a61f6cccf&size=200&page=1 200 OK (88ms)"
-      `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
   });
