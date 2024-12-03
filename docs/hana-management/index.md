@@ -46,9 +46,9 @@ Commands for this area are:
 *         --hdi-delete-all                        delete all hdi container instances and bindings
           ...    [TENANT_ID]                      filter for tenant id
           ...    [PARAMS]                         create binding with custom parameters
-          ...    --reveal                         show passwords
-          ...    --time                           list includes timestamps
           ...    --json                           list in json
+          ...    --time                           list includes timestamps
+          ...    --reveal                         show passwords
 
 ~  are read-only commands
 *  are potentially _dangerous_ commands

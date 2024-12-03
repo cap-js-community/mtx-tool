@@ -42,8 +42,8 @@ Commands for this area are:
 ~  uaasp  --uaa-service-passcode SERVICE PASSCODE [TENANT]       obtain service token for one-time passcode
 ~  uaasu  --uaa-service-user SERVICE USERNAME PASSWORD [TENANT]  obtain service token for username password
           ...    [TENANT]                                        obtain token for tenant, fallback to paas tenant
-          ...    --decode                                        decode result token
           ...    --json                                          output in json
+          ...    --decode                                        decode result token
           ...    --userinfo                                      add detailed user info for passcode or username
 
 ~  are read-only commands

@@ -42,9 +42,9 @@ Commands for this area are:
 *         --cds-offboard-all                         offboard all tenants
           ...    [METADATA]                          onboard subscription metadata
           ...    [TENANT]                            filter list for tenant id or subdomain
-          ...    --auto-undeploy                     upgrade with auto undeploy
-          ...    --time                              list includes timestamps
           ...    --json                              list in json
+          ...    --time                              list includes timestamps
+          ...    --auto-undeploy                     upgrade with auto undeploy
 
 ~  are read-only commands
 *  are potentially _dangerous_ commands
