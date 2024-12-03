@@ -12,6 +12,8 @@ const BUILDPACK_INFO = {
 };
 const DEFAULT_ENV_FILENAME = "default-env.json";
 
+const logger = Logger.getInstance();
+
 const serverInfo = async (context) => {
   const { cfRouteUrl } = await context.getSrvInfo();
   const token = await context.getCachedUaaToken();
@@ -22,8 +24,6 @@ const serverInfo = async (context) => {
   });
   return await response.json();
 };
-
-const logger = Logger.getInstance();
 
 const _serverDebug = async (context, { appName, appInstance = 0 } = {}) => {
   const { cfBuildpack, cfAppGuid, cfRouteUrl, cfSsh } = appName
