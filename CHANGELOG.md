@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+- added node v22 to voters
+
 - better separation for test request-replay recording and playback
 
 - hdi: fixed logic for `ready` list column, such that it's false if either instance or binding is not ready
