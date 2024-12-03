@@ -78,7 +78,7 @@ describe("uaa tests", () => {
     });
   });
 
-  describe("xsuaa tokens", () => {
+  describe("xsuaa app tokens", () => {
     test.each([
       ["paas client default", PAAS_CLIENT_TOKEN, [], [false, false]],
       ["paas client --decode", PAAS_CLIENT_TOKEN, [], [true, false]],
