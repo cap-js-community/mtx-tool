@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- order is REMOVED, CHANGED, ADDED, FIXED -->
 
+## v0.8.8 - tbd
+
+### Added
+
+- reg/cds/hdi: the list and long list command gets a `--json` flag to produce json output
+
+- uaa: all uaa commands get a `--json` flag to produce json output
+
+- code scanning with codeQL
+
+### Fixed
+
+- better separation for test request-replay recording and playback
+
+- hdi: fixed logic for `ready` list column, such that it's false if either instance or binding is not ready
+
+- srv: better resilience for apps with no buildpack
+
 ## v0.8.7 - 2024-07-23
 
 ### Added
