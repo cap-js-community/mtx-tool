@@ -26,10 +26,6 @@ const mockService = "command_and_control";
 const mockTenant = "troll_tenant";
 
 describe("cli tests", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   test("force flag bypasses validation", async () => {
     await cli(["--uaa-decode", PAAS_CLIENT_TOKEN, "--force"]);
     expect(mockLogger.error).toHaveBeenCalledTimes(0);

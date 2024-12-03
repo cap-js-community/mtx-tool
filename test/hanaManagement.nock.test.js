@@ -24,7 +24,6 @@ describe("hdi tests", () => {
   afterEach(() => {
     hdi._._reset();
     nock.restore();
-    jest.clearAllMocks();
   });
 
   describe("hdi list", () => {

@@ -20,10 +20,6 @@ const options = {
 const normalizeMockCallTimings = (calls) => calls.map((call) => call.map((args) => args.replace(/\d+ms/g, "xms")));
 
 describe("request tests", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   test("handling too many requests with falloff", async () => {
     const busyResponseFactory = (index) =>
       Promise.resolve({

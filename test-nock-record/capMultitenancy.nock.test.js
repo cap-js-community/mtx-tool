@@ -23,7 +23,6 @@ describe("cds tests", () => {
   afterEach(() => {
     cds._._reset();
     nock.restore();
-    jest.clearAllMocks();
   });
 
   test("cds list basic", async () => {

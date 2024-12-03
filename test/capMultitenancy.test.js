@@ -32,10 +32,6 @@ const fakeContext = {
 };
 
 describe("cds tests", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   test("cds upgrade request fails", async () => {
     mockRequest.request.mockReturnValueOnce({ status: 200 });
 

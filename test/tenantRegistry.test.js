@@ -92,10 +92,6 @@ const fakeJobImplementationFactory =
   };
 
 describe("reg tests", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   test.each([
     ["unfiltered", false, false],
     ["only stale", true, false],

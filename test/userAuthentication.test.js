@@ -66,10 +66,6 @@ const contextMock = {
 };
 
 describe("uaa tests", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   describe("without context", () => {
     test("uaaDecode", async () => {
       const result = await uaa.uaaDecode([PAAS_CLIENT_TOKEN], []);

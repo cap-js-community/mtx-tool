@@ -38,10 +38,6 @@ const mockRuntimeConfig = {
 };
 
 describe("context tests", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   test("no vcap service information means no uaa token (space supporter role)", async () => {
     mockStatic.spawnAsync.mockReturnValueOnce(["oauth-token"]);
     mockStatic.tryReadJsonSync.mockReturnValueOnce(mockCfConfig);

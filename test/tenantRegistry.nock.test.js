@@ -23,7 +23,6 @@ const freshContext = async () => await newContext({ usePersistedCache: false, is
 describe("reg tests", () => {
   afterEach(() => {
     nock.restore();
-    jest.clearAllMocks();
   });
 
   describe("reg list", () => {
