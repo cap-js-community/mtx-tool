@@ -67,6 +67,7 @@ commands:
 ~  uaasu  --uaa-service-user SERVICE USERNAME PASSWORD [TENANT]  obtain service token for username password
           ...    [TENANT]                                        obtain token for tenant, fallback to paas tenant
           ...    --decode                                        decode result token
+          ...    --json                                          output in json
           ...    --userinfo                                      add detailed user info for passcode or username
 
    === tenant registry (reg) ===
@@ -81,6 +82,7 @@ commands:
 *         --registry-offboard-skip TENANT_ID SKIP_APPS  offboard tenant subscription skipping apps
           ...    [TENANT]                               filter list for tenant id or subdomain
           ...    --time                                 list includes timestamps
+          ...    --json                                 list in json
           ...    --skip-unchanged                       skip update for unchanged dependencies
           ...    --only-stale                           only update subscriptions that have not changed today
           ...    --only-failed                          only update subscriptions with UPDATE_FAILED state
@@ -97,6 +99,7 @@ commands:
           ...    [TENANT]                            filter list for tenant id or subdomain
           ...    --auto-undeploy                     upgrade with auto undeploy
           ...    --time                              list includes timestamps
+          ...    --json                              list in json
 
    === hana management (hdi) ===
 ~  hdil   --hdi-list [TENANT_ID]                  list all hdi container instances
@@ -112,6 +115,7 @@ commands:
           ...    [PARAMS]                         create binding with custom parameters
           ...    --reveal                         show passwords
           ...    --time                           list includes timestamps
+          ...    --json                           list in json
 
    === server diagnostic (srv) ===
 ~  srv     --server-info                                      call server /info

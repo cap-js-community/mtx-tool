@@ -4,10 +4,6 @@ const { LazyCache, ExpiringLazyCache, DEFAULT_EXPIRATION_GAP } = require("../../
 let cache;
 
 describe("cache", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   describe("LazyCache", () => {
     test("custom separator", async () => {
       const customSeparator = "--";

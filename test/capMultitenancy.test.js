@@ -1,8 +1,10 @@
 "use strict";
 
+const mockRequest = require("../src/shared/request");
 jest.mock("../src/shared/request", () => ({
   request: jest.fn(),
 }));
+
 jest.mock("../src/shared/static", () => {
   const staticLib = jest.requireActual("../src/shared/static");
   return {
@@ -11,15 +13,12 @@ jest.mock("../src/shared/static", () => {
   };
 });
 
-const mockRequest = require("../src/shared/request");
+const { Logger: MockLogger } = require("../src/shared/logger");
+const mockLogger = MockLogger.getInstance();
+jest.mock("../src/shared/logger", () => require("./__mocks/shared/logger"));
 
 const cds = require("../src/submodules/capMultitenancy");
 const { outputFromLoggerPartitionFetch } = require("./util/static");
-
-let loggerSpy = {
-  info: jest.spyOn(console, "log").mockImplementation(),
-  error: jest.spyOn(console, "error").mockImplementation(),
-};
 
 const fakeContext = {
   getCdsInfo: () => ({
@@ -33,10 +32,6 @@ const fakeContext = {
 };
 
 describe("cds tests", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   test("cds upgrade request fails", async () => {
     mockRequest.request.mockReturnValueOnce({ status: 200 });
 
@@ -185,7 +180,7 @@ describe("cds tests", () => {
       `[Error: error happened during tenant upgrade]`
     );
 
-    expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
+    expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "using cds-mtxs apis
       started upgrade on server with jobId 8fd6894a-91d6-4eed-b772-1be05b8ac6ed polling interval 15sec
       job 8fd6894a-91d6-4eed-b772-1be05b8ac6ed is FAILED with tasks queued/running: 0/0 | failed/finished: 6/0
@@ -196,10 +191,9 @@ describe("cds tests", () => {
       4  5ecc7413-2b7e-414a-9496-ad4a61f6cccf  FAILED  HDI deployment failed with exit code 1
       5  6917dfd6-7590-4033-af2a-140b75263b0d  FAILED  HDI deployment failed with exit code 1
       6  dde70ec5-983d-4848-b50c-fb2cdac7d359  FAILED  HDI deployment failed with exit code 1
-
       "
     `);
 
-    expect(loggerSpy.error).toHaveBeenCalledTimes(0);
+    expect(mockLogger.error).toHaveBeenCalledTimes(0);
   });
 });

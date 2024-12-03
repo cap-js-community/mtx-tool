@@ -1,8 +1,10 @@
 "use strict";
 
+const mockRequest = require("../src/shared/request");
 jest.mock("../src/shared/request", () => ({
   request: jest.fn(),
 }));
+const mockShared = require("../src/shared/static");
 jest.mock("../src/shared/static", () => {
   const staticLib = jest.requireActual("../src/shared/static");
   return {
@@ -10,17 +12,12 @@ jest.mock("../src/shared/static", () => {
     sleep: jest.fn(),
   };
 });
-
-const mockRequest = require("../src/shared/request");
-const mockShared = require("../src/shared/static");
+const { Logger: MockLogger } = require("../src/shared/logger");
+const mockLogger = MockLogger.getInstance();
+jest.mock("../src/shared/logger", () => require("./__mocks/shared/logger"));
 
 const reg = require("../src/submodules/tenantRegistry");
 const { outputFromLoggerPartitionFetch } = require("./util/static");
-
-let loggerSpy = {
-  info: jest.spyOn(console, "log").mockImplementation(),
-  error: jest.spyOn(console, "error").mockImplementation(),
-};
 
 const fakeContext = {
   getRegInfo: () => ({
@@ -95,10 +92,6 @@ const fakeJobImplementationFactory =
   };
 
 describe("reg tests", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   test.each([
     ["unfiltered", false, false],
     ["only stale", true, false],
@@ -115,11 +108,11 @@ describe("reg tests", () => {
       json: () => ({ subscriptions: fakeSubscriptions.slice(10) }),
     });
 
-    const regListOutput = await reg.registryListSubscriptions(fakeContext, [], [false, doOnlyStale, doOnlyFail]);
+    const regListOutput = await reg.registryListSubscriptions(fakeContext, [], [false, false, doOnlyStale, doOnlyFail]);
     expect(mockRequest.request.mock.calls).toMatchSnapshot();
     expect(regListOutput).toMatchSnapshot();
-    expect(loggerSpy.info).toHaveBeenCalledTimes(0);
-    expect(loggerSpy.error).toHaveBeenCalledTimes(0);
+    expect(mockLogger.info).toHaveBeenCalledTimes(0);
+    expect(mockLogger.error).toHaveBeenCalledTimes(0);
   });
 
   test("reg update without failure", async () => {
@@ -141,7 +134,7 @@ describe("reg tests", () => {
 
     expect(mockShared.sleep.mock.calls).toMatchSnapshot();
 
-    expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
+    expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "response: Job for update subscription of application: appId and tenant: 00000000-0000-0000-0000-000000000001, was created
       polling job /api/v2.0/jobs/11111111-0000-0000-0000-000000000001 with interval 15sec
       response: Job for update subscription of application: appId and tenant: 00000000-0000-0000-0000-000000000002, was created
@@ -174,7 +167,7 @@ describe("reg tests", () => {
       ]
       "
     `);
-    expect(loggerSpy.error).toHaveBeenCalledTimes(0);
+    expect(mockLogger.error).toHaveBeenCalledTimes(0);
   });
 
   test("reg update with state failed", async () => {
@@ -204,7 +197,7 @@ describe("reg tests", () => {
 
     expect(mockShared.sleep.mock.calls).toMatchSnapshot();
 
-    expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
+    expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "response: Job for update subscription of application: appId and tenant: 00000000-0000-0000-0000-000000000001, was created
       polling job /api/v2.0/jobs/11111111-0000-0000-0000-000000000001 with interval 15sec
       response: Job for update subscription of application: appId and tenant: 00000000-0000-0000-0000-000000000002, was created
@@ -237,7 +230,7 @@ describe("reg tests", () => {
       ]
       "
     `);
-    expect(loggerSpy.error).toHaveBeenCalledTimes(0);
+    expect(mockLogger.error).toHaveBeenCalledTimes(0);
   });
 
   test("reg update with request failed", async () => {
@@ -269,7 +262,7 @@ describe("reg tests", () => {
 
     expect(mockShared.sleep.mock.calls).toMatchSnapshot();
 
-    expect(outputFromLoggerPartitionFetch(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
+    expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "response: Job for update subscription of application: appId and tenant: 00000000-0000-0000-0000-000000000001, was created
       polling job /api/v2.0/jobs/11111111-0000-0000-0000-000000000001 with interval 15sec
       response: Job for update subscription of application: appId and tenant: 00000000-0000-0000-0000-000000000002, was created
@@ -280,6 +273,6 @@ describe("reg tests", () => {
       polling job /api/v2.0/jobs/11111111-0000-0000-0000-000000000004 with interval 15sec
       "
     `);
-    expect(loggerSpy.error).toHaveBeenCalledTimes(0);
+    expect(mockLogger.error).toHaveBeenCalledTimes(0);
   });
 });

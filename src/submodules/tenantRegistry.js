@@ -21,10 +21,11 @@ const {
 } = require("../shared/static");
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
+const { Logger } = require("../shared/logger");
 
 const REGISTRY_PAGE_SIZE = 200;
 const REGISTRY_JOB_POLL_FREQUENCY_FALLBACK = 15000;
-const REGISTRY_REQUEST_CONCURRENCY_FALLBACK = 10;
+const REGISTRY_REQUEST_CONCURRENCY_FALLBACK = 6;
 const JOB_STATE = Object.freeze({
   STARTED: "STARTED",
   SUCCEEDED: "SUCCEEDED",
@@ -35,6 +36,8 @@ const SUBSCRIPTION_STATE = Object.freeze({
   UPDATE_FAILED: "UPDATE_FAILED",
 });
 const UPDATABLE_STATES = [SUBSCRIPTION_STATE.SUBSCRIBED, SUBSCRIPTION_STATE.UPDATE_FAILED];
+
+const logger = Logger.getInstance();
 
 const regRequestConcurrency = parseIntWithFallback(
   process.env[ENV.REG_CONCURRENCY],
@@ -89,12 +92,22 @@ const _registrySubscriptionsPaged = async (context, { tenant, onlyFailed, onlySt
   return { subscriptions };
 };
 
-const registryListSubscriptions = async (context, [tenant], [doTimestamps, doOnlyStale, doOnlyFailed]) => {
-  const { subscriptions } = await _registrySubscriptionsPaged(context, {
+const registryListSubscriptions = async (
+  context,
+  [tenant],
+  [doTimestamps, doJsonOutput, doOnlyStale, doOnlyFailed]
+) => {
+  const subscriptionInfos = await _registrySubscriptionsPaged(context, {
     tenant,
     onlyStale: doOnlyStale,
     onlyFailed: doOnlyFailed,
   });
+  const { subscriptions } = subscriptionInfos;
+
+  if (doJsonOutput) {
+    return subscriptionInfos;
+  }
+
   const headerRow = ["consumerTenantId", "globalAccountId", "subdomain", "plan", "state", "url"];
   doTimestamps && headerRow.push("created_on", "updated_on");
   const nowDate = new Date();
@@ -116,9 +129,8 @@ const registryListSubscriptions = async (context, [tenant], [doTimestamps, doOnl
   return tableList(table, { withRowNumber: !tenant });
 };
 
-const registryLongListSubscriptions = async (context, [tenant], [doOnlyStale, doOnlyFailed]) => {
-  const data = await _registrySubscriptionsPaged(context, { tenant, onlyStale: doOnlyStale, onlyFailed: doOnlyFailed });
-  return JSON.stringify(data, null, 2);
+const registryLongListSubscriptions = async (context, [tenant], [, doOnlyStale, doOnlyFailed]) => {
+  return await _registrySubscriptionsPaged(context, { tenant, onlyStale: doOnlyStale, onlyFailed: doOnlyFailed });
 };
 
 const registryServiceConfig = async (context) => {
@@ -127,7 +139,7 @@ const registryServiceConfig = async (context) => {
       credentials: { appUrls },
     },
   } = await context.getRegInfo();
-  return JSON.stringify(JSON.parse(appUrls), null, 2);
+  return JSON.parse(appUrls);
 };
 
 const _registryJobPoll = async (context, location, { skipFirst = false } = {}) => {
@@ -158,8 +170,7 @@ const _registryJobPoll = async (context, location, { skipFirst = false } = {}) =
 
 const registryJob = async (context, [jobId]) => {
   assert(isUUID(jobId), "JOB_ID is not a uuid", jobId);
-  const result = await _registryJobPoll(context, `/api/v2.0/jobs/${jobId}`, { skipFirst: true });
-  return JSON.stringify(result, null, 2);
+  return await _registryJobPoll(context, `/api/v2.0/jobs/${jobId}`, { skipFirst: true });
 };
 
 const _registryCallForTenant = async (
@@ -212,8 +223,8 @@ const _registryCallForTenant = async (
   }
   const [location] = response.headers.raw().location;
   const responseText = await response.text();
-  console.log("response: %s", responseText);
-  console.log("polling job %s with interval %isec", location, regPollFrequency / 1000);
+  logger.info("response: %s", responseText);
+  logger.info("polling job %s with interval %isec", location, regPollFrequency / 1000);
 
   const jobResult = await _registryJobPoll(context, location);
 
@@ -243,7 +254,7 @@ const _registryCall = async (context, method, tenantId, options) => {
     );
   }
   assert(Array.isArray(results), "got invalid results from registry %s call with %j", method, options);
-  console.log(JSON.stringify(results.length === 1 ? results[0] : results, null, 2));
+  logger.info(JSON.stringify(results.length === 1 ? results[0] : results, null, 2));
   assert(
     results.every(({ state }) => state === JOB_STATE.SUCCEEDED),
     "registry %s failed for some tenant",

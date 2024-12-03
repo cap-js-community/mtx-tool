@@ -1,0 +1,3544 @@
+[
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/apps?space_guids=0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
+        "body": "",
+        "status": 200,
+        "response": {
+            "pagination": {
+                "total_results": 15,
+                "total_pages": 1,
+                "first": {
+                    "href": "https://api.cf.sap.hana.ondemand.com/v3/apps?page=1&per_page=50&space_guids=0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                },
+                "last": {
+                    "href": "https://api.cf.sap.hana.ondemand.com/v3/apps?page=1&per_page=50&space_guids=0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                },
+                "next": null,
+                "previous": null
+            },
+            "resources": [
+                {
+                    "guid": "f84d681e-7123-442f-b8ea-2c747c11e145",
+                    "created_at": "2020-04-22T16:43:08Z",
+                    "updated_at": "2024-12-01T19:57:22Z",
+                    "name": "afc-backend",
+                    "state": "STARTED",
+                    "lifecycle": {
+                        "type": "buildpack",
+                        "data": {
+                            "buildpacks": [
+                                "https://github.com/cloudfoundry/nodejs-buildpack.git#v1.8.27"
+                            ],
+                            "stack": "cflinuxfs4"
+                        }
+                    },
+                    "relationships": {
+                        "space": {
+                            "data": {
+                                "guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                            }
+                        },
+                        "current_droplet": {
+                            "data": {
+                                "guid": "7bbfa536-0e97-4416-8741-fc2e7bd6c6f4"
+                            }
+                        }
+                    },
+                    "metadata": {
+                        "labels": {
+                            "mta_id": "ccdf76b5fe158066818731fccdf24919"
+                        },
+                        "annotations": {
+                            "mta_version": "4.8.0",
+                            "mta_id": "afc",
+                            "mta_module": "{\"name\":\"afc-backend\"}",
+                            "mta_module_provided_dependencies": "[]",
+                            "mta_bound_services": "[\"afc-aicore\",\"afc-logs\",\"afc-malware-scanner\",\"afc-business-logging\",\"afc-service-manager\",\"afc-uaa\",\"afc-destination\",\"afc-connectivity\",\"afc-auditlog\",\"afc-autoscaler\",\"afc-redis\",\"afc-bpa\"]"
+                        }
+                    },
+                    "links": {
+                        "self": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145"
+                        },
+                        "environment_variables": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/environment_variables"
+                        },
+                        "space": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/spaces/0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                        },
+                        "processes": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/processes"
+                        },
+                        "packages": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/packages"
+                        },
+                        "current_droplet": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/droplets/current"
+                        },
+                        "droplets": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/droplets"
+                        },
+                        "tasks": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/tasks"
+                        },
+                        "start": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/actions/start",
+                            "method": "POST"
+                        },
+                        "stop": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/actions/stop",
+                            "method": "POST"
+                        },
+                        "clear_buildpack_cache": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/actions/clear_buildpack_cache",
+                            "method": "POST"
+                        },
+                        "revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/revisions"
+                        },
+                        "deployed_revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/revisions/deployed"
+                        },
+                        "features": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/features"
+                        }
+                    }
+                },
+                {
+                    "guid": "188569c2-8a80-4eb2-a80b-4aa58dd40c7b",
+                    "created_at": "2020-04-22T16:47:50Z",
+                    "updated_at": "2024-12-01T19:47:01Z",
+                    "name": "afc-frontend",
+                    "state": "STARTED",
+                    "lifecycle": {
+                        "type": "buildpack",
+                        "data": {
+                            "buildpacks": [
+                                "https://github.com/cloudfoundry/nodejs-buildpack.git#v1.8.27"
+                            ],
+                            "stack": "cflinuxfs4"
+                        }
+                    },
+                    "relationships": {
+                        "space": {
+                            "data": {
+                                "guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                            }
+                        },
+                        "current_droplet": {
+                            "data": {
+                                "guid": "8d49a45f-4e4d-4911-bb34-9928cbd643fa"
+                            }
+                        }
+                    },
+                    "metadata": {
+                        "labels": {
+                            "mta_id": "ccdf76b5fe158066818731fccdf24919"
+                        },
+                        "annotations": {
+                            "mta_id": "afc",
+                            "mta_module": "{\"name\":\"afc-frontend\"}",
+                            "mta_module_provided_dependencies": "[]",
+                            "mta_bound_services": "[\"afc-redis\",\"afc-logs\",\"afc-business-logging\",\"afc-html5-repo-runtime\",\"afc-flp\",\"afc-saas-registry\",\"afc-uaa\",\"afc-ui5-flexibility-keyuser\",\"afc-theming\"]",
+                            "mta_version": "4.8.0"
+                        }
+                    },
+                    "links": {
+                        "self": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/188569c2-8a80-4eb2-a80b-4aa58dd40c7b"
+                        },
+                        "environment_variables": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/188569c2-8a80-4eb2-a80b-4aa58dd40c7b/environment_variables"
+                        },
+                        "space": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/spaces/0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                        },
+                        "processes": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/188569c2-8a80-4eb2-a80b-4aa58dd40c7b/processes"
+                        },
+                        "packages": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/188569c2-8a80-4eb2-a80b-4aa58dd40c7b/packages"
+                        },
+                        "current_droplet": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/188569c2-8a80-4eb2-a80b-4aa58dd40c7b/droplets/current"
+                        },
+                        "droplets": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/188569c2-8a80-4eb2-a80b-4aa58dd40c7b/droplets"
+                        },
+                        "tasks": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/188569c2-8a80-4eb2-a80b-4aa58dd40c7b/tasks"
+                        },
+                        "start": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/188569c2-8a80-4eb2-a80b-4aa58dd40c7b/actions/start",
+                            "method": "POST"
+                        },
+                        "stop": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/188569c2-8a80-4eb2-a80b-4aa58dd40c7b/actions/stop",
+                            "method": "POST"
+                        },
+                        "clear_buildpack_cache": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/188569c2-8a80-4eb2-a80b-4aa58dd40c7b/actions/clear_buildpack_cache",
+                            "method": "POST"
+                        },
+                        "revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/188569c2-8a80-4eb2-a80b-4aa58dd40c7b/revisions"
+                        },
+                        "deployed_revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/188569c2-8a80-4eb2-a80b-4aa58dd40c7b/revisions/deployed"
+                        },
+                        "features": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/188569c2-8a80-4eb2-a80b-4aa58dd40c7b/features"
+                        }
+                    }
+                },
+                {
+                    "guid": "e4c44adf-7eb5-4717-8056-f3319bf28ab1",
+                    "created_at": "2020-05-05T11:05:39Z",
+                    "updated_at": "2024-12-01T19:45:19Z",
+                    "name": "afc-maintenance-staged",
+                    "state": "STOPPED",
+                    "lifecycle": {
+                        "type": "buildpack",
+                        "data": {
+                            "buildpacks": [
+                                "https://github.com/cloudfoundry/nginx-buildpack.git#v1.2.17"
+                            ],
+                            "stack": "cflinuxfs4"
+                        }
+                    },
+                    "relationships": {
+                        "space": {
+                            "data": {
+                                "guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                            }
+                        },
+                        "current_droplet": {
+                            "data": {
+                                "guid": "1fc49f75-a167-483b-89d2-f9207c261858"
+                            }
+                        }
+                    },
+                    "metadata": {
+                        "labels": {
+                            "mta_id": "ccdf76b5fe158066818731fccdf24919"
+                        },
+                        "annotations": {
+                            "mta_id": "afc",
+                            "mta_module": "{\"name\":\"afc-maintenance-staged\"}",
+                            "mta_module_provided_dependencies": "[]",
+                            "mta_bound_services": "[]",
+                            "mta_version": "4.8.0"
+                        }
+                    },
+                    "links": {
+                        "self": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/e4c44adf-7eb5-4717-8056-f3319bf28ab1"
+                        },
+                        "environment_variables": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/e4c44adf-7eb5-4717-8056-f3319bf28ab1/environment_variables"
+                        },
+                        "space": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/spaces/0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                        },
+                        "processes": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/e4c44adf-7eb5-4717-8056-f3319bf28ab1/processes"
+                        },
+                        "packages": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/e4c44adf-7eb5-4717-8056-f3319bf28ab1/packages"
+                        },
+                        "current_droplet": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/e4c44adf-7eb5-4717-8056-f3319bf28ab1/droplets/current"
+                        },
+                        "droplets": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/e4c44adf-7eb5-4717-8056-f3319bf28ab1/droplets"
+                        },
+                        "tasks": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/e4c44adf-7eb5-4717-8056-f3319bf28ab1/tasks"
+                        },
+                        "start": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/e4c44adf-7eb5-4717-8056-f3319bf28ab1/actions/start",
+                            "method": "POST"
+                        },
+                        "stop": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/e4c44adf-7eb5-4717-8056-f3319bf28ab1/actions/stop",
+                            "method": "POST"
+                        },
+                        "clear_buildpack_cache": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/e4c44adf-7eb5-4717-8056-f3319bf28ab1/actions/clear_buildpack_cache",
+                            "method": "POST"
+                        },
+                        "revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/e4c44adf-7eb5-4717-8056-f3319bf28ab1/revisions"
+                        },
+                        "deployed_revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/e4c44adf-7eb5-4717-8056-f3319bf28ab1/revisions/deployed"
+                        },
+                        "features": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/e4c44adf-7eb5-4717-8056-f3319bf28ab1/features"
+                        }
+                    }
+                },
+                {
+                    "guid": "2e946a49-9b15-4b86-b10c-d659129cc048",
+                    "created_at": "2020-05-05T11:57:47Z",
+                    "updated_at": "2024-12-01T19:54:15Z",
+                    "name": "afc-maintenance-live",
+                    "state": "STARTED",
+                    "lifecycle": {
+                        "type": "buildpack",
+                        "data": {
+                            "buildpacks": [
+                                "nginx_buildpack"
+                            ],
+                            "stack": "cflinuxfs4"
+                        }
+                    },
+                    "relationships": {
+                        "space": {
+                            "data": {
+                                "guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                            }
+                        },
+                        "current_droplet": {
+                            "data": {
+                                "guid": "924dec47-6921-4d64-95f1-9b2330286530"
+                            }
+                        }
+                    },
+                    "metadata": {
+                        "labels": {},
+                        "annotations": {}
+                    },
+                    "links": {
+                        "self": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/2e946a49-9b15-4b86-b10c-d659129cc048"
+                        },
+                        "environment_variables": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/2e946a49-9b15-4b86-b10c-d659129cc048/environment_variables"
+                        },
+                        "space": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/spaces/0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                        },
+                        "processes": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/2e946a49-9b15-4b86-b10c-d659129cc048/processes"
+                        },
+                        "packages": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/2e946a49-9b15-4b86-b10c-d659129cc048/packages"
+                        },
+                        "current_droplet": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/2e946a49-9b15-4b86-b10c-d659129cc048/droplets/current"
+                        },
+                        "droplets": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/2e946a49-9b15-4b86-b10c-d659129cc048/droplets"
+                        },
+                        "tasks": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/2e946a49-9b15-4b86-b10c-d659129cc048/tasks"
+                        },
+                        "start": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/2e946a49-9b15-4b86-b10c-d659129cc048/actions/start",
+                            "method": "POST"
+                        },
+                        "stop": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/2e946a49-9b15-4b86-b10c-d659129cc048/actions/stop",
+                            "method": "POST"
+                        },
+                        "clear_buildpack_cache": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/2e946a49-9b15-4b86-b10c-d659129cc048/actions/clear_buildpack_cache",
+                            "method": "POST"
+                        },
+                        "revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/2e946a49-9b15-4b86-b10c-d659129cc048/revisions"
+                        },
+                        "deployed_revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/2e946a49-9b15-4b86-b10c-d659129cc048/revisions/deployed"
+                        },
+                        "features": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/2e946a49-9b15-4b86-b10c-d659129cc048/features"
+                        }
+                    }
+                },
+                {
+                    "guid": "5cccc504-4911-43ef-a531-31cbf2b89939",
+                    "created_at": "2021-02-08T11:09:21Z",
+                    "updated_at": "2024-12-01T19:53:42Z",
+                    "name": "afc-mtx",
+                    "state": "STARTED",
+                    "lifecycle": {
+                        "type": "buildpack",
+                        "data": {
+                            "buildpacks": [
+                                "https://github.com/cloudfoundry/nodejs-buildpack.git#v1.8.27"
+                            ],
+                            "stack": "cflinuxfs4"
+                        }
+                    },
+                    "relationships": {
+                        "space": {
+                            "data": {
+                                "guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                            }
+                        },
+                        "current_droplet": {
+                            "data": {
+                                "guid": "ebcc16e4-8417-44e0-8736-ac320d5ed663"
+                            }
+                        }
+                    },
+                    "metadata": {
+                        "labels": {
+                            "mta_id": "ccdf76b5fe158066818731fccdf24919"
+                        },
+                        "annotations": {
+                            "mta_version": "4.8.0",
+                            "mta_id": "afc",
+                            "mta_module": "{\"name\":\"afc-mtx\"}",
+                            "mta_module_provided_dependencies": "[]",
+                            "mta_bound_services": "[\"afc-logs\",\"afc-service-manager\",\"afc-uaa\",\"afc-saas-registry\",\"afc-redis\",\"afc-business-logging\",\"afc-connectivity\",\"afc-ui5-flexibility-keyuser\",\"afc-ans\",\"afc-flp\",\"afc-html5-repo-runtime\",\"afc-theming\",\"afc-destination\",\"afc-auditlog\",\"afc-bpa\"]"
+                        }
+                    },
+                    "links": {
+                        "self": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5cccc504-4911-43ef-a531-31cbf2b89939"
+                        },
+                        "environment_variables": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5cccc504-4911-43ef-a531-31cbf2b89939/environment_variables"
+                        },
+                        "space": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/spaces/0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                        },
+                        "processes": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5cccc504-4911-43ef-a531-31cbf2b89939/processes"
+                        },
+                        "packages": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5cccc504-4911-43ef-a531-31cbf2b89939/packages"
+                        },
+                        "current_droplet": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5cccc504-4911-43ef-a531-31cbf2b89939/droplets/current"
+                        },
+                        "droplets": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5cccc504-4911-43ef-a531-31cbf2b89939/droplets"
+                        },
+                        "tasks": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5cccc504-4911-43ef-a531-31cbf2b89939/tasks"
+                        },
+                        "start": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5cccc504-4911-43ef-a531-31cbf2b89939/actions/start",
+                            "method": "POST"
+                        },
+                        "stop": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5cccc504-4911-43ef-a531-31cbf2b89939/actions/stop",
+                            "method": "POST"
+                        },
+                        "clear_buildpack_cache": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5cccc504-4911-43ef-a531-31cbf2b89939/actions/clear_buildpack_cache",
+                            "method": "POST"
+                        },
+                        "revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5cccc504-4911-43ef-a531-31cbf2b89939/revisions"
+                        },
+                        "deployed_revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5cccc504-4911-43ef-a531-31cbf2b89939/revisions/deployed"
+                        },
+                        "features": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5cccc504-4911-43ef-a531-31cbf2b89939/features"
+                        }
+                    }
+                },
+                {
+                    "guid": "58af95d6-983b-44a0-aef3-dfd58a0c3dce",
+                    "created_at": "2021-11-15T13:52:32Z",
+                    "updated_at": "2024-11-28T19:54:58Z",
+                    "name": "afc-hana-monitoring",
+                    "state": "STARTED",
+                    "lifecycle": {
+                        "type": "buildpack",
+                        "data": {
+                            "buildpacks": [
+                                "nodejs_buildpack"
+                            ],
+                            "stack": "cflinuxfs4"
+                        }
+                    },
+                    "relationships": {
+                        "space": {
+                            "data": {
+                                "guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                            }
+                        },
+                        "current_droplet": {
+                            "data": {
+                                "guid": "9b0eb45a-1474-4baa-b1ea-88e14e0922cd"
+                            }
+                        }
+                    },
+                    "metadata": {
+                        "labels": {},
+                        "annotations": {}
+                    },
+                    "links": {
+                        "self": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/58af95d6-983b-44a0-aef3-dfd58a0c3dce"
+                        },
+                        "environment_variables": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/58af95d6-983b-44a0-aef3-dfd58a0c3dce/environment_variables"
+                        },
+                        "space": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/spaces/0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                        },
+                        "processes": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/58af95d6-983b-44a0-aef3-dfd58a0c3dce/processes"
+                        },
+                        "packages": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/58af95d6-983b-44a0-aef3-dfd58a0c3dce/packages"
+                        },
+                        "current_droplet": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/58af95d6-983b-44a0-aef3-dfd58a0c3dce/droplets/current"
+                        },
+                        "droplets": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/58af95d6-983b-44a0-aef3-dfd58a0c3dce/droplets"
+                        },
+                        "tasks": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/58af95d6-983b-44a0-aef3-dfd58a0c3dce/tasks"
+                        },
+                        "start": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/58af95d6-983b-44a0-aef3-dfd58a0c3dce/actions/start",
+                            "method": "POST"
+                        },
+                        "stop": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/58af95d6-983b-44a0-aef3-dfd58a0c3dce/actions/stop",
+                            "method": "POST"
+                        },
+                        "clear_buildpack_cache": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/58af95d6-983b-44a0-aef3-dfd58a0c3dce/actions/clear_buildpack_cache",
+                            "method": "POST"
+                        },
+                        "revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/58af95d6-983b-44a0-aef3-dfd58a0c3dce/revisions"
+                        },
+                        "deployed_revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/58af95d6-983b-44a0-aef3-dfd58a0c3dce/revisions/deployed"
+                        },
+                        "features": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/58af95d6-983b-44a0-aef3-dfd58a0c3dce/features"
+                        }
+                    }
+                },
+                {
+                    "guid": "c80cf645-459a-40d4-94d2-0f209a69886e",
+                    "created_at": "2022-01-13T20:11:53Z",
+                    "updated_at": "2024-12-01T19:52:34Z",
+                    "name": "afc-backend-worker",
+                    "state": "STARTED",
+                    "lifecycle": {
+                        "type": "buildpack",
+                        "data": {
+                            "buildpacks": [
+                                "https://github.com/cloudfoundry/nodejs-buildpack.git#v1.8.27"
+                            ],
+                            "stack": "cflinuxfs4"
+                        }
+                    },
+                    "relationships": {
+                        "space": {
+                            "data": {
+                                "guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                            }
+                        },
+                        "current_droplet": {
+                            "data": {
+                                "guid": "7d76f300-3f46-4c90-9b2f-bd2873bb9ff6"
+                            }
+                        }
+                    },
+                    "metadata": {
+                        "labels": {
+                            "mta_id": "ccdf76b5fe158066818731fccdf24919"
+                        },
+                        "annotations": {
+                            "mta_bound_services": "[\"afc-aicore\",\"afc-logs\",\"afc-malware-scanner\",\"afc-business-logging\",\"afc-service-manager\",\"afc-uaa\",\"afc-destination\",\"afc-connectivity\",\"afc-metering\",\"afc-auditlog\",\"afc-autoscaler\",\"afc-redis\",\"afc-bpa\",\"afc-saas-registry\"]",
+                            "mta_id": "afc",
+                            "mta_module": "{\"name\":\"afc-backend-worker\"}",
+                            "mta_module_provided_dependencies": "[]",
+                            "mta_version": "4.8.0"
+                        }
+                    },
+                    "links": {
+                        "self": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/c80cf645-459a-40d4-94d2-0f209a69886e"
+                        },
+                        "environment_variables": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/c80cf645-459a-40d4-94d2-0f209a69886e/environment_variables"
+                        },
+                        "space": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/spaces/0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                        },
+                        "processes": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/c80cf645-459a-40d4-94d2-0f209a69886e/processes"
+                        },
+                        "packages": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/c80cf645-459a-40d4-94d2-0f209a69886e/packages"
+                        },
+                        "current_droplet": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/c80cf645-459a-40d4-94d2-0f209a69886e/droplets/current"
+                        },
+                        "droplets": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/c80cf645-459a-40d4-94d2-0f209a69886e/droplets"
+                        },
+                        "tasks": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/c80cf645-459a-40d4-94d2-0f209a69886e/tasks"
+                        },
+                        "start": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/c80cf645-459a-40d4-94d2-0f209a69886e/actions/start",
+                            "method": "POST"
+                        },
+                        "stop": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/c80cf645-459a-40d4-94d2-0f209a69886e/actions/stop",
+                            "method": "POST"
+                        },
+                        "clear_buildpack_cache": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/c80cf645-459a-40d4-94d2-0f209a69886e/actions/clear_buildpack_cache",
+                            "method": "POST"
+                        },
+                        "revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/c80cf645-459a-40d4-94d2-0f209a69886e/revisions"
+                        },
+                        "deployed_revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/c80cf645-459a-40d4-94d2-0f209a69886e/revisions/deployed"
+                        },
+                        "features": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/c80cf645-459a-40d4-94d2-0f209a69886e/features"
+                        }
+                    }
+                },
+                {
+                    "guid": "e7934faa-b419-4643-9bca-13c4df79f64f",
+                    "created_at": "2022-02-09T19:57:00Z",
+                    "updated_at": "2024-12-01T19:46:20Z",
+                    "name": "afc-system-data-collector",
+                    "state": "STARTED",
+                    "lifecycle": {
+                        "type": "buildpack",
+                        "data": {
+                            "buildpacks": [
+                                "https://github.com/cloudfoundry/nodejs-buildpack.git#v1.8.27"
+                            ],
+                            "stack": "cflinuxfs4"
+                        }
+                    },
+                    "relationships": {
+                        "space": {
+                            "data": {
+                                "guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                            }
+                        },
+                        "current_droplet": {
+                            "data": {
+                                "guid": "c8e1fc6d-8929-4268-8843-0598f80238f0"
+                            }
+                        }
+                    },
+                    "metadata": {
+                        "labels": {
+                            "mta_id": "ccdf76b5fe158066818731fccdf24919"
+                        },
+                        "annotations": {
+                            "mta_module_provided_dependencies": "[]",
+                            "mta_id": "afc",
+                            "mta_module": "{\"name\":\"afc-system-data-collector\"}",
+                            "mta_version": "4.8.0",
+                            "mta_bound_services": "[\"afc-uaa\",\"afc-service-manager\",\"afc-logs\",\"afc-destination\",\"afc-connectivity\",\"afc-securestore\",\"afc-redis\",\"afc-business-logging\",\"afc-saas-registry\",\"afc-auditlog\",\"afc-bpa\"]"
+                        }
+                    },
+                    "links": {
+                        "self": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/e7934faa-b419-4643-9bca-13c4df79f64f"
+                        },
+                        "environment_variables": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/e7934faa-b419-4643-9bca-13c4df79f64f/environment_variables"
+                        },
+                        "space": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/spaces/0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                        },
+                        "processes": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/e7934faa-b419-4643-9bca-13c4df79f64f/processes"
+                        },
+                        "packages": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/e7934faa-b419-4643-9bca-13c4df79f64f/packages"
+                        },
+                        "current_droplet": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/e7934faa-b419-4643-9bca-13c4df79f64f/droplets/current"
+                        },
+                        "droplets": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/e7934faa-b419-4643-9bca-13c4df79f64f/droplets"
+                        },
+                        "tasks": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/e7934faa-b419-4643-9bca-13c4df79f64f/tasks"
+                        },
+                        "start": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/e7934faa-b419-4643-9bca-13c4df79f64f/actions/start",
+                            "method": "POST"
+                        },
+                        "stop": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/e7934faa-b419-4643-9bca-13c4df79f64f/actions/stop",
+                            "method": "POST"
+                        },
+                        "clear_buildpack_cache": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/e7934faa-b419-4643-9bca-13c4df79f64f/actions/clear_buildpack_cache",
+                            "method": "POST"
+                        },
+                        "revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/e7934faa-b419-4643-9bca-13c4df79f64f/revisions"
+                        },
+                        "deployed_revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/e7934faa-b419-4643-9bca-13c4df79f64f/revisions/deployed"
+                        },
+                        "features": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/e7934faa-b419-4643-9bca-13c4df79f64f/features"
+                        }
+                    }
+                },
+                {
+                    "guid": "1d6f1e2f-abe8-42ab-9c77-4240ac1dec61",
+                    "created_at": "2022-02-21T06:56:40Z",
+                    "updated_at": "2023-05-19T12:38:18Z",
+                    "name": "afc-abap-backend-emulator",
+                    "state": "STARTED",
+                    "lifecycle": {
+                        "type": "buildpack",
+                        "data": {
+                            "buildpacks": [
+                                "nodejs_buildpack"
+                            ],
+                            "stack": "cflinuxfs4"
+                        }
+                    },
+                    "relationships": {
+                        "space": {
+                            "data": {
+                                "guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                            }
+                        },
+                        "current_droplet": {
+                            "data": {
+                                "guid": "7746e2c4-b22f-4c7e-aec7-a01db121d96b"
+                            }
+                        }
+                    },
+                    "metadata": {
+                        "labels": {
+                            "sap.com/cflinuxfs4_stack_migration_state": "succeeded"
+                        },
+                        "annotations": {}
+                    },
+                    "links": {
+                        "self": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/1d6f1e2f-abe8-42ab-9c77-4240ac1dec61"
+                        },
+                        "environment_variables": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/1d6f1e2f-abe8-42ab-9c77-4240ac1dec61/environment_variables"
+                        },
+                        "space": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/spaces/0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                        },
+                        "processes": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/1d6f1e2f-abe8-42ab-9c77-4240ac1dec61/processes"
+                        },
+                        "packages": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/1d6f1e2f-abe8-42ab-9c77-4240ac1dec61/packages"
+                        },
+                        "current_droplet": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/1d6f1e2f-abe8-42ab-9c77-4240ac1dec61/droplets/current"
+                        },
+                        "droplets": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/1d6f1e2f-abe8-42ab-9c77-4240ac1dec61/droplets"
+                        },
+                        "tasks": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/1d6f1e2f-abe8-42ab-9c77-4240ac1dec61/tasks"
+                        },
+                        "start": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/1d6f1e2f-abe8-42ab-9c77-4240ac1dec61/actions/start",
+                            "method": "POST"
+                        },
+                        "stop": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/1d6f1e2f-abe8-42ab-9c77-4240ac1dec61/actions/stop",
+                            "method": "POST"
+                        },
+                        "clear_buildpack_cache": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/1d6f1e2f-abe8-42ab-9c77-4240ac1dec61/actions/clear_buildpack_cache",
+                            "method": "POST"
+                        },
+                        "revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/1d6f1e2f-abe8-42ab-9c77-4240ac1dec61/revisions"
+                        },
+                        "deployed_revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/1d6f1e2f-abe8-42ab-9c77-4240ac1dec61/revisions/deployed"
+                        },
+                        "features": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/1d6f1e2f-abe8-42ab-9c77-4240ac1dec61/features"
+                        }
+                    }
+                },
+                {
+                    "guid": "efefbbf6-df4a-48a9-9056-add75c3ba2e6",
+                    "created_at": "2022-05-05T14:13:10Z",
+                    "updated_at": "2024-12-01T19:47:31Z",
+                    "name": "afc-api",
+                    "state": "STARTED",
+                    "lifecycle": {
+                        "type": "buildpack",
+                        "data": {
+                            "buildpacks": [
+                                "https://github.com/cloudfoundry/nodejs-buildpack.git#v1.8.27"
+                            ],
+                            "stack": "cflinuxfs4"
+                        }
+                    },
+                    "relationships": {
+                        "space": {
+                            "data": {
+                                "guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                            }
+                        },
+                        "current_droplet": {
+                            "data": {
+                                "guid": "60a91cda-8a7c-4830-ae54-c4f9924ec875"
+                            }
+                        }
+                    },
+                    "metadata": {
+                        "labels": {
+                            "mta_id": "ccdf76b5fe158066818731fccdf24919"
+                        },
+                        "annotations": {
+                            "mta_bound_services": "[\"afc-api-uaa\",\"afc-uaa\",\"afc-service-manager\",\"afc-redis\",\"afc-destination\",\"afc-connectivity\",\"afc-logs\",\"afc-auditlog\",\"afc-autoscaler\"]",
+                            "mta_version": "4.8.0",
+                            "mta_id": "afc",
+                            "mta_module": "{\"name\":\"afc-api\"}",
+                            "mta_module_provided_dependencies": "[]"
+                        }
+                    },
+                    "links": {
+                        "self": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/efefbbf6-df4a-48a9-9056-add75c3ba2e6"
+                        },
+                        "environment_variables": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/efefbbf6-df4a-48a9-9056-add75c3ba2e6/environment_variables"
+                        },
+                        "space": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/spaces/0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                        },
+                        "processes": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/efefbbf6-df4a-48a9-9056-add75c3ba2e6/processes"
+                        },
+                        "packages": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/efefbbf6-df4a-48a9-9056-add75c3ba2e6/packages"
+                        },
+                        "current_droplet": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/efefbbf6-df4a-48a9-9056-add75c3ba2e6/droplets/current"
+                        },
+                        "droplets": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/efefbbf6-df4a-48a9-9056-add75c3ba2e6/droplets"
+                        },
+                        "tasks": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/efefbbf6-df4a-48a9-9056-add75c3ba2e6/tasks"
+                        },
+                        "start": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/efefbbf6-df4a-48a9-9056-add75c3ba2e6/actions/start",
+                            "method": "POST"
+                        },
+                        "stop": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/efefbbf6-df4a-48a9-9056-add75c3ba2e6/actions/stop",
+                            "method": "POST"
+                        },
+                        "clear_buildpack_cache": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/efefbbf6-df4a-48a9-9056-add75c3ba2e6/actions/clear_buildpack_cache",
+                            "method": "POST"
+                        },
+                        "revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/efefbbf6-df4a-48a9-9056-add75c3ba2e6/revisions"
+                        },
+                        "deployed_revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/efefbbf6-df4a-48a9-9056-add75c3ba2e6/revisions/deployed"
+                        },
+                        "features": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/efefbbf6-df4a-48a9-9056-add75c3ba2e6/features"
+                        }
+                    }
+                },
+                {
+                    "guid": "a2eece29-efb8-4977-8ed5-0c79729cbb57",
+                    "created_at": "2023-01-12T09:37:17Z",
+                    "updated_at": "2023-05-19T12:33:07Z",
+                    "name": "afc-abap-backend-emulator-dev",
+                    "state": "STARTED",
+                    "lifecycle": {
+                        "type": "buildpack",
+                        "data": {
+                            "buildpacks": [
+                                "nodejs_buildpack"
+                            ],
+                            "stack": "cflinuxfs4"
+                        }
+                    },
+                    "relationships": {
+                        "space": {
+                            "data": {
+                                "guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                            }
+                        },
+                        "current_droplet": {
+                            "data": {
+                                "guid": "147602e8-8562-4451-94d0-adb19f5f9359"
+                            }
+                        }
+                    },
+                    "metadata": {
+                        "labels": {
+                            "sap.com/cflinuxfs4_stack_migration_state": "succeeded"
+                        },
+                        "annotations": {}
+                    },
+                    "links": {
+                        "self": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/a2eece29-efb8-4977-8ed5-0c79729cbb57"
+                        },
+                        "environment_variables": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/a2eece29-efb8-4977-8ed5-0c79729cbb57/environment_variables"
+                        },
+                        "space": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/spaces/0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                        },
+                        "processes": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/a2eece29-efb8-4977-8ed5-0c79729cbb57/processes"
+                        },
+                        "packages": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/a2eece29-efb8-4977-8ed5-0c79729cbb57/packages"
+                        },
+                        "current_droplet": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/a2eece29-efb8-4977-8ed5-0c79729cbb57/droplets/current"
+                        },
+                        "droplets": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/a2eece29-efb8-4977-8ed5-0c79729cbb57/droplets"
+                        },
+                        "tasks": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/a2eece29-efb8-4977-8ed5-0c79729cbb57/tasks"
+                        },
+                        "start": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/a2eece29-efb8-4977-8ed5-0c79729cbb57/actions/start",
+                            "method": "POST"
+                        },
+                        "stop": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/a2eece29-efb8-4977-8ed5-0c79729cbb57/actions/stop",
+                            "method": "POST"
+                        },
+                        "clear_buildpack_cache": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/a2eece29-efb8-4977-8ed5-0c79729cbb57/actions/clear_buildpack_cache",
+                            "method": "POST"
+                        },
+                        "revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/a2eece29-efb8-4977-8ed5-0c79729cbb57/revisions"
+                        },
+                        "deployed_revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/a2eece29-efb8-4977-8ed5-0c79729cbb57/revisions/deployed"
+                        },
+                        "features": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/a2eece29-efb8-4977-8ed5-0c79729cbb57/features"
+                        }
+                    }
+                },
+                {
+                    "guid": "10720f56-b09c-4a8e-8c72-55170ccd2fcd",
+                    "created_at": "2023-02-07T11:32:39Z",
+                    "updated_at": "2024-12-01T19:47:21Z",
+                    "name": "afc-backend-isolation",
+                    "state": "STARTED",
+                    "lifecycle": {
+                        "type": "buildpack",
+                        "data": {
+                            "buildpacks": [
+                                "https://github.com/cloudfoundry/nodejs-buildpack.git#v1.8.27"
+                            ],
+                            "stack": "cflinuxfs4"
+                        }
+                    },
+                    "relationships": {
+                        "space": {
+                            "data": {
+                                "guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                            }
+                        },
+                        "current_droplet": {
+                            "data": {
+                                "guid": "f256d5e4-0597-4571-b6d1-b369bf1c809e"
+                            }
+                        }
+                    },
+                    "metadata": {
+                        "labels": {
+                            "mta_id": "ccdf76b5fe158066818731fccdf24919"
+                        },
+                        "annotations": {
+                            "mta_id": "afc",
+                            "mta_module": "{\"name\":\"afc-backend-isolation\"}",
+                            "mta_module_provided_dependencies": "[]",
+                            "mta_version": "4.8.0",
+                            "mta_bound_services": "[\"afc-aicore\",\"afc-logs\",\"afc-malware-scanner\",\"afc-business-logging\",\"afc-service-manager\",\"afc-uaa\",\"afc-destination\",\"afc-connectivity\",\"afc-auditlog\",\"afc-redis\",\"afc-bpa\",\"afc-saas-registry\"]"
+                        }
+                    },
+                    "links": {
+                        "self": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/10720f56-b09c-4a8e-8c72-55170ccd2fcd"
+                        },
+                        "environment_variables": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/10720f56-b09c-4a8e-8c72-55170ccd2fcd/environment_variables"
+                        },
+                        "space": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/spaces/0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                        },
+                        "processes": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/10720f56-b09c-4a8e-8c72-55170ccd2fcd/processes"
+                        },
+                        "packages": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/10720f56-b09c-4a8e-8c72-55170ccd2fcd/packages"
+                        },
+                        "current_droplet": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/10720f56-b09c-4a8e-8c72-55170ccd2fcd/droplets/current"
+                        },
+                        "droplets": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/10720f56-b09c-4a8e-8c72-55170ccd2fcd/droplets"
+                        },
+                        "tasks": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/10720f56-b09c-4a8e-8c72-55170ccd2fcd/tasks"
+                        },
+                        "start": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/10720f56-b09c-4a8e-8c72-55170ccd2fcd/actions/start",
+                            "method": "POST"
+                        },
+                        "stop": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/10720f56-b09c-4a8e-8c72-55170ccd2fcd/actions/stop",
+                            "method": "POST"
+                        },
+                        "clear_buildpack_cache": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/10720f56-b09c-4a8e-8c72-55170ccd2fcd/actions/clear_buildpack_cache",
+                            "method": "POST"
+                        },
+                        "revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/10720f56-b09c-4a8e-8c72-55170ccd2fcd/revisions"
+                        },
+                        "deployed_revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/10720f56-b09c-4a8e-8c72-55170ccd2fcd/revisions/deployed"
+                        },
+                        "features": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/10720f56-b09c-4a8e-8c72-55170ccd2fcd/features"
+                        }
+                    }
+                },
+                {
+                    "guid": "5d976c86-b135-4070-98b2-286ff12c3356",
+                    "created_at": "2023-07-03T12:07:15Z",
+                    "updated_at": "2024-08-30T12:10:25Z",
+                    "name": "afc-health-check",
+                    "state": "STARTED",
+                    "lifecycle": {
+                        "type": "buildpack",
+                        "data": {
+                            "buildpacks": [
+                                "https://github.com/cloudfoundry/apt-buildpack#v0.3.0",
+                                "https://github.com/cloudfoundry/nodejs-buildpack#v1.8.12"
+                            ],
+                            "stack": "cflinuxfs4"
+                        }
+                    },
+                    "relationships": {
+                        "space": {
+                            "data": {
+                                "guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                            }
+                        },
+                        "current_droplet": {
+                            "data": {
+                                "guid": "d96b6a03-d664-47f2-bbee-b53f624a7b60"
+                            }
+                        }
+                    },
+                    "metadata": {
+                        "labels": {},
+                        "annotations": {}
+                    },
+                    "links": {
+                        "self": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5d976c86-b135-4070-98b2-286ff12c3356"
+                        },
+                        "environment_variables": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5d976c86-b135-4070-98b2-286ff12c3356/environment_variables"
+                        },
+                        "space": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/spaces/0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                        },
+                        "processes": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5d976c86-b135-4070-98b2-286ff12c3356/processes"
+                        },
+                        "packages": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5d976c86-b135-4070-98b2-286ff12c3356/packages"
+                        },
+                        "current_droplet": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5d976c86-b135-4070-98b2-286ff12c3356/droplets/current"
+                        },
+                        "droplets": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5d976c86-b135-4070-98b2-286ff12c3356/droplets"
+                        },
+                        "tasks": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5d976c86-b135-4070-98b2-286ff12c3356/tasks"
+                        },
+                        "start": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5d976c86-b135-4070-98b2-286ff12c3356/actions/start",
+                            "method": "POST"
+                        },
+                        "stop": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5d976c86-b135-4070-98b2-286ff12c3356/actions/stop",
+                            "method": "POST"
+                        },
+                        "clear_buildpack_cache": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5d976c86-b135-4070-98b2-286ff12c3356/actions/clear_buildpack_cache",
+                            "method": "POST"
+                        },
+                        "revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5d976c86-b135-4070-98b2-286ff12c3356/revisions"
+                        },
+                        "deployed_revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5d976c86-b135-4070-98b2-286ff12c3356/revisions/deployed"
+                        },
+                        "features": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5d976c86-b135-4070-98b2-286ff12c3356/features"
+                        }
+                    }
+                },
+                {
+                    "guid": "b5ba0ed4-3bf5-4893-b57c-814672a6843a",
+                    "created_at": "2024-06-19T19:47:22Z",
+                    "updated_at": "2024-12-01T19:47:01Z",
+                    "name": "afc-cms",
+                    "state": "STARTED",
+                    "lifecycle": {
+                        "type": "buildpack",
+                        "data": {
+                            "buildpacks": [
+                                "https://github.com/cloudfoundry/nodejs-buildpack.git#v1.8.27"
+                            ],
+                            "stack": "cflinuxfs4"
+                        }
+                    },
+                    "relationships": {
+                        "space": {
+                            "data": {
+                                "guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                            }
+                        },
+                        "current_droplet": {
+                            "data": {
+                                "guid": "6045f86f-4a8b-4e8f-be4d-390ed53e53d6"
+                            }
+                        }
+                    },
+                    "metadata": {
+                        "labels": {
+                            "mta_id": "ccdf76b5fe158066818731fccdf24919"
+                        },
+                        "annotations": {
+                            "mta_version": "4.8.0",
+                            "mta_id": "afc",
+                            "mta_module": "{\"name\":\"afc-cms\"}",
+                            "mta_module_provided_dependencies": "[]",
+                            "mta_bound_services": "[\"afc-logs\",\"afc-service-manager\",\"afc-uaa\",\"afc-destination\",\"afc-connectivity\",\"afc-redis\",\"afc-autoscaler\"]"
+                        }
+                    },
+                    "links": {
+                        "self": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/b5ba0ed4-3bf5-4893-b57c-814672a6843a"
+                        },
+                        "environment_variables": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/b5ba0ed4-3bf5-4893-b57c-814672a6843a/environment_variables"
+                        },
+                        "space": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/spaces/0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                        },
+                        "processes": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/b5ba0ed4-3bf5-4893-b57c-814672a6843a/processes"
+                        },
+                        "packages": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/b5ba0ed4-3bf5-4893-b57c-814672a6843a/packages"
+                        },
+                        "current_droplet": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/b5ba0ed4-3bf5-4893-b57c-814672a6843a/droplets/current"
+                        },
+                        "droplets": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/b5ba0ed4-3bf5-4893-b57c-814672a6843a/droplets"
+                        },
+                        "tasks": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/b5ba0ed4-3bf5-4893-b57c-814672a6843a/tasks"
+                        },
+                        "start": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/b5ba0ed4-3bf5-4893-b57c-814672a6843a/actions/start",
+                            "method": "POST"
+                        },
+                        "stop": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/b5ba0ed4-3bf5-4893-b57c-814672a6843a/actions/stop",
+                            "method": "POST"
+                        },
+                        "clear_buildpack_cache": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/b5ba0ed4-3bf5-4893-b57c-814672a6843a/actions/clear_buildpack_cache",
+                            "method": "POST"
+                        },
+                        "revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/b5ba0ed4-3bf5-4893-b57c-814672a6843a/revisions"
+                        },
+                        "deployed_revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/b5ba0ed4-3bf5-4893-b57c-814672a6843a/revisions/deployed"
+                        },
+                        "features": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/b5ba0ed4-3bf5-4893-b57c-814672a6843a/features"
+                        }
+                    }
+                },
+                {
+                    "guid": "86e4b3b4-3cd8-4f8b-a381-457fc3a5b839",
+                    "created_at": "2024-08-16T08:01:43Z",
+                    "updated_at": "2024-10-08T08:53:46Z",
+                    "name": "afc-admin-app",
+                    "state": "STARTED",
+                    "lifecycle": {
+                        "type": "buildpack",
+                        "data": {
+                            "buildpacks": [
+                                "nodejs_buildpack"
+                            ],
+                            "stack": "cflinuxfs4"
+                        }
+                    },
+                    "relationships": {
+                        "space": {
+                            "data": {
+                                "guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                            }
+                        },
+                        "current_droplet": {
+                            "data": {
+                                "guid": "264bfdc6-31da-4303-8895-c0686b23bfca"
+                            }
+                        }
+                    },
+                    "metadata": {
+                        "labels": {
+                            "mta_id": "0019fa7558dddf98bab59c19a66e68ef"
+                        },
+                        "annotations": {
+                            "mta_id": "afc-admin-mta",
+                            "mta_version": "1.0.0",
+                            "mta_module": "{\"name\":\"afc-admin-app\"}",
+                            "mta_module_provided_dependencies": "[]",
+                            "mta_bound_services": "[\"afc-admin-uaa\",\"afc-admin-saas-registry\"]"
+                        }
+                    },
+                    "links": {
+                        "self": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/86e4b3b4-3cd8-4f8b-a381-457fc3a5b839"
+                        },
+                        "environment_variables": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/86e4b3b4-3cd8-4f8b-a381-457fc3a5b839/environment_variables"
+                        },
+                        "space": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/spaces/0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                        },
+                        "processes": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/86e4b3b4-3cd8-4f8b-a381-457fc3a5b839/processes"
+                        },
+                        "packages": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/86e4b3b4-3cd8-4f8b-a381-457fc3a5b839/packages"
+                        },
+                        "current_droplet": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/86e4b3b4-3cd8-4f8b-a381-457fc3a5b839/droplets/current"
+                        },
+                        "droplets": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/86e4b3b4-3cd8-4f8b-a381-457fc3a5b839/droplets"
+                        },
+                        "tasks": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/86e4b3b4-3cd8-4f8b-a381-457fc3a5b839/tasks"
+                        },
+                        "start": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/86e4b3b4-3cd8-4f8b-a381-457fc3a5b839/actions/start",
+                            "method": "POST"
+                        },
+                        "stop": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/86e4b3b4-3cd8-4f8b-a381-457fc3a5b839/actions/stop",
+                            "method": "POST"
+                        },
+                        "clear_buildpack_cache": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/86e4b3b4-3cd8-4f8b-a381-457fc3a5b839/actions/clear_buildpack_cache",
+                            "method": "POST"
+                        },
+                        "revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/86e4b3b4-3cd8-4f8b-a381-457fc3a5b839/revisions"
+                        },
+                        "deployed_revisions": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/86e4b3b4-3cd8-4f8b-a381-457fc3a5b839/revisions/deployed"
+                        },
+                        "features": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/86e4b3b4-3cd8-4f8b-a381-457fc3a5b839/features"
+                        }
+                    }
+                }
+            ]
+        },
+        "rawHeaders": [
+            "content-length",
+            "37151",
+            "content-type",
+            "application/json; charset=utf-8",
+            "date",
+            "Mon, 02 Dec 2024 16:05:34 GMT",
+            "referrer-policy",
+            "strict-origin-when-cross-origin",
+            "vary",
+            "Accept",
+            "x-b3-spanid",
+            "7f3580c3a2767918",
+            "x-b3-traceid",
+            "53edc9e80d6d42827f3580c3a2767918",
+            "x-content-type-options",
+            "nosniff",
+            "x-download-options",
+            "noopen",
+            "x-frame-options",
+            "SAMEORIGIN",
+            "x-permitted-cross-domain-policies",
+            "none",
+            "x-ratelimit-limit",
+            "20000",
+            "x-ratelimit-remaining",
+            "18000",
+            "x-ratelimit-reset",
+            "1733157161",
+            "x-runtime",
+            "0.094500",
+            "x-vcap-request-id",
+            "53edc9e8-0d6d-4282-7f35-80c3a2767918::9edd3c18-aff5-4aef-8ab7-7a7f93d11af0",
+            "x-xss-protection",
+            "1; mode=block",
+            "strict-transport-security",
+            "max-age=31536000; includeSubDomains; preload;"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/apps/5cccc504-4911-43ef-a531-31cbf2b89939/env",
+        "body": "",
+        "status": 200,
+        "response": {
+            "system_env_json": {
+                "VCAP_SERVICES": {
+                    "business-logging": [
+                        {
+                            "label": "business-logging",
+                            "provider": null,
+                            "plan": "default",
+                            "name": "afc-business-logging",
+                            "tags": [
+                                "business-logging",
+                                "logging",
+                                "com.sap.appbasic.businesslogs",
+                                "comsapappbasicbusinesslogs"
+                            ],
+                            "instance_guid": "3c6e7048-f419-45ab-861b-1d500ed9a872",
+                            "instance_name": "afc-business-logging",
+                            "binding_guid": "1a957419-4835-4345-9fdf-fb1b89e61143",
+                            "binding_name": null,
+                            "credentials": {
+                                "LPSCallbackDependencyName": "businesslogging-sb-prod",
+                                "configUrl": "https://buslog-prod-business-logging-core-service-appconfig.cfapps.sap.hana.ondemand.com/",
+                                "configurationPath": "buslogs/configs",
+                                "content_endpoint": "https://buslog-prod-business-logging-core-service-appconfig.cfapps.sap.hana.ondemand.com/buslogs/content",
+                                "endpoints": {
+                                    "configservice": "https://buslog-prod-business-logging-core-service-appconfig.cfapps.sap.hana.ondemand.com/buslogs/configs",
+                                    "readservice": "https://buslog-prod-business-logging-odata-service.cfapps.sap.hana.ondemand.com/odata/v2/com.sap.bs.businesslogging.DisplayMessage",
+                                    "readservicev4": "https://buslog-prod-business-logging-odata-service.cfapps.sap.hana.ondemand.com/odata/v4/com.sap.bs.businesslogging.DisplayMessage",
+                                    "textresourceservice": "https://buslog-prod-business-logging-core-service-appconfig.cfapps.sap.hana.ondemand.com/buslogs/configs/textresource",
+                                    "writeservice": "https://buslog-prod-business-logging-write-service.cfapps.sap.hana.ondemand.com/buslogs/log"
+                                },
+                                "host": "business-logging-0-credentials-host",
+                                "readLogPath": "/odata/v2/com.sap.bs.businesslogging.DisplayMessage",
+                                "readLogPathv4": "/odata/v4/com.sap.bs.businesslogging.DisplayMessage",
+                                "readUrl": "https://buslog-prod-business-logging-odata-service.cfapps.sap.hana.ondemand.com/",
+                                "saasregistryappname": "businesslogging-sb-prod",
+                                "saasregistryenabled": true,
+                                "sap.cloud.service": "com.sap.bs.businesslogging",
+                                "vendor": "SAP",
+                                "writeLogPath": "buslogs/log",
+                                "writeUrl": "https://buslog-prod-business-logging-write-service.cfapps.sap.hana.ondemand.com/",
+                                "html5-apps-repo": {
+                                    "app_host_id": "99fe3965-708a-43bf-9fdf-33206e55010c"
+                                },
+                                "uaa": {
+                                    "tenantmode": "dedicated",
+                                    "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
+                                    "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "credential-type": "instance-secret",
+                                    "clientid": "business-logging-0-credentials-uaa-clientid",
+                                    "xsappname": "afc-dev!b5874|businesslogging-sb-prod!b3598",
+                                    "clientsecret": "business-logging-0-credentials-uaa-clientsecret",
+                                    "serviceInstanceId": "3c6e7048-f419-45ab-861b-1d500ed9a872",
+                                    "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                                    "uaadomain": "authentication.sap.hana.ondemand.com",
+                                    "verificationkey": "business-logging-0-credentials-uaa-verificationkey",
+                                    "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
+                                    "identityzone": "skyfin",
+                                    "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+                                },
+                                "instanceId": "3c6e7048-f419-45ab-861b-1d500ed9a872"
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "auditlog": [
+                        {
+                            "label": "auditlog",
+                            "provider": null,
+                            "plan": "oauth2",
+                            "name": "afc-auditlog",
+                            "tags": [
+                                "auditlog",
+                                "audit log",
+                                "cf"
+                            ],
+                            "instance_guid": "d2761c94-ee8f-47a8-8570-166d28321df3",
+                            "instance_name": "afc-auditlog",
+                            "binding_guid": "5af3e7a8-59b2-4bb0-80b1-856d3e22cc0e",
+                            "binding_name": null,
+                            "credentials": {
+                                "vendor": "SAP",
+                                "url": "https://api.auditlog.cf.sap.hana.ondemand.com:8081/",
+                                "uaa": {
+                                    "tenantmode": "dedicated",
+                                    "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
+                                    "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "credential-type": "binding-secret",
+                                    "clientid": "auditlog-0-credentials-uaa-clientid",
+                                    "xsappname": "d2761c94-ee8f-47a8-8570-166d28321df3!b5874|auditlog!b4",
+                                    "clientsecret": "auditlog-0-credentials-uaa-clientsecret",
+                                    "serviceInstanceId": "d2761c94-ee8f-47a8-8570-166d28321df3",
+                                    "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                                    "uaadomain": "authentication.sap.hana.ondemand.com",
+                                    "verificationkey": "auditlog-0-credentials-uaa-verificationkey",
+                                    "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
+                                    "identityzone": "skyfin",
+                                    "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+                                }
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "saas-registry": [
+                        {
+                            "label": "saas-registry",
+                            "provider": null,
+                            "plan": "application",
+                            "name": "afc-saas-registry",
+                            "tags": [
+                                "SaaS"
+                            ],
+                            "instance_guid": "8452bcb5-45fc-4740-a770-e49580b331f9",
+                            "instance_name": "afc-saas-registry",
+                            "binding_guid": "2ba4d588-da4e-45be-8bad-e1b463c3812d",
+                            "binding_name": null,
+                            "credentials": {
+                                "tenantmode": "dedicated",
+                                "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
+                                "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                "credential-type": "binding-secret",
+                                "clientid": "saas-registry-0-credentials-clientid",
+                                "xsappname": "afc-dev",
+                                "appName": "afc-dev",
+                                "clientsecret": "saas-registry-0-credentials-clientsecret",
+                                "tenant_onboarding_url": "https://saas-manager.mesh.cf.sap.hana.ondemand.com/",
+                                "saas_registry_url": "https://saas-manager.mesh.cf.sap.hana.ondemand.com/",
+                                "appUrls": "{\"getDependencies\":\"https://skyfin.dev.eu10-canary.afc.cloud.sap/callback/v1.0/dependencies\",\"onSubscription\":\"https://skyfin.dev.eu10-canary.afc.cloud.sap/callback/v1.0/tenants/{tenantId}\",\"getSubscriptionParameters\":\"\",\"onSubscriptionAsync\":true,\"onUnSubscriptionAsync\":true,\"onUpdateSubscriptionParametersAsync\":false,\"callbackTimeoutMillis\":900000,\"runGetDependenciesOnAsyncCallback\":false,\"onUpdateDependenciesAsync\":false}",
+                                "serviceInstanceId": "8452bcb5-45fc-4740-a770-e49580b331f9",
+                                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                                "uaadomain": "authentication.sap.hana.ondemand.com",
+                                "verificationkey": "saas-registry-0-credentials-verificationkey",
+                                "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
+                                "identityzone": "skyfin",
+                                "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "html5-apps-repo": [
+                        {
+                            "label": "html5-apps-repo",
+                            "provider": null,
+                            "plan": "app-runtime",
+                            "name": "afc-html5-repo-runtime",
+                            "tags": [
+                                "html5appsrepo",
+                                "html5-apps-repo-rt",
+                                "html5-apps-rt",
+                                "html5-apps-repo-dt",
+                                "html5-apps-dt"
+                            ],
+                            "instance_guid": "4457fe63-ba67-42be-80c6-ce16066c80ca",
+                            "instance_name": "afc-html5-repo-runtime",
+                            "binding_guid": "120b05c9-e6d0-4dc9-b07b-c4942d3300b8",
+                            "binding_name": null,
+                            "credentials": {
+                                "vendor": "SAP",
+                                "uri": "https://html5-apps-repo-rt.cfapps.sap.hana.ondemand.com/",
+                                "uaa": {
+                                    "tenantmode": "dedicated",
+                                    "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
+                                    "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "credential-type": "instance-secret",
+                                    "clientid": "html5-apps-repo-0-credentials-uaa-clientid",
+                                    "xsappname": "4457fe63-ba67-42be-80c6-ce16066c80ca!b5874|html5-apps-repo-uaa!b1129",
+                                    "clientsecret": "html5-apps-repo-0-credentials-uaa-clientsecret",
+                                    "serviceInstanceId": "4457fe63-ba67-42be-80c6-ce16066c80ca",
+                                    "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                                    "uaadomain": "authentication.sap.hana.ondemand.com",
+                                    "verificationkey": "html5-apps-repo-0-credentials-uaa-verificationkey",
+                                    "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
+                                    "identityzone": "skyfin",
+                                    "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+                                },
+                                "grant_type": "client_credentials",
+                                "sap.cloud.service": "html5-apps-repo-rt",
+                                "saasregistryenabled": true
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "theming": [
+                        {
+                            "label": "theming",
+                            "provider": null,
+                            "plan": "standard",
+                            "name": "afc-theming",
+                            "tags": [
+                                "sap-theming"
+                            ],
+                            "instance_guid": "e6168484-4a7c-480b-b418-fefcf45afba8",
+                            "instance_name": "afc-theming",
+                            "binding_guid": "e1e4cec8-79b7-41c1-a89b-ecec3c61e30b",
+                            "binding_name": null,
+                            "credentials": {
+                                "vendor": "SAP",
+                                "uri": "https://theming-runtime.cfapps.sap.hana.ondemand.com/",
+                                "endpoints": {
+                                    "runtime": "https://theming-runtime.cfapps.sap.hana.ondemand.com",
+                                    "repository": "https://theming-repository.cfapps.sap.hana.ondemand.com"
+                                },
+                                "sap.cloud.service": "com.sap.ui.theming",
+                                "saasregistryappname": "theming",
+                                "html5-apps-repo": {
+                                    "app_host_id": "251a90ce-8798-4191-9828-4d4ac97e4ea9"
+                                },
+                                "uaa": {
+                                    "tenantmode": "dedicated",
+                                    "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
+                                    "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "credential-type": "binding-secret",
+                                    "clientid": "theming-0-credentials-uaa-clientid",
+                                    "xsappname": "e6168484-4a7c-480b-b418-fefcf45afba8!b5874|sap-theming!b2675",
+                                    "clientsecret": "theming-0-credentials-uaa-clientsecret",
+                                    "serviceInstanceId": "e6168484-4a7c-480b-b418-fefcf45afba8",
+                                    "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                                    "uaadomain": "authentication.sap.hana.ondemand.com",
+                                    "verificationkey": "theming-0-credentials-uaa-verificationkey",
+                                    "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
+                                    "identityzone": "skyfin",
+                                    "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+                                }
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "application-logs": [
+                        {
+                            "label": "application-logs",
+                            "provider": null,
+                            "plan": "standard",
+                            "name": "afc-logs",
+                            "tags": [],
+                            "instance_guid": "393a971c-77c1-4930-a373-f7345e2b2527",
+                            "instance_name": "afc-logs",
+                            "binding_guid": "595d69ca-8fbe-4659-abb7-b227b8b0fa0c",
+                            "binding_name": null,
+                            "credentials": {},
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "redis-cache": [
+                        {
+                            "label": "redis-cache",
+                            "provider": null,
+                            "plan": "standard",
+                            "name": "afc-redis",
+                            "tags": [
+                                "cache"
+                            ],
+                            "instance_guid": "0c94f0c1-db0a-495d-b385-4a44a87fc398",
+                            "instance_name": "afc-redis",
+                            "binding_guid": "eeec6cd4-3bc1-48b0-a652-ad0748d8c535",
+                            "binding_name": null,
+                            "credentials": {
+                                "password": "redis-cache-0-credentials-password",
+                                "hostname": "clustercfg.rg-0c94f0c1-db0a-495d-b385-4a44a87fc398.vwvwdz.euc1.cache.amazonaws.com",
+                                "port": 3991,
+                                "uri": "rediss://:redis-cache-0-credentials-uri-password@clustercfg.rg-0c94f0c1-db0a-495d-b385-4a44a87fc398.vwvwdz.euc1.cache.amazonaws.com:3991",
+                                "cluster_mode": true,
+                                "urls": {
+                                    "api_server": "https://api-backing-services.eu10-canary.data.services.cloud.sap"
+                                },
+                                "tls": true
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "user-provided": [
+                        {
+                            "label": "user-provided",
+                            "name": "afc-logging-hub",
+                            "tags": [],
+                            "instance_guid": "9c12b0fb-ab43-46fc-94e4-82eab5e541ce",
+                            "instance_name": "afc-logging-hub",
+                            "binding_guid": "67591d51-5395-4084-a8ff-2129645ed6d0",
+                            "binding_name": null,
+                            "credentials": {},
+                            "syslog_drain_url": "https://user-provided-0-syslog_drain_url-username:user-provided-0-syslog_drain_url-password@ingest-sf-068034bc-13cf-4be3-9589-3a751c760bea.cls-01.cloud.logs.services.sap.hana.ondemand.com/cfsyslog",
+                            "volume_mounts": []
+                        }
+                    ],
+                    "alert-notification": [
+                        {
+                            "label": "alert-notification",
+                            "provider": null,
+                            "plan": "business-notifications",
+                            "name": "afc-ans",
+                            "tags": [],
+                            "instance_guid": "e9f2bb15-1b46-4ea6-8530-a89508081ec4",
+                            "instance_name": "afc-ans",
+                            "binding_guid": "9ee7e447-8d3a-494f-9d44-8e7ce22f737f",
+                            "binding_name": null,
+                            "credentials": {
+                                "endpoints": {
+                                    "credentials_url": "https://clm-sl-ans-canary-ans-service-api.cfapps.sap.hana.ondemand.com/api",
+                                    "notifications_url": "https://clm-sl-ans-canary-ans-service-api.cfapps.sap.hana.ondemand.com/",
+                                    "websockets_url": "https://clm-sl-ans-canary-ans-service-api.cfapps.sap.hana.ondemand.com/"
+                                },
+                                "saasregistryenabled": true,
+                                "sap.cloud.service": "alert-notification",
+                                "grant_type": "user_token",
+                                "uaa": {
+                                    "tenantmode": "shared",
+                                    "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
+                                    "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "credential-type": "binding-secret",
+                                    "clientid": "alert-notification-0-credentials-uaa-clientid",
+                                    "xsappname": "e9f2bb15-1b46-4ea6-8530-a89508081ec4!b5874|ans-business!b2187",
+                                    "clientsecret": "alert-notification-0-credentials-uaa-clientsecret",
+                                    "serviceInstanceId": "e9f2bb15-1b46-4ea6-8530-a89508081ec4",
+                                    "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                                    "uaadomain": "authentication.sap.hana.ondemand.com",
+                                    "verificationkey": "alert-notification-0-credentials-uaa-verificationkey",
+                                    "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
+                                    "identityzone": "skyfin",
+                                    "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+                                }
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "portal": [
+                        {
+                            "label": "portal",
+                            "provider": null,
+                            "plan": "standard",
+                            "name": "afc-flp",
+                            "tags": [
+                                "cp",
+                                "portal",
+                                "portal-service"
+                            ],
+                            "instance_guid": "b4700476-0b63-4eea-add7-2873a2fc4f0b",
+                            "instance_name": "afc-flp",
+                            "binding_guid": "add1b04b-cd03-4ef1-a5a5-f582fb4c7cbb",
+                            "binding_name": null,
+                            "credentials": {
+                                "endpoints": {
+                                    "portal-service": "https://portal-service.cfapps.sap.hana.ondemand.com",
+                                    "token-service": "portal-0-credentials-endpoints-token-service"
+                                },
+                                "sap.cloud.service": "com.sap.ui.portal",
+                                "sap.cloud.service.alias": "cp",
+                                "saasregistryenabled": true,
+                                "html5-apps-repo": {
+                                    "app_host_id": "85cd3f98-4345-42bd-b425-364c144d0e0e,570d7b41-113a-469b-ae5f-7ba55967aed4,c693e508-f8d5-4a70-be60-cb6106d0b60e,77d1971b-3fdc-45e0-8da3-f7b719dfff86"
+                                },
+                                "uaa": {
+                                    "tenantmode": "dedicated",
+                                    "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
+                                    "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "credential-type": "instance-secret",
+                                    "clientid": "portal-0-credentials-uaa-clientid",
+                                    "xsappname": "b4700476-0b63-4eea-add7-2873a2fc4f0b!b5874|portal-cf-service!b119",
+                                    "clientsecret": "portal-0-credentials-uaa-clientsecret",
+                                    "serviceInstanceId": "b4700476-0b63-4eea-add7-2873a2fc4f0b",
+                                    "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                                    "uaadomain": "authentication.sap.hana.ondemand.com",
+                                    "verificationkey": "portal-0-credentials-uaa-verificationkey",
+                                    "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
+                                    "identityzone": "skyfin",
+                                    "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+                                },
+                                "fdc_app_host_id": "77d1971b-3fdc-45e0-8da3-f7b719dfff86",
+                                "instance_id": "b4700476-0b63-4eea-add7-2873a2fc4f0b",
+                                "forwardiastoken": true
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "process-automation-service": [
+                        {
+                            "label": "process-automation-service",
+                            "provider": null,
+                            "plan": "standard",
+                            "name": "afc-bpa",
+                            "tags": [
+                                "process",
+                                "automation"
+                            ],
+                            "instance_guid": "ed97b05a-4216-468f-89f1-553462d5e213",
+                            "instance_name": "afc-bpa",
+                            "binding_guid": "c15b0ec0-c459-4faf-aa2c-8f0c8ee82c38",
+                            "binding_name": null,
+                            "credentials": {
+                                "endpoints": {
+                                    "api": "https://spa-api-gateway-bpi-eu-prod.cfapps.sap.hana.ondemand.com"
+                                },
+                                "sap.cloud.service": "com.sap.spa.processautomation",
+                                "sap.cloud.service.alias": "spa",
+                                "saasregistryenabled": true,
+                                "html5-apps-repo": {
+                                    "app_host_id": "8ef202ec-5300-4822-ac3e-d527b71343e1,5737bcba-eac3-4265-91d0-27980ca889dc,5d203986-5aea-417e-bdcb-800a16265520,bb16aaa9-1b9a-43f8-b301-f7bcd3218c58,64f14ff8-f853-4225-af4b-3ec38b65c833,2591ef13-f04a-4868-93ab-99decaea00ef,25975f0f-9b7f-4052-a11c-16a1d9780eec,d3b6c3eb-12cd-47c7-9ff6-d4ad26b83eab"
+                                },
+                                "uaa": {
+                                    "tenantmode": "shared",
+                                    "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
+                                    "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "clientid": "process-automation-service-0-credentials-uaa-clientid",
+                                    "credential-type": "x509",
+                                    "clientx509enabled": false,
+                                    "xsappname": "ed97b05a-4216-468f-89f1-553462d5e213!b5874|xsuaa!b34009",
+                                    "certificate": "process-automation-service-0-credentials-uaa-certificate",
+                                    "serviceInstanceId": "ed97b05a-4216-468f-89f1-553462d5e213",
+                                    "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                                    "uaadomain": "authentication.sap.hana.ondemand.com",
+                                    "verificationkey": "process-automation-service-0-credentials-uaa-verificationkey",
+                                    "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
+                                    "certurl": "https://skyfin.authentication.cert.sap.hana.ondemand.com/",
+                                    "identityzone": "skyfin",
+                                    "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "certificate-pinning": true,
+                                    "key": "process-automation-service-0-credentials-uaa-key"
+                                }
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "destination": [
+                        {
+                            "label": "destination",
+                            "provider": null,
+                            "plan": "lite",
+                            "name": "afc-destination",
+                            "tags": [
+                                "destination",
+                                "conn",
+                                "connsvc"
+                            ],
+                            "instance_guid": "05ed0260-5f01-499a-b077-2a3cafc5eac3",
+                            "instance_name": "afc-destination",
+                            "binding_guid": "521f5368-5434-4a3d-9e05-4eefbb32972f",
+                            "binding_name": null,
+                            "credentials": {
+                                "tenantmode": "dedicated",
+                                "clientid": "destination-0-credentials-clientid",
+                                "credential-type": "binding-secret",
+                                "xsappname": "clone05ed02605f01499ab0772a3cafc5eac3!b5874|destination-xsappname!b433",
+                                "clientsecret": "destination-0-credentials-clientsecret",
+                                "uri": "https://destination-configuration.cfapps.sap.hana.ondemand.com/",
+                                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                                "uaadomain": "authentication.sap.hana.ondemand.com",
+                                "instanceid": "05ed0260-5f01-499a-b077-2a3cafc5eac3",
+                                "verificationkey": "destination-0-credentials-verificationkey",
+                                "identityzone": "skyfin",
+                                "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "connectivity": [
+                        {
+                            "label": "connectivity",
+                            "provider": null,
+                            "plan": "lite",
+                            "name": "afc-connectivity",
+                            "tags": [
+                                "connectivity",
+                                "conn",
+                                "connsvc"
+                            ],
+                            "instance_guid": "43c89fea-a7e1-4781-a446-eca57e3748b5",
+                            "instance_name": "afc-connectivity",
+                            "binding_guid": "16fd4629-0097-415e-9f7b-823949d0a067",
+                            "binding_name": null,
+                            "credentials": {
+                                "tenantmode": "dedicated",
+                                "clientid": "connectivity-0-credentials-clientid",
+                                "token_service_domain": "connectivity-0-credentials-token_service_domain",
+                                "credential-type": "binding-secret",
+                                "token_service_url": "connectivity-0-credentials-token_service_url",
+                                "xsappname": "clone43c89feaa7e14781a446eca57e3748b5!b5874|connectivity!b137",
+                                "onpremise_proxy_ldap_port": "20001",
+                                "onpremise_socks5_proxy_port": "20004",
+                                "clientsecret": "connectivity-0-credentials-clientsecret",
+                                "onpremise_proxy_http_port": "20003",
+                                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                                "onpremise_proxy_host": "connectivityproxy.internal.cf.sap.hana.ondemand.com",
+                                "uaadomain": "authentication.sap.hana.ondemand.com",
+                                "onpremise_proxy_port": "20003",
+                                "verificationkey": "connectivity-0-credentials-verificationkey",
+                                "identityzone": "skyfin",
+                                "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                "onpremise_proxy_rfc_port": "20001"
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "dynatrace": [
+                        {
+                            "label": "dynatrace",
+                            "provider": null,
+                            "plan": "environment",
+                            "name": "afc-dynatrace",
+                            "tags": [
+                                "dynatrace"
+                            ],
+                            "instance_guid": "b37ed912-457a-43da-856c-20ded42fd748",
+                            "instance_name": "afc-dynatrace",
+                            "binding_guid": "7133d9df-4b9f-424f-b029-16cca9960352",
+                            "binding_name": null,
+                            "credentials": {
+                                "apitoken": "dynatrace-0-credentials-apitoken",
+                                "apiurl": "https://canary.eu10.apm.services.cloud.sap/e/99479865-a86b-4792-a740-fc62388b3496/api",
+                                "environmentid": "99479865-a86b-4792-a740-fc62388b3496",
+                                "ingest_apitoken": "dynatrace-0-credentials-ingest_apitoken",
+                                "skiperrors": "true",
+                                "token_expiry": "dynatrace-0-credentials-token_expiry"
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "xsuaa": [
+                        {
+                            "label": "xsuaa",
+                            "provider": null,
+                            "plan": "application",
+                            "name": "afc-uaa",
+                            "tags": [
+                                "xsuaa"
+                            ],
+                            "instance_guid": "e020b20a-eb23-4475-91ec-d525f8738fd7",
+                            "instance_name": "afc-uaa",
+                            "binding_guid": "62efed23-7a77-49d1-81d1-f542f1a0e01e",
+                            "binding_name": null,
+                            "credentials": {
+                                "tenantmode": "shared",
+                                "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
+                                "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                "clientid": "xsuaa-0-credentials-clientid",
+                                "credential-type": "x509",
+                                "clientx509enabled": false,
+                                "xsappname": "afc-dev!t5874",
+                                "certificate": "xsuaa-0-credentials-certificate",
+                                "serviceInstanceId": "e020b20a-eb23-4475-91ec-d525f8738fd7",
+                                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                                "uaadomain": "authentication.sap.hana.ondemand.com",
+                                "verificationkey": "xsuaa-0-credentials-verificationkey",
+                                "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
+                                "certurl": "https://skyfin.authentication.cert.sap.hana.ondemand.com/",
+                                "identityzone": "skyfin",
+                                "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                "certificate-pinning": true,
+                                "key": "xsuaa-0-credentials-key"
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "service-manager": [
+                        {
+                            "label": "service-manager",
+                            "provider": null,
+                            "plan": "container",
+                            "name": "afc-service-manager",
+                            "tags": [],
+                            "instance_guid": "51ddd18b-5a78-418e-8f41-9a4c518650ec",
+                            "instance_name": "afc-service-manager",
+                            "binding_guid": "b087c48a-9a12-42bc-892c-95cad8c2ff44",
+                            "binding_name": null,
+                            "credentials": {
+                                "sm_url": "https://service-manager.cfapps.sap.hana.ondemand.com/",
+                                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                                "certurl": "https://skyfin.authentication.cert.sap.hana.ondemand.com/",
+                                "clientid": "service-manager-0-credentials-clientid",
+                                "xsappname": "51ddd18b-5a78-418e-8f41-9a4c518650ec!b5874|service-manager!b4065",
+                                "certificate": "service-manager-0-credentials-certificate",
+                                "key": "service-manager-0-credentials-key"
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "ui5-flexibility-keyuser": [
+                        {
+                            "label": "ui5-flexibility-keyuser",
+                            "provider": null,
+                            "plan": "keyuser",
+                            "name": "afc-ui5-flexibility-keyuser",
+                            "tags": [
+                                "flex-keyuser"
+                            ],
+                            "instance_guid": "04d135c3-cde3-4394-9ee5-b90561e5bcf0",
+                            "instance_name": "afc-ui5-flexibility-keyuser",
+                            "binding_guid": "6eeed9fb-97fd-47f5-a50b-ed2000259052",
+                            "binding_name": null,
+                            "credentials": {
+                                "vendor": "SAP",
+                                "sap.cloud.service": "com.sap.ui.flex.cf.keyuser",
+                                "sap.cloud.service.alias": "flexkeyuser",
+                                "endpoints": {
+                                    "keyuser": "ui5-flexibility-keyuser-0-credentials-endpoints-keyuser"
+                                },
+                                "saasregistryenabled": true,
+                                "grant_type": "user_token",
+                                "url": "https://ui5-flexibility-keyuser.cfapps.sap.hana.ondemand.com/",
+                                "uaa": {
+                                    "tenantmode": "dedicated",
+                                    "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
+                                    "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "credential-type": "instance-secret",
+                                    "clientid": "ui5-flexibility-keyuser-0-credentials-uaa-clientid",
+                                    "xsappname": "04d135c3-cde3-4394-9ee5-b90561e5bcf0!b5874|ui5-flexibility-keyuser!b1506",
+                                    "clientsecret": "ui5-flexibility-keyuser-0-credentials-uaa-clientsecret",
+                                    "serviceInstanceId": "04d135c3-cde3-4394-9ee5-b90561e5bcf0",
+                                    "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                                    "uaadomain": "authentication.sap.hana.ondemand.com",
+                                    "verificationkey": "ui5-flexibility-keyuser-0-credentials-uaa-verificationkey",
+                                    "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
+                                    "identityzone": "skyfin",
+                                    "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+                                }
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ]
+                }
+            }
+        },
+        "rawHeaders": [
+            "content-length",
+            "53607",
+            "content-type",
+            "application/json; charset=utf-8",
+            "date",
+            "Mon, 02 Dec 2024 16:05:35 GMT",
+            "referrer-policy",
+            "strict-origin-when-cross-origin",
+            "vary",
+            "Accept",
+            "x-b3-spanid",
+            "49b182a2271c8220",
+            "x-b3-traceid",
+            "942aeb147b8e428a49b182a2271c8220",
+            "x-content-type-options",
+            "nosniff",
+            "x-download-options",
+            "noopen",
+            "x-frame-options",
+            "SAMEORIGIN",
+            "x-permitted-cross-domain-policies",
+            "none",
+            "x-ratelimit-limit",
+            "20000",
+            "x-ratelimit-remaining",
+            "18000",
+            "x-ratelimit-reset",
+            "1733157162",
+            "x-runtime",
+            "0.111458",
+            "x-vcap-request-id",
+            "942aeb14-7b8e-428a-49b1-82a2271c8220::12209279-e122-4bd1-b1a7-6a3c2498e7c9",
+            "x-xss-protection",
+            "1; mode=block",
+            "strict-transport-security",
+            "max-age=31536000; includeSubDomains; preload;"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/apps/5cccc504-4911-43ef-a531-31cbf2b89939/processes",
+        "body": "",
+        "status": 200,
+        "response": {
+            "pagination": {
+                "total_results": 1,
+                "total_pages": 1,
+                "first": {
+                    "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5cccc504-4911-43ef-a531-31cbf2b89939/processes?page=1&per_page=50"
+                },
+                "last": {
+                    "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5cccc504-4911-43ef-a531-31cbf2b89939/processes?page=1&per_page=50"
+                },
+                "next": null,
+                "previous": null
+            },
+            "resources": [
+                {
+                    "guid": "5cccc504-4911-43ef-a531-31cbf2b89939",
+                    "created_at": "2021-02-08T11:09:21Z",
+                    "updated_at": "2024-12-01T19:53:42Z",
+                    "version": "7f43e60e-2dfd-4694-8be0-a6c3a9851653",
+                    "type": "web",
+                    "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+                    "instances": 1,
+                    "memory_in_mb": 2048,
+                    "disk_in_mb": 2048,
+                    "log_rate_limit_in_bytes_per_second": -1,
+                    "health_check": {
+                        "type": "http",
+                        "data": {
+                            "timeout": 180,
+                            "invocation_timeout": 180,
+                            "interval": null,
+                            "endpoint": "/cfhealth"
+                        }
+                    },
+                    "readiness_health_check": {
+                        "type": "process",
+                        "data": {
+                            "invocation_timeout": null,
+                            "interval": null
+                        }
+                    },
+                    "relationships": {
+                        "app": {
+                            "data": {
+                                "guid": "5cccc504-4911-43ef-a531-31cbf2b89939"
+                            }
+                        },
+                        "revision": {
+                            "data": {
+                                "guid": "494225b4-5ee5-44f3-bb64-0f3cd467f144"
+                            }
+                        }
+                    },
+                    "metadata": {
+                        "labels": {},
+                        "annotations": {}
+                    },
+                    "links": {
+                        "self": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/processes/5cccc504-4911-43ef-a531-31cbf2b89939"
+                        },
+                        "scale": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/processes/5cccc504-4911-43ef-a531-31cbf2b89939/actions/scale",
+                            "method": "POST"
+                        },
+                        "app": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5cccc504-4911-43ef-a531-31cbf2b89939"
+                        },
+                        "space": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/spaces/0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                        },
+                        "stats": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/processes/5cccc504-4911-43ef-a531-31cbf2b89939/stats"
+                        }
+                    }
+                }
+            ]
+        },
+        "rawHeaders": [
+            "content-length",
+            "1647",
+            "content-type",
+            "application/json; charset=utf-8",
+            "date",
+            "Mon, 02 Dec 2024 16:05:35 GMT",
+            "referrer-policy",
+            "strict-origin-when-cross-origin",
+            "vary",
+            "Accept",
+            "x-b3-spanid",
+            "62da1c87b8660b5c",
+            "x-b3-traceid",
+            "3e138d311c224d0c62da1c87b8660b5c",
+            "x-content-type-options",
+            "nosniff",
+            "x-download-options",
+            "noopen",
+            "x-frame-options",
+            "SAMEORIGIN",
+            "x-permitted-cross-domain-policies",
+            "none",
+            "x-ratelimit-limit",
+            "20000",
+            "x-ratelimit-remaining",
+            "18000",
+            "x-ratelimit-reset",
+            "1733157162",
+            "x-runtime",
+            "0.010210",
+            "x-vcap-request-id",
+            "3e138d31-1c22-4d0c-62da-1c87b8660b5c::ac0f6b27-bd48-4631-9fef-08100d16cc73",
+            "x-xss-protection",
+            "1; mode=block",
+            "strict-transport-security",
+            "max-age=31536000; includeSubDomains; preload;"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/apps/5cccc504-4911-43ef-a531-31cbf2b89939/routes",
+        "body": "",
+        "status": 200,
+        "response": {
+            "pagination": {
+                "total_results": 1,
+                "total_pages": 1,
+                "first": {
+                    "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5cccc504-4911-43ef-a531-31cbf2b89939/routes?app_guids=5cccc504-4911-43ef-a531-31cbf2b89939&page=1&per_page=50"
+                },
+                "last": {
+                    "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5cccc504-4911-43ef-a531-31cbf2b89939/routes?app_guids=5cccc504-4911-43ef-a531-31cbf2b89939&page=1&per_page=50"
+                },
+                "next": null,
+                "previous": null
+            },
+            "resources": [
+                {
+                    "guid": "0ff95de3-7e9b-45e4-9d11-f881f577e4a1",
+                    "created_at": "2021-02-08T11:09:24Z",
+                    "updated_at": "2021-02-08T11:09:24Z",
+                    "protocol": "http",
+                    "host": "skyfin-dev-afc-mtx",
+                    "path": "",
+                    "port": null,
+                    "url": "skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com",
+                    "destinations": [
+                        {
+                            "guid": "0b5ddbc7-5c48-427f-936b-0ae02ae8e78f",
+                            "app": {
+                                "guid": "5cccc504-4911-43ef-a531-31cbf2b89939",
+                                "process": {
+                                    "type": "web"
+                                }
+                            },
+                            "weight": null,
+                            "port": 8080,
+                            "protocol": "http1"
+                        }
+                    ],
+                    "metadata": {
+                        "labels": {},
+                        "annotations": {}
+                    },
+                    "relationships": {
+                        "space": {
+                            "data": {
+                                "guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                            }
+                        },
+                        "domain": {
+                            "data": {
+                                "guid": "9aa474f9-3f82-4967-a2e1-dfe0cd155064"
+                            }
+                        }
+                    },
+                    "links": {
+                        "self": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/routes/0ff95de3-7e9b-45e4-9d11-f881f577e4a1"
+                        },
+                        "space": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/spaces/0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                        },
+                        "destinations": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/routes/0ff95de3-7e9b-45e4-9d11-f881f577e4a1/destinations"
+                        },
+                        "domain": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/domains/9aa474f9-3f82-4967-a2e1-dfe0cd155064"
+                        }
+                    }
+                }
+            ]
+        },
+        "rawHeaders": [
+            "content-length",
+            "1526",
+            "content-type",
+            "application/json; charset=utf-8",
+            "date",
+            "Mon, 02 Dec 2024 16:05:35 GMT",
+            "referrer-policy",
+            "strict-origin-when-cross-origin",
+            "vary",
+            "Accept",
+            "x-b3-spanid",
+            "428523ecab9806c7",
+            "x-b3-traceid",
+            "418a64597c254826428523ecab9806c7",
+            "x-content-type-options",
+            "nosniff",
+            "x-download-options",
+            "noopen",
+            "x-frame-options",
+            "SAMEORIGIN",
+            "x-permitted-cross-domain-policies",
+            "none",
+            "x-ratelimit-limit",
+            "20000",
+            "x-ratelimit-remaining",
+            "18000",
+            "x-ratelimit-reset",
+            "1733157161",
+            "x-runtime",
+            "0.126027",
+            "x-vcap-request-id",
+            "418a6459-7c25-4826-4285-23ecab9806c7::390f6d34-45af-44e2-b847-4bb34d579d02",
+            "x-xss-protection",
+            "1; mode=block",
+            "strict-transport-security",
+            "max-age=31536000; includeSubDomains; preload;"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/domains/9aa474f9-3f82-4967-a2e1-dfe0cd155064",
+        "body": "",
+        "status": 200,
+        "response": {
+            "guid": "9aa474f9-3f82-4967-a2e1-dfe0cd155064",
+            "created_at": "2016-10-06T08:30:16Z",
+            "updated_at": "2019-03-04T11:12:14Z",
+            "name": "cfapps.sap.hana.ondemand.com",
+            "internal": false,
+            "router_group": null,
+            "supported_protocols": [
+                "http"
+            ],
+            "relationships": {
+                "organization": {
+                    "data": null
+                },
+                "shared_organizations": {
+                    "data": []
+                }
+            },
+            "metadata": {
+                "labels": {},
+                "annotations": {}
+            },
+            "links": {
+                "self": {
+                    "href": "https://api.cf.sap.hana.ondemand.com/v3/domains/9aa474f9-3f82-4967-a2e1-dfe0cd155064"
+                },
+                "route_reservations": {
+                    "href": "https://api.cf.sap.hana.ondemand.com/v3/domains/9aa474f9-3f82-4967-a2e1-dfe0cd155064/route_reservations"
+                }
+            }
+        },
+        "rawHeaders": [
+            "content-length",
+            "598",
+            "content-type",
+            "application/json; charset=utf-8",
+            "date",
+            "Mon, 02 Dec 2024 16:05:35 GMT",
+            "referrer-policy",
+            "strict-origin-when-cross-origin",
+            "vary",
+            "Accept",
+            "x-b3-spanid",
+            "69633114523d5562",
+            "x-b3-traceid",
+            "43b62d12aed6405569633114523d5562",
+            "x-content-type-options",
+            "nosniff",
+            "x-download-options",
+            "noopen",
+            "x-frame-options",
+            "SAMEORIGIN",
+            "x-permitted-cross-domain-policies",
+            "none",
+            "x-ratelimit-limit",
+            "20000",
+            "x-ratelimit-remaining",
+            "18000",
+            "x-ratelimit-reset",
+            "1733157161",
+            "x-runtime",
+            "0.009649",
+            "x-vcap-request-id",
+            "43b62d12-aed6-4055-6963-3114523d5562::c136ad5b-b02f-41be-9966-1af80982a5ce",
+            "x-xss-protection",
+            "1; mode=block",
+            "strict-transport-security",
+            "max-age=31536000; includeSubDomains; preload;"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com:443",
+        "method": "HEAD",
+        "path": "/-/cds/saas-provisioning",
+        "body": "",
+        "status": 401,
+        "response": "",
+        "rawHeaders": [
+            "content-length",
+            "22",
+            "content-type",
+            "application/json; charset=utf-8",
+            "date",
+            "Mon, 02 Dec 2024 16:05:35 GMT",
+            "x-correlation-id",
+            "f9159f37-6e6f-4882-4f2e-20fd34f34217",
+            "x-powered-by",
+            "Express",
+            "x-vcap-request-id",
+            "f9159f37-6e6f-4882-4f2e-20fd34f34217",
+            "strict-transport-security",
+            "max-age=31536000; includeSubDomains; preload;"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/env",
+        "body": "",
+        "status": 200,
+        "response": {
+            "system_env_json": {
+                "VCAP_SERVICES": {
+                    "user-provided": [
+                        {
+                            "label": "user-provided",
+                            "name": "afc-logging-hub",
+                            "tags": [],
+                            "instance_guid": "9c12b0fb-ab43-46fc-94e4-82eab5e541ce",
+                            "instance_name": "afc-logging-hub",
+                            "binding_guid": "1c4e2c2c-64bc-452f-b8bd-bd6beef68c55",
+                            "binding_name": null,
+                            "credentials": {},
+                            "syslog_drain_url": "https://user-provided-0-syslog_drain_url-username:user-provided-0-syslog_drain_url-password@ingest-sf-068034bc-13cf-4be3-9589-3a751c760bea.cls-01.cloud.logs.services.sap.hana.ondemand.com/cfsyslog",
+                            "volume_mounts": []
+                        },
+                        {
+                            "label": "user-provided",
+                            "name": "afc-mail-service",
+                            "tags": [],
+                            "instance_guid": "9f484b06-5918-4c1c-9ae1-aa2faa351469",
+                            "instance_name": "afc-mail-service",
+                            "binding_guid": "068ef612-4238-41d2-9614-7637bcda2bcf",
+                            "binding_name": null,
+                            "credentials": {
+                                "pass": "user-provided-1-credentials-pass",
+                                "user": "user-provided-1-credentials-user"
+                            },
+                            "syslog_drain_url": "",
+                            "volume_mounts": []
+                        },
+                        {
+                            "label": "user-provided",
+                            "name": "afc-ans-user-maintained",
+                            "tags": [
+                                "alert-notification"
+                            ],
+                            "instance_guid": "44cd8c4e-b1f3-4e69-a4fb-79e95570c017",
+                            "instance_name": "afc-ans-user-maintained",
+                            "binding_guid": "918cb16e-94b8-4a4e-bb08-b56185ed38d7",
+                            "binding_name": null,
+                            "credentials": {
+                                "endpoints": {
+                                    "credentials_url": "https://clm-sl-ans-canary-ans-service-api.cfapps.sap.hana.ondemand.com/api",
+                                    "notifications_url": "https://clm-sl-ans-canary-ans-service-api.cfapps.sap.hana.ondemand.com/",
+                                    "websockets_url": "https://clm-sl-ans-canary-ans-service-api.cfapps.sap.hana.ondemand.com/"
+                                },
+                                "grant_type": "user_token",
+                                "saasregistryenabled": true,
+                                "sap.cloud.service": "alert-notification",
+                                "uaa": {
+                                    "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
+                                    "clientid": "user-provided-2-credentials-uaa-clientid",
+                                    "clientsecret": "user-provided-2-credentials-uaa-clientsecret",
+                                    "credential-type": "binding-secret",
+                                    "identityzone": "skyfin",
+                                    "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
+                                    "serviceInstanceId": "e9f2bb15-1b46-4ea6-8530-a89508081ec4",
+                                    "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "tenantmode": "shared",
+                                    "uaadomain": "authentication.sap.hana.ondemand.com",
+                                    "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                                    "verificationkey": "user-provided-2-credentials-uaa-verificationkey",
+                                    "xsappname": "e9f2bb15-1b46-4ea6-8530-a89508081ec4!b5874|ans-business!b2187",
+                                    "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+                                }
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "auditlog": [
+                        {
+                            "label": "auditlog",
+                            "provider": null,
+                            "plan": "oauth2",
+                            "name": "afc-auditlog",
+                            "tags": [
+                                "auditlog",
+                                "audit log",
+                                "cf"
+                            ],
+                            "instance_guid": "d2761c94-ee8f-47a8-8570-166d28321df3",
+                            "instance_name": "afc-auditlog",
+                            "binding_guid": "1ec8da13-afaf-4cc0-99a9-7cf0074b1db1",
+                            "binding_name": null,
+                            "credentials": {
+                                "vendor": "SAP",
+                                "url": "https://api.auditlog.cf.sap.hana.ondemand.com:8081/",
+                                "uaa": {
+                                    "tenantmode": "dedicated",
+                                    "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
+                                    "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "credential-type": "binding-secret",
+                                    "clientid": "auditlog-0-credentials-uaa-clientid",
+                                    "xsappname": "d2761c94-ee8f-47a8-8570-166d28321df3!b5874|auditlog!b4",
+                                    "clientsecret": "auditlog-0-credentials-uaa-clientsecret",
+                                    "serviceInstanceId": "d2761c94-ee8f-47a8-8570-166d28321df3",
+                                    "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                                    "uaadomain": "authentication.sap.hana.ondemand.com",
+                                    "verificationkey": "auditlog-0-credentials-uaa-verificationkey",
+                                    "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
+                                    "identityzone": "skyfin",
+                                    "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+                                }
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "dynatrace": [
+                        {
+                            "label": "dynatrace",
+                            "provider": null,
+                            "plan": "environment",
+                            "name": "afc-dynatrace",
+                            "tags": [
+                                "dynatrace"
+                            ],
+                            "instance_guid": "b37ed912-457a-43da-856c-20ded42fd748",
+                            "instance_name": "afc-dynatrace",
+                            "binding_guid": "58d7ed66-bd92-49ac-a718-08ce5587afef",
+                            "binding_name": null,
+                            "credentials": {
+                                "apitoken": "dynatrace-0-credentials-apitoken",
+                                "apiurl": "https://canary.eu10.apm.services.cloud.sap/e/99479865-a86b-4792-a740-fc62388b3496/api",
+                                "environmentid": "99479865-a86b-4792-a740-fc62388b3496",
+                                "ingest_apitoken": "dynatrace-0-credentials-ingest_apitoken",
+                                "skiperrors": "true",
+                                "token_expiry": "dynatrace-0-credentials-token_expiry"
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "autoscaler": [
+                        {
+                            "label": "autoscaler",
+                            "provider": null,
+                            "plan": "standard",
+                            "name": "afc-autoscaler",
+                            "tags": [
+                                "autoscaler",
+                                "app-autoscaler",
+                                "cf-autoscaler"
+                            ],
+                            "instance_guid": "015ba89e-44e6-4316-a250-9ccbf2d9267e",
+                            "instance_name": "afc-autoscaler",
+                            "binding_guid": "efaaee0b-7019-43e6-85f5-ee6699ea7e53",
+                            "binding_name": null,
+                            "credentials": {
+                                "custom_metrics": {
+                                    "username": "autoscaler-0-credentials-custom_metrics-username",
+                                    "password": "autoscaler-0-credentials-custom_metrics-password",
+                                    "url": "https://autoscaler-metrics.cf.sap.hana.ondemand.com/",
+                                    "mtls_url": "https://autoscaler-metrics-mtls.cf.sap.hana.ondemand.com/"
+                                }
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "application-logs": [
+                        {
+                            "label": "application-logs",
+                            "provider": null,
+                            "plan": "standard",
+                            "name": "afc-logs",
+                            "tags": [],
+                            "instance_guid": "393a971c-77c1-4930-a373-f7345e2b2527",
+                            "instance_name": "afc-logs",
+                            "binding_guid": "c4d04656-f471-426e-8d08-b28da29942bc",
+                            "binding_name": null,
+                            "credentials": {},
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "aicore": [
+                        {
+                            "label": "aicore",
+                            "provider": null,
+                            "plan": "sap-internal",
+                            "name": "afc-aicore",
+                            "tags": [],
+                            "instance_guid": "cff72d89-f0b9-4c3d-b1e4-6e26bc874eaf",
+                            "instance_name": "afc-aicore",
+                            "binding_guid": "10f6576f-a332-4dc7-bf43-22f942bcfb48",
+                            "binding_name": null,
+                            "credentials": {
+                                "serviceurls": {
+                                    "AI_API_URL": "https://api.ai.internalprod.eu-central-1.aws.ml.hana.ondemand.com/"
+                                },
+                                "appname": "cff72d89-f0b9-4c3d-b1e4-6e26bc874eaf!b5874|xsuaa_std!b77089",
+                                "clientid": "aicore-0-credentials-clientid",
+                                "clientsecret": "aicore-0-credentials-clientsecret",
+                                "identityzone": "skyfin",
+                                "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                "url": "https://skyfin.authentication.sap.hana.ondemand.com/"
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "process-automation-service": [
+                        {
+                            "label": "process-automation-service",
+                            "provider": null,
+                            "plan": "standard",
+                            "name": "afc-bpa",
+                            "tags": [
+                                "process",
+                                "automation"
+                            ],
+                            "instance_guid": "ed97b05a-4216-468f-89f1-553462d5e213",
+                            "instance_name": "afc-bpa",
+                            "binding_guid": "e99eda30-2124-4478-9a3c-7f2f6cb6d4f5",
+                            "binding_name": null,
+                            "credentials": {
+                                "endpoints": {
+                                    "api": "https://spa-api-gateway-bpi-eu-prod.cfapps.sap.hana.ondemand.com"
+                                },
+                                "sap.cloud.service": "com.sap.spa.processautomation",
+                                "sap.cloud.service.alias": "spa",
+                                "saasregistryenabled": true,
+                                "html5-apps-repo": {
+                                    "app_host_id": "8ef202ec-5300-4822-ac3e-d527b71343e1,5737bcba-eac3-4265-91d0-27980ca889dc,5d203986-5aea-417e-bdcb-800a16265520,bb16aaa9-1b9a-43f8-b301-f7bcd3218c58,64f14ff8-f853-4225-af4b-3ec38b65c833,2591ef13-f04a-4868-93ab-99decaea00ef,25975f0f-9b7f-4052-a11c-16a1d9780eec,d3b6c3eb-12cd-47c7-9ff6-d4ad26b83eab"
+                                },
+                                "uaa": {
+                                    "tenantmode": "shared",
+                                    "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
+                                    "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "clientid": "process-automation-service-0-credentials-uaa-clientid",
+                                    "credential-type": "x509",
+                                    "clientx509enabled": false,
+                                    "xsappname": "ed97b05a-4216-468f-89f1-553462d5e213!b5874|xsuaa!b34009",
+                                    "certificate": "process-automation-service-0-credentials-uaa-certificate",
+                                    "serviceInstanceId": "ed97b05a-4216-468f-89f1-553462d5e213",
+                                    "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                                    "uaadomain": "authentication.sap.hana.ondemand.com",
+                                    "verificationkey": "process-automation-service-0-credentials-uaa-verificationkey",
+                                    "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
+                                    "certurl": "https://skyfin.authentication.cert.sap.hana.ondemand.com/",
+                                    "identityzone": "skyfin",
+                                    "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "certificate-pinning": true,
+                                    "key": "process-automation-service-0-credentials-uaa-key"
+                                }
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "service-manager": [
+                        {
+                            "label": "service-manager",
+                            "provider": null,
+                            "plan": "container",
+                            "name": "afc-service-manager",
+                            "tags": [],
+                            "instance_guid": "51ddd18b-5a78-418e-8f41-9a4c518650ec",
+                            "instance_name": "afc-service-manager",
+                            "binding_guid": "d58db794-7a31-4a99-b0e1-cf3dbebd4f4d",
+                            "binding_name": null,
+                            "credentials": {
+                                "sm_url": "https://service-manager.cfapps.sap.hana.ondemand.com/",
+                                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                                "certurl": "https://skyfin.authentication.cert.sap.hana.ondemand.com/",
+                                "clientid": "service-manager-0-credentials-clientid",
+                                "xsappname": "51ddd18b-5a78-418e-8f41-9a4c518650ec!b5874|service-manager!b4065",
+                                "certificate": "service-manager-0-credentials-certificate",
+                                "key": "service-manager-0-credentials-key"
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "business-logging": [
+                        {
+                            "label": "business-logging",
+                            "provider": null,
+                            "plan": "default",
+                            "name": "afc-business-logging",
+                            "tags": [
+                                "business-logging",
+                                "logging",
+                                "com.sap.appbasic.businesslogs",
+                                "comsapappbasicbusinesslogs"
+                            ],
+                            "instance_guid": "3c6e7048-f419-45ab-861b-1d500ed9a872",
+                            "instance_name": "afc-business-logging",
+                            "binding_guid": "e2e6dac5-0747-4de6-8f2f-8f6185b89cc1",
+                            "binding_name": null,
+                            "credentials": {
+                                "LPSCallbackDependencyName": "businesslogging-sb-prod",
+                                "configUrl": "https://buslog-prod-business-logging-core-service-appconfig.cfapps.sap.hana.ondemand.com/",
+                                "configurationPath": "buslogs/configs",
+                                "content_endpoint": "https://buslog-prod-business-logging-core-service-appconfig.cfapps.sap.hana.ondemand.com/buslogs/content",
+                                "endpoints": {
+                                    "configservice": "https://buslog-prod-business-logging-core-service-appconfig.cfapps.sap.hana.ondemand.com/buslogs/configs",
+                                    "readservice": "https://buslog-prod-business-logging-odata-service.cfapps.sap.hana.ondemand.com/odata/v2/com.sap.bs.businesslogging.DisplayMessage",
+                                    "readservicev4": "https://buslog-prod-business-logging-odata-service.cfapps.sap.hana.ondemand.com/odata/v4/com.sap.bs.businesslogging.DisplayMessage",
+                                    "textresourceservice": "https://buslog-prod-business-logging-core-service-appconfig.cfapps.sap.hana.ondemand.com/buslogs/configs/textresource",
+                                    "writeservice": "https://buslog-prod-business-logging-write-service.cfapps.sap.hana.ondemand.com/buslogs/log"
+                                },
+                                "host": "business-logging-0-credentials-host",
+                                "readLogPath": "/odata/v2/com.sap.bs.businesslogging.DisplayMessage",
+                                "readLogPathv4": "/odata/v4/com.sap.bs.businesslogging.DisplayMessage",
+                                "readUrl": "https://buslog-prod-business-logging-odata-service.cfapps.sap.hana.ondemand.com/",
+                                "saasregistryappname": "businesslogging-sb-prod",
+                                "saasregistryenabled": true,
+                                "sap.cloud.service": "com.sap.bs.businesslogging",
+                                "vendor": "SAP",
+                                "writeLogPath": "buslogs/log",
+                                "writeUrl": "https://buslog-prod-business-logging-write-service.cfapps.sap.hana.ondemand.com/",
+                                "html5-apps-repo": {
+                                    "app_host_id": "99fe3965-708a-43bf-9fdf-33206e55010c"
+                                },
+                                "uaa": {
+                                    "tenantmode": "dedicated",
+                                    "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
+                                    "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "credential-type": "instance-secret",
+                                    "clientid": "business-logging-0-credentials-uaa-clientid",
+                                    "xsappname": "afc-dev!b5874|businesslogging-sb-prod!b3598",
+                                    "clientsecret": "business-logging-0-credentials-uaa-clientsecret",
+                                    "serviceInstanceId": "3c6e7048-f419-45ab-861b-1d500ed9a872",
+                                    "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                                    "uaadomain": "authentication.sap.hana.ondemand.com",
+                                    "verificationkey": "business-logging-0-credentials-uaa-verificationkey",
+                                    "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
+                                    "identityzone": "skyfin",
+                                    "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                    "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+                                },
+                                "instanceId": "3c6e7048-f419-45ab-861b-1d500ed9a872"
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "xsuaa": [
+                        {
+                            "label": "xsuaa",
+                            "provider": null,
+                            "plan": "application",
+                            "name": "afc-uaa",
+                            "tags": [
+                                "xsuaa"
+                            ],
+                            "instance_guid": "e020b20a-eb23-4475-91ec-d525f8738fd7",
+                            "instance_name": "afc-uaa",
+                            "binding_guid": "1307249d-895b-490f-b2d8-f12225c82677",
+                            "binding_name": null,
+                            "credentials": {
+                                "tenantmode": "shared",
+                                "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
+                                "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                "clientid": "xsuaa-0-credentials-clientid",
+                                "credential-type": "x509",
+                                "clientx509enabled": false,
+                                "xsappname": "afc-dev!t5874",
+                                "certificate": "xsuaa-0-credentials-certificate",
+                                "serviceInstanceId": "e020b20a-eb23-4475-91ec-d525f8738fd7",
+                                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                                "uaadomain": "authentication.sap.hana.ondemand.com",
+                                "verificationkey": "xsuaa-0-credentials-verificationkey",
+                                "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
+                                "certurl": "https://skyfin.authentication.cert.sap.hana.ondemand.com/",
+                                "identityzone": "skyfin",
+                                "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                "certificate-pinning": true,
+                                "key": "xsuaa-0-credentials-key"
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "redis-cache": [
+                        {
+                            "label": "redis-cache",
+                            "provider": null,
+                            "plan": "standard",
+                            "name": "afc-redis",
+                            "tags": [
+                                "cache"
+                            ],
+                            "instance_guid": "0c94f0c1-db0a-495d-b385-4a44a87fc398",
+                            "instance_name": "afc-redis",
+                            "binding_guid": "ff972081-d3f4-4136-b92a-e06eb1728a66",
+                            "binding_name": null,
+                            "credentials": {
+                                "password": "redis-cache-0-credentials-password",
+                                "hostname": "clustercfg.rg-0c94f0c1-db0a-495d-b385-4a44a87fc398.vwvwdz.euc1.cache.amazonaws.com",
+                                "port": 3991,
+                                "uri": "rediss://:redis-cache-0-credentials-uri-password@clustercfg.rg-0c94f0c1-db0a-495d-b385-4a44a87fc398.vwvwdz.euc1.cache.amazonaws.com:3991",
+                                "cluster_mode": true,
+                                "urls": {
+                                    "api_server": "https://api-backing-services.eu10-canary.data.services.cloud.sap"
+                                },
+                                "tls": true
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "malware-scanner": [
+                        {
+                            "label": "malware-scanner",
+                            "provider": null,
+                            "plan": "clamav",
+                            "name": "afc-malware-scanner",
+                            "tags": [],
+                            "instance_guid": "e188bf3f-4e52-4c14-ba89-3d05eaeeeff2",
+                            "instance_name": "afc-malware-scanner",
+                            "binding_guid": "4576817b-9d4b-47b7-889b-195ec69cf7dc",
+                            "binding_name": null,
+                            "credentials": {
+                                "sync_scan_url": "https://malware-scanner.cf.sap.hana.ondemand.com/",
+                                "async_scan_url": "",
+                                "uri": "https://malware-scanner.cf.sap.hana.ondemand.com/",
+                                "url": "https://malware-scanner.cf.sap.hana.ondemand.com/",
+                                "username": "malware-scanner-0-credentials-username",
+                                "password": "malware-scanner-0-credentials-password"
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "connectivity": [
+                        {
+                            "label": "connectivity",
+                            "provider": null,
+                            "plan": "lite",
+                            "name": "afc-connectivity",
+                            "tags": [
+                                "connectivity",
+                                "conn",
+                                "connsvc"
+                            ],
+                            "instance_guid": "43c89fea-a7e1-4781-a446-eca57e3748b5",
+                            "instance_name": "afc-connectivity",
+                            "binding_guid": "0249b8db-64f2-4ed2-8e96-d792ba66ebc0",
+                            "binding_name": null,
+                            "credentials": {
+                                "tenantmode": "dedicated",
+                                "clientid": "connectivity-0-credentials-clientid",
+                                "token_service_domain": "connectivity-0-credentials-token_service_domain",
+                                "credential-type": "binding-secret",
+                                "token_service_url": "connectivity-0-credentials-token_service_url",
+                                "xsappname": "clone43c89feaa7e14781a446eca57e3748b5!b5874|connectivity!b137",
+                                "onpremise_proxy_ldap_port": "20001",
+                                "onpremise_socks5_proxy_port": "20004",
+                                "clientsecret": "connectivity-0-credentials-clientsecret",
+                                "onpremise_proxy_http_port": "20003",
+                                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                                "onpremise_proxy_host": "connectivityproxy.internal.cf.sap.hana.ondemand.com",
+                                "uaadomain": "authentication.sap.hana.ondemand.com",
+                                "onpremise_proxy_port": "20003",
+                                "verificationkey": "connectivity-0-credentials-verificationkey",
+                                "identityzone": "skyfin",
+                                "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                                "onpremise_proxy_rfc_port": "20001"
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ],
+                    "destination": [
+                        {
+                            "label": "destination",
+                            "provider": null,
+                            "plan": "lite",
+                            "name": "afc-destination",
+                            "tags": [
+                                "destination",
+                                "conn",
+                                "connsvc"
+                            ],
+                            "instance_guid": "05ed0260-5f01-499a-b077-2a3cafc5eac3",
+                            "instance_name": "afc-destination",
+                            "binding_guid": "1ae763bd-76f7-4621-8426-a5c6567e30bd",
+                            "binding_name": null,
+                            "credentials": {
+                                "tenantmode": "dedicated",
+                                "clientid": "destination-0-credentials-clientid",
+                                "credential-type": "binding-secret",
+                                "xsappname": "clone05ed02605f01499ab0772a3cafc5eac3!b5874|destination-xsappname!b433",
+                                "clientsecret": "destination-0-credentials-clientsecret",
+                                "uri": "https://destination-configuration.cfapps.sap.hana.ondemand.com/",
+                                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                                "uaadomain": "authentication.sap.hana.ondemand.com",
+                                "instanceid": "05ed0260-5f01-499a-b077-2a3cafc5eac3",
+                                "verificationkey": "destination-0-credentials-verificationkey",
+                                "identityzone": "skyfin",
+                                "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+                            },
+                            "syslog_drain_url": null,
+                            "volume_mounts": []
+                        }
+                    ]
+                }
+            }
+        },
+        "rawHeaders": [
+            "content-length",
+            "46547",
+            "content-type",
+            "application/json; charset=utf-8",
+            "date",
+            "Mon, 02 Dec 2024 16:05:35 GMT",
+            "referrer-policy",
+            "strict-origin-when-cross-origin",
+            "vary",
+            "Accept",
+            "x-b3-spanid",
+            "4d48adc7e283b90e",
+            "x-b3-traceid",
+            "fca602c956ea4f8e4d48adc7e283b90e",
+            "x-content-type-options",
+            "nosniff",
+            "x-download-options",
+            "noopen",
+            "x-frame-options",
+            "SAMEORIGIN",
+            "x-permitted-cross-domain-policies",
+            "none",
+            "x-ratelimit-limit",
+            "20000",
+            "x-ratelimit-remaining",
+            "18000",
+            "x-ratelimit-reset",
+            "1733157161",
+            "x-runtime",
+            "0.101925",
+            "x-vcap-request-id",
+            "fca602c9-56ea-4f8e-4d48-adc7e283b90e::faea2623-5a92-4fe6-a3f1-3311aca02eff",
+            "x-xss-protection",
+            "1; mode=block",
+            "strict-transport-security",
+            "max-age=31536000; includeSubDomains; preload;"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/processes",
+        "body": "",
+        "status": 200,
+        "response": {
+            "pagination": {
+                "total_results": 1,
+                "total_pages": 1,
+                "first": {
+                    "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/processes?page=1&per_page=50"
+                },
+                "last": {
+                    "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/processes?page=1&per_page=50"
+                },
+                "next": null,
+                "previous": null
+            },
+            "resources": [
+                {
+                    "guid": "ef332d56-b955-4c39-a3ec-4b891d147226",
+                    "created_at": "2024-08-06T16:21:26Z",
+                    "updated_at": "2024-12-02T05:18:15Z",
+                    "version": "978cd366-08e4-4ebf-b6d4-29bbb2dd4ad7",
+                    "type": "web",
+                    "command": "[PRIVATE DATA HIDDEN IN LISTS]",
+                    "instances": 2,
+                    "memory_in_mb": 2048,
+                    "disk_in_mb": 1024,
+                    "log_rate_limit_in_bytes_per_second": -1,
+                    "health_check": {
+                        "type": "http",
+                        "data": {
+                            "timeout": 180,
+                            "invocation_timeout": 180,
+                            "interval": null,
+                            "endpoint": "/cfhealth"
+                        }
+                    },
+                    "readiness_health_check": {
+                        "type": "process",
+                        "data": {
+                            "invocation_timeout": null,
+                            "interval": null
+                        }
+                    },
+                    "relationships": {
+                        "app": {
+                            "data": {
+                                "guid": "f84d681e-7123-442f-b8ea-2c747c11e145"
+                            }
+                        },
+                        "revision": {
+                            "data": {
+                                "guid": "945f694a-8b68-4fe8-bd1d-d59f7c7f9390"
+                            }
+                        }
+                    },
+                    "metadata": {
+                        "labels": {},
+                        "annotations": {}
+                    },
+                    "links": {
+                        "self": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/processes/ef332d56-b955-4c39-a3ec-4b891d147226"
+                        },
+                        "scale": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/processes/ef332d56-b955-4c39-a3ec-4b891d147226/actions/scale",
+                            "method": "POST"
+                        },
+                        "app": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145"
+                        },
+                        "space": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/spaces/0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                        },
+                        "stats": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/processes/ef332d56-b955-4c39-a3ec-4b891d147226/stats"
+                        }
+                    }
+                }
+            ]
+        },
+        "rawHeaders": [
+            "content-length",
+            "1647",
+            "content-type",
+            "application/json; charset=utf-8",
+            "date",
+            "Mon, 02 Dec 2024 16:05:35 GMT",
+            "referrer-policy",
+            "strict-origin-when-cross-origin",
+            "vary",
+            "Accept",
+            "x-b3-spanid",
+            "6c3848c7b9f73c68",
+            "x-b3-traceid",
+            "791fc3dab65640c06c3848c7b9f73c68",
+            "x-content-type-options",
+            "nosniff",
+            "x-download-options",
+            "noopen",
+            "x-frame-options",
+            "SAMEORIGIN",
+            "x-permitted-cross-domain-policies",
+            "none",
+            "x-ratelimit-limit",
+            "20000",
+            "x-ratelimit-remaining",
+            "18000",
+            "x-ratelimit-reset",
+            "1733157161",
+            "x-runtime",
+            "0.015053",
+            "x-vcap-request-id",
+            "791fc3da-b656-40c0-6c38-48c7b9f73c68::b39811a8-1e63-45bb-aa29-6fbd6721a831",
+            "x-xss-protection",
+            "1; mode=block",
+            "strict-transport-security",
+            "max-age=31536000; includeSubDomains; preload;"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/routes",
+        "body": "",
+        "status": 200,
+        "response": {
+            "pagination": {
+                "total_results": 1,
+                "total_pages": 1,
+                "first": {
+                    "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/routes?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&page=1&per_page=50"
+                },
+                "last": {
+                    "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/routes?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&page=1&per_page=50"
+                },
+                "next": null,
+                "previous": null
+            },
+            "resources": [
+                {
+                    "guid": "819b3465-aa66-4ade-b29e-35530951b66e",
+                    "created_at": "2020-04-22T16:43:09Z",
+                    "updated_at": "2020-04-22T16:43:09Z",
+                    "protocol": "http",
+                    "host": "skyfin-dev-afc-backend",
+                    "path": "",
+                    "port": null,
+                    "url": "skyfin-dev-afc-backend.cfapps.sap.hana.ondemand.com",
+                    "destinations": [
+                        {
+                            "guid": "50be1a90-823b-498f-a7e4-11111d6987b0",
+                            "app": {
+                                "guid": "f84d681e-7123-442f-b8ea-2c747c11e145",
+                                "process": {
+                                    "type": "web"
+                                }
+                            },
+                            "weight": null,
+                            "port": 8080,
+                            "protocol": "http1"
+                        }
+                    ],
+                    "metadata": {
+                        "labels": {},
+                        "annotations": {}
+                    },
+                    "relationships": {
+                        "space": {
+                            "data": {
+                                "guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                            }
+                        },
+                        "domain": {
+                            "data": {
+                                "guid": "9aa474f9-3f82-4967-a2e1-dfe0cd155064"
+                            }
+                        }
+                    },
+                    "links": {
+                        "self": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/routes/819b3465-aa66-4ade-b29e-35530951b66e"
+                        },
+                        "space": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/spaces/0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                        },
+                        "destinations": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/routes/819b3465-aa66-4ade-b29e-35530951b66e/destinations"
+                        },
+                        "domain": {
+                            "href": "https://api.cf.sap.hana.ondemand.com/v3/domains/9aa474f9-3f82-4967-a2e1-dfe0cd155064"
+                        }
+                    }
+                }
+            ]
+        },
+        "rawHeaders": [
+            "content-length",
+            "1534",
+            "content-type",
+            "application/json; charset=utf-8",
+            "date",
+            "Mon, 02 Dec 2024 16:05:35 GMT",
+            "referrer-policy",
+            "strict-origin-when-cross-origin",
+            "vary",
+            "Accept",
+            "x-b3-spanid",
+            "616da98b18e332a0",
+            "x-b3-traceid",
+            "667b2bb4668d4a2d616da98b18e332a0",
+            "x-content-type-options",
+            "nosniff",
+            "x-download-options",
+            "noopen",
+            "x-frame-options",
+            "SAMEORIGIN",
+            "x-permitted-cross-domain-policies",
+            "none",
+            "x-ratelimit-limit",
+            "20000",
+            "x-ratelimit-remaining",
+            "18000",
+            "x-ratelimit-reset",
+            "1733157161",
+            "x-runtime",
+            "0.132246",
+            "x-vcap-request-id",
+            "667b2bb4-668d-4a2d-616d-a98b18e332a0::3dcc8bfc-3988-4ea3-a044-d4a1445955bb",
+            "x-xss-protection",
+            "1; mode=block",
+            "strict-transport-security",
+            "max-age=31536000; includeSubDomains; preload;"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/domains/9aa474f9-3f82-4967-a2e1-dfe0cd155064",
+        "body": "",
+        "status": 200,
+        "response": {
+            "guid": "9aa474f9-3f82-4967-a2e1-dfe0cd155064",
+            "created_at": "2016-10-06T08:30:16Z",
+            "updated_at": "2019-03-04T11:12:14Z",
+            "name": "cfapps.sap.hana.ondemand.com",
+            "internal": false,
+            "router_group": null,
+            "supported_protocols": [
+                "http"
+            ],
+            "relationships": {
+                "organization": {
+                    "data": null
+                },
+                "shared_organizations": {
+                    "data": []
+                }
+            },
+            "metadata": {
+                "labels": {},
+                "annotations": {}
+            },
+            "links": {
+                "self": {
+                    "href": "https://api.cf.sap.hana.ondemand.com/v3/domains/9aa474f9-3f82-4967-a2e1-dfe0cd155064"
+                },
+                "route_reservations": {
+                    "href": "https://api.cf.sap.hana.ondemand.com/v3/domains/9aa474f9-3f82-4967-a2e1-dfe0cd155064/route_reservations"
+                }
+            }
+        },
+        "rawHeaders": [
+            "content-length",
+            "598",
+            "content-type",
+            "application/json; charset=utf-8",
+            "date",
+            "Mon, 02 Dec 2024 16:05:35 GMT",
+            "referrer-policy",
+            "strict-origin-when-cross-origin",
+            "vary",
+            "Accept",
+            "x-b3-spanid",
+            "534fca86736bda6e",
+            "x-b3-traceid",
+            "a46328210991465d534fca86736bda6e",
+            "x-content-type-options",
+            "nosniff",
+            "x-download-options",
+            "noopen",
+            "x-frame-options",
+            "SAMEORIGIN",
+            "x-permitted-cross-domain-policies",
+            "none",
+            "x-ratelimit-limit",
+            "20000",
+            "x-ratelimit-remaining",
+            "18000",
+            "x-ratelimit-reset",
+            "1733157160",
+            "x-runtime",
+            "0.010609",
+            "x-vcap-request-id",
+            "a4632821-0991-465d-534f-ca86736bda6e::d5ababb2-e8f0-4cd3-bec8-b3f18ec9a722",
+            "x-xss-protection",
+            "1; mode=block",
+            "strict-transport-security",
+            "max-age=31536000; includeSubDomains; preload;"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://skyfin.authentication.cert.sap.hana.ondemand.com:443",
+        "method": "POST",
+        "path": "/oauth/token",
+        "status": 200,
+        "response": {
+            "access_token": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+            "token_type": "bearer",
+            "expires_in": 3599,
+            "scope": "uaa.resource afc-dev!t5874.afc-internal afc-dev!t5874.mtdeployment afc-dev!t5874.mtcallback",
+            "jti": "4d7ae1b758dc4cdd82ce9727c0f2a97b"
+        },
+        "rawHeaders": [
+            "cache-control",
+            "no-store",
+            "content-type",
+            "application/json;charset=UTF-8",
+            "date",
+            "Mon, 02 Dec 2024 16:05:35 GMT",
+            "pragma",
+            "no-cache",
+            "server",
+            "nginx",
+            "x-content-type-options",
+            "nosniff",
+            "x-frame-options",
+            "DENY",
+            "x-vcap-request-id",
+            "4dd28234-01a1-4d32-5e41-2d5c7b24da57",
+            "x-xss-protection",
+            "1; mode=block",
+            "transfer-encoding",
+            "chunked",
+            "strict-transport-security",
+            "max-age=31536000; includeSubDomains; preload;",
+            "connection",
+            "close"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/-/cds/saas-provisioning/tenant",
+        "body": "",
+        "status": 200,
+        "response": [
+            {
+                "subscribedTenantId": "ae2dc112-9745-4f5e-8feb-79ebdc0094bd",
+                "subscriptionAppName": "afc-dev",
+                "subscriptionCommercialAppName": "afc-dev",
+                "subscriptionAppId": "afc-dev!t5874",
+                "subscribedSubaccountId": "ae2dc112-9745-4f5e-8feb-79ebdc0094bd",
+                "providerSubaccountId": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                "subscriptionGUID": "204919bb-585f-471e-97d7-5f249d182a94",
+                "subscribedZoneId": "ae2dc112-9745-4f5e-8feb-79ebdc0094bd",
+                "subscribedSubdomain": "skyfin-sap-start",
+                "subscribedLicenseType": "SAPDEV",
+                "subscribedCrmId": "",
+                "subscribedCostObjectId": "101741293",
+                "subscriptionAppPlan": "standard",
+                "subscriptionAppAmount": 10,
+                "userId": "APPLICATION_OWNER",
+                "globalAccountGUID": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+                "eventType": "UPDATE",
+                "createdAt": "2024-07-05T11:24:00.230Z",
+                "modifiedAt": "2024-08-08T04:10:14.602Z"
+            },
+            {
+                "subscribedTenantId": "6917dfd6-7590-4033-af2a-140b75263b0d",
+                "subscriptionAppName": "afc-dev",
+                "subscriptionCommercialAppName": "afc-dev",
+                "subscriptionAppId": "afc-dev!t5874",
+                "subscribedSubaccountId": "6917dfd6-7590-4033-af2a-140b75263b0d",
+                "providerSubaccountId": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                "subscriptionGUID": "84daed86-d52b-4649-8dd8-4378e673ee94",
+                "subscribedZoneId": "6917dfd6-7590-4033-af2a-140b75263b0d",
+                "subscribedSubdomain": "skyfin-debug-company",
+                "subscribedLicenseType": "SAPDEV",
+                "subscribedCrmId": "",
+                "subscribedCostObjectId": "101741293",
+                "subscriptionAppPlan": "standard",
+                "subscriptionAppAmount": 10,
+                "userId": "APPLICATION_OWNER",
+                "globalAccountGUID": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+                "eventType": "UPDATE",
+                "createdAt": "2024-06-26T10:31:05.748Z",
+                "modifiedAt": "2024-08-09T04:17:02.224Z"
+            },
+            {
+                "subscribedTenantId": "cf528063-6a43-4bf2-8ccc-ca4e6d75d88e",
+                "subscriptionAppName": "afc-dev",
+                "subscriptionCommercialAppName": "afc-dev",
+                "subscriptionAppId": "afc-dev!t5874",
+                "subscribedSubaccountId": "cf528063-6a43-4bf2-8ccc-ca4e6d75d88e",
+                "providerSubaccountId": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                "subscriptionGUID": "b9659eb7-cf54-4cb4-bab2-6262b48b1a60",
+                "subscribedZoneId": "cf528063-6a43-4bf2-8ccc-ca4e6d75d88e",
+                "subscribedSubdomain": "jyd-dev-apps-eu10",
+                "subscribedLicenseType": "SAPDEV",
+                "subscribedCrmId": "12553508",
+                "subscriptionAppPlan": "standard",
+                "subscriptionAppAmount": 1,
+                "userId": "APPLICATION_OWNER",
+                "globalAccountGUID": "a6786cbf-f7e7-4103-9386-b91d1c07e3ea",
+                "eventType": "UPDATE",
+                "createdAt": "2024-03-19T16:57:50.505Z",
+                "modifiedAt": "2024-08-09T06:53:28.661Z"
+            },
+            {
+                "subscribedTenantId": "288393a7-972c-4fa8-acfd-12299c4db374",
+                "subscriptionAppName": "afc-dev",
+                "subscriptionCommercialAppName": "afc-dev",
+                "subscriptionAppId": "afc-dev!t5874",
+                "subscribedSubaccountId": "0b0eda38-2795-445a-a1f7-025e336263c0",
+                "providerSubaccountId": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                "subscriptionGUID": "efd308d6-db5a-41fd-8f35-6211d40746a1",
+                "subscribedZoneId": "288393a7-972c-4fa8-acfd-12299c4db374",
+                "subscribedSubdomain": "nga-dev-eu10-uofvpsx0",
+                "subscribedLicenseType": "SAPDEV",
+                "subscribedCostObjectId": "101013787",
+                "subscriptionAppPlan": "standard",
+                "subscriptionAppAmount": 1,
+                "userId": "APPLICATION_OWNER",
+                "globalAccountGUID": "096cea2e-77ef-498f-a588-114b33817f5d",
+                "eventType": "UPDATE",
+                "createdAt": "2024-01-05T07:56:20.923Z",
+                "modifiedAt": "2024-08-09T10:14:57.327Z"
+            },
+            {
+                "subscribedTenantId": "cb9158ce-f8fd-441b-b443-17219e8f79fa",
+                "subscriptionAppName": "afc-dev",
+                "subscriptionCommercialAppName": "afc-dev",
+                "subscriptionAppId": "afc-dev!t5874",
+                "subscribedSubaccountId": "b07cc881-e90b-4c18-82c4-94aad87c2bb9",
+                "providerSubaccountId": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                "subscriptionGUID": "76fcb047-85cc-baa4-9705-aa22aebf47f7",
+                "subscribedZoneId": "cb9158ce-f8fd-441b-b443-17219e8f79fa",
+                "subscribedSubdomain": "skysand",
+                "subscribedLicenseType": "SAPDEV",
+                "subscribedCrmId": "",
+                "subscribedCostObjectId": "101741293",
+                "userId": "APPLICATION_OWNER",
+                "globalAccountGUID": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+                "eventType": "UPDATE",
+                "createdAt": null,
+                "modifiedAt": "2024-08-09T12:27:04.007Z"
+            },
+            {
+                "subscribedTenantId": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+                "subscriptionAppName": "afc-dev",
+                "subscriptionCommercialAppName": "afc-dev",
+                "subscriptionAppId": "afc-dev!t5874",
+                "subscribedSubaccountId": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+                "providerSubaccountId": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                "subscriptionGUID": "8999d1fa-3a3e-bbf5-c21d-2db950822b8a",
+                "subscribedZoneId": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+                "subscribedSubdomain": "skyfin-company",
+                "subscribedLicenseType": "SAPDEV",
+                "subscribedCrmId": "",
+                "subscribedCostObjectId": "101741293",
+                "subscriptionAppPlan": "standard",
+                "subscriptionAppAmount": 1,
+                "userId": "APPLICATION_OWNER",
+                "globalAccountGUID": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+                "eventType": "UPDATE",
+                "createdAt": null,
+                "modifiedAt": "2024-08-09T22:11:20.072Z"
+            },
+            {
+                "subscribedTenantId": "4c0909b1-a84e-4763-a26e-532fdb9e40fa",
+                "subscriptionAppName": "afc-dev",
+                "subscriptionCommercialAppName": "afc-dev",
+                "subscriptionAppId": "afc-dev!t5874",
+                "subscribedSubaccountId": "4c0909b1-a84e-4763-a26e-532fdb9e40fa",
+                "providerSubaccountId": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                "subscriptionGUID": "b6db4043-7b32-4bc5-89cc-b605ac033edd",
+                "subscribedZoneId": "4c0909b1-a84e-4763-a26e-532fdb9e40fa",
+                "subscribedSubdomain": "hw6-apps-eu10",
+                "subscribedLicenseType": "CUSTOMER",
+                "subscribedCrmId": "12553508",
+                "subscriptionAppPlan": "standard",
+                "subscriptionAppAmount": 2,
+                "userId": "APPLICATION_OWNER",
+                "globalAccountGUID": "1fb05c0d-22c0-43d8-9ca7-c9ef0c28f67f",
+                "eventType": "UPDATE",
+                "createdAt": null,
+                "modifiedAt": "2024-08-09T22:18:18.019Z"
+            },
+            {
+                "subscribedTenantId": "dde70ec5-983d-4848-b50c-fb2cdac7d359",
+                "subscriptionAppName": "afc-dev",
+                "subscriptionCommercialAppName": "afc-dev",
+                "subscriptionAppId": "afc-dev!t5874",
+                "subscribedSubaccountId": "dde70ec5-983d-4848-b50c-fb2cdac7d359",
+                "providerSubaccountId": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                "subscriptionGUID": "f1413a16-e900-4fb0-a269-573e1dfed7b8",
+                "subscribedZoneId": "dde70ec5-983d-4848-b50c-fb2cdac7d359",
+                "subscribedSubdomain": "skyfin-test-3",
+                "subscribedLicenseType": "SAPDEV",
+                "subscribedCrmId": "",
+                "subscribedCostObjectId": "101741293",
+                "subscriptionAppPlan": "standard",
+                "subscriptionAppAmount": 10,
+                "userId": "APPLICATION_OWNER",
+                "globalAccountGUID": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+                "eventType": "UPDATE",
+                "createdAt": "2024-07-09T08:43:19.015Z",
+                "modifiedAt": "2024-08-10T01:56:42.406Z"
+            },
+            {
+                "subscribedTenantId": "663d2938-be50-44ab-92ca-538855eb594f",
+                "subscriptionAppName": "afc-dev",
+                "subscriptionCommercialAppName": "afc-dev",
+                "subscriptionAppId": "afc-dev!t5874",
+                "subscribedSubaccountId": "663d2938-be50-44ab-92ca-538855eb594f",
+                "providerSubaccountId": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                "subscriptionGUID": "1da4a3ef-da21-4087-a9ca-7283c67f4e21",
+                "subscribedZoneId": "663d2938-be50-44ab-92ca-538855eb594f",
+                "subscribedSubdomain": "skyfin-workzone",
+                "subscribedLicenseType": "SAPDEV",
+                "subscribedCostObjectId": "101741293",
+                "subscriptionAppPlan": "standard",
+                "subscriptionAppAmount": 10,
+                "userId": "oliver.klemenz@sap.com",
+                "userInfo": {
+                    "userId": "oliver.klemenz@sap.com",
+                    "userGuid": "b58a7f93-c7a1-4686-b233-7be376da04d3",
+                    "userName": "oliver.klemenz@sap.com",
+                    "email": "oliver.klemenz@sap.com",
+                    "subIdp": "D045365",
+                    "sub": "b58a7f93-c7a1-4686-b233-7be376da04d3"
+                },
+                "additionalInformation": {
+                    "tenantMetadataUrl": "https://skyfin-workzone.authentication.sap.hana.ondemand.com/saml/metadata"
+                },
+                "globalAccountGUID": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+                "eventType": "CREATE",
+                "createdAt": "2024-09-11T07:37:19.676Z",
+                "modifiedAt": "2024-09-11T07:37:19.676Z"
+            },
+            {
+                "subscribedTenantId": "9c418100-6318-4e8a-b4b2-1114f4f44aef",
+                "subscriptionAppName": "afc-dev",
+                "subscriptionCommercialAppName": "afc-dev",
+                "subscriptionAppId": "afc-dev!t5874",
+                "subscribedSubaccountId": "9c418100-6318-4e8a-b4b2-1114f4f44aef",
+                "providerSubaccountId": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                "subscriptionGUID": "97e5ac7a-f91a-4bbf-a29d-443138d65313",
+                "subscribedZoneId": "9c418100-6318-4e8a-b4b2-1114f4f44aef",
+                "subscribedSubdomain": "skyfin-booster",
+                "subscribedLicenseType": "SAPDEV",
+                "subscribedCostObjectId": "101741293",
+                "subscriptionAppPlan": "standard",
+                "subscriptionAppAmount": 10,
+                "userId": "oliver.klemenz@sap.com",
+                "userInfo": {
+                    "userId": "oliver.klemenz@sap.com",
+                    "userGuid": "c73507ca-b6c5-48eb-9ec3-2857f5ee92cb",
+                    "userName": "oliver.klemenz@sap.com",
+                    "email": "oliver.klemenz@sap.com",
+                    "subIdp": "D045365",
+                    "sub": "c73507ca-b6c5-48eb-9ec3-2857f5ee92cb"
+                },
+                "additionalInformation": {
+                    "tenantMetadataUrl": "https://skyfin-booster.authentication.sap.hana.ondemand.com/saml/metadata"
+                },
+                "globalAccountGUID": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
+                "eventType": "CREATE",
+                "createdAt": "2024-11-27T06:54:40.207Z",
+                "modifiedAt": "2024-11-27T06:54:40.207Z"
+            }
+        ],
+        "rawHeaders": [
+            "content-length",
+            "8397",
+            "content-type",
+            "application/json; charset=utf-8",
+            "date",
+            "Mon, 02 Dec 2024 16:05:35 GMT",
+            "x-correlation-id",
+            "bdaa7690-b954-426b-6afb-055f2bfd7a71",
+            "x-powered-by",
+            "Express",
+            "x-vcap-request-id",
+            "bdaa7690-b954-426b-6afb-055f2bfd7a71",
+            "strict-transport-security",
+            "max-age=31536000; includeSubDomains; preload;"
+        ],
+        "responseIsBinary": false
+    }
+]

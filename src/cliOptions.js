@@ -36,17 +36,17 @@ const PASS_ARG_META = Object.freeze({
 });
 
 const FLAG_ARG = Object.freeze({
+  FORCE: "--force",
   DECODE: "--decode",
   REVEAL: "--reveal",
   TIMESTAMPS: "--time",
+  JSON_OUTPUT: "--json",
   USER_INFO: "--userinfo",
   AUTO_UNDEPLOY: "--auto-undeploy",
   SKIP_UNCHANGED: "--skip-unchanged",
   ONLY_STALE: "--only-stale",
   ONLY_FAILED: "--only-failed",
 });
-
-const FORCE_FLAG = "--force";
 
 const USAGE = `usage: ${NAME} [command]
 
@@ -70,6 +70,7 @@ commands:
 ~  uaasu  --uaa-service-user SERVICE USERNAME PASSWORD [TENANT]  obtain service token for username password
           ...    [TENANT]                                        obtain token for tenant, fallback to paas tenant
           ...    --decode                                        decode result token
+          ...    --json                                          output in json
           ...    --userinfo                                      add detailed user info for passcode or username
 
    === tenant registry (reg) ===
@@ -84,6 +85,7 @@ commands:
 *         --registry-offboard-skip TENANT_ID SKIP_APPS  offboard tenant subscription skipping apps
           ...    [TENANT]                               filter list for tenant id or subdomain
           ...    --time                                 list includes timestamps
+          ...    --json                                 list in json
           ...    --skip-unchanged                       skip update for unchanged dependencies
           ...    --only-stale                           only update subscriptions that have not changed today
           ...    --only-failed                          only update subscriptions with UPDATE_FAILED state
@@ -100,6 +102,7 @@ commands:
           ...    [TENANT]                            filter list for tenant id or subdomain
           ...    --auto-undeploy                     upgrade with auto undeploy
           ...    --time                              list includes timestamps
+          ...    --json                              list in json
 
    === hana management (hdi) ===
 ~  hdil   --hdi-list [TENANT_ID]                  list all hdi container instances
@@ -115,6 +118,7 @@ commands:
           ...    [PARAMS]                         create binding with custom parameters
           ...    --reveal                         show passwords
           ...    --time                           list includes timestamps
+          ...    --json                           list in json
 
    === server diagnostic (srv) ===
 ~  srv     --server-info                                      call server /info
@@ -158,6 +162,7 @@ const APP_CLI_OPTIONS = Object.freeze({
   UAA_DECODE: {
     commandVariants: ["uaad", "--uaa-decode"],
     requiredPassArgs: [PASS_ARG.TOKEN],
+    optionalFlagArgs: [FLAG_ARG.JSON_OUTPUT],
     callback: uaa.uaaDecode,
     passContext: false,
     readonly: true,
@@ -165,7 +170,7 @@ const APP_CLI_OPTIONS = Object.freeze({
   UAA_CLIENT: {
     commandVariants: ["uaac", "--uaa-client"],
     optionalPassArgs: [PASS_ARG.TENANT],
-    optionalFlagArgs: [FLAG_ARG.DECODE],
+    optionalFlagArgs: [FLAG_ARG.DECODE, FLAG_ARG.JSON_OUTPUT],
     callback: uaa.uaaClient,
     readonly: true,
   },
@@ -173,7 +178,7 @@ const APP_CLI_OPTIONS = Object.freeze({
     commandVariants: ["uaap", "--uaa-passcode"],
     requiredPassArgs: [PASS_ARG.PASSCODE],
     optionalPassArgs: [PASS_ARG.TENANT],
-    optionalFlagArgs: [FLAG_ARG.DECODE, FLAG_ARG.USER_INFO],
+    optionalFlagArgs: [FLAG_ARG.DECODE, FLAG_ARG.JSON_OUTPUT, FLAG_ARG.USER_INFO],
     callback: uaa.uaaPasscode,
     readonly: true,
   },
@@ -181,7 +186,7 @@ const APP_CLI_OPTIONS = Object.freeze({
     commandVariants: ["uaau", "--uaa-user"],
     requiredPassArgs: [PASS_ARG.USERNAME, PASS_ARG.PASSWORD],
     optionalPassArgs: [PASS_ARG.TENANT],
-    optionalFlagArgs: [FLAG_ARG.DECODE, FLAG_ARG.USER_INFO],
+    optionalFlagArgs: [FLAG_ARG.DECODE, FLAG_ARG.JSON_OUTPUT, FLAG_ARG.USER_INFO],
     callback: uaa.uaaUser,
     readonly: true,
   },
@@ -189,7 +194,7 @@ const APP_CLI_OPTIONS = Object.freeze({
     commandVariants: ["uaasc", "--uaa-service-client"],
     requiredPassArgs: [PASS_ARG.SERVICE],
     optionalPassArgs: [PASS_ARG.TENANT],
-    optionalFlagArgs: [FLAG_ARG.DECODE],
+    optionalFlagArgs: [FLAG_ARG.DECODE, FLAG_ARG.JSON_OUTPUT],
     callback: uaa.uaaServiceClient,
     readonly: true,
   },
@@ -197,7 +202,7 @@ const APP_CLI_OPTIONS = Object.freeze({
     commandVariants: ["uaasp", "--uaa-service-passcode"],
     requiredPassArgs: [PASS_ARG.SERVICE, PASS_ARG.PASSCODE],
     optionalPassArgs: [PASS_ARG.TENANT],
-    optionalFlagArgs: [FLAG_ARG.DECODE, FLAG_ARG.USER_INFO],
+    optionalFlagArgs: [FLAG_ARG.DECODE, FLAG_ARG.JSON_OUTPUT, FLAG_ARG.USER_INFO],
     callback: uaa.uaaServicePasscode,
     readonly: true,
   },
@@ -205,7 +210,7 @@ const APP_CLI_OPTIONS = Object.freeze({
     commandVariants: ["uaasu", "--uaa-service-user"],
     requiredPassArgs: [PASS_ARG.SERVICE, PASS_ARG.USERNAME, PASS_ARG.PASSWORD],
     optionalPassArgs: [PASS_ARG.TENANT],
-    optionalFlagArgs: [FLAG_ARG.DECODE, FLAG_ARG.USER_INFO],
+    optionalFlagArgs: [FLAG_ARG.DECODE, FLAG_ARG.JSON_OUTPUT, FLAG_ARG.USER_INFO],
     callback: uaa.uaaServiceUser,
     readonly: true,
   },
@@ -213,14 +218,14 @@ const APP_CLI_OPTIONS = Object.freeze({
   REGISTRY_LIST: {
     commandVariants: ["regl", "--registry-list"],
     optionalPassArgs: [PASS_ARG.TENANT],
-    optionalFlagArgs: [FLAG_ARG.TIMESTAMPS, FLAG_ARG.ONLY_STALE, FLAG_ARG.ONLY_FAILED],
+    optionalFlagArgs: [FLAG_ARG.TIMESTAMPS, FLAG_ARG.JSON_OUTPUT, FLAG_ARG.ONLY_STALE, FLAG_ARG.ONLY_FAILED],
     callback: reg.registryListSubscriptions,
     readonly: true,
   },
   REGISTRY_LONG_LIST: {
     commandVariants: ["regll", "--registry-long-list"],
     optionalPassArgs: [PASS_ARG.TENANT],
-    optionalFlagArgs: [FLAG_ARG.ONLY_STALE, FLAG_ARG.ONLY_FAILED],
+    optionalFlagArgs: [FLAG_ARG.JSON_OUTPUT, FLAG_ARG.ONLY_STALE, FLAG_ARG.ONLY_FAILED],
     callback: reg.registryLongListSubscriptions,
     readonly: true,
   },
@@ -268,14 +273,14 @@ const APP_CLI_OPTIONS = Object.freeze({
   CDS_LIST: {
     commandVariants: ["cdsl", "--cds-list"],
     optionalPassArgs: [PASS_ARG.TENANT],
-    optionalFlagArgs: [FLAG_ARG.TIMESTAMPS],
+    optionalFlagArgs: [FLAG_ARG.TIMESTAMPS, FLAG_ARG.JSON_OUTPUT],
     callback: cds.cdsList,
     readonly: true,
   },
   CDS_LONG_LIST: {
     commandVariants: ["cdsll", "--cds-long-list"],
     optionalPassArgs: [PASS_ARG.TENANT],
-
+    optionalFlagArgs: [FLAG_ARG.JSON_OUTPUT],
     callback: cds.cdsLongList,
     readonly: true,
   },
@@ -308,7 +313,7 @@ const APP_CLI_OPTIONS = Object.freeze({
   HDI_LIST: {
     commandVariants: ["hdil", "--hdi-list"],
     optionalPassArgs: [PASS_ARG.TENANT_ID],
-    optionalFlagArgs: [FLAG_ARG.TIMESTAMPS],
+    optionalFlagArgs: [FLAG_ARG.TIMESTAMPS, FLAG_ARG.JSON_OUTPUT],
     callback: hdi.hdiList,
     useCache: false,
     readonly: true,
@@ -316,7 +321,7 @@ const APP_CLI_OPTIONS = Object.freeze({
   HDI_LONG_LIST: {
     commandVariants: ["hdill", "--hdi-long-list"],
     optionalPassArgs: [PASS_ARG.TENANT_ID],
-    optionalFlagArgs: [FLAG_ARG.REVEAL],
+    optionalFlagArgs: [FLAG_ARG.JSON_OUTPUT, FLAG_ARG.REVEAL],
     callback: hdi.hdiLongList,
     useCache: false,
     readonly: true,
@@ -402,7 +407,7 @@ const APP_CLI_OPTIONS = Object.freeze({
 
 module.exports = {
   PASS_ARG_META,
-  FORCE_FLAG,
+  FLAG_ARG,
   USAGE,
   GENERIC_CLI_OPTIONS,
   APP_CLI_OPTIONS,

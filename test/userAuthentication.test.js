@@ -1,5 +1,6 @@
 "use strict";
 
+jest.mock("../src/shared/logger", () => require("./__mocks/shared/logger"));
 const fetchMock = require("node-fetch");
 jest.mock("node-fetch");
 const sharedStaticMock = require("../src/shared/static");
@@ -64,17 +65,10 @@ const contextMock = {
   }),
 };
 
-jest.spyOn(console, "log").mockImplementation();
-jest.spyOn(console, "error").mockImplementation();
-
 describe("uaa tests", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   describe("without context", () => {
     test("uaaDecode", async () => {
-      const result = await uaa.uaaDecode([PAAS_CLIENT_TOKEN]);
+      const result = await uaa.uaaDecode([PAAS_CLIENT_TOKEN], []);
       expect(sharedStaticMock.isJWT).toHaveBeenCalledTimes(1);
       expect(sharedStaticMock.isJWT).toHaveBeenCalledWith(PAAS_CLIENT_TOKEN);
       expect(result).toMatchSnapshot();
@@ -83,10 +77,10 @@ describe("uaa tests", () => {
 
   describe("xsuaa tokens", () => {
     test.each([
-      ["paas client default", PAAS_CLIENT_TOKEN, [], [false]],
-      ["paas client --decode", PAAS_CLIENT_TOKEN, [], [true]],
-      ["saas client default", SAAS_CLIENT_TOKEN, [SUBDOMAIN], [false]],
-      ["saas client --decode", SAAS_CLIENT_TOKEN, [SUBDOMAIN], [true]],
+      ["paas client default", PAAS_CLIENT_TOKEN, [], [false, false]],
+      ["paas client --decode", PAAS_CLIENT_TOKEN, [], [true, false]],
+      ["saas client default", SAAS_CLIENT_TOKEN, [SUBDOMAIN], [false, false]],
+      ["saas client --decode", SAAS_CLIENT_TOKEN, [SUBDOMAIN], [true, false]],
     ])("%s", async (_, token, passArgs, passFlags) => {
       fetchMock.mockResolvedValueOnce({
         ok: true,
@@ -99,10 +93,10 @@ describe("uaa tests", () => {
     });
 
     test.each([
-      ["saas passcode default", SAAS_PASSCODE_TOKEN, [PASSCODE, SUBDOMAIN], [false, false], 1],
-      ["saas passcode --decode", SAAS_PASSCODE_TOKEN, [PASSCODE, SUBDOMAIN], [true, false], 1],
-      ["saas passcode --userinfo", SAAS_PASSCODE_TOKEN, [PASSCODE, SUBDOMAIN], [false, true], 2],
-      ["saas passcode --decode --userinfo", SAAS_PASSCODE_TOKEN, [PASSCODE, SUBDOMAIN], [true, true], 2],
+      ["saas passcode default", SAAS_PASSCODE_TOKEN, [PASSCODE, SUBDOMAIN], [false, false, false], 1],
+      ["saas passcode --decode", SAAS_PASSCODE_TOKEN, [PASSCODE, SUBDOMAIN], [true, false, false], 1],
+      ["saas passcode --userinfo", SAAS_PASSCODE_TOKEN, [PASSCODE, SUBDOMAIN], [false, false, true], 2],
+      ["saas passcode --decode --userinfo", SAAS_PASSCODE_TOKEN, [PASSCODE, SUBDOMAIN], [true, false, true], 2],
     ])("%s", async (_, token, passArgs, passFlags, fetchCalls) => {
       fetchMock.mockResolvedValueOnce({
         ok: true,
@@ -121,10 +115,10 @@ describe("uaa tests", () => {
     });
 
     test.each([
-      ["saas user default", SAAS_USER_TOKEN, [USERNAME, PASSWORD, SUBDOMAIN], [false, false], 1],
-      ["saas user --decode", SAAS_USER_TOKEN, [USERNAME, PASSWORD, SUBDOMAIN], [true, false], 1],
-      ["saas user --userinfo", SAAS_USER_TOKEN, [USERNAME, PASSWORD, SUBDOMAIN], [false, true], 2],
-      ["saas user --decode --userinfo", SAAS_USER_TOKEN, [USERNAME, PASSWORD, SUBDOMAIN], [true, true], 2],
+      ["saas user default", SAAS_USER_TOKEN, [USERNAME, PASSWORD, SUBDOMAIN], [false, false, false], 1],
+      ["saas user --decode", SAAS_USER_TOKEN, [USERNAME, PASSWORD, SUBDOMAIN], [true, false, false], 1],
+      ["saas user --userinfo", SAAS_USER_TOKEN, [USERNAME, PASSWORD, SUBDOMAIN], [false, false, true], 2],
+      ["saas user --decode --userinfo", SAAS_USER_TOKEN, [USERNAME, PASSWORD, SUBDOMAIN], [true, false, true], 2],
     ])("%s", async (_, token, passArgs, passFlags, fetchCalls) => {
       fetchMock.mockResolvedValueOnce({
         ok: true,
@@ -145,8 +139,8 @@ describe("uaa tests", () => {
 
   describe("service tokens", () => {
     test.each([
-      ["saas service client default", SAAS_SERVICE_CLIENT_TOKEN, [SERVICE, SUBDOMAIN], [false]],
-      ["saas service client --decode", SAAS_SERVICE_CLIENT_TOKEN, [SERVICE, SUBDOMAIN], [true]],
+      ["saas service client default", SAAS_SERVICE_CLIENT_TOKEN, [SERVICE, SUBDOMAIN], [false, false]],
+      ["saas service client --decode", SAAS_SERVICE_CLIENT_TOKEN, [SERVICE, SUBDOMAIN], [true, false]],
     ])("%s", async (_, token, passArgs, passFlags) => {
       sharedStaticMock.isDashedWord.mockReturnValue(true);
       contextMock.getUaaInfo.mockReturnValueOnce({
@@ -162,20 +156,32 @@ describe("uaa tests", () => {
     });
 
     test.each([
-      ["saas service passcode default", SAAS_SERVICE_PASSCODE_TOKEN, [SERVICE, PASSCODE, SUBDOMAIN], [false, false], 0],
-      ["saas service passcode --decode", SAAS_SERVICE_PASSCODE_TOKEN, [SERVICE, PASSCODE, SUBDOMAIN], [true, false], 0],
+      [
+        "saas service passcode default",
+        SAAS_SERVICE_PASSCODE_TOKEN,
+        [SERVICE, PASSCODE, SUBDOMAIN],
+        [false, false, false],
+        0,
+      ],
+      [
+        "saas service passcode --decode",
+        SAAS_SERVICE_PASSCODE_TOKEN,
+        [SERVICE, PASSCODE, SUBDOMAIN],
+        [true, false, false],
+        0,
+      ],
       [
         "saas service passcode --userinfo",
         SAAS_SERVICE_PASSCODE_TOKEN,
         [SERVICE, PASSCODE, SUBDOMAIN],
-        [false, true],
+        [false, false, true],
         1,
       ],
       [
         "saas service passcode --decode --userinfo",
         SAAS_SERVICE_PASSCODE_TOKEN,
         [SERVICE, PASSCODE, SUBDOMAIN],
-        [true, true],
+        [true, false, true],
         1,
       ],
     ])("%s", async (_, token, passArgs, passFlags, fetchCalls) => {
@@ -203,28 +209,28 @@ describe("uaa tests", () => {
         "saas service user default",
         SAAS_SERVICE_USER_TOKEN,
         [SERVICE, USERNAME, PASSWORD, SUBDOMAIN],
-        [false, false],
+        [false, false, false],
         0,
       ],
       [
         "saas service user --decode",
         SAAS_SERVICE_USER_TOKEN,
         [SERVICE, USERNAME, PASSWORD, SUBDOMAIN],
-        [true, false],
+        [true, false, false],
         0,
       ],
       [
         "saas service user --userinfo",
         SAAS_SERVICE_USER_TOKEN,
         [SERVICE, USERNAME, PASSWORD, SUBDOMAIN],
-        [false, true],
+        [false, false, true],
         1,
       ],
       [
         "saas service user --decode --userinfo",
         SAAS_SERVICE_USER_TOKEN,
         [SERVICE, USERNAME, PASSWORD, SUBDOMAIN],
-        [true, true],
+        [true, false, true],
         1,
       ],
     ])("%s", async (_, token, passArgs, passFlags, fetchCalls) => {

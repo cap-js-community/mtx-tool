@@ -22,7 +22,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm ci --package-lock
       - run: npm test
-      - run: npm run lint:ci
+      - run: npm run lint
       - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

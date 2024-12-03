@@ -10,6 +10,7 @@ const outputFromLoggerPartitionFetch = (calls) => {
     /^(?:GET|POST|PATCH|DELETE) https:\/\//i.test(line)
   );
   const fetchLogLinesWithMockTimestamp = fetchLogLines.map((line) => line.replace(/\(\d+ms\)/g, "(88ms)"));
+  fetchLogLinesWithMockTimestamp.sort(); // NOTE: this is inherently unstable otherwise
   return [...logLines, "", ...fetchLogLinesWithMockTimestamp].join("\n");
 };
 

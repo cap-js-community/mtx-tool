@@ -10,6 +10,7 @@ exports[`cli tests uaa service user via env with service 1`] = `
   [
     false,
     false,
+    false,
   ],
 ]
 `;
@@ -33,6 +34,7 @@ exports[`cli tests uaa service user via env with service tenant 1`] = `
     "troll_tenant",
   ],
   [
+    false,
     false,
     false,
   ],
@@ -60,6 +62,7 @@ exports[`cli tests uaa service user with service username password 1`] = `
   [
     false,
     false,
+    false,
   ],
 ]
 `;
@@ -83,6 +86,7 @@ exports[`cli tests uaa service user with service username password tenant 1`] = 
     "troll_tenant",
   ],
   [
+    false,
     false,
     false,
   ],
@@ -109,6 +113,7 @@ exports[`cli tests uaa user via env 1`] = `
   [
     false,
     false,
+    false,
   ],
 ]
 `;
@@ -130,6 +135,7 @@ exports[`cli tests uaa user via env with tenant 1`] = `
     "troll_tenant",
   ],
   [
+    false,
     false,
     false,
   ],
@@ -167,6 +173,7 @@ exports[`cli tests uaa user with username password 1`] = `
   [
     false,
     false,
+    false,
   ],
 ]
 `;
@@ -188,6 +195,7 @@ exports[`cli tests uaa user with username password tenant 1`] = `
     "troll_tenant",
   ],
   [
+    false,
     false,
     false,
   ],

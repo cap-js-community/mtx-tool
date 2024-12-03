@@ -15,9 +15,12 @@ const {
   formatTimestampsWithRelativeDays,
   isObject,
   parseIntWithFallback,
+  makeOneTime,
+  resetOneTime,
 } = require("../shared/static");
 const { assert, assertAll } = require("../shared/error");
 const { request } = require("../shared/request");
+const { Logger } = require("../shared/logger");
 
 const CDS_UPGRADE_APP_INSTANCE = 0;
 const CDS_REQUEST_CONCURRENCY_FALLBACK = 10;
@@ -33,30 +36,28 @@ const JOB_STATUS = Object.freeze({
 });
 const TASK_STATUS = JOB_STATUS;
 
+const logger = Logger.getInstance();
 const writeFileAsync = promisify(writeFile);
 const cdsRequestConcurrency = parseIntWithFallback(process.env[ENV.CDS_CONCURRENCY], CDS_REQUEST_CONCURRENCY_FALLBACK);
 const cdsPollFrequency = parseIntWithFallback(process.env[ENV.CDS_FREQUENCY], CDS_JOB_POLL_FREQUENCY_FALLBACK);
 
-const _isMtxs = async (context) => {
-  if (_isMtxs._result === undefined) {
-    const { cfRouteUrl } = await context.getCdsInfo();
-    const response = await request({
-      method: "HEAD",
-      url: cfRouteUrl,
-      pathname: `/-/cds/saas-provisioning`,
-      logged: false,
-      checkStatus: false,
-    });
-    const result = response.status !== 404;
-    _isMtxs._result = result;
-    if (result) {
-      console.log("using cds-mtxs apis");
-    } else {
-      console.log("using legacy cds-mtx apis, consider upgrading to cds-mtxs");
-    }
+const _isMtxs = makeOneTime(async (context) => {
+  const { cfRouteUrl } = await context.getCdsInfo();
+  const response = await request({
+    method: "HEAD",
+    url: cfRouteUrl,
+    pathname: `/-/cds/saas-provisioning`,
+    logged: false,
+    checkStatus: false,
+  });
+  const result = response.status !== 404;
+  if (result) {
+    logger.info("using cds-mtxs apis");
+  } else {
+    logger.info("using legacy cds-mtx apis, consider upgrading to cds-mtxs");
   }
-  return _isMtxs._result;
-};
+  return result;
+});
 
 const _cdsTenants = async (context, tenant) => {
   const isMtxs = await _isMtxs(context);
@@ -85,10 +86,16 @@ const _cdsTenants = async (context, tenant) => {
   return result;
 };
 
-const cdsList = async (context, [tenant], [doTimestamps]) => {
+const cdsList = async (context, [tenant], [doTimestamps, doJsonOutput]) => {
+  const tenants = await _cdsTenants(context, tenant);
+
+  if (doJsonOutput) {
+    return tenants;
+  }
+
+  const nowDate = new Date();
   const headerRow = ["subscribedTenantId", "subscribedSubdomain", "subscriptionAppName", "eventType"];
   doTimestamps && headerRow.push("created_on", "updated_on");
-  const nowDate = new Date();
 
   const tenantRow = (tenant) => {
     const row = [
@@ -100,14 +107,12 @@ const cdsList = async (context, [tenant], [doTimestamps]) => {
     doTimestamps && row.push(...formatTimestampsWithRelativeDays([tenant.createdAt, tenant.modifiedAt], nowDate));
     return row;
   };
-  const tenants = await _cdsTenants(context, tenant);
   const table = tenants && tenants.length ? [headerRow].concat(tenants.map(tenantRow)) : null;
   return tableList(table, { withRowNumber: !tenant });
 };
 
 const cdsLongList = async (context, [tenant]) => {
-  const data = await _cdsTenants(context, tenant);
-  return JSON.stringify(data, null, 2);
+  return await _cdsTenants(context, tenant);
 };
 
 const _cdsOnboard = async (context, tenantId, metadata = {}) => {
@@ -132,7 +137,7 @@ const cdsOnboardTenant = async (context, [tenantId, rawMetadata]) => {
   if (rawMetadata) {
     metadata = tryJsonParse(rawMetadata);
     assert(isObject(metadata), "METADATA is not a JSON object");
-    console.log("using onboarding metadata: %O", metadata);
+    logger.info("using onboarding metadata: %O", metadata);
   }
   return _cdsOnboard(context, tenantId, metadata);
 };
@@ -195,7 +200,7 @@ const _cdsUpgradeMtxs = async (
   });
   const upgradeResponseData = await _safeMaterializeJson(upgradeResponse, "upgrade");
   const jobId = upgradeResponseData.ID;
-  console.log("started upgrade on server with jobId %s polling interval %isec", jobId, cdsPollFrequency / 1000);
+  logger.info("started upgrade on server with jobId %s polling interval %isec", jobId, cdsPollFrequency / 1000);
   const upgradeTenantEntries = upgradeResponseData.tenants && Object.entries(upgradeResponseData.tenants);
   assert(upgradeTenantEntries, "no tenants found in response for upgrade\n%j", upgradeResponseData);
   const countLength = String(upgradeTenantEntries.length).length;
@@ -218,7 +223,7 @@ const _cdsUpgradeMtxs = async (
     assert(status, "no status retrieved for jobId %s", jobId);
     const taskSummary = _getTaskSummary(tasks ?? []);
     const [queued, running, failed, finished] = taskSummary.map((count) => String(count).padStart(countLength));
-    console.log(
+    logger.info(
       "job %s is %s with tasks queued/running: %s/%s | failed/finished: %s/%s",
       jobId,
       status,
@@ -256,7 +261,7 @@ const _cdsUpgradeMtxs = async (
     })
   );
 
-  console.log(tableList(table) + "\n");
+  logger.info(tableList(table));
   assert(!hasError, "error happened during tenant upgrade");
   assert(!hasChangeTimeout, "no task progress after %s", CDS_CHANGE_TIMEOUT_TEXT);
 };
@@ -283,7 +288,7 @@ const _cdsUpgradeMtx = async (
   });
   const upgradeResponseData = await _safeMaterializeJson(upgradeResponse, "upgrade");
   const jobId = upgradeResponseData.jobID;
-  console.log("started upgrade on server with jobId %s polling interval %isec", jobId, cdsPollFrequency / 1000);
+  logger.info("started upgrade on server with jobId %s polling interval %isec", jobId, cdsPollFrequency / 1000);
 
   let pollJobResponseData;
 
@@ -298,7 +303,7 @@ const _cdsUpgradeMtx = async (
 
     const { status } = pollJobResponseData || {};
     assert(status, "no status retrieved for jobId %s", jobId);
-    console.log("job %s is %s", jobId, status);
+    logger.info("job %s is %s", jobId, status);
 
     if (status !== JOB_STATUS.RUNNING) {
       break;
@@ -326,7 +331,7 @@ const _cdsUpgradeMtx = async (
       })
     )
   );
-  console.log(tableList(table) + "\n");
+  logger.info(tableList(table));
   assert(failedTenants.length === 0, "upgrade tenant not successful for", failedTenants.join(", "));
 };
 
@@ -350,15 +355,15 @@ const cdsUpgradeAll = async (context, _, [doAutoUndeploy]) => {
   const tenantIds = (await _cdsTenants(context)).map(({ subscribedTenantId }) => subscribedTenantId).sort();
   const tenantIdParts = balancedSplit(tenantIds, appInstances);
 
-  console.log("splitting tenants across %i app instances of '%s' as follows:", appInstances, cfAppName);
+  logger.info("splitting tenants across %i app instances of '%s' as follows:", appInstances, cfAppName);
   for (let i = 0; i < appInstances; i++) {
     if (tenantIdParts[i].length) {
-      console.log("instance %i: processing tenants %s", i + 1, tenantIdParts[i].join(", "));
+      logger.info("instance %i: processing tenants %s", i + 1, tenantIdParts[i].join(", "));
     } else {
-      console.log("instance %i: not processing tenants", i + 1);
+      logger.info("instance %i: not processing tenants", i + 1);
     }
   }
-  console.log();
+  logger.info();
 
   await assertAll("problems occurred during tenant upgrade")(
     tenantIdParts.map(
@@ -401,4 +406,10 @@ module.exports = {
   cdsUpgradeAll,
   cdsOffboardTenant,
   cdsOffboardAll,
+
+  _: {
+    _reset() {
+      resetOneTime(_isMtxs);
+    },
+  },
 };

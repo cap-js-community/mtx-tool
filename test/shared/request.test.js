@@ -7,12 +7,11 @@ jest.mock("../../src/shared/static", () => ({
 const mockFetchLib = require("node-fetch");
 const mockShared = require("../../src/shared/static");
 
-const { request } = require("../../src/shared/request");
+const { Logger: MockLogger } = require("../../src/shared/logger");
+const mockLogger = MockLogger.getInstance();
+jest.mock("../../src/shared/logger", () => require("../__mocks/shared/logger"));
 
-let loggerSpy = {
-  info: jest.spyOn(console, "log").mockImplementation(),
-  error: jest.spyOn(console, "error").mockImplementation(),
-};
+const { request } = require("../../src/shared/request");
 
 const options = {
   url: "https://fake.com",
@@ -21,10 +20,6 @@ const options = {
 const normalizeMockCallTimings = (calls) => calls.map((call) => call.map((args) => args.replace(/\d+ms/g, "xms")));
 
 describe("request tests", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   test("handling too many requests with falloff", async () => {
     const busyResponseFactory = (index) =>
       Promise.resolve({
@@ -63,7 +58,7 @@ describe("request tests", () => {
     `);
 
     expect(mockFetchLib).toHaveBeenCalledTimes(responseCount);
-    expect(normalizeMockCallTimings(loggerSpy.info.mock.calls)).toMatchInlineSnapshot(`
+    expect(normalizeMockCallTimings(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       [
         [
           "GET https://fake.com/ 429 Too Many Requests (xms) retrying in 6sec",
@@ -82,6 +77,6 @@ describe("request tests", () => {
         ],
       ]
     `);
-    expect(loggerSpy.error).toHaveBeenCalledTimes(0);
+    expect(mockLogger.error).toHaveBeenCalledTimes(0);
   });
 });

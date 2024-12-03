@@ -5,12 +5,15 @@ const fetchlib = require("node-fetch");
 
 const { sleep } = require("./static");
 const { fail } = require("./error");
+const { Logger } = require("./logger");
 
 // NOTE: These times add up to 90sec in total and give an exponential falloff
 const TOO_MANY_POLL_FREQUENCIES = [6000, 12000, 24000, 48000];
 
 const STOP_SLEEPING_TIME = -1;
 const SLEEP_TIMES = [].concat(TOO_MANY_POLL_FREQUENCIES, [STOP_SLEEPING_TIME]);
+
+const logger = Logger.getInstance();
 
 const _request = async ({
   // https://nodejs.org/docs/latest-v10.x/api/url.html
@@ -79,7 +82,7 @@ const _request = async ({
     response = await fetchlib(_url, _options);
     const isFinalRetry = response.status !== 429 || sleepTime === STOP_SLEEPING_TIME;
     if (logged) {
-      console.log(
+      logger.info(
         isFinalRetry
           ? `${_method} ${_url} ${response.status} ${response.statusText} (${Date.now() - startTime}ms)`
           : `${_method} ${_url} ${response.status} ${response.statusText} (${Date.now() - startTime}ms) retrying in ${sleepTime / 1000}sec`
