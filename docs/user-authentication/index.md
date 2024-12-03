@@ -172,7 +172,7 @@ mtx uaac --json | jq .token
 mtx uaac --json --decode | jq .body.scope
 ```
 
-Note that errors are still written in plain text. Since errors are written to STDERR, not STDOUT, this will not disrupt
+Note that errors are still written in plain text. Since errors are written to `STDERR`, not `STDOUT`, this will not disrupt
 any pipes that might be used to process the output.
 
 ## Example for Saas Service
