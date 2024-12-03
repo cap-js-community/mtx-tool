@@ -71,7 +71,8 @@ list, by providing that information, e.g., `mtx cdsl skyfin-company`.
 
 {: .info }
 For automated processes, it might be easier to use the `--json` flag and consume the list data as JSON. With the
-`--json` flag active, you will get the same data for `cdsl` and `cdsll`.
+`--json` flag active, you will get the same data for `cdsl` and `cdsll`. For example, you could get the global account
+id of all subscribed tenants with `mtx cdsl --json | jq '.[].globalAccountGUID'`.
 
 ## Example for List
 

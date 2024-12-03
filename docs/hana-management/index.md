@@ -82,7 +82,8 @@ tenant.
 
 {: .info }
 For automated processes, it might be easier to use the `--json` flag and consume the list data as JSON. With the
-`--json` flag active, you will get the same data for `hdil` and `hdill`.
+`--json` flag active, you will get the same data for `hdil` and `hdill`. For example, to get the credentials of
+the first binding you use `mtx hdil --json | jq '.bindings.[0].credentials'`.
 
 ## Example for List
 
