@@ -69,7 +69,7 @@ Commands for this area are:
 The list command `mtx regl` is the most common entry point and will show a table of all registered subacconts with
 their most useful associated information.
 
-With the addition of the `--time` option, the list will include both absolute and relative timestamps for creation
+With the addition of the `--time` flag, the list will include both absolute and relative timestamps for creation
 and the latest update.
 
 If the provided information is insufficient or seems incomplete, then you can always fallback to the long list
@@ -77,6 +77,10 @@ If the provided information is insufficient or seems incomplete, then you can al
 
 If you already know which subaccount or tenant id you want the information for, then you can filter the list or long
 list, by providing that information, e.g., `mtx regl skyfin-company`.
+
+{: .info }
+For automated processes, it might be easier to use the `--json` flag and consume the list data as JSON. With the
+`--json` flag active, you will get the same data for `regl` and `regll`.
 
 ## Example for List
 

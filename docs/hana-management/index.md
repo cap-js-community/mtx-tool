@@ -66,7 +66,7 @@ Commands for this area are:
 The list command `mtx hdil` is the most common entry point and will show a table of all hdi container bindings their
 most useful associated information.
 
-With the addition of the `--time` option, the list will include both absolute and relative timestamps for creation
+With the addition of the `--time` flag, the list will include both absolute and relative timestamps for creation
 and the latest update.
 
 If the provided information is insufficient or seems incomplete, then you can always fallback to the long list
@@ -79,6 +79,10 @@ providing that information, e.g., `mtx hdill <tenant_id>`.
 Note that due to the way `@sap/cds-mtx` works, the number of hdi 'tenants' does not correspond 1:1 with subscribed
 subaccounts. Rather there are 2 hdi tenants for each subscribed subaccount, as well as one additional `__META__` hdi
 tenant.
+
+{: .info }
+For automated processes, it might be easier to use the `--json` flag and consume the list data as JSON. With the
+`--json` flag active, you will get the same data for `hdil` and `hdill`.
 
 ## Example for List
 
@@ -134,7 +138,7 @@ evolution.
 
 {: .info}
 By default MTX Tool hides passwords, to protect the user from revealing them inadvertantly in screen sharing sessions.
-When you first set up connections and want to reveal the passwords, use the `--reveal` option.
+When you first set up connections and want to reveal the passwords, use the `--reveal` flag.
 
 ![](hana-management-tunnel.gif)
 

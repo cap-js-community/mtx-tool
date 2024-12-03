@@ -69,6 +69,10 @@ If the provided information is insufficient or seems incomplete, then you can al
 If you already know which subaccount or tenant id you want the information for, then you can filter the list or long
 list, by providing that information, e.g., `mtx cdsl skyfin-company`.
 
+{: .info }
+For automated processes, it might be easier to use the `--json` flag and consume the list data as JSON. With the
+`--json` flag active, you will get the same data for `cdsl` and `cdsll`.
+
 ## Example for List
 
 Here is an example of listing all subscribed subacconts:
