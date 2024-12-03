@@ -8,6 +8,7 @@ module.exports = {
   // https://jestjs.io/docs/configuration/#prettierpath-string
   prettierPath: null,
 
+  // Indicates whether the coverage information should be collected while executing the test
   collectCoverage: false,
 
   // The test environment that will be used for testing
