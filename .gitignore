@@ -12,3 +12,6 @@ temp/
 
 # npm package
 *.tgz
+
+# jest
+coverage/
