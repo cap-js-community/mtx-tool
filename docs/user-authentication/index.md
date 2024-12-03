@@ -155,6 +155,23 @@ only be trusted if that account has successfully subscribed to the xsapp.
 So, `mtx uaasc destination skyfin-company`, will give you the corresponding JWT, which can then be decoded or used as
 `Authorization` header in an HTTP client.
 
+## Output in JSON
+
+All uaa commands support the `--json` flag.
+
+| active flags         | output structure                                     |
+| :------------------- | :--------------------------------------------------- |
+| `--json`             | `{ "token": "<bearer token>" }`                      |
+| `--json`, `--decode` | `{ "header": "<JWT header>", "body": "<JWT body>" }` |
+
+When this flag is active, the regular logging is disabled, so that the
+output processing can be automated with, e.g., [jq](https://jqlang.github.io/jq/).
+
+```
+mtx uaac --json | jq .token
+mtx uaac --json --decode | jq .body.scope
+```
+
 ## Example for Saas Service
 
 Here is an example of retrieving a JWT for the bound destination service:
