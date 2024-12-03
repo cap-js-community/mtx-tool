@@ -150,6 +150,7 @@ describe("uaa tests", () => {
     test.each([
       ["saas service client default", SAAS_SERVICE_CLIENT_TOKEN, [SERVICE, SUBDOMAIN], [false, false]],
       ["saas service client --decode", SAAS_SERVICE_CLIENT_TOKEN, [SERVICE, SUBDOMAIN], [true, false]],
+      ["saas service client --json", SAAS_SERVICE_CLIENT_TOKEN, [SERVICE, SUBDOMAIN], [false, true]],
     ])("%s", async (_, token, passArgs, passFlags) => {
       sharedStaticMock.isDashedWord.mockReturnValue(true);
       contextMock.getUaaInfo.mockReturnValueOnce({
@@ -177,6 +178,13 @@ describe("uaa tests", () => {
         SAAS_SERVICE_PASSCODE_TOKEN,
         [SERVICE, PASSCODE, SUBDOMAIN],
         [true, false, false],
+        0,
+      ],
+      [
+        "saas service passcode --json",
+        SAAS_SERVICE_PASSCODE_TOKEN,
+        [SERVICE, PASSCODE, SUBDOMAIN],
+        [false, true, false],
         0,
       ],
       [
@@ -226,6 +234,13 @@ describe("uaa tests", () => {
         SAAS_SERVICE_USER_TOKEN,
         [SERVICE, USERNAME, PASSWORD, SUBDOMAIN],
         [true, false, false],
+        0,
+      ],
+      [
+        "saas service user --json",
+        SAAS_SERVICE_USER_TOKEN,
+        [SERVICE, USERNAME, PASSWORD, SUBDOMAIN],
+        [false, true, false],
         0,
       ],
       [
