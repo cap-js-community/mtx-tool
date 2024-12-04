@@ -1,7 +1,5 @@
 "use strict";
 
-const { promisify } = require("util");
-const { writeFile } = require("fs");
 const {
   ENV,
   isUUID,
@@ -15,8 +13,6 @@ const {
   formatTimestampsWithRelativeDays,
   isObject,
   parseIntWithFallback,
-  makeOneTime,
-  resetOneTime,
 } = require("../shared/static");
 const { assert, assertAll } = require("../shared/error");
 const { request } = require("../shared/request");
@@ -37,42 +33,17 @@ const JOB_STATUS = Object.freeze({
 const TASK_STATUS = JOB_STATUS;
 
 const logger = Logger.getInstance();
-const writeFileAsync = promisify(writeFile);
 const cdsRequestConcurrency = parseIntWithFallback(process.env[ENV.CDS_CONCURRENCY], CDS_REQUEST_CONCURRENCY_FALLBACK);
 const cdsPollFrequency = parseIntWithFallback(process.env[ENV.CDS_FREQUENCY], CDS_JOB_POLL_FREQUENCY_FALLBACK);
 
-const _isMtxs = makeOneTime(async (context) => {
-  const { cfRouteUrl } = await context.getCdsInfo();
-  const response = await request({
-    method: "HEAD",
-    url: cfRouteUrl,
-    pathname: `/-/cds/saas-provisioning`,
-    logged: false,
-    checkStatus: false,
-  });
-  const result = response.status !== 404;
-  if (result) {
-    logger.info("using cds-mtxs apis");
-  } else {
-    logger.info("using legacy cds-mtx apis, consider upgrading to cds-mtxs");
-  }
-  return result;
-});
-
 const _cdsTenants = async (context, tenant) => {
-  const isMtxs = await _isMtxs(context);
   const { subdomain: filterSubdomain, tenantId: filterTenantId } = resolveTenantArg(tenant);
   filterSubdomain && assert(isDashedWord(filterSubdomain), `argument "${filterSubdomain}" is not a valid subdomain`);
 
   const { cfRouteUrl } = await context.getCdsInfo();
 
-  const _getTenantRequestOptionsPathname = () => {
-    if (isMtxs) {
-      return filterTenantId ? `/-/cds/saas-provisioning/tenant/${filterTenantId}` : "/-/cds/saas-provisioning/tenant";
-    } else {
-      return filterTenantId ? `/mtx/v1/provisioning/tenant/${filterTenantId}` : "/mtx/v1/provisioning/tenant";
-    }
-  };
+  const _getTenantRequestOptionsPathname = () =>
+    filterTenantId ? `/-/cds/saas-provisioning/tenant/${filterTenantId}` : "/-/cds/saas-provisioning/tenant";
   const response = await request({
     url: cfRouteUrl,
     pathname: _getTenantRequestOptionsPathname(),
@@ -120,9 +91,7 @@ const _cdsOnboard = async (context, tenantId, metadata = {}) => {
   await request({
     method: "PUT",
     url: cfRouteUrl,
-    pathname: (await _isMtxs(context))
-      ? `/-/cds/saas-provisioning/tenant/${tenantId}`
-      : `/mtx/v1/provisioning/tenant/${tenantId}`,
+    pathname: `/-/cds/saas-provisioning/tenant/${tenantId}`,
     auth: { token: await context.getCachedUaaToken() },
     headers: {
       "Content-Type": "application/json",
@@ -141,8 +110,6 @@ const cdsOnboardTenant = async (context, [tenantId, rawMetadata]) => {
   }
   return _cdsOnboard(context, tenantId, metadata);
 };
-
-const _cdsUpgradeBuildLogFilepath = (tenantId) => `cds-upgrade-buildlog-${tenantId}.txt`;
 
 const _safeMaterializeJson = async (response, description) => {
   const responseText = await response.text();
@@ -266,77 +233,7 @@ const _cdsUpgradeMtxs = async (
   assert(!hasChangeTimeout, "no task progress after %s", CDS_CHANGE_TIMEOUT_TEXT);
 };
 
-const _cdsUpgradeMtx = async (
-  context,
-  { tenants = ["all"], doAutoUndeploy = false, appInstance = CDS_UPGRADE_APP_INSTANCE } = {}
-) => {
-  if (tenants.length === 0) {
-    return;
-  }
-  const autoUndeployOptions = { autoUndeploy: true };
-  const { cfAppGuid, cfRouteUrl } = await context.getCdsInfo();
-  const upgradeResponse = await request({
-    method: "POST",
-    url: cfRouteUrl,
-    pathname: "/mtx/v1/model/asyncUpgrade",
-    auth: { token: await context.getCachedUaaToken() },
-    headers: {
-      "Content-Type": "application/json",
-      "X-Cf-App-Instance": `${cfAppGuid}:${appInstance}`,
-    },
-    body: JSON.stringify({ tenants, ...(doAutoUndeploy && autoUndeployOptions) }),
-  });
-  const upgradeResponseData = await _safeMaterializeJson(upgradeResponse, "upgrade");
-  const jobId = upgradeResponseData.jobID;
-  logger.info("started upgrade on server with jobId %s polling interval %isec", jobId, cdsPollFrequency / 1000);
-
-  let pollJobResponseData;
-
-  while (true) {
-    await sleep(cdsPollFrequency);
-    const pollJobResponse = await request({
-      url: cfRouteUrl,
-      pathname: `/mtx/v1/model/status/${jobId}`,
-      auth: { token: await context.getCachedUaaToken() },
-    });
-    pollJobResponseData = await _safeMaterializeJson(pollJobResponse, "poll job");
-
-    const { status } = pollJobResponseData || {};
-    assert(status, "no status retrieved for jobId %s", jobId);
-    logger.info("job %s is %s", jobId, status);
-
-    if (status !== JOB_STATUS.RUNNING) {
-      break;
-    }
-  }
-
-  const { error, result } = pollJobResponseData || {};
-  assert(!error, "upgrade tenant failed\n%j", error);
-  const resultTenantEntries = result.tenants && Object.entries(result.tenants);
-  assert(resultTenantEntries, "no tenants found in result\n%j", result);
-
-  const failedTenants = [];
-  const table = [["tenantId", "status", "message", "logfile"]].concat(
-    await Promise.all(
-      resultTenantEntries.map(async ([tenantId, { status, message, buildLogs }]) => {
-        let logfile = "";
-        if (buildLogs) {
-          logfile = _cdsUpgradeBuildLogFilepath(tenantId);
-          await writeFileAsync(logfile, buildLogs);
-        }
-        if (status !== "SUCCESS") {
-          failedTenants.push(tenantId);
-        }
-        return [tenantId, status, message, logfile];
-      })
-    )
-  );
-  logger.info(tableList(table));
-  assert(failedTenants.length === 0, "upgrade tenant not successful for", failedTenants.join(", "));
-};
-
-const _cdsUpgrade = async (context, options) =>
-  (await _isMtxs(context)) ? await _cdsUpgradeMtxs(context, options) : await _cdsUpgradeMtx(context, options);
+const _cdsUpgrade = async (context, options) => await _cdsUpgradeMtxs(context, options);
 
 const cdsUpgradeTenant = async (context, [tenantId], [doAutoUndeploy]) => {
   assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
@@ -377,9 +274,7 @@ const _cdsOffboard = async (context, tenantId) => {
   await request({
     method: "DELETE",
     url: cfRouteUrl,
-    pathname: (await _isMtxs(context))
-      ? `/-/cds/saas-provisioning/tenant/${tenantId}`
-      : `/mtx/v1/provisioning/tenant/${tenantId}`,
+    pathname: `/-/cds/saas-provisioning/tenant/${tenantId}`,
     auth: { token: await context.getCachedUaaToken() },
   });
 };
@@ -406,10 +301,4 @@ module.exports = {
   cdsUpgradeAll,
   cdsOffboardTenant,
   cdsOffboardAll,
-
-  _: {
-    _reset() {
-      resetOneTime(_isMtxs);
-    },
-  },
 };

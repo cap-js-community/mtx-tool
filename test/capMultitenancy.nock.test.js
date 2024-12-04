@@ -10,11 +10,6 @@ const { outputFromLoggerPartitionFetch, anonymizeListTimestamps, collectScopeCou
 nock.back.fixtures = pathlib.resolve(`${__dirname}/../test-nock-record/__nock-fixtures__`);
 nock.back.setMode("lockdown");
 
-jest.mock("fs", () => ({
-  ...jest.requireActual("fs"),
-  writeFile: jest.fn((filename, data, cb) => cb()),
-}));
-
 jest.mock("../src/shared/static", () => require("./__mocks/sharedNockPlayback/static"));
 
 const { Logger: MockLogger } = require("../src/shared/logger");
@@ -27,7 +22,6 @@ const freshContext = async () => await newContext({ usePersistedCache: false, is
 
 describe("cds tests", () => {
   afterEach(() => {
-    cds._._reset();
     nock.restore();
   });
 
@@ -103,7 +97,6 @@ describe("cds tests", () => {
       `);
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-        using cds-mtxs apis
 
         GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/saas-provisioning/tenant 200 OK (88ms)"
       `);
@@ -145,7 +138,6 @@ describe("cds tests", () => {
       `);
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-        using cds-mtxs apis
 
         GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/saas-provisioning/tenant/5ecc7413-2b7e-414a-9496-ad4a61f6cccf 200 OK (88ms)"
       `);
@@ -177,7 +169,6 @@ describe("cds tests", () => {
       expect(output).toMatchSnapshot();
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-        using cds-mtxs apis
 
         GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/saas-provisioning/tenant 200 OK (88ms)"
       `);
@@ -190,7 +181,6 @@ describe("cds tests", () => {
       expect(output).toMatchSnapshot();
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-        using cds-mtxs apis
 
         GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/saas-provisioning/tenant/5ecc7413-2b7e-414a-9496-ad4a61f6cccf 200 OK (88ms)"
       `);
@@ -203,7 +193,6 @@ describe("cds tests", () => {
     expect(await cds.cdsUpgradeTenant(await freshContext(), [testTenantId], [true])).toBeUndefined();
     expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-      using cds-mtxs apis
       started upgrade on server with jobId 8de6330c-6b52-40b0-86eb-10e0447f0c97 polling interval 15sec
       job 8de6330c-6b52-40b0-86eb-10e0447f0c97 is RUNNING with tasks queued/running: 0/1 | failed/finished: 0/0
       job 8de6330c-6b52-40b0-86eb-10e0447f0c97 is RUNNING with tasks queued/running: 0/1 | failed/finished: 0/0
@@ -224,7 +213,6 @@ describe("cds tests", () => {
     expect(await cds.cdsUpgradeAll(await freshContext(), null, [false])).toBeUndefined();
     expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-      using cds-mtxs apis
       started upgrade on server with jobId d8c2f77d-5e86-48d7-a877-caebc8aba8ff polling interval 15sec
       job d8c2f77d-5e86-48d7-a877-caebc8aba8ff is RUNNING with tasks queued/running:  0/ 4 | failed/finished:  0/ 0
       job d8c2f77d-5e86-48d7-a877-caebc8aba8ff is RUNNING with tasks queued/running:  0/ 4 | failed/finished:  0/ 0
