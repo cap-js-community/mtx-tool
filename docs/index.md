@@ -122,7 +122,7 @@ commands:
 ~  srvd    --server-debug [APP_NAME] [APP_INSTANCE]           open ssh tunnel to port /info {debugPort}
 ~  srvenv  --server-env [APP_NAME]                            dump system environment
 ~  srvcrt  --server-certificates [APP_NAME] [APP_INSTANCE]    dump instance certificates
-*          --server-start-debugger [APP_NAME] [APP_INSTANCE]  start debugger on server node process
+           --server-start-debugger [APP_NAME] [APP_INSTANCE]  start debugger on server node process
            ...    [APP_NAME]                                  run server commands for a specific app
            ...    [APP_INSTANCE]                              tunnel to specific app instance, fallback to 0
 
