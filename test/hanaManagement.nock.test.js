@@ -5,7 +5,7 @@ const nock = require("nock");
 
 const { newContext } = require("../src/context");
 const hdi = require("../src/submodules/hanaManagement");
-const { outputFromLoggerPartitionFetch, anonymizeListTimestamps } = require("./util/static");
+const { outputFromLoggerPartitionFetch, anonymizeListTimestamps, collectScopeCount } = require("./util/static");
 
 nock.back.fixtures = pathlib.resolve(`${__dirname}/../test-nock-record/__nock-fixtures__`);
 nock.back.setMode("lockdown");
@@ -24,6 +24,37 @@ describe("hdi tests", () => {
   afterEach(() => {
     hdi._._reset();
     nock.restore();
+  });
+
+  test("request count", async () => {
+    expect(collectScopeCount(require(`${nock.back.fixtures}/hdi-list.json`))).toMatchInlineSnapshot(`
+      {
+        "GET https://api.cf.sap.hana.ondemand.com:443": 5,
+        "GET https://service-manager.cfapps.sap.hana.ondemand.com:443": 3,
+        "POST https://skyfin.authentication.cert.sap.hana.ondemand.com:443": 1,
+      }
+    `);
+    expect(collectScopeCount(require(`${nock.back.fixtures}/hdi-list-filtered.json`))).toMatchInlineSnapshot(`
+      {
+        "GET https://api.cf.sap.hana.ondemand.com:443": 5,
+        "GET https://service-manager.cfapps.sap.hana.ondemand.com:443": 3,
+        "POST https://skyfin.authentication.cert.sap.hana.ondemand.com:443": 1,
+      }
+    `);
+    expect(collectScopeCount(require(`${nock.back.fixtures}/hdi-long-list.json`))).toMatchInlineSnapshot(`
+      {
+        "GET https://api.cf.sap.hana.ondemand.com:443": 5,
+        "GET https://service-manager.cfapps.sap.hana.ondemand.com:443": 3,
+        "POST https://skyfin.authentication.cert.sap.hana.ondemand.com:443": 1,
+      }
+    `);
+    expect(collectScopeCount(require(`${nock.back.fixtures}/hdi-long-list-filtered.json`))).toMatchInlineSnapshot(`
+      {
+        "GET https://api.cf.sap.hana.ondemand.com:443": 5,
+        "GET https://service-manager.cfapps.sap.hana.ondemand.com:443": 3,
+        "POST https://skyfin.authentication.cert.sap.hana.ondemand.com:443": 1,
+      }
+    `);
   });
 
   describe("hdi list", () => {
