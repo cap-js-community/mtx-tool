@@ -19,7 +19,7 @@ const anonymizeListTimestamps = (output) =>
     .replace(/created_on *updated_on */g, "created_on  updated_on")
     .replace(/\(\d+ days? ago\) */g, "(x days ago)  ");
 
-const collectScopeCount = (requests) =>
+const collectRequestCount = (requests) =>
   requests.reduce((acc, request) => {
     const key = `${request.method} ${request.scope}`;
     if (!acc[key]) {
@@ -33,5 +33,5 @@ module.exports = {
   outputFromLogger,
   outputFromLoggerPartitionFetch,
   anonymizeListTimestamps,
-  collectScopeCount,
+  collectRequestCount,
 };

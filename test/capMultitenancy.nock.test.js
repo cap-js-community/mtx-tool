@@ -5,7 +5,7 @@ const nock = require("nock");
 
 const { newContext } = require("../src/context");
 const cds = require("../src/submodules/capMultitenancy");
-const { outputFromLoggerPartitionFetch, anonymizeListTimestamps, collectScopeCount } = require("./util/static");
+const { outputFromLoggerPartitionFetch, anonymizeListTimestamps, collectRequestCount } = require("./util/static");
 
 nock.back.fixtures = pathlib.resolve(`${__dirname}/../test-nock-record/__nock-fixtures__`);
 nock.back.setMode("lockdown");
@@ -26,7 +26,7 @@ describe("cds tests", () => {
   });
 
   test("request count", async () => {
-    expect(collectScopeCount(require(`${nock.back.fixtures}/cds-list.json`))).toMatchInlineSnapshot(`
+    expect(collectRequestCount(require(`${nock.back.fixtures}/cds-list.json`))).toMatchInlineSnapshot(`
       {
         "GET https://api.cf.sap.hana.ondemand.com:443": 9,
         "GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com:443": 1,
@@ -34,7 +34,7 @@ describe("cds tests", () => {
         "POST https://skyfin.authentication.cert.sap.hana.ondemand.com:443": 1,
       }
     `);
-    expect(collectScopeCount(require(`${nock.back.fixtures}/cds-list-filtered.json`))).toMatchInlineSnapshot(`
+    expect(collectRequestCount(require(`${nock.back.fixtures}/cds-list-filtered.json`))).toMatchInlineSnapshot(`
       {
         "GET https://api.cf.sap.hana.ondemand.com:443": 9,
         "GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com:443": 1,
@@ -42,7 +42,7 @@ describe("cds tests", () => {
         "POST https://skyfin.authentication.cert.sap.hana.ondemand.com:443": 1,
       }
     `);
-    expect(collectScopeCount(require(`${nock.back.fixtures}/cds-long-list.json`))).toMatchInlineSnapshot(`
+    expect(collectRequestCount(require(`${nock.back.fixtures}/cds-long-list.json`))).toMatchInlineSnapshot(`
       {
         "GET https://api.cf.sap.hana.ondemand.com:443": 9,
         "GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com:443": 1,
@@ -50,7 +50,7 @@ describe("cds tests", () => {
         "POST https://skyfin.authentication.cert.sap.hana.ondemand.com:443": 1,
       }
     `);
-    expect(collectScopeCount(require(`${nock.back.fixtures}/cds-long-list-filtered.json`))).toMatchInlineSnapshot(`
+    expect(collectRequestCount(require(`${nock.back.fixtures}/cds-long-list-filtered.json`))).toMatchInlineSnapshot(`
       {
         "GET https://api.cf.sap.hana.ondemand.com:443": 9,
         "GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com:443": 1,
@@ -58,7 +58,7 @@ describe("cds tests", () => {
         "POST https://skyfin.authentication.cert.sap.hana.ondemand.com:443": 1,
       }
     `);
-    expect(collectScopeCount(require(`${nock.back.fixtures}/cds-upgrade-all.json`))).toMatchInlineSnapshot(`
+    expect(collectRequestCount(require(`${nock.back.fixtures}/cds-upgrade-all.json`))).toMatchInlineSnapshot(`
       {
         "GET https://api.cf.sap.hana.ondemand.com:443": 9,
         "GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com:443": 9,
@@ -67,7 +67,7 @@ describe("cds tests", () => {
         "POST https://skyfin.authentication.cert.sap.hana.ondemand.com:443": 1,
       }
     `);
-    expect(collectScopeCount(require(`${nock.back.fixtures}/cds-upgrade-tenant.json`))).toMatchInlineSnapshot(`
+    expect(collectRequestCount(require(`${nock.back.fixtures}/cds-upgrade-tenant.json`))).toMatchInlineSnapshot(`
       {
         "GET https://api.cf.sap.hana.ondemand.com:443": 9,
         "GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com:443": 3,

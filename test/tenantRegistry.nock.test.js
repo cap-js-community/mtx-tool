@@ -5,7 +5,7 @@ const nock = require("nock");
 
 const { newContext } = require("../src/context");
 const reg = require("../src/submodules/tenantRegistry");
-const { outputFromLoggerPartitionFetch, anonymizeListTimestamps, collectScopeCount } = require("./util/static");
+const { outputFromLoggerPartitionFetch, anonymizeListTimestamps, collectRequestCount } = require("./util/static");
 
 nock.back.fixtures = pathlib.resolve(`${__dirname}/../test-nock-record/__nock-fixtures__`);
 nock.back.setMode("lockdown");
@@ -26,40 +26,40 @@ describe("reg tests", () => {
   });
 
   test("request count", async () => {
-    expect(collectScopeCount(require(`${nock.back.fixtures}/reg-list.json`))).toMatchInlineSnapshot(`
+    expect(collectRequestCount(require(`${nock.back.fixtures}/reg-list.json`))).toMatchInlineSnapshot(`
       {
         "GET https://api.cf.sap.hana.ondemand.com:443": 5,
         "GET https://saas-manager.mesh.cf.sap.hana.ondemand.com:443": 1,
         "POST https://skyfin.authentication.sap.hana.ondemand.com:443": 1,
       }
     `);
-    expect(collectScopeCount(require(`${nock.back.fixtures}/reg-list-filtered.json`))).toMatchInlineSnapshot(`
+    expect(collectRequestCount(require(`${nock.back.fixtures}/reg-list-filtered.json`))).toMatchInlineSnapshot(`
       {
         "GET https://api.cf.sap.hana.ondemand.com:443": 5,
         "GET https://saas-manager.mesh.cf.sap.hana.ondemand.com:443": 1,
         "POST https://skyfin.authentication.sap.hana.ondemand.com:443": 1,
       }
     `);
-    expect(collectScopeCount(require(`${nock.back.fixtures}/reg-long-list.json`))).toMatchInlineSnapshot(`
+    expect(collectRequestCount(require(`${nock.back.fixtures}/reg-long-list.json`))).toMatchInlineSnapshot(`
       {
         "GET https://api.cf.sap.hana.ondemand.com:443": 5,
         "GET https://saas-manager.mesh.cf.sap.hana.ondemand.com:443": 1,
         "POST https://skyfin.authentication.sap.hana.ondemand.com:443": 1,
       }
     `);
-    expect(collectScopeCount(require(`${nock.back.fixtures}/reg-long-list-filtered.json`))).toMatchInlineSnapshot(`
+    expect(collectRequestCount(require(`${nock.back.fixtures}/reg-long-list-filtered.json`))).toMatchInlineSnapshot(`
       {
         "GET https://api.cf.sap.hana.ondemand.com:443": 5,
         "GET https://saas-manager.mesh.cf.sap.hana.ondemand.com:443": 1,
         "POST https://skyfin.authentication.sap.hana.ondemand.com:443": 1,
       }
     `);
-    expect(collectScopeCount(require(`${nock.back.fixtures}/reg-service-config.json`))).toMatchInlineSnapshot(`
+    expect(collectRequestCount(require(`${nock.back.fixtures}/reg-service-config.json`))).toMatchInlineSnapshot(`
       {
         "GET https://api.cf.sap.hana.ondemand.com:443": 5,
       }
     `);
-    expect(collectScopeCount(require(`${nock.back.fixtures}/reg-update-tenant.json`))).toMatchInlineSnapshot(`
+    expect(collectRequestCount(require(`${nock.back.fixtures}/reg-update-tenant.json`))).toMatchInlineSnapshot(`
       {
         "GET https://api.cf.sap.hana.ondemand.com:443": 5,
         "GET https://saas-manager.mesh.cf.sap.hana.ondemand.com:443": 5,
@@ -67,7 +67,7 @@ describe("reg tests", () => {
         "POST https://skyfin.authentication.sap.hana.ondemand.com:443": 1,
       }
     `);
-    expect(collectScopeCount(require(`${nock.back.fixtures}/reg-update-tenant-all.json`))).toMatchInlineSnapshot(`
+    expect(collectRequestCount(require(`${nock.back.fixtures}/reg-update-tenant-all.json`))).toMatchInlineSnapshot(`
       {
         "GET https://api.cf.sap.hana.ondemand.com:443": 5,
         "GET https://saas-manager.mesh.cf.sap.hana.ondemand.com:443": 45,
@@ -75,7 +75,7 @@ describe("reg tests", () => {
         "POST https://skyfin.authentication.sap.hana.ondemand.com:443": 1,
       }
     `);
-    expect(collectScopeCount(require(`${nock.back.fixtures}/reg-update-tenant-app-url.json`))).toMatchInlineSnapshot(`
+    expect(collectRequestCount(require(`${nock.back.fixtures}/reg-update-tenant-app-url.json`))).toMatchInlineSnapshot(`
       {
         "GET https://api.cf.sap.hana.ondemand.com:443": 5,
         "GET https://saas-manager.mesh.cf.sap.hana.ondemand.com:443": 1,
@@ -83,7 +83,7 @@ describe("reg tests", () => {
         "POST https://skyfin.authentication.sap.hana.ondemand.com:443": 1,
       }
     `);
-    expect(collectScopeCount(require(`${nock.back.fixtures}/reg-update-tenant-app-url-all.json`)))
+    expect(collectRequestCount(require(`${nock.back.fixtures}/reg-update-tenant-app-url-all.json`)))
       .toMatchInlineSnapshot(`
       {
         "GET https://api.cf.sap.hana.ondemand.com:443": 5,
