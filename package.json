@@ -32,7 +32,7 @@
     "upgrade-lock": "npx shx rm -rf package-lock.json node_modules && npm i --package-lock && npm run patch"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   },
   "dependencies": {
     "node-fetch": "^2.7.0"
