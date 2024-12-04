@@ -111,9 +111,7 @@ For this metadata, the following are potential fields that can be set:
 Common options are:
 
 ```
-
 { "subscriptionAppName": "<value>", "globalAccountGUID": "<value>", "subscribedSubaccountId": "<value>", "subscribedSubdomain": "<value>" }
-
 ```
 
 {: .info}
@@ -163,7 +161,3 @@ real BTP subaccount. This can be useful for testing or mocking purposes.
 
 {: .warn}
 In most cases, the BTP cockpit's subaccount _unsubscribe_ funcationality should be used instead.
-
-```
-
-```
