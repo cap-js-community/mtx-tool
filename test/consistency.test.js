@@ -18,12 +18,15 @@ const appCliOptions = Object.values(APP_CLI_OPTIONS).filter((option) =>
  */
 
 describe("consistency tests", () => {
-  test("readme version is up-to-date", async () => {
+  test("readme version is up-to-date with latest changelog release", async () => {
     const readme = readFileSync(join(__dirname, "..", "README.md")).toString();
+    const changelog = readFileSync(join(__dirname, "..", "CHANGELOG.md")).toString();
     const readmeInstall = /(## Install or Upgrade\n\n[\s\S]*?)\n##/g.exec(readme)[1];
+
+    const changelogVersion = /^## v(\d+\.\d+\.\d+) - \d\d\d\d-\d\d-\d\d/gm.exec(changelog)[1];
     const readmeVersion = /@cap-js-community\/mtx-tool@v(\d+\.\d+\.\d+)/g.exec(readmeInstall)[1];
-    const packageInfo = JSON.parse(readFileSync(join(__dirname, "..", "package.json")).toString());
-    expect(readmeVersion).toEqual(packageInfo.version);
+
+    expect(readmeVersion).toEqual(changelogVersion);
   });
 
   test("readme install matches docs", async () => {
