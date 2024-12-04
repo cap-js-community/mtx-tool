@@ -396,7 +396,7 @@ describe("reg tests", () => {
   });
 
   test("reg update tenant application url with tenant", async () => {
-    await nock.back("req-update-tenant-app-url.json");
+    await nock.back("reg-update-tenant-app-url.json");
     expect(await reg.registryUpdateApplicationURL(await freshContext(), [testTenantId], [])).toBeUndefined();
     expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
