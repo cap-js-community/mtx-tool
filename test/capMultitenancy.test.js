@@ -33,8 +33,6 @@ const fakeContext = {
 
 describe("cds tests", () => {
   test("cds upgrade request fails", async () => {
-    mockRequest.request.mockReturnValueOnce({ status: 200 });
-
     mockRequest.request.mockReturnValueOnce({
       text: () =>
         JSON.stringify({
@@ -181,8 +179,7 @@ describe("cds tests", () => {
     );
 
     expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
-      "using cds-mtxs apis
-      started upgrade on server with jobId 8fd6894a-91d6-4eed-b772-1be05b8ac6ed polling interval 15sec
+      "started upgrade on server with jobId 8fd6894a-91d6-4eed-b772-1be05b8ac6ed polling interval 15sec
       job 8fd6894a-91d6-4eed-b772-1be05b8ac6ed is FAILED with tasks queued/running: 0/0 | failed/finished: 6/0
       #  tenantId                              status  message                               
       1  00000000-0000-4000-8000-000000000101  FAILED  HDI deployment failed with exit code 1

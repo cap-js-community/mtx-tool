@@ -81,7 +81,7 @@ describe("reg tests", () => {
   });
 
   test("reg update tenant application url with tenant", async () => {
-    const { nockDone } = await nock.back("req-update-tenant-app-url.json", { afterRecord: anonymizeNock });
+    const { nockDone } = await nock.back("reg-update-tenant-app-url.json", { afterRecord: anonymizeNock });
     await reg.registryUpdateApplicationURL(await freshContext(), [testTenantId], []);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);

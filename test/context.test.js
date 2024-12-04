@@ -6,11 +6,12 @@ jest.mock("../src/shared/logger", () => require("./__mocks/shared/logger"));
 
 const mockStatic = require("../src/shared/static");
 jest.mock("../src/shared/static", () => {
-  const { ENV, safeUnshift, escapeRegExp } = jest.requireActual("../src/shared/static");
+  const { ENV, safeUnshift, escapeRegExp, makeOneTime } = jest.requireActual("../src/shared/static");
   return {
     ENV,
     safeUnshift,
     escapeRegExp,
+    makeOneTime,
     tryAccessSync: jest.fn(),
     tryReadJsonSync: jest.fn(),
     spawnAsync: jest.fn(),
