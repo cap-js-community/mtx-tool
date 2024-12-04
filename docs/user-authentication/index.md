@@ -42,8 +42,8 @@ Commands for this area are:
 ~  uaasp  --uaa-service-passcode SERVICE PASSCODE [TENANT]       obtain service token for one-time passcode
 ~  uaasu  --uaa-service-user SERVICE USERNAME PASSWORD [TENANT]  obtain service token for username password
           ...    [TENANT]                                        obtain token for tenant, fallback to paas tenant
-          ...    --decode                                        decode result token
           ...    --json                                          output in json
+          ...    --decode                                        decode result token
           ...    --userinfo                                      add detailed user info for passcode or username
 
 ~  are read-only commands
@@ -154,6 +154,26 @@ only be trusted if that account has successfully subscribed to the xsapp.
 
 So, `mtx uaasc destination skyfin-company`, will give you the corresponding JWT, which can then be decoded or used as
 `Authorization` header in an HTTP client.
+
+## Output in JSON
+
+All uaa commands support the `--json` flag. When this flag is active, the tool will produce JSON output.
+
+| active flags         | output structure                                     |
+| :------------------- | :--------------------------------------------------- |
+| `--json`             | `{ "token": "<bearer token>" }`                      |
+| `--json`, `--decode` | `{ "header": "<JWT header>", "body": "<JWT body>" }` |
+
+When this flag is active, the regular logging is disabled, so that the
+output processing can be automated with, e.g., [jq](https://jqlang.github.io/jq/).
+
+```
+mtx uaac --json | jq .token
+mtx uaac --json --decode | jq .body.scope
+```
+
+Note that errors are still written in plain text. Since errors are written to `STDERR`, not `STDOUT`, this will not disrupt
+any pipes that might be used to process the output.
 
 ## Example for Saas Service
 

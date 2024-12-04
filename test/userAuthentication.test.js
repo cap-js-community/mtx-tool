@@ -67,34 +67,42 @@ const contextMock = {
 
 describe("uaa tests", () => {
   describe("without context", () => {
-    test("uaaDecode", async () => {
-      const result = await uaa.uaaDecode([PAAS_CLIENT_TOKEN], []);
+    test.each([
+      ["decode default", PAAS_CLIENT_TOKEN, [PAAS_CLIENT_TOKEN], [false]],
+      ["decode --json", PAAS_CLIENT_TOKEN, [PAAS_CLIENT_TOKEN], [true]],
+    ])("%s", async (_, token, passArgs, passFlags) => {
+      const result = await uaa.uaaDecode(passArgs, passFlags);
       expect(sharedStaticMock.isJWT).toHaveBeenCalledTimes(1);
-      expect(sharedStaticMock.isJWT).toHaveBeenCalledWith(PAAS_CLIENT_TOKEN);
+      expect(sharedStaticMock.isJWT).toHaveBeenCalledWith(token);
       expect(result).toMatchSnapshot();
     });
   });
 
-  describe("xsuaa tokens", () => {
+  describe("xsuaa app tokens", () => {
     test.each([
       ["paas client default", PAAS_CLIENT_TOKEN, [], [false, false]],
       ["paas client --decode", PAAS_CLIENT_TOKEN, [], [true, false]],
+      ["paas client --json", PAAS_CLIENT_TOKEN, [], [false, true]],
+      ["paas client --decode --json", PAAS_CLIENT_TOKEN, [], [true, true]],
       ["saas client default", SAAS_CLIENT_TOKEN, [SUBDOMAIN], [false, false]],
       ["saas client --decode", SAAS_CLIENT_TOKEN, [SUBDOMAIN], [true, false]],
+      ["saas client --json", SAAS_CLIENT_TOKEN, [SUBDOMAIN], [false, true]],
+      ["saas client --decode --json", SAAS_CLIENT_TOKEN, [SUBDOMAIN], [true, true]],
     ])("%s", async (_, token, passArgs, passFlags) => {
       fetchMock.mockResolvedValueOnce({
         ok: true,
         json: async () => ({ access_token: token, expires_in: Infinity }),
       });
       const result = await uaa.uaaClient(contextMock, passArgs, passFlags);
-      expect(fetchMock.mock.calls[0]).toMatchSnapshot();
       expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect(fetchMock.mock.calls[0]).toMatchSnapshot();
       expect(result).toMatchSnapshot();
     });
 
     test.each([
       ["saas passcode default", SAAS_PASSCODE_TOKEN, [PASSCODE, SUBDOMAIN], [false, false, false], 1],
       ["saas passcode --decode", SAAS_PASSCODE_TOKEN, [PASSCODE, SUBDOMAIN], [true, false, false], 1],
+      ["saas passcode --json", SAAS_PASSCODE_TOKEN, [PASSCODE, SUBDOMAIN], [false, true, false], 1],
       ["saas passcode --userinfo", SAAS_PASSCODE_TOKEN, [PASSCODE, SUBDOMAIN], [false, false, true], 2],
       ["saas passcode --decode --userinfo", SAAS_PASSCODE_TOKEN, [PASSCODE, SUBDOMAIN], [true, false, true], 2],
     ])("%s", async (_, token, passArgs, passFlags, fetchCalls) => {
@@ -109,14 +117,15 @@ describe("uaa tests", () => {
         });
       }
       const result = await uaa.uaaPasscode(contextMock, passArgs, passFlags);
-      expect(fetchMock.mock.calls).toMatchSnapshot();
       expect(fetchMock).toHaveBeenCalledTimes(fetchCalls);
+      expect(fetchMock.mock.calls).toMatchSnapshot();
       expect(result).toMatchSnapshot();
     });
 
     test.each([
       ["saas user default", SAAS_USER_TOKEN, [USERNAME, PASSWORD, SUBDOMAIN], [false, false, false], 1],
       ["saas user --decode", SAAS_USER_TOKEN, [USERNAME, PASSWORD, SUBDOMAIN], [true, false, false], 1],
+      ["saas user --json", SAAS_USER_TOKEN, [USERNAME, PASSWORD, SUBDOMAIN], [false, true, false], 1],
       ["saas user --userinfo", SAAS_USER_TOKEN, [USERNAME, PASSWORD, SUBDOMAIN], [false, false, true], 2],
       ["saas user --decode --userinfo", SAAS_USER_TOKEN, [USERNAME, PASSWORD, SUBDOMAIN], [true, false, true], 2],
     ])("%s", async (_, token, passArgs, passFlags, fetchCalls) => {
@@ -131,8 +140,8 @@ describe("uaa tests", () => {
         });
       }
       const result = await uaa.uaaUser(contextMock, passArgs, passFlags);
-      expect(fetchMock.mock.calls).toMatchSnapshot();
       expect(fetchMock).toHaveBeenCalledTimes(fetchCalls);
+      expect(fetchMock.mock.calls).toMatchSnapshot();
       expect(result).toMatchSnapshot();
     });
   });
@@ -141,6 +150,7 @@ describe("uaa tests", () => {
     test.each([
       ["saas service client default", SAAS_SERVICE_CLIENT_TOKEN, [SERVICE, SUBDOMAIN], [false, false]],
       ["saas service client --decode", SAAS_SERVICE_CLIENT_TOKEN, [SERVICE, SUBDOMAIN], [true, false]],
+      ["saas service client --json", SAAS_SERVICE_CLIENT_TOKEN, [SERVICE, SUBDOMAIN], [false, true]],
     ])("%s", async (_, token, passArgs, passFlags) => {
       sharedStaticMock.isDashedWord.mockReturnValue(true);
       contextMock.getUaaInfo.mockReturnValueOnce({
@@ -168,6 +178,13 @@ describe("uaa tests", () => {
         SAAS_SERVICE_PASSCODE_TOKEN,
         [SERVICE, PASSCODE, SUBDOMAIN],
         [true, false, false],
+        0,
+      ],
+      [
+        "saas service passcode --json",
+        SAAS_SERVICE_PASSCODE_TOKEN,
+        [SERVICE, PASSCODE, SUBDOMAIN],
+        [false, true, false],
         0,
       ],
       [
@@ -199,8 +216,8 @@ describe("uaa tests", () => {
         });
       }
       const result = await uaa.uaaServicePasscode(contextMock, passArgs, passFlags);
-      expect(fetchMock.mock.calls).toMatchSnapshot();
       expect(fetchMock).toHaveBeenCalledTimes(fetchCalls);
+      expect(fetchMock.mock.calls).toMatchSnapshot();
       expect(result).toMatchSnapshot();
     });
 
@@ -217,6 +234,13 @@ describe("uaa tests", () => {
         SAAS_SERVICE_USER_TOKEN,
         [SERVICE, USERNAME, PASSWORD, SUBDOMAIN],
         [true, false, false],
+        0,
+      ],
+      [
+        "saas service user --json",
+        SAAS_SERVICE_USER_TOKEN,
+        [SERVICE, USERNAME, PASSWORD, SUBDOMAIN],
+        [false, true, false],
         0,
       ],
       [
@@ -248,8 +272,8 @@ describe("uaa tests", () => {
         });
       }
       const result = await uaa.uaaServiceUser(contextMock, passArgs, passFlags);
-      expect(fetchMock.mock.calls).toMatchSnapshot();
       expect(fetchMock).toHaveBeenCalledTimes(fetchCalls);
+      expect(fetchMock.mock.calls).toMatchSnapshot();
       expect(result).toMatchSnapshot();
     });
   });

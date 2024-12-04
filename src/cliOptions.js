@@ -69,8 +69,8 @@ commands:
 ~  uaasp  --uaa-service-passcode SERVICE PASSCODE [TENANT]       obtain service token for one-time passcode
 ~  uaasu  --uaa-service-user SERVICE USERNAME PASSWORD [TENANT]  obtain service token for username password
           ...    [TENANT]                                        obtain token for tenant, fallback to paas tenant
-          ...    --decode                                        decode result token
           ...    --json                                          output in json
+          ...    --decode                                        decode result token
           ...    --userinfo                                      add detailed user info for passcode or username
 
    === tenant registry (reg) ===
@@ -84,8 +84,8 @@ commands:
 *         --registry-offboard TENANT_ID                 offboard tenant subscription
 *         --registry-offboard-skip TENANT_ID SKIP_APPS  offboard tenant subscription skipping apps
           ...    [TENANT]                               filter list for tenant id or subdomain
-          ...    --time                                 list includes timestamps
           ...    --json                                 list in json
+          ...    --time                                 list includes timestamps
           ...    --skip-unchanged                       skip update for unchanged dependencies
           ...    --only-stale                           only update subscriptions that have not changed today
           ...    --only-failed                          only update subscriptions with UPDATE_FAILED state
@@ -100,9 +100,9 @@ commands:
 *         --cds-offboard-all                         offboard all tenants
           ...    [METADATA]                          onboard subscription metadata
           ...    [TENANT]                            filter list for tenant id or subdomain
-          ...    --auto-undeploy                     upgrade with auto undeploy
-          ...    --time                              list includes timestamps
           ...    --json                              list in json
+          ...    --time                              list includes timestamps
+          ...    --auto-undeploy                     upgrade with auto undeploy
 
    === hana management (hdi) ===
 ~  hdil   --hdi-list [TENANT_ID]                  list all hdi container instances
@@ -116,9 +116,9 @@ commands:
 *         --hdi-delete-all                        delete all hdi container instances and bindings
           ...    [TENANT_ID]                      filter for tenant id
           ...    [PARAMS]                         create binding with custom parameters
-          ...    --reveal                         show passwords
-          ...    --time                           list includes timestamps
           ...    --json                           list in json
+          ...    --time                           list includes timestamps
+          ...    --reveal                         show passwords
 
    === server diagnostic (srv) ===
 ~  srv     --server-info                                      call server /info

@@ -46,9 +46,9 @@ Commands for this area are:
 *         --hdi-delete-all                        delete all hdi container instances and bindings
           ...    [TENANT_ID]                      filter for tenant id
           ...    [PARAMS]                         create binding with custom parameters
-          ...    --reveal                         show passwords
-          ...    --time                           list includes timestamps
           ...    --json                           list in json
+          ...    --time                           list includes timestamps
+          ...    --reveal                         show passwords
 
 ~  are read-only commands
 *  are potentially _dangerous_ commands
@@ -66,7 +66,7 @@ Commands for this area are:
 The list command `mtx hdil` is the most common entry point and will show a table of all hdi container bindings their
 most useful associated information.
 
-With the addition of the `--time` option, the list will include both absolute and relative timestamps for creation
+With the addition of the `--time` flag, the list will include both absolute and relative timestamps for creation
 and the latest update.
 
 If the provided information is insufficient or seems incomplete, then you can always fallback to the long list
@@ -74,6 +74,14 @@ If the provided information is insufficient or seems incomplete, then you can al
 
 If you already know which tenant id you want the information for, then you can filter the list or long list, by
 providing that information, e.g., `mtx hdill <tenant_id>`.
+
+For automated processes, you can use the `--json` flag and consume the list data as JSON. With the
+`--json` flag active, you will get the same data for `hdil` and `hdill`. For example, to get the ready state of
+the all bindings, you use:
+
+```
+mtx hdil --json | jq '.bindings.[] | { binding: .id, ready: .ready }'
+```
 
 {: .info}
 Note that due to the way `@sap/cds-mtx` works, the number of hdi 'tenants' does not correspond 1:1 with subscribed
@@ -134,7 +142,7 @@ evolution.
 
 {: .info}
 By default MTX Tool hides passwords, to protect the user from revealing them inadvertantly in screen sharing sessions.
-When you first set up connections and want to reveal the passwords, use the `--reveal` option.
+When you first set up connections and want to reveal the passwords, use the `--reveal` flag.
 
 ![](hana-management-tunnel.gif)
 

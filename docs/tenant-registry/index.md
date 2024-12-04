@@ -46,8 +46,8 @@ Commands for this area are:
 *         --registry-offboard TENANT_ID                 offboard tenant subscription
 *         --registry-offboard-skip TENANT_ID SKIP_APPS  offboard tenant subscription skipping apps
           ...    [TENANT]                               filter list for tenant id or subdomain
-          ...    --time                                 list includes timestamps
           ...    --json                                 list in json
+          ...    --time                                 list includes timestamps
           ...    --skip-unchanged                       skip update for unchanged dependencies
           ...    --only-stale                           only update subscriptions that have not changed today
           ...    --only-failed                          only update subscriptions with UPDATE_FAILED state
@@ -69,7 +69,7 @@ Commands for this area are:
 The list command `mtx regl` is the most common entry point and will show a table of all registered subacconts with
 their most useful associated information.
 
-With the addition of the `--time` option, the list will include both absolute and relative timestamps for creation
+With the addition of the `--time` flag, the list will include both absolute and relative timestamps for creation
 and the latest update.
 
 If the provided information is insufficient or seems incomplete, then you can always fallback to the long list
@@ -77,6 +77,14 @@ If the provided information is insufficient or seems incomplete, then you can al
 
 If you already know which subaccount or tenant id you want the information for, then you can filter the list or long
 list, by providing that information, e.g., `mtx regl skyfin-company`.
+
+For automated processes, you can use the `--json` flag and consume the list data as JSON. With the `--json` flag
+active, you will get the same data for `regl` and `regll`. For example, to get the subscription url and state for each
+tenant, you could use:
+
+```
+mtx regl --json | jq '.subscriptions.[] | { url: .url, state: .state }'
+```
 
 ## Example for List
 

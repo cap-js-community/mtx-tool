@@ -42,9 +42,9 @@ Commands for this area are:
 *         --cds-offboard-all                         offboard all tenants
           ...    [METADATA]                          onboard subscription metadata
           ...    [TENANT]                            filter list for tenant id or subdomain
-          ...    --auto-undeploy                     upgrade with auto undeploy
-          ...    --time                              list includes timestamps
           ...    --json                              list in json
+          ...    --time                              list includes timestamps
+          ...    --auto-undeploy                     upgrade with auto undeploy
 
 ~  are read-only commands
 *  are potentially _dangerous_ commands
@@ -68,6 +68,14 @@ If the provided information is insufficient or seems incomplete, then you can al
 
 If you already know which subaccount or tenant id you want the information for, then you can filter the list or long
 list, by providing that information, e.g., `mtx cdsl skyfin-company`.
+
+For automated processes, you can use the `--json` flag and consume the list data as JSON. With the
+`--json` flag active, you will get the same data for `cdsl` and `cdsll`. For example, you could get the tenant, global
+account and subscription user for each tenant with:
+
+```
+mtx cdsl --json | jq '.[] | { tenant: .subscribedTenantId, account: .globalAccountGUID, user: .userId }'
+```
 
 ## Example for List
 
