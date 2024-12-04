@@ -83,9 +83,8 @@ describe("reg tests", () => {
         "POST https://skyfin.authentication.sap.hana.ondemand.com:443": 1,
       }
     `);
-    expect(
-        collectScopeCount(require(`${nock.back.fixtures}/reg-update-tenant-app-url-all.json`))
-      ).toMatchInlineSnapshot(`
+    expect(collectScopeCount(require(`${nock.back.fixtures}/reg-update-tenant-app-url-all.json`)))
+      .toMatchInlineSnapshot(`
       {
         "GET https://api.cf.sap.hana.ondemand.com:443": 5,
         "GET https://saas-manager.mesh.cf.sap.hana.ondemand.com:443": 1,
