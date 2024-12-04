@@ -144,7 +144,7 @@ const GENERIC_CLI_OPTIONS = {
     commandVariants: ["v", "-v", "--version"],
     silent: true,
     passContext: false,
-    callback: () => `${NAME} ${VERSION}`,
+    callback: () => `${NAME} v${VERSION}`,
   },
 };
 
