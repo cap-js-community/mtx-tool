@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- reg/cds/hdi: the list and long list command gets a `--json` flag to produce json output
+- reg/cds/hdi: the list and long list command gets a `--json` flag to produce json output (fixes #86)
 
 - uaa: all uaa commands get a `--json` flag to produce json output
 
