@@ -104,4 +104,10 @@ module.exports = {
   LEVEL,
 
   Logger,
+
+  _: {
+    _reset() {
+      Reflect.deleteProperty(Logger, "__instance");
+    },
+  },
 };
