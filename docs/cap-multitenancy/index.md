@@ -69,10 +69,13 @@ If the provided information is insufficient or seems incomplete, then you can al
 If you already know which subaccount or tenant id you want the information for, then you can filter the list or long
 list, by providing that information, e.g., `mtx cdsl skyfin-company`.
 
-{: .info }
-For automated processes, it might be easier to use the `--json` flag and consume the list data as JSON. With the
-`--json` flag active, you will get the same data for `cdsl` and `cdsll`. For example, you could get the global account
-id of all subscribed tenants with `mtx cdsl --json | jq '.[].globalAccountGUID'`.
+For automated processes, you can use the `--json` flag and consume the list data as JSON. With the
+`--json` flag active, you will get the same data for `cdsl` and `cdsll`. For example, you could get the tenant, global
+account and subscription user for each tenant with:
+
+```
+mtx cdsl --json | jq '.[] | { tenant: .subscribedTenantId, account: .globalAccountGUID, user: .userId }'
+```
 
 ## Example for List
 
@@ -108,7 +111,9 @@ For this metadata, the following are potential fields that can be set:
 Common options are:
 
 ```
+
 { "subscriptionAppName": "<value>", "globalAccountGUID": "<value>", "subscribedSubaccountId": "<value>", "subscribedSubdomain": "<value>" }
+
 ```
 
 {: .info}
@@ -158,3 +163,7 @@ real BTP subaccount. This can be useful for testing or mocking purposes.
 
 {: .warn}
 In most cases, the BTP cockpit's subaccount _unsubscribe_ funcationality should be used instead.
+
+```
+
+```

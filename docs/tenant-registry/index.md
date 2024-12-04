@@ -78,9 +78,13 @@ If the provided information is insufficient or seems incomplete, then you can al
 If you already know which subaccount or tenant id you want the information for, then you can filter the list or long
 list, by providing that information, e.g., `mtx regl skyfin-company`.
 
-{: .info }
-For automated processes, it might be easier to use the `--json` flag and consume the list data as JSON. With the
-`--json` flag active, you will get the same data for `regl` and `regll`.
+For automated processes, you can use the `--json` flag and consume the list data as JSON. With the `--json` flag
+active, you will get the same data for `regl` and `regll`. For example, to get the subscription url and state for each
+tenant, you could use:
+
+```
+mtx regl --json | jq '.subscriptions.[] | { url: .url, state: .state }'
+```
 
 ## Example for List
 

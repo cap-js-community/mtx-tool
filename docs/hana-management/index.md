@@ -75,15 +75,18 @@ If the provided information is insufficient or seems incomplete, then you can al
 If you already know which tenant id you want the information for, then you can filter the list or long list, by
 providing that information, e.g., `mtx hdill <tenant_id>`.
 
+For automated processes, you can use the `--json` flag and consume the list data as JSON. With the
+`--json` flag active, you will get the same data for `hdil` and `hdill`. For example, to get the ready state of
+the all bindings, you use:
+
+```
+mtx hdil --json | jq '.bindings.[] | { binding: .id, ready: .ready }'
+```
+
 {: .info}
 Note that due to the way `@sap/cds-mtx` works, the number of hdi 'tenants' does not correspond 1:1 with subscribed
 subaccounts. Rather there are 2 hdi tenants for each subscribed subaccount, as well as one additional `__META__` hdi
 tenant.
-
-{: .info }
-For automated processes, it might be easier to use the `--json` flag and consume the list data as JSON. With the
-`--json` flag active, you will get the same data for `hdil` and `hdill`. For example, to get the credentials of
-the first binding you use `mtx hdil --json | jq '.bindings.[0].credentials'`.
 
 ## Example for List
 
