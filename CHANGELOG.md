@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- order is REMOVED, CHANGED, ADDED, FIXED -->
 
+## v0.9.0 - tbd
+
+### Removed
+
+- remove legacy instance manager code
+
+- remove legacy cds-mtx code
+
+### Changed
+
+- marked `--server-start-debugger` as not dangerous
+
+### Fixed
+
+- fix some internal context call queuing under parallel execution
+
+- fix console output for `--server-start-debugger` and `--version`
+
 ## v0.8.8 - 2024-12-04
 
 ### Added
