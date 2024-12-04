@@ -52,7 +52,7 @@ const UAA_TOKEN_CACHE_EXPIRY_GAP = 60000; // 1 minute
 const logger = Logger.getInstance();
 
 const _run = async (command, ...args) => {
-  return spawnAsync(command, args, {
+  return await spawnAsync(command, args, {
     env: {
       PATH: process.env.PATH,
       CF_HOME: CF.HOME,
@@ -279,7 +279,9 @@ const _cfSsh = async (appName, { localPort, remotePort, remoteHostname, appInsta
   }
   logger.info("running", args.join(" "));
   try {
-    return await _run(...args);
+    const [stdout, stderr] = await _run(...args);
+    stderr && logger.error(stderr);
+    stdout && logger.info(stdout);
   } catch (err) {
     return fail(
       "caught error during cf ssh: %s",
