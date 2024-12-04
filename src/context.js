@@ -17,6 +17,7 @@ const {
   spawnAsync,
   safeUnshift,
   escapeRegExp,
+  makeOneTime,
 } = require("./shared/static");
 const { assert, fail } = require("./shared/error");
 const { request } = require("./shared/request");
@@ -501,11 +502,11 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     return processRawAppInfo(cfApp.name, rawAppInfo, setting);
   };
 
-  const getUaaInfo = getAppInfoCached(SETTING_TYPE.UAA_APP);
-  const getRegInfo = getAppInfoCached(SETTING_TYPE.REGISTRY_APP);
-  const getCdsInfo = getAppInfoCached(SETTING_TYPE.CDS_APP);
-  const getHdiInfo = getAppInfoCached(SETTING_TYPE.HDI_APP);
-  const getSrvInfo = getAppInfoCached(SETTING_TYPE.SERVER_APP);
+  const getUaaInfo = makeOneTime(getAppInfoCached(SETTING_TYPE.UAA_APP));
+  const getRegInfo = makeOneTime(getAppInfoCached(SETTING_TYPE.REGISTRY_APP));
+  const getCdsInfo = makeOneTime(getAppInfoCached(SETTING_TYPE.CDS_APP));
+  const getHdiInfo = makeOneTime(getAppInfoCached(SETTING_TYPE.HDI_APP));
+  const getSrvInfo = makeOneTime(getAppInfoCached(SETTING_TYPE.SERVER_APP));
 
   const getCachedUaaTokenFromCredentials = async (credentials, options) =>
     await cfUaaTokenCache.getSetCb(
