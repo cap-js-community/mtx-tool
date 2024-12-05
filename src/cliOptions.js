@@ -329,7 +329,7 @@ const APP_CLI_OPTIONS = Object.freeze({
   HDI_LIST_RELATIONS: {
     commandVariants: ["hdilr", "--hdi-list-relations"],
     optionalPassArgs: [PASS_ARG.TENANT_ID],
-    optionalFlagArgs: [FLAG_ARG.TIMESTAMPS],
+    optionalFlagArgs: [FLAG_ARG.TIMESTAMPS, FLAG_ARG.JSON_OUTPUT],
     callback: hdi.hdiListRelations,
     useCache: false,
     readonly: true,

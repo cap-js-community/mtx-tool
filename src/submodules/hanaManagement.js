@@ -481,7 +481,7 @@ ${_formatOutput(bindings)}
 const hdiLongList = async (context, [filterTenantId], [doJsonOutput, doReveal]) =>
   await _hdiLongListServiceManager(context, { filterTenantId, doJsonOutput, doReveal });
 
-const _hdiListRelationsServiceManager = async (context, filterTenantId, doTimestamps) => {
+const _hdiListRelationsServiceManager = async (context, { filterTenantId, doTimestamps, doJsonOutput }) => {
   const [instances, bindings] = await Promise.all([
     _hdiInstancesServiceManager(context, { filterTenantId }),
     _hdiBindingsServiceManager(context, { filterTenantId }),
@@ -493,6 +493,14 @@ const _hdiListRelationsServiceManager = async (context, filterTenantId, doTimest
   const headerRow = ["tenant_id", "instance_id", "", "binding_id", "ready"];
   doTimestamps && headerRow.push("created_on", "updated_on");
   const table = [headerRow];
+
+  if (doJsonOutput) {
+    return {
+      instances: instances.map((instance) => {
+        return { ...instance, bindings: bindingsByInstance[instance.id] };
+      }),
+    };
+  }
 
   for (const instance of instances) {
     const instanceBindings = bindingsByInstance[instance.id];
@@ -522,8 +530,8 @@ const _hdiListRelationsServiceManager = async (context, filterTenantId, doTimest
   return tableList(table, { sortCol: null, withRowNumber: !filterTenantId });
 };
 
-const hdiListRelations = async (context, [tenantId], [doTimestamps]) =>
-  await _hdiListRelationsServiceManager(context, tenantId, doTimestamps);
+const hdiListRelations = async (context, [tenantId], [doTimestamps, doJsonOutput]) =>
+  await _hdiListRelationsServiceManager(context, { filterTenantId: tenantId, doTimestamps, doJsonOutput });
 
 const hdiRebindTenant = async (context, [tenantId, rawParameters]) => {
   assert(isValidTenantId(tenantId), `argument "${tenantId}" is not a valid hdi tenant id`);
