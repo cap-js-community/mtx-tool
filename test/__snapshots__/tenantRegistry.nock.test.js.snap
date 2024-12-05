@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`reg tests reg list reg list filtered json 1`] = `
+exports[`reg nock tests reg list reg list filtered json 1`] = `
 {
   "subscriptions": [
     {
@@ -880,7 +880,7 @@ exports[`reg tests reg list reg list filtered json 1`] = `
 }
 `;
 
-exports[`reg tests reg list reg list json 1`] = `
+exports[`reg nock tests reg list reg list json 1`] = `
 {
   "subscriptions": [
     {
@@ -10465,7 +10465,7 @@ exports[`reg tests reg list reg list json 1`] = `
 }
 `;
 
-exports[`reg tests reg long list reg long list basic/json 1`] = `
+exports[`reg nock tests reg long list reg long list basic/json 1`] = `
 {
   "subscriptions": [
     {
@@ -20050,7 +20050,7 @@ exports[`reg tests reg long list reg long list basic/json 1`] = `
 }
 `;
 
-exports[`reg tests reg long list reg long list filtered basic/json 1`] = `
+exports[`reg nock tests reg long list reg long list filtered basic/json 1`] = `
 {
   "subscriptions": [
     {

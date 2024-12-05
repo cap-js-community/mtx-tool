@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`hdi tests list list filtered json 1`] = `
+exports[`hdi nock tests list list filtered json 1`] = `
 {
   "bindings": [
     {
@@ -116,7 +116,7 @@ exports[`hdi tests list list filtered json 1`] = `
 }
 `;
 
-exports[`hdi tests list list json 1`] = `
+exports[`hdi nock tests list list json 1`] = `
 {
   "bindings": [
     {
@@ -1307,7 +1307,7 @@ exports[`hdi tests list list json 1`] = `
 }
 `;
 
-exports[`hdi tests list relations list relations filtered json 1`] = `
+exports[`hdi nock tests list relations list relations filtered json 1`] = `
 {
   "instances": [
     {
@@ -1423,7 +1423,7 @@ exports[`hdi tests list relations list relations filtered json 1`] = `
 }
 `;
 
-exports[`hdi tests list relations list relations json 1`] = `
+exports[`hdi nock tests list relations list relations json 1`] = `
 {
   "instances": [
     {
@@ -2634,7 +2634,7 @@ exports[`hdi tests list relations list relations json 1`] = `
 }
 `;
 
-exports[`hdi tests long list long list basic 1`] = `
+exports[`hdi nock tests long list long list basic 1`] = `
 "
 === container instances ===
 
@@ -3830,7 +3830,7 @@ exports[`hdi tests long list long list basic 1`] = `
 "
 `;
 
-exports[`hdi tests long list long list filtered basic 1`] = `
+exports[`hdi nock tests long list long list filtered basic 1`] = `
 "
 === container instance ===
 
@@ -3947,7 +3947,7 @@ exports[`hdi tests long list long list filtered basic 1`] = `
 "
 `;
 
-exports[`hdi tests long list long list filtered json 1`] = `
+exports[`hdi nock tests long list long list filtered json 1`] = `
 {
   "bindings": [
     {
@@ -4063,7 +4063,7 @@ exports[`hdi tests long list long list filtered json 1`] = `
 }
 `;
 
-exports[`hdi tests long list long list filtered revealed 1`] = `
+exports[`hdi nock tests long list long list filtered revealed 1`] = `
 "
 === container instance ===
 
@@ -4180,7 +4180,7 @@ exports[`hdi tests long list long list filtered revealed 1`] = `
 "
 `;
 
-exports[`hdi tests long list long list json 1`] = `
+exports[`hdi nock tests long list long list json 1`] = `
 {
   "bindings": [
     {
@@ -5371,7 +5371,7 @@ exports[`hdi tests long list long list json 1`] = `
 }
 `;
 
-exports[`hdi tests long list long list revealed 1`] = `
+exports[`hdi nock tests long list long list revealed 1`] = `
 "
 === container instances ===
 
