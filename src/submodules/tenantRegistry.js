@@ -168,11 +168,6 @@ const _registryJobPoll = async (context, location, { skipFirst = false } = {}) =
   }
 };
 
-const registryJob = async (context, [jobId]) => {
-  assert(isUUID(jobId), "JOB_ID is not a uuid", jobId);
-  return await _registryJobPoll(context, `/api/v2.0/jobs/${jobId}`, { skipFirst: true });
-};
-
 const _registryCallForTenant = async (
   context,
   subscription,
@@ -289,7 +284,6 @@ module.exports = {
   registryListSubscriptions,
   registryLongListSubscriptions,
   registryServiceConfig,
-  registryJob,
   registryUpdateDependencies,
   registryUpdateAllDependencies,
   registryUpdateApplicationURL,

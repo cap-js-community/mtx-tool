@@ -20,7 +20,6 @@ const PASS_ARG = Object.freeze({
   USERNAME: "USERNAME",
   PASSWORD: "PASSWORD",
   SERVICE: "SERVICE",
-  JOB_ID: "JOB_ID",
   TENANT_ID: "TENANT_ID",
   SKIP_APPS: "SKIP_APPS",
   APP_NAME: "APP_NAME",
@@ -77,7 +76,6 @@ commands:
 ~  regl   --registry-list [TENANT]                      list all subscribed subaccount names
 ~  regll  --registry-long-list [TENANT]                 long list all subscribed subaccounts
 ~  regs   --registry-service-config                     show registry service config
-~  regj   --registry-job JOB_ID                         show registry job
           --registry-update TENANT_ID                   update tenant dependencies
           --registry-update-all                         update dependencies for all subscribed tenants
           --registry-update-url [TENANT_ID]             update all subscribed application URL
@@ -231,12 +229,6 @@ const APP_CLI_OPTIONS = Object.freeze({
   REGISTRY_SERVICE_CONFIG: {
     commandVariants: ["regs", "--registry-service-config"],
     callback: reg.registryServiceConfig,
-    readonly: true,
-  },
-  REGISTRY_JOB: {
-    commandVariants: ["regj", "--registry-job"],
-    requiredPassArgs: [PASS_ARG.JOB_ID],
-    callback: reg.registryJob,
     readonly: true,
   },
   REGISTRY_UPDATE_DEPENDENCIES: {

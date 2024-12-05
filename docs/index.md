@@ -74,7 +74,6 @@ commands:
 ~  regl   --registry-list [TENANT]                      list all subscribed subaccount names
 ~  regll  --registry-long-list [TENANT]                 long list all subscribed subaccounts
 ~  regs   --registry-service-config                     show registry service config
-~  regj   --registry-job JOB_ID                         show registry job
           --registry-update TENANT_ID                   update tenant dependencies
           --registry-update-all                         update dependencies for all subscribed tenants
           --registry-update-url [TENANT_ID]             update all subscribed application URL
