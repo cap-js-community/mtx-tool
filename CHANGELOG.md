@@ -11,9 +11,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Removed
 
-- remove legacy instance manager code
+- hdi: remove legacy instance manager code
 
-- remove legacy cds-mtx code
+- cds: remove legacy cds-mtx code
+
+- reg: remove registry job command
+
+- srv: remove server info command
 
 ### Changed
 
