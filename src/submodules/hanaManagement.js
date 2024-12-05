@@ -105,7 +105,7 @@ const _deleteBindingServiceManager = async (sm_url, token, id) => {
   });
 };
 
-async function _deleteInstanceServiceManager(sm_url, token, id) {
+const _deleteInstanceServiceManager = async (sm_url, token, id) => {
   await request({
     method: "DELETE",
     url: sm_url,
@@ -113,7 +113,7 @@ async function _deleteInstanceServiceManager(sm_url, token, id) {
     query: { async: false },
     auth: { token },
   });
-}
+};
 
 const _getQuery = (filters) =>
   Object.entries(filters)
@@ -208,10 +208,10 @@ const _hdiBindingsServiceManager = async (
   return bindings;
 };
 
-async function _hdiRebindBindingServiceManager(sm_url, token, binding, options) {
+const _hdiRebindBindingServiceManager = async (sm_url, token, binding, options) => {
   await _createBindingServiceManagerFromBinding(sm_url, token, binding, options);
   await _deleteBindingServiceManager(sm_url, token, binding.id);
-}
+};
 
 const _hdiRebindTenantServiceManager = async (context, filterTenantId, parameters) => {
   const {
@@ -409,7 +409,7 @@ const _hdiDeleteServiceManager = async (context, filterTenantId) => {
 
 const _hdiDelete = async (context, ...args) => await _hdiDeleteServiceManager(context, ...args);
 
-function _getBindingsByInstance(bindings) {
+const _getBindingsByInstance = (bindings) => {
   return bindings.reduce((result, binding) => {
     const instance_id = binding.service_instance_id;
     if (result[instance_id]) {
@@ -419,7 +419,7 @@ function _getBindingsByInstance(bindings) {
     }
     return result;
   }, {});
-}
+};
 
 const hdiListServiceManager = async (context, { filterTenantId, doTimestamps, doJsonOutput } = {}) => {
   const [instances, bindings] = await Promise.all([
