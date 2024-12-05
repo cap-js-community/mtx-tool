@@ -66,6 +66,7 @@ const mockBindingFactory = (i) => ({
   usable: true,
   labels: {
     tenant_id: [`tenant-id-${i}`],
+    service_plan_id: [`service-plan-id-${i}`],
   },
 });
 
@@ -200,6 +201,140 @@ describe("hdi tests", () => {
       password   *** show with --reveal ***
       "
     `);
+    expect(mockLogger.error).toHaveBeenCalledTimes(0);
+  });
+
+  test("hdi rebind tenant", async () => {
+    mockRequest.request.mockReturnValueOnce({
+      async json() {
+        return { items: [{ id: "service-plan-id" }] };
+      },
+    });
+    mockRequest.request.mockReturnValueOnce({
+      async json() {
+        return { items: [mockBindingFactory(0)] };
+      },
+    });
+    mockRequest.request.mockReturnValueOnce();
+    mockRequest.request.mockReturnValueOnce();
+
+    expect(await hdi.hdiRebindTenant(mockContext, [testTenantId])).toBeUndefined();
+    expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
+      [
+        "GET service-manager-url /v1/service_plans {"fieldQuery":"name eq 'hdi-shared'"}",
+        "GET service-manager-url /v1/service_bindings {"labelQuery":"service_plan_id eq 'service-plan-id' and tenant_id eq '5ecc7413-2b7e-414a-9496-ad4a61f6cccf'"}",
+        "POST service-manager-url /v1/service_bindings {"async":false}",
+        "DELETE service-manager-url /v1/service_bindings/binding-id-0 {"async":false}",
+      ]
+    `);
+    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`""`);
+    expect(mockLogger.error).toHaveBeenCalledTimes(0);
+  });
+
+  test("hdi rebind all", async () => {
+    const n = 2;
+    mockRequest.request.mockReturnValueOnce({
+      async json() {
+        return { items: [{ id: "service-plan-id" }] };
+      },
+    });
+    mockRequest.request.mockReturnValueOnce({
+      async json() {
+        return { items: Array.from({ length: n }).map((_, i) => mockBindingFactory(i)) };
+      },
+    });
+    for (let i = 0; i < n; i++) {
+      mockRequest.request.mockReturnValueOnce();
+      mockRequest.request.mockReturnValueOnce();
+    }
+
+    expect(await hdi.hdiRebindAll(mockContext, [])).toBeUndefined();
+    expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
+      [
+        "GET service-manager-url /v1/service_plans {"fieldQuery":"name eq 'hdi-shared'"}",
+        "GET service-manager-url /v1/service_bindings {"labelQuery":"service_plan_id eq 'service-plan-id'"}",
+        "POST service-manager-url /v1/service_bindings {"async":false}",
+        "POST service-manager-url /v1/service_bindings {"async":false}",
+        "DELETE service-manager-url /v1/service_bindings/binding-id-0 {"async":false}",
+        "DELETE service-manager-url /v1/service_bindings/binding-id-1 {"async":false}",
+      ]
+    `);
+    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(
+      `"rebinding tenants tenant-id-0, tenant-id-1"`
+    );
+    expect(mockLogger.error).toHaveBeenCalledTimes(0);
+  });
+
+  test("hdi delete tenant", async () => {
+    mockRequest.request.mockReturnValueOnce({
+      async json() {
+        return { items: [{ id: "service-plan-id" }] };
+      },
+    });
+    mockRequest.request.mockReturnValueOnce({
+      async json() {
+        return { items: [mockBindingFactory(0)] };
+      },
+    });
+    mockRequest.request.mockReturnValueOnce();
+    mockRequest.request.mockReturnValueOnce({
+      async json() {
+        return { items: [mockInstanceFactory(0)] };
+      },
+    });
+    mockRequest.request.mockReturnValueOnce();
+
+    expect(await hdi.hdiDeleteTenant(mockContext, [testTenantId])).toBeUndefined();
+    expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
+      [
+        "GET service-manager-url /v1/service_plans {"fieldQuery":"name eq 'hdi-shared'"}",
+        "GET service-manager-url /v1/service_bindings {"labelQuery":"service_plan_id eq 'service-plan-id' and tenant_id eq '5ecc7413-2b7e-414a-9496-ad4a61f6cccf'"}",
+        "DELETE service-manager-url /v1/service_bindings/binding-id-0 {"async":false}",
+        "GET service-manager-url /v1/service_instances {"fieldQuery":"service_plan_id eq 'service-plan-id'","labelQuery":"tenant_id eq '5ecc7413-2b7e-414a-9496-ad4a61f6cccf'"}",
+        "DELETE service-manager-url /v1/service_instances/instance-id-0 {"async":false}",
+      ]
+    `);
+    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`""`);
+    expect(mockLogger.error).toHaveBeenCalledTimes(0);
+  });
+
+  test("hdi delete all", async () => {
+    const n = 2;
+    mockRequest.request.mockReturnValueOnce({
+      async json() {
+        return { items: [{ id: "service-plan-id" }] };
+      },
+    });
+    mockRequest.request.mockReturnValueOnce({
+      async json() {
+        return { items: Array.from({ length: n }).map((_, i) => mockBindingFactory(i)) };
+      },
+    });
+    for (let i = 0; i < n; i++) {
+      mockRequest.request.mockReturnValueOnce();
+    }
+    mockRequest.request.mockReturnValueOnce({
+      async json() {
+        return { items: Array.from({ length: n }).map((_, i) => mockInstanceFactory(i)) };
+      },
+    });
+    for (let i = 0; i < n; i++) {
+      mockRequest.request.mockReturnValueOnce();
+    }
+
+    expect(await hdi.hdiDeleteAll(mockContext)).toBeUndefined();
+    expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
+      [
+        "GET service-manager-url /v1/service_plans {"fieldQuery":"name eq 'hdi-shared'"}",
+        "GET service-manager-url /v1/service_bindings {"labelQuery":"service_plan_id eq 'service-plan-id'"}",
+        "DELETE service-manager-url /v1/service_bindings/binding-id-0 {"async":false}",
+        "DELETE service-manager-url /v1/service_bindings/binding-id-1 {"async":false}",
+        "GET service-manager-url /v1/service_instances {"fieldQuery":"service_plan_id eq 'service-plan-id'"}",
+        "DELETE service-manager-url /v1/service_instances/instance-id-0 {"async":false}",
+        "DELETE service-manager-url /v1/service_instances/instance-id-1 {"async":false}",
+      ]
+    `);
+    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`""`);
     expect(mockLogger.error).toHaveBeenCalledTimes(0);
   });
 });
