@@ -388,7 +388,7 @@ const _hdiTunnel = async (context, filterTenantId, doReveal = false) => {
   return cfSsh({ localPort, remotePort: port, remoteHostname: host });
 };
 
-const _hdiDeleteServiceManager = async (context, filterTenantId) => {
+const _hdiDeleteServiceManager = async (context, { filterTenantId } = {}) => {
   const {
     cfService: { credentials },
   } = await context.getHdiInfo();
@@ -406,8 +406,6 @@ const _hdiDeleteServiceManager = async (context, filterTenantId) => {
     await _deleteInstanceServiceManager(sm_url, token, id);
   }
 };
-
-const _hdiDelete = async (context, ...args) => await _hdiDeleteServiceManager(context, ...args);
 
 const _getBindingsByInstance = (bindings) => {
   return bindings.reduce((result, binding) => {
@@ -559,33 +557,10 @@ const hdiTunnelTenant = async (context, [tenantId], [doReveal]) => {
 
 const hdiDeleteTenant = async (context, [tenantId]) => {
   assert(isValidTenantId(tenantId), `argument "${tenantId}" is not a valid hdi tenant id`);
-  return await _hdiDelete(context, tenantId);
+  return await _hdiDeleteServiceManager(context, { filterTenantId: tenantId });
 };
 
-const hdiDeleteAllServiceManager = async (context) => {
-  const {
-    cfService: { credentials },
-  } = await context.getHdiInfo();
-  const { sm_url } = credentials;
-  const token = await context.getCachedUaaTokenFromCredentials(credentials);
-  const getBindingsResponse = await request({
-    url: sm_url,
-    pathname: "/v1/service_bindings",
-    auth: { token },
-  });
-  const { items: bindings } = (await getBindingsResponse.json()) || {};
-  assert(Array.isArray(bindings), "could not retrieve hdi service bindings");
-
-  bindings.sort(compareForServiceManagerTenantId);
-
-  // NOTE: we want to do this serially
-  for (const binding of bindings) {
-    const tenantId = binding.labels?.tenant_id?.[0];
-    tenantId && (await _hdiDelete(context, tenantId));
-  }
-};
-
-const hdiDeleteAll = async (context) => await hdiDeleteAllServiceManager(context);
+const hdiDeleteAll = async (context) => await _hdiDeleteServiceManager(context);
 
 const hdiEnableNative = async (context, [tenantId]) => {
   assert(!tenantId || isValidTenantId(tenantId), `argument "${tenantId}" is not a valid hdi tenant id`);
