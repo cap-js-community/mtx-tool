@@ -14,17 +14,6 @@ const DEFAULT_ENV_FILENAME = "default-env.json";
 
 const logger = Logger.getInstance();
 
-const serverInfo = async (context) => {
-  const { cfRouteUrl } = await context.getSrvInfo();
-  const token = await context.getCachedUaaToken();
-  const response = await request({
-    url: cfRouteUrl,
-    pathname: "/info",
-    auth: { token },
-  });
-  return await response.json();
-};
-
 const _serverDebug = async (context, { appName, appInstance = 0 } = {}) => {
   const { cfBuildpack, cfAppGuid, cfRouteUrl, cfSsh } = appName
     ? await context.getAppNameInfoCached(appName)
@@ -104,7 +93,6 @@ const serverStartDebugger = async (context, [appName, appInstance]) => {
 };
 
 module.exports = {
-  serverInfo,
   serverDebug,
   serverEnvironment,
   serverCertificates,

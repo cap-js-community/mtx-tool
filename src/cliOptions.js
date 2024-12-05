@@ -121,7 +121,6 @@ commands:
           ...    --reveal                         show passwords
 
    === server diagnostic (srv) ===
-~  srv     --server-info                                      call server /info
 ~  srvd    --server-debug [APP_NAME] [APP_INSTANCE]           open ssh tunnel to port /info {debugPort}
 ~  srvenv  --server-env [APP_NAME]                            dump system environment
 ~  srvcrt  --server-certificates [APP_NAME] [APP_INSTANCE]    dump instance certificates
@@ -376,7 +375,6 @@ const APP_CLI_OPTIONS = Object.freeze({
   },
   HDI_DELETE_ALL: { commandVariants: ["--hdi-delete-all"], callback: hdi.hdiDeleteAll, useCache: false, danger: true },
 
-  SRV_INFO: { commandVariants: ["srv", "--server-info"], callback: srv.serverInfo, readonly: true },
   SRV_DEBUG: {
     commandVariants: ["srvd", "--server-debug"],
     optionalPassArgs: [PASS_ARG.APP_NAME, PASS_ARG.APP_INSTANCE],
