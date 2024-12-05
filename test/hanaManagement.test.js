@@ -20,7 +20,7 @@ const mockLogger = MockLogger.getInstance();
 jest.mock("../src/shared/logger", () => require("./__mocks/shared/logger"));
 
 const hdi = require("../src/submodules/hanaManagement");
-const { outputFromLogger } = require("./util/static");
+const { outputFromLogger, collectRequestMockCalls } = require("./util/static");
 
 const testTenantId = "5ecc7413-2b7e-414a-9496-ad4a61f6cccf";
 
@@ -119,6 +119,7 @@ describe("hdi tests", () => {
     }
 
     await expect(hdi.hdiEnableNative(mockContext, [])).resolves.toBeUndefined();
+
     expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "skipping 1 already enabled tenants
       enabling 3 tenants tenant-id-1, tenant-id-2, tenant-id-3
@@ -126,6 +127,23 @@ describe("hdi tests", () => {
       created 1 missing binding for tenant tenant-id-1
       created 1 missing binding for tenant tenant-id-2
       created 1 missing binding for tenant tenant-id-3"
+    `);
+    expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
+      [
+        "GET service-manager-url /v1/service_plans {"fieldQuery":"name eq 'hdi-shared'"}",
+        "GET service-manager-url /v1/service_instances {"fieldQuery":"service_plan_id eq 'service-plan-id'"}",
+        "GET service-manager-url /v1/service_bindings {"labelQuery":"service_plan_id eq 'service-plan-id'"}",
+        "GET service-manager-url /v1/service_instances/instance-id-0/parameters",
+        "GET service-manager-url /v1/service_instances/instance-id-1/parameters",
+        "GET service-manager-url /v1/service_instances/instance-id-2/parameters",
+        "GET service-manager-url /v1/service_instances/instance-id-3/parameters",
+        "PATCH service-manager-url /v1/service_instances/instance-id-1 {"async":false}",
+        "PATCH service-manager-url /v1/service_instances/instance-id-2 {"async":false}",
+        "PATCH service-manager-url /v1/service_instances/instance-id-3 {"async":false}",
+        "POST service-manager-url /v1/service_bindings {"async":false}",
+        "POST service-manager-url /v1/service_bindings {"async":false}",
+        "POST service-manager-url /v1/service_bindings {"async":false}",
+      ]
     `);
     expect(mockLogger.error).toHaveBeenCalledTimes(0);
   });

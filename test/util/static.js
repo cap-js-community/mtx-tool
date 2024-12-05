@@ -29,9 +29,15 @@ const collectRequestCount = (requests) =>
     return acc;
   }, {});
 
+const collectRequestMockCalls = (mockFn) =>
+  mockFn.mock.calls.map(([{ method, url, pathname, query }]) =>
+    [method ?? "GET", url, pathname, ...(query ? [JSON.stringify(query)] : [])].join(" ")
+  );
+
 module.exports = {
   outputFromLogger,
   outputFromLoggerPartitionFetch,
   anonymizeListTimestamps,
   collectRequestCount,
+  collectRequestMockCalls,
 };
