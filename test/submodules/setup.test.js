@@ -35,8 +35,8 @@ let set;
 describe("set tests", () => {
   beforeEach(() => {
     jest.isolateModules(() => {
-      process.env.HOME = "root/home-dir";
-      processCwdSpy.mockReturnValueOnce("root/local-dir");
+      process.env.HOME = "/root/home-dir";
+      processCwdSpy.mockReturnValueOnce("/root/local-dir");
       set = require("../../src/submodules/setup");
     });
   });
