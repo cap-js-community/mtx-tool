@@ -1,14 +1,14 @@
 "use strict";
 
-jest.mock("../src/shared/logger", () => require("./__mocks/shared/logger"));
+jest.mock("../../src/shared/logger", () => require("../__mocks/shared/logger"));
 const fetchMock = require("node-fetch");
 jest.mock("node-fetch");
-const sharedStaticMock = require("../src/shared/static");
-jest.mock("../src/shared/static", () => require("./__mocks/shared/static"));
-const sharedOAuthMock = require("../src/shared/oauth");
-jest.mock("../src/shared/oauth", () => require("./__mocks/shared/oauth"));
+const sharedStaticMock = require("../../src/shared/static");
+jest.mock("../../src/shared/static", () => require("../__mocks/shared/static"));
+const sharedOAuthMock = require("../../src/shared/oauth");
+jest.mock("../../src/shared/oauth", () => require("../__mocks/shared/oauth"));
 
-const uaa = require("../src/submodules/userAuthentication");
+const uaa = require("../../src/submodules/userAuthentication");
 
 const SUBDOMAIN = "subdomain";
 const PASSCODE = "passcode90";

@@ -1,23 +1,23 @@
 "use strict";
 
-const mockRequest = require("../src/shared/request");
-jest.mock("../src/shared/request", () => ({
+const mockRequest = require("../../src/shared/request");
+jest.mock("../../src/shared/request", () => ({
   request: jest.fn(),
 }));
-const mockShared = require("../src/shared/static");
-jest.mock("../src/shared/static", () => {
-  const staticLib = jest.requireActual("../src/shared/static");
+const mockShared = require("../../src/shared/static");
+jest.mock("../../src/shared/static", () => {
+  const staticLib = jest.requireActual("../../src/shared/static");
   return {
     ...staticLib,
     sleep: jest.fn(),
   };
 });
-const { Logger: MockLogger } = require("../src/shared/logger");
+const { Logger: MockLogger } = require("../../src/shared/logger");
 const mockLogger = MockLogger.getInstance();
-jest.mock("../src/shared/logger", () => require("./__mocks/shared/logger"));
+jest.mock("../../src/shared/logger", () => require("../__mocks/shared/logger"));
 
-const reg = require("../src/submodules/tenantRegistry");
-const { outputFromLoggerPartitionFetch } = require("./util/static");
+const reg = require("../../src/submodules/tenantRegistry");
+const { outputFromLoggerPartitionFetch } = require("../test-util/static");
 
 const fakeContext = {
   getRegInfo: () => ({

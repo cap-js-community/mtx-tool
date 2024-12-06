@@ -3,18 +3,18 @@
 const pathlib = require("path");
 const nock = require("nock");
 
-const { newContext } = require("../src/context");
-const hdi = require("../src/submodules/hanaManagement");
-const { outputFromLoggerPartitionFetch, anonymizeListTimestamps, collectRequestCount } = require("./util/static");
+const { newContext } = require("../../src/context");
+const hdi = require("../../src/submodules/hanaManagement");
+const { outputFromLoggerPartitionFetch, anonymizeListTimestamps, collectRequestCount } = require("../test-util/static");
 
-nock.back.fixtures = pathlib.resolve(`${__dirname}/../test-nock-record/__nock-fixtures__`);
+nock.back.fixtures = pathlib.resolve(`${__dirname}/../../test-nock-record/__nock-fixtures__`);
 nock.back.setMode("lockdown");
 
-jest.mock("../src/shared/static", () => require("./__mocks/sharedNockPlayback/static"));
+jest.mock("../../src/shared/static", () => require("../__mocks/sharedNockPlayback/static"));
 
-const { Logger: MockLogger } = require("../src/shared/logger");
+const { Logger: MockLogger } = require("../../src/shared/logger");
 const mockLogger = MockLogger.getInstance();
-jest.mock("../src/shared/logger", () => require("./__mocks/shared/logger"));
+jest.mock("../../src/shared/logger", () => require("../__mocks/shared/logger"));
 
 const testTenantId = "5ecc7413-2b7e-414a-9496-ad4a61f6cccf";
 

@@ -1,13 +1,13 @@
 "use strict";
 
-const mockRequest = require("../src/shared/request");
-jest.mock("../src/shared/request", () => ({
+const mockRequest = require("../../src/shared/request");
+jest.mock("../../src/shared/request", () => ({
   request: jest.fn(),
 }));
 
-const mockStatic = require("../src/shared/static");
-jest.mock("../src/shared/static", () => {
-  const staticLib = jest.requireActual("../src/shared/static");
+const mockStatic = require("../../src/shared/static");
+jest.mock("../../src/shared/static", () => {
+  const staticLib = jest.requireActual("../../src/shared/static");
   return {
     ...staticLib,
     sleep: jest.fn(),
@@ -15,12 +15,12 @@ jest.mock("../src/shared/static", () => {
   };
 });
 
-const { Logger: MockLogger } = require("../src/shared/logger");
+const { Logger: MockLogger } = require("../../src/shared/logger");
 const mockLogger = MockLogger.getInstance();
-jest.mock("../src/shared/logger", () => require("./__mocks/shared/logger"));
+jest.mock("../../src/shared/logger", () => require("../__mocks/shared/logger"));
 
-const hdi = require("../src/submodules/hanaManagement");
-const { outputFromLogger, collectRequestMockCalls } = require("./util/static");
+const hdi = require("../../src/submodules/hanaManagement");
+const { outputFromLogger, collectRequestMockCalls } = require("../test-util/static");
 
 const testTenantId = "5ecc7413-2b7e-414a-9496-ad4a61f6cccf";
 
