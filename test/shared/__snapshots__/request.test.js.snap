@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`request bad request unchecked 1`] = `
+exports[`request tests bad request unchecked 1`] = `
 [
   [
-    "https://server/path",
+    "https://fake-server.com/path",
     {
       "headers": {},
       "method": "GET",
@@ -12,10 +12,10 @@ exports[`request bad request unchecked 1`] = `
 ]
 `;
 
-exports[`request basic bad request 2`] = `
+exports[`request tests basic bad request 2`] = `
 [
   [
-    "https://server/path",
+    "https://fake-server.com/path",
     {
       "headers": {},
       "method": "GET",
@@ -24,10 +24,10 @@ exports[`request basic bad request 2`] = `
 ]
 `;
 
-exports[`request basic ok 1`] = `
+exports[`request tests basic ok 1`] = `
 [
   [
-    "https://server/path",
+    "https://fake-server.com/path",
     {
       "headers": {},
       "method": "GET",
@@ -36,10 +36,10 @@ exports[`request basic ok 1`] = `
 ]
 `;
 
-exports[`request ok with basic auth 1`] = `
+exports[`request tests ok with basic auth 1`] = `
 [
   [
-    "https://server/path",
+    "https://fake-server.com/path",
     {
       "headers": {
         "Authorization": "Basic dXNlcm5hbWU6dGVzdC1wYXNzd29yZA==",
@@ -50,10 +50,10 @@ exports[`request ok with basic auth 1`] = `
 ]
 `;
 
-exports[`request ok with bearer auth 1`] = `
+exports[`request tests ok with bearer auth 1`] = `
 [
   [
-    "https://server/path",
+    "https://fake-server.com/path",
     {
       "headers": {
         "Authorization": "Bearer test-token",
@@ -64,7 +64,7 @@ exports[`request ok with bearer auth 1`] = `
 ]
 `;
 
-exports[`request ok with lots of options 1`] = `
+exports[`request tests ok with lots of options 1`] = `
 [
   [
     "https://server/path?hello=world&foo=bar#hashed",
@@ -77,10 +77,10 @@ exports[`request ok with lots of options 1`] = `
 ]
 `;
 
-exports[`request ok with no logging 1`] = `
+exports[`request tests ok with no logging 1`] = `
 [
   [
-    "https://server/path",
+    "https://fake-server.com/path",
     {
       "headers": {},
       "method": "GET",
