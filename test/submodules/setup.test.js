@@ -123,12 +123,8 @@ describe("set tests", () => {
   });
 
   test("setup clean cache", async () => {
-    mockStatic.tryAccessSync.mockReturnValueOnce(true); // local try is a hit
-    mockStatic.tryAccessSync.mockReturnValueOnce(false);
-    mockStatic.tryAccessSync.mockReturnValueOnce(false);
-    mockStatic.tryAccessSync.mockReturnValueOnce(false);
-    mockStatic.tryAccessSync.mockReturnValueOnce(true); // global try is also a hit
-    mockStatic.tryAccessSync.mockReturnValueOnce(false);
+    mockStatic.tryAccessSync.mockReturnValueOnce(true);
+    mockStatic.tryAccessSync.mockReturnValue(false);
 
     set.setupCleanCache();
     expect(mockStatic.tryAccessSync.mock.calls).toMatchInlineSnapshot(`
@@ -153,35 +149,18 @@ describe("set tests", () => {
           "/root/home-dir/.mtxcache.json",
           4,
         ],
+      ]
+    `);
+    expect(mockFs.unlinkSync.mock.calls).toMatchInlineSnapshot(`
+      [
         [
           "/root/local-dir/.mtxcache.json",
-          4,
-        ],
-        [
-          "/root/.mtxcache.json",
-          4,
-        ],
-        [
-          "/.mtxcache.json",
-          4,
-        ],
-        [
-          "/root/home-dir/.mtxcache.json",
-          4,
         ],
       ]
     `);
-    // expect(mockStatic.tryAccessSync).toHaveBeenCalledTimes(8);
-    expect(mockFs.unlinkSync).toHaveBeenCalledTimes(2);
-    expect(mockFs.unlinkSync.mock.calls[0]).toMatchInlineSnapshot(`
-      [
-        "/root/local-dir/.mtxcache.json",
-      ]
-    `);
-    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
-      "removed local cache /root/local-dir/.mtxcache.json
-      removed global cache /root/home-dir/.mtxcache.json"
-    `);
+    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(
+      `"removed local cache /root/local-dir/.mtxcache.json"`
+    );
     expect(mockLogger.error).toHaveBeenCalledTimes(0);
   });
 });
