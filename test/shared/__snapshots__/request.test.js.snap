@@ -1,0 +1,77 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`request bad request unchecked 1`] = `
+[
+  [
+    "https://server/path",
+    {
+      "headers": {},
+      "method": "GET",
+    },
+  ],
+]
+`;
+
+exports[`request basic bad request 2`] = `
+[
+  [
+    "https://server/path",
+    {
+      "headers": {},
+      "method": "GET",
+    },
+  ],
+]
+`;
+
+exports[`request basic ok 1`] = `
+[
+  [
+    "https://server/path",
+    {
+      "headers": {},
+      "method": "GET",
+    },
+  ],
+]
+`;
+
+exports[`request ok with basic auth 1`] = `
+[
+  [
+    "https://server/path",
+    {
+      "headers": {
+        "Authorization": "Basic dXNlcm5hbWU6cGFzc3dvcmQ=",
+      },
+      "method": "GET",
+    },
+  ],
+]
+`;
+
+exports[`request ok with bearer auth 1`] = `
+[
+  [
+    "https://server/path",
+    {
+      "headers": {
+        "Authorization": "Bearer token",
+      },
+      "method": "GET",
+    },
+  ],
+]
+`;
+
+exports[`request ok with no logging 1`] = `
+[
+  [
+    "https://server/path",
+    {
+      "headers": {},
+      "method": "GET",
+    },
+  ],
+]
+`;
