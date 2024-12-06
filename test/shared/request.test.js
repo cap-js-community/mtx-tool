@@ -61,13 +61,17 @@ describe("request", () => {
 
   test("ok with basic auth", async () => {
     mockFetchLib.mockReturnValueOnce(baseOkResponse);
-    await request({ url: "https://server", pathname: "/path", auth: { username: "username", password: "password" } });
+    await request({
+      url: "https://server",
+      pathname: "/path",
+      auth: { username: "username", password: "test-password" },
+    });
     expect(mockFetchLib.mock.calls).toMatchSnapshot();
   });
 
   test("ok with bearer auth", async () => {
     mockFetchLib.mockReturnValueOnce(baseOkResponse);
-    await request({ url: "https://server", pathname: "/path", auth: { token: "token" } });
+    await request({ url: "https://server", pathname: "/path", auth: { token: "test-token" } });
     expect(mockFetchLib.mock.calls).toMatchSnapshot();
   });
 
