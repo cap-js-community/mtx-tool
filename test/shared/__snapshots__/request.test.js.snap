@@ -42,7 +42,7 @@ exports[`request ok with basic auth 1`] = `
     "https://server/path",
     {
       "headers": {
-        "Authorization": "Basic dXNlcm5hbWU6cGFzc3dvcmQ=",
+        "Authorization": "Basic dXNlcm5hbWU6dGVzdC1wYXNzd29yZA==",
       },
       "method": "GET",
     },
@@ -56,7 +56,7 @@ exports[`request ok with bearer auth 1`] = `
     "https://server/path",
     {
       "headers": {
-        "Authorization": "Bearer token",
+        "Authorization": "Bearer test-token",
       },
       "method": "GET",
     },
