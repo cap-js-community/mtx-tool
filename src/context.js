@@ -4,14 +4,11 @@ const urllib = require("url");
 const pathlib = require("path");
 const {
   writeFileSync,
-  unlinkSync,
   constants: { R_OK },
 } = require("fs");
 const { version } = require("../package.json");
 
 const {
-  ENV,
-  question,
   tryReadJsonSync,
   tryAccessSync,
   spawnAsync,
@@ -26,6 +23,10 @@ const { LazyCache, ExpiringLazyCache } = require("./shared/cache");
 const { SETTING_TYPE, SETTING } = require("./setting");
 const { Logger } = require("./shared/logger");
 
+const ENV = Object.freeze({
+  APP_SUFFIX: "MTX_APP_SUFFIX",
+});
+
 const APP_SUFFIXES = safeUnshift(["", "-{UUID}", "-blue", "-green"], process.env[ENV.APP_SUFFIX]);
 const APP_SUFFIXES_READONLY = APP_SUFFIXES.concat(["-live"]);
 const HOME = process.env.HOME || process.env.USERPROFILE;
@@ -37,10 +38,6 @@ const CF = Object.freeze({
 const LOCATION = Object.freeze({
   LOCAL: "LOCAL",
   GLOBAL: "GLOBAL",
-});
-const LOCATION_DIR = Object.freeze({
-  [LOCATION.LOCAL]: process.cwd(),
-  [LOCATION.GLOBAL]: HOME,
 });
 const FILENAME = Object.freeze({
   CONFIG: ".mtxrc.json",
@@ -150,7 +147,7 @@ const _resolveDir = (filename) => {
   }
 };
 
-const _readRuntimeConfig = (filepath, { logged = false, checkConfig = true } = {}) => {
+const readRuntimeConfig = (filepath, { logged = false, checkConfig = true } = {}) => {
   const rawRuntimeConfig = filepath ? tryReadJsonSync(filepath) : null;
   if (checkConfig && !rawRuntimeConfig) {
     return fail(`failed reading runtime configuration, run setup`);
@@ -165,15 +162,6 @@ const _readRuntimeConfig = (filepath, { logged = false, checkConfig = true } = {
         return result;
       }, Object.create(null))
     : {};
-};
-
-const _writeRuntimeConfig = async (runtimeConfig, filepath) => {
-  try {
-    writeFileSync(filepath, JSON.stringify(runtimeConfig, null, 2) + "\n");
-    logger.info("wrote runtime config");
-  } catch (err) {
-    fail("caught error while writing runtime config:", err.message);
-  }
 };
 
 const _readRawAppPersistedCache = (location, filepath, orgGuid, spaceGuid, appName) => {
@@ -202,63 +190,6 @@ const _writeRawAppPersistedCache = (newRuntimeCache, filepath, orgGuid, spaceGui
     writeFileSync(filepath, JSON.stringify(fullCache, null, 2) + "\n");
   } catch (err) {
     fail("caught error while writing app cache:", err.message);
-  }
-};
-
-const _setup = async (location) => {
-  const dir = LOCATION_DIR[location];
-  const filepath = pathlib.join(dir, FILENAME.CONFIG);
-  const runtimeConfig = _readRuntimeConfig(filepath, { logged: true, checkConfig: false });
-
-  const newRuntimeConfig = {};
-  logger.info("hit enter to skip a question. re-using the same app for multiple questions is possible.");
-  try {
-    const settings = Object.values(SETTING);
-    for (let i = 0; i < settings.length; i++) {
-      const value = settings[i];
-      const ask = `${i + 1}/${settings.length} | ${value.question}`;
-      const answer = (await question(ask, runtimeConfig[value.config])).trim();
-      if (answer) {
-        newRuntimeConfig[value.config] = answer;
-      }
-    }
-  } catch (err) {
-    fail();
-  }
-  return _writeRuntimeConfig(newRuntimeConfig, filepath);
-};
-
-const setup = async () => {
-  return _setup(LOCATION.GLOBAL);
-};
-
-const setupLocal = async () => {
-  return _setup(LOCATION.LOCAL);
-};
-
-const setupList = () => {
-  const { filepath } = _resolveDir(FILENAME.CONFIG) || {};
-  const runtimeConfig = _readRuntimeConfig(filepath, { logged: true });
-  return Object.values(SETTING)
-    .map(
-      (value, i, settings) =>
-        `${i + 1}/${settings.length} | ${value.question} ${runtimeConfig[value.config] || "<empty>"}`
-    )
-    .join("\n");
-};
-
-const setupCleanCache = async () => {
-  while (true) {
-    const { filepath, location } = _resolveDir(FILENAME.CACHE) || {};
-    if (!filepath) {
-      break;
-    }
-    try {
-      unlinkSync(filepath);
-      logger.info(`removed ${location.toLowerCase()} cache`, filepath);
-    } catch (err) {
-      fail(`could not remove ${filepath}`);
-    }
   }
 };
 
@@ -296,7 +227,7 @@ const _getCfApps = async (cfInfo) => _cfRequestPaged(cfInfo, `/v3/apps?space_gui
 const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false } = {}) => {
   const cfInfo = { config: _readCfConfig(), token: await _cfAuthToken() };
   const { filepath: configPath, dir, location } = _resolveDir(FILENAME.CONFIG) || {};
-  const runtimeConfig = _readRuntimeConfig(configPath);
+  const runtimeConfig = readRuntimeConfig(configPath);
   const cachePath = pathlib.join(dir, FILENAME.CACHE);
   const cfApps = await _getCfApps(cfInfo);
   const cfUaaTokenCache = new ExpiringLazyCache({ expirationGap: UAA_TOKEN_CACHE_EXPIRY_GAP });
@@ -539,9 +470,6 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
 };
 
 module.exports = {
-  setup,
-  setupLocal,
-  setupList,
-  setupCleanCache,
   newContext,
+  readRuntimeConfig,
 };

@@ -1,6 +1,15 @@
 "use strict";
 
-const { ENV } = require("./shared/static");
+const ENV = Object.freeze({
+  UAA_APP: "MTX_UAA_APP",
+  UAA_KEY: "MTX_UAA_KEY",
+  REGISTRY_APP: "MTX_REG_APP",
+  REGISTRY_KEY: "MTX_REG_KEY",
+  CDS_APP: "MTX_CDS_APP",
+  HDI_APP: "MTX_HDI_APP",
+  HDI_KEY: "MTX_HDI_KEY",
+  SERVER_APP: "MTX_SRV_APP",
+});
 
 const SETTING_TYPE = {
   UAA_APP: "UAA_APP",
@@ -78,13 +87,14 @@ const SETTING = {
     config: "srvAppName",
     name: "server app",
     envVariable: ENV.SERVER_APP,
-    question: 'cf app with "/info" endpoint (optional)?',
-    failMessage: 'option requires configured app with "/info" endpoint',
+    question: "cf app with server (optional)?",
+    failMessage: "option requires configured server app",
     requireRoute: true,
   },
 };
 
 module.exports = {
+  ENV,
   SETTING_TYPE,
   SETTING,
 };

@@ -39,7 +39,6 @@ Commands for this area are:
 ~  regl   --registry-list [TENANT]                      list all subscribed subaccount names
 ~  regll  --registry-long-list [TENANT]                 long list all subscribed subaccounts
 ~  regs   --registry-service-config                     show registry service config
-~  regj   --registry-job JOB_ID                         show registry job
           --registry-update TENANT_ID                   update tenant dependencies
           --registry-update-all                         update dependencies for all subscribed tenants
           --registry-update-url [TENANT_ID]             update all subscribed application URL
@@ -96,9 +95,6 @@ Here is an example of listing all registered tenants:
 
 The command `mtx regs` shows you the currently active configuration of the service instance. For details on the
 meaning of the configuration, please consult the official BTP documentation (see [Summary](#summary)).
-
-The command `mtx regj <job_id>` will show you the status of an ongoing job. Such job ids are issued for all
-asynchronous tasks of the registry.
 
 ## Update Dependencies
 

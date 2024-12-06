@@ -11,13 +11,23 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Removed
 
-- remove legacy instance manager code
+- hdi: remove legacy instance manager code
 
-- remove legacy cds-mtx code
+- cds: remove legacy cds-mtx code
+
+- reg: remove registry job command
+
+- srv: remove server info command
 
 ### Changed
 
 - marked `--server-start-debugger` as not dangerous
+
+### Added
+
+- established baseline test coverage
+
+- hdi: list relations also gets the `--json` flag
 
 ### Fixed
 

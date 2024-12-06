@@ -5,7 +5,6 @@
   "bin": {
     "mtx": "bin/mtx.js"
   },
-  "main": "src/index.js",
   "files": [
     "bin",
     "src"
@@ -13,6 +12,7 @@
   "scripts": {
     "patch": "npx patch-package",
     "test": "jest",
+    "test:coverage": "jest --coverageReporters=html",
     "test:remove-inline-snapshots": "npx replace '\\.toMatchInlineSnapshot\\(\\s*`[\\s\\S]*?`\\s*\\);' '.toMatchInlineSnapshot();' test -r --include='*.test.js'",
     "test:record": "npm run test:record:reg && npm run test:record:cds && npm run test:record:hdi",
     "test:update": "jest --updateSnapshot",
