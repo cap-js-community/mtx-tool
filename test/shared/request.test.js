@@ -24,7 +24,7 @@ const baseBadRequestResponse = {
   },
 };
 
-const outputFromLoggerWithTimestamps = (calls) => outputFromLogger(calls).replace(/\(\d+ms\)/g, "(0ms)");
+const outputFromLoggerWithTimestamps = (calls) => outputFromLogger(calls).replace(/\(\d+ms\)/g, "(88ms)");
 
 describe("request", () => {
   test("basic ok", async () => {
@@ -32,7 +32,7 @@ describe("request", () => {
     await request({ url: "https://server", pathname: "/path" });
     expect(mockFetchLib.mock.calls).toMatchSnapshot();
     expect(outputFromLoggerWithTimestamps(mockLogger.info.mock.calls)).toMatchInlineSnapshot(
-      `"GET https://server/path 200 OK (0ms)"`
+      `"GET https://server/path 200 OK (88ms)"`
     );
   });
 
@@ -44,7 +44,7 @@ describe("request", () => {
           `);
     expect(mockFetchLib.mock.calls).toMatchSnapshot();
     expect(outputFromLoggerWithTimestamps(mockLogger.info.mock.calls)).toMatchInlineSnapshot(
-      `"GET https://server/path 400 Bad Request (0ms)"`
+      `"GET https://server/path 400 Bad Request (88ms)"`
     );
   });
 
@@ -90,7 +90,7 @@ describe("request", () => {
     });
     expect(mockFetchLib.mock.calls).toMatchSnapshot();
     expect(outputFromLoggerWithTimestamps(mockLogger.info.mock.calls)).toMatchInlineSnapshot(
-      `"GET https://server/path?hello=world&foo=bar#hashed 200 OK (0ms)"`
+      `"GET https://server/path?hello=world&foo=bar#hashed 200 OK (88ms)"`
     );
   });
 });

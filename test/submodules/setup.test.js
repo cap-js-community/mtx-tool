@@ -54,7 +54,7 @@ describe("set tests", () => {
       2/5 | cf app bound to saas-registry service (optional)? mock-reg-app
       3/5 | cf app running @sap/cds-mtx or @sap/cds-mtxs library (optional)? mock-cds-app
       4/5 | cf app bound to service-manager or managed-hana service (optional)? mock-hdi-app
-      5/5 | cf app with "/info" endpoint (optional)? mock-srv-app"
+      5/5 | cf app with server (optional)? mock-srv-app"
     `);
     expect(mockStatic.tryAccessSync).toHaveBeenCalledTimes(1);
     expect(mockContextModule.readRuntimeConfig).toHaveBeenCalledTimes(1);
