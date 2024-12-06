@@ -92,6 +92,29 @@ describe("set tests", () => {
     expect(mockLogger.error).toHaveBeenCalledTimes(0);
   });
 
+  test("setup global with failing question", async () => {
+    mockContextModule.readRuntimeConfig.mockReturnValueOnce(mockRuntimeConfig);
+    mockStatic.question.mockImplementationOnce(() => {
+      throw new Error("question fail");
+    });
+
+    await expect(set.setup()).rejects.toMatchInlineSnapshot(`[Error: caught error during question: question fail]`);
+  });
+
+  test("setup global with failing write", async () => {
+    mockContextModule.readRuntimeConfig.mockReturnValueOnce(mockRuntimeConfig);
+    for (let i = 0; i < Object.keys(mockRuntimeConfig).length; i++) {
+      mockStatic.question.mockReturnValueOnce(`answer ${i + 1}`);
+    }
+    mockFs.writeFileSync.mockImplementationOnce(() => {
+      throw new Error("cannot write");
+    });
+
+    await expect(set.setup()).rejects.toMatchInlineSnapshot(
+      `[Error: caught error while writing runtime config: cannot write]`
+    );
+  });
+
   test("setup local", async () => {
     mockContextModule.readRuntimeConfig.mockReturnValueOnce(mockRuntimeConfig);
     for (let i = 0; i < Object.keys(mockRuntimeConfig).length; i++) {
@@ -124,7 +147,9 @@ describe("set tests", () => {
 
   test("setup clean cache", async () => {
     mockStatic.tryAccessSync.mockReturnValueOnce(true);
-    mockStatic.tryAccessSync.mockReturnValue(false);
+    for (let i = 0; i < 4; i++) {
+      mockStatic.tryAccessSync.mockReturnValueOnce(false);
+    }
 
     set.setupCleanCache();
     expect(mockStatic.tryAccessSync.mock.calls).toMatchInlineSnapshot(`
@@ -162,5 +187,19 @@ describe("set tests", () => {
       `"removed local cache /root/local-dir/.mtxcache.json"`
     );
     expect(mockLogger.error).toHaveBeenCalledTimes(0);
+  });
+
+  test("setup clean cache with failing delete", async () => {
+    mockStatic.tryAccessSync.mockReturnValueOnce(true);
+    for (let i = 0; i < 4; i++) {
+      mockStatic.tryAccessSync.mockReturnValueOnce(false);
+    }
+    mockFs.unlinkSync.mockImplementationOnce(() => {
+      throw new Error("failing delete");
+    });
+
+    await expect(async () => set.setupCleanCache()).rejects.toMatchInlineSnapshot(
+      `[Error: could not remove /root/local-dir/.mtxcache.json]`
+    );
   });
 });
