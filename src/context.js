@@ -144,7 +144,7 @@ const _resolveDir = (filename) => {
   }
 };
 
-const _readRuntimeConfig = (filepath, { logged = false, checkConfig = true } = {}) => {
+const readRuntimeConfig = (filepath, { logged = false, checkConfig = true } = {}) => {
   const rawRuntimeConfig = filepath ? tryReadJsonSync(filepath) : null;
   if (checkConfig && !rawRuntimeConfig) {
     return fail(`failed reading runtime configuration, run setup`);
@@ -224,7 +224,7 @@ const _getCfApps = async (cfInfo) => _cfRequestPaged(cfInfo, `/v3/apps?space_gui
 const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false } = {}) => {
   const cfInfo = { config: _readCfConfig(), token: await _cfAuthToken() };
   const { filepath: configPath, dir, location } = _resolveDir(FILENAME.CONFIG) || {};
-  const runtimeConfig = _readRuntimeConfig(configPath);
+  const runtimeConfig = readRuntimeConfig(configPath);
   const cachePath = pathlib.join(dir, FILENAME.CACHE);
   const cfApps = await _getCfApps(cfInfo);
   const cfUaaTokenCache = new ExpiringLazyCache({ expirationGap: UAA_TOKEN_CACHE_EXPIRY_GAP });
@@ -468,4 +468,5 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
 
 module.exports = {
   newContext,
+  readRuntimeConfig,
 };

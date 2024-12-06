@@ -7,10 +7,11 @@ const {
   constants: { R_OK },
 } = require("fs");
 
-const { question, tryReadJsonSync, tryAccessSync } = require("../shared/static");
+const { question, tryAccessSync } = require("../shared/static");
 const { fail } = require("../shared/error");
 const { SETTING } = require("../setting");
 const { Logger } = require("../shared/logger");
+const { readRuntimeConfig } = require("../context");
 
 const PROCESS_CWD = process.cwd();
 const HOME = process.env.HOME || process.env.USERPROFILE;
@@ -49,23 +50,6 @@ const _resolveDir = (filename) => {
   }
 };
 
-const _readRuntimeConfig = (filepath, { logged = false, checkConfig = true } = {}) => {
-  const rawRuntimeConfig = filepath ? tryReadJsonSync(filepath) : null;
-  if (checkConfig && !rawRuntimeConfig) {
-    return fail(`failed reading runtime configuration, run setup`);
-  }
-  if (logged && filepath) {
-    logger.info("using runtime config", filepath);
-  }
-
-  return rawRuntimeConfig
-    ? Object.values(SETTING).reduce((result, value) => {
-        result[value.config] = rawRuntimeConfig[value.config];
-        return result;
-      }, Object.create(null))
-    : {};
-};
-
 const _writeRuntimeConfig = async (runtimeConfig, filepath) => {
   try {
     writeFileSync(filepath, JSON.stringify(runtimeConfig, null, 2) + "\n");
@@ -78,7 +62,7 @@ const _writeRuntimeConfig = async (runtimeConfig, filepath) => {
 const _setup = async (location) => {
   const dir = LOCATION_DIR[location];
   const filepath = pathlib.join(dir, FILENAME.CONFIG);
-  const runtimeConfig = _readRuntimeConfig(filepath, { logged: true, checkConfig: false });
+  const runtimeConfig = readRuntimeConfig(filepath, { logged: true, checkConfig: false });
 
   const newRuntimeConfig = {};
   logger.info("hit enter to skip a question. re-using the same app for multiple questions is possible.");
@@ -108,7 +92,7 @@ const setupLocal = async () => {
 
 const setupList = () => {
   const { filepath } = _resolveDir(FILENAME.CONFIG) || {};
-  const runtimeConfig = _readRuntimeConfig(filepath, { logged: true });
+  const runtimeConfig = readRuntimeConfig(filepath, { logged: true });
   return Object.values(SETTING)
     .map(
       (value, i, settings) =>
