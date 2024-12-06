@@ -97,7 +97,9 @@ describe("request tests", () => {
       redirect: true,
     });
     expect(mockFetchLib.mock.calls).toMatchSnapshot();
-    expect(outputFromLoggerWithTimestamps(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"GET https://server/path?hello=world&foo=bar#hashed 200 OK (88ms)"`);
+    expect(outputFromLoggerWithTimestamps(mockLogger.info.mock.calls)).toMatchInlineSnapshot(
+      `"GET https://server/path?hello=world&foo=bar#hashed 200 OK (88ms)"`
+    );
   });
 
   test("handling too many requests with falloff", async () => {
