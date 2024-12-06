@@ -9,7 +9,6 @@ const {
 const { version } = require("../package.json");
 
 const {
-  ENV,
   tryReadJsonSync,
   tryAccessSync,
   spawnAsync,
@@ -23,6 +22,10 @@ const { getUaaTokenFromCredentials: sharedUaaTokenFromCredentials } = require(".
 const { LazyCache, ExpiringLazyCache } = require("./shared/cache");
 const { SETTING_TYPE, SETTING } = require("./setting");
 const { Logger } = require("./shared/logger");
+
+const ENV = Object.freeze({
+  APP_SUFFIX: "MTX_APP_SUFFIX",
+});
 
 const APP_SUFFIXES = safeUnshift(["", "-{UUID}", "-blue", "-green"], process.env[ENV.APP_SUFFIX]);
 const APP_SUFFIXES_READONLY = APP_SUFFIXES.concat(["-live"]);

@@ -9,7 +9,6 @@ const childProcess = require("child_process");
 const util = require("util");
 
 const ENV = Object.freeze({
-  APP_SUFFIX: "MTX_APP_SUFFIX",
   REG_CONCURRENCY: "MTX_REG_CONCURRENCY",
   REG_FREQUENCY: "MTX_REG_FREQUENCY",
   CDS_CONCURRENCY: "MTX_CDS_CONCURRENCY",
