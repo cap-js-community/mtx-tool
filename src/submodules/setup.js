@@ -12,6 +12,7 @@ const { fail } = require("../shared/error");
 const { SETTING } = require("../setting");
 const { Logger } = require("../shared/logger");
 
+const PROCESS_CWD = process.cwd();
 const HOME = process.env.HOME || process.env.USERPROFILE;
 
 const LOCATION = Object.freeze({
@@ -19,7 +20,7 @@ const LOCATION = Object.freeze({
   GLOBAL: "GLOBAL",
 });
 const LOCATION_DIR = Object.freeze({
-  [LOCATION.LOCAL]: process.cwd(),
+  [LOCATION.LOCAL]: PROCESS_CWD,
   [LOCATION.GLOBAL]: HOME,
 });
 const FILENAME = Object.freeze({
@@ -30,7 +31,7 @@ const FILENAME = Object.freeze({
 const logger = Logger.getInstance();
 
 const _resolveDir = (filename) => {
-  let subdirs = process.cwd().split(pathlib.sep);
+  let subdirs = PROCESS_CWD.split(pathlib.sep);
   while (true) {
     const dir = subdirs.length === 0 ? HOME : subdirs.join(pathlib.sep);
     const filepath = dir + pathlib.sep + filename;
