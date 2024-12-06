@@ -1,7 +1,6 @@
 "use strict";
 
 const {
-  ENV,
   tableList,
   isPortFree,
   formatTimestampsWithRelativeDays,
@@ -17,6 +16,10 @@ const {
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
 const { Logger } = require("../shared/logger");
+
+const ENV = Object.freeze({
+  HDI_CONCURRENCY: "MTX_HDI_CONCURRENCY",
+});
 
 const TUNNEL_LOCAL_PORT = 30015;
 const HIDDEN_PASSWORD_TEXT = "*** show with --reveal ***";

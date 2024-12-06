@@ -8,7 +8,6 @@
 "use strict";
 
 const {
-  ENV,
   isUUID,
   isDashedWord,
   sleep,
@@ -22,6 +21,11 @@ const {
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
 const { Logger } = require("../shared/logger");
+
+const ENV = Object.freeze({
+  REG_CONCURRENCY: "MTX_REG_CONCURRENCY",
+  REG_FREQUENCY: "MTX_REG_FREQUENCY",
+});
 
 const REGISTRY_PAGE_SIZE = 200;
 const REGISTRY_JOB_POLL_FREQUENCY_FALLBACK = 15000;

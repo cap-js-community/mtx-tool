@@ -1,7 +1,6 @@
 "use strict";
 
 const {
-  ENV,
   isUUID,
   isDashedWord,
   sleep,
@@ -17,6 +16,11 @@ const {
 const { assert, assertAll } = require("../shared/error");
 const { request } = require("../shared/request");
 const { Logger } = require("../shared/logger");
+
+const ENV = Object.freeze({
+  CDS_CONCURRENCY: "MTX_CDS_CONCURRENCY",
+  CDS_FREQUENCY: "MTX_CDS_FREQUENCY",
+});
 
 const CDS_UPGRADE_APP_INSTANCE = 0;
 const CDS_REQUEST_CONCURRENCY_FALLBACK = 10;

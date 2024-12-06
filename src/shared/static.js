@@ -8,14 +8,6 @@ const net = require("net");
 const childProcess = require("child_process");
 const util = require("util");
 
-const ENV = Object.freeze({
-  REG_CONCURRENCY: "MTX_REG_CONCURRENCY",
-  REG_FREQUENCY: "MTX_REG_FREQUENCY",
-  CDS_CONCURRENCY: "MTX_CDS_CONCURRENCY",
-  CDS_FREQUENCY: "MTX_CDS_FREQUENCY",
-  HDI_CONCURRENCY: "MTX_HDI_CONCURRENCY",
-});
-
 const isUUID = (input) =>
   input && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(input);
 const isJWT = (input) => input && /^[0-9a-z-_.]+$/i.test(input);
@@ -371,7 +363,6 @@ const parseIntWithFallback = (input, fallback) => {
 };
 
 module.exports = {
-  ENV,
   isPortFree,
   nextFreePort,
   isUUID,
