@@ -77,7 +77,12 @@ const _setup = async (location) => {
       }
     }
   } catch (err) {
-    fail("caught error during question:", err.message);
+    // NOTE: if a ctrl-c interrupt is signaled, question() throws an undefined
+    if (err) {
+      fail("caught error during question:", err.message);
+    } else {
+      fail();
+    }
   }
   return _writeRuntimeConfig(newRuntimeConfig, filepath);
 };
