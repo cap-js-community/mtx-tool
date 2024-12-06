@@ -87,8 +87,8 @@ const SETTING = {
     config: "srvAppName",
     name: "server app",
     envVariable: ENV.SERVER_APP,
-    question: 'cf app with "/info" endpoint (optional)?',
-    failMessage: 'option requires configured app with "/info" endpoint',
+    question: "cf app with server (optional)?",
+    failMessage: "option requires configured server app",
     requireRoute: true,
   },
 };
