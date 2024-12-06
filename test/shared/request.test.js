@@ -24,14 +24,14 @@ const baseBadRequestResponse = {
   },
 };
 
+const outputFromLoggerWithTimestamps = (calls) => outputFromLogger(calls).replace(/\(\d+ms\)/g, "(0ms)");
+
 describe("request", () => {
   test("basic ok", async () => {
     mockFetchLib.mockReturnValueOnce(baseOkResponse);
     await request({ url: "https://server", pathname: "/path" });
     expect(mockFetchLib.mock.calls).toMatchSnapshot();
-    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(
-      `"GET https://server/path 200 OK (0ms)"`
-    );
+    expect(outputFromLoggerWithTimestamps(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"GET https://server/path 200 OK (0ms)"`);
   });
 
   test("basic bad request", async () => {
@@ -41,9 +41,7 @@ describe("request", () => {
             failure reason]
           `);
     expect(mockFetchLib.mock.calls).toMatchSnapshot();
-    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(
-      `"GET https://server/path 400 Bad Request (0ms)"`
-    );
+    expect(outputFromLoggerWithTimestamps(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"GET https://server/path 400 Bad Request (0ms)"`);
   });
 
   test("bad request unchecked", async () => {
@@ -87,8 +85,6 @@ describe("request", () => {
       redirect: true,
     });
     expect(mockFetchLib.mock.calls).toMatchSnapshot();
-    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(
-      `"GET https://server/path?hello=world&foo=bar#hashed 200 OK (0ms)"`
-    );
+    expect(outputFromLoggerWithTimestamps(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"GET https://server/path?hello=world&foo=bar#hashed 200 OK (0ms)"`);
   });
 });
