@@ -3,7 +3,7 @@
 const pathlib = require("path");
 const { version: VERSION } = require("../package.json");
 
-const set = require("./context");
+const set = require("./submodules/setup");
 const uaa = require("./submodules/userAuthentication");
 const reg = require("./submodules/tenantRegistry");
 const cds = require("./submodules/capMultitenancy");
