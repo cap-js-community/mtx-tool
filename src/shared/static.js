@@ -9,14 +9,6 @@ const childProcess = require("child_process");
 const util = require("util");
 
 const ENV = Object.freeze({
-  UAA_APP: "MTX_UAA_APP",
-  UAA_KEY: "MTX_UAA_KEY",
-  REGISTRY_APP: "MTX_REG_APP",
-  REGISTRY_KEY: "MTX_REG_KEY",
-  CDS_APP: "MTX_CDS_APP",
-  HDI_APP: "MTX_HDI_APP",
-  HDI_KEY: "MTX_HDI_KEY",
-  SERVER_APP: "MTX_SRV_APP",
   APP_SUFFIX: "MTX_APP_SUFFIX",
   REG_CONCURRENCY: "MTX_REG_CONCURRENCY",
   REG_FREQUENCY: "MTX_REG_FREQUENCY",

@@ -1,6 +1,15 @@
 "use strict";
 
-const { ENV } = require("./shared/static");
+const ENV = Object.freeze({
+  UAA_APP: "MTX_UAA_APP",
+  UAA_KEY: "MTX_UAA_KEY",
+  REGISTRY_APP: "MTX_REG_APP",
+  REGISTRY_KEY: "MTX_REG_KEY",
+  CDS_APP: "MTX_CDS_APP",
+  HDI_APP: "MTX_HDI_APP",
+  HDI_KEY: "MTX_HDI_KEY",
+  SERVER_APP: "MTX_SRV_APP",
+});
 
 const SETTING_TYPE = {
   UAA_APP: "UAA_APP",
@@ -85,6 +94,7 @@ const SETTING = {
 };
 
 module.exports = {
+  ENV,
   SETTING_TYPE,
   SETTING,
 };
