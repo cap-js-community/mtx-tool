@@ -117,7 +117,7 @@ const setupList = () => {
     .join("\n");
 };
 
-const setupCleanCache = async () => {
+const setupCleanCache = () => {
   while (true) {
     const { filepath, location } = _resolveDir(FILENAME.CACHE) || {};
     if (!filepath) {
