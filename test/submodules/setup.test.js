@@ -46,7 +46,7 @@ describe("set tests", () => {
   });
 
   test("setup list", async () => {
-    mockStatic.tryAccessSync.mockReturnValue(true);
+    mockStatic.tryAccessSync.mockReturnValueOnce(true);
     mockContextModule.readRuntimeConfig.mockReturnValueOnce(mockRuntimeConfig);
 
     expect(set.setupList()).toMatchInlineSnapshot(`
