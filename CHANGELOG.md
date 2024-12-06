@@ -23,6 +23,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - marked `--server-start-debugger` as not dangerous
 
+### Added
+
+- established baseline test coverage
+
+- hdi: list relations also gets the `--json` flag
+
 ### Fixed
 
 - fix some internal context call queuing under parallel execution
