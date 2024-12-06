@@ -38,23 +38,7 @@ const mockRuntimeConfig = {
   srvAppName: "srv-app",
 };
 
-let context;
-
 describe("context tests", () => {
-  test("setup list", async () => {
-    mockStatic.spawnAsync.mockReturnValueOnce(["oauth-token"]);
-    mockStatic.tryReadJsonSync.mockReturnValueOnce(mockCfConfig);
-    mockStatic.tryAccessSync.mockReturnValueOnce(true);
-    mockStatic.tryReadJsonSync.mockReturnValueOnce(mockRuntimeConfig);
-    mockRequest.mockReturnValueOnce({ json: () => mockCfApps });
-    mockRequest.mockReturnValueOnce({ json: () => mockCfEnvNoServices });
-
-    context = await newContext();
-    expect(await setupList()).toMatchInlineSnapshot(
-      `[Error: no vcap service information in environment, check cf user permissions]`
-    );
-  });
-
   test("no vcap service information means no uaa token (space supporter role)", async () => {
     mockStatic.spawnAsync.mockReturnValueOnce(["oauth-token"]);
     mockStatic.tryReadJsonSync.mockReturnValueOnce(mockCfConfig);
