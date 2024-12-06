@@ -70,4 +70,21 @@ describe("request", () => {
     await request({ url: "https://server", pathname: "/path", auth: { token: "token" } });
     expect(mockFetchLib.mock.calls).toMatchSnapshot();
   });
+
+  test("ok with lots of options", async () => {
+    mockFetchLib.mockReturnValueOnce(baseOkResponse);
+    await request({
+      url: "",
+      protocol: "https",
+      hostname: "server",
+      pathname: "/path",
+      query: { hello: "world", foo: "bar" },
+      hash: "#hashed",
+      redirect: true,
+    });
+    expect(mockFetchLib.mock.calls).toMatchSnapshot();
+    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(
+      `"GET https://server/path?hello=world&foo=bar#hashed 200 OK (0ms)"`
+    );
+  });
 });

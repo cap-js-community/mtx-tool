@@ -64,6 +64,19 @@ exports[`request ok with bearer auth 1`] = `
 ]
 `;
 
+exports[`request ok with lots of options 1`] = `
+[
+  [
+    "https://server/path?hello=world&foo=bar#hashed",
+    {
+      "headers": {},
+      "method": "GET",
+      "redirect": true,
+    },
+  ],
+]
+`;
+
 exports[`request ok with no logging 1`] = `
 [
   [
