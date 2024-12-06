@@ -101,6 +101,15 @@ describe("set tests", () => {
     await expect(set.setup()).rejects.toMatchInlineSnapshot(`[Error: caught error during question: question fail]`);
   });
 
+  test("setup global with question interrupted", async () => {
+    mockContextModule.readRuntimeConfig.mockReturnValueOnce(mockRuntimeConfig);
+    mockStatic.question.mockImplementationOnce(() => {
+      throw undefined;
+    });
+
+    await expect(set.setup()).rejects.toMatchInlineSnapshot(`[Error]`);
+  });
+
   test("setup global with failing write", async () => {
     mockContextModule.readRuntimeConfig.mockReturnValueOnce(mockRuntimeConfig);
     for (let i = 0; i < Object.keys(mockRuntimeConfig).length; i++) {
