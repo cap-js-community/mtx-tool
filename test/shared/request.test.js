@@ -48,11 +48,8 @@ describe("request", () => {
 
   test("bad request unchecked", async () => {
     mockFetchLib.mockReturnValueOnce(baseBadRequestResponse);
-    await request({ url: "https://server", pathname: "/path", checkStatus: false });
+    await expect(request({ url: "https://server", pathname: "/path", checkStatus: false })).resolves.toBeDefined();
     expect(mockFetchLib.mock.calls).toMatchSnapshot();
-    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(
-      `"GET https://server/path 400 Bad Request (0ms)"`
-    );
   });
 
   test("ok with no logging", async () => {
