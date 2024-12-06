@@ -77,7 +77,7 @@ const _setup = async (location) => {
       }
     }
   } catch (err) {
-    fail();
+    fail("caught error during question:", err.message);
   }
   return _writeRuntimeConfig(newRuntimeConfig, filepath);
 };
