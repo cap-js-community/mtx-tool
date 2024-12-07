@@ -24,7 +24,7 @@ describe("consistency tests", () => {
     const readmeInstall = /(## Install or Upgrade\n\n[\s\S]*?)\n##/g.exec(readme)[1];
 
     const changelogVersion = /^## v(\d+\.\d+\.\d+) - \d\d\d\d-\d\d-\d\d/gm.exec(changelog)[1];
-    const readmeVersion = /@cap-js-community\/mtx-tool@v(\d+\.\d+\.\d+)/g.exec(readmeInstall)[1];
+    const readmeVersion = /@cap-js-community\/mtx-tool@(\d+\.\d+\.\d+)/g.exec(readmeInstall)[1];
 
     expect(readmeVersion).toEqual(changelogVersion);
   });
