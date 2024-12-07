@@ -7,9 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- order is REMOVED, CHANGED, ADDED, FIXED -->
 
-## v0.9.0 - tbd
+## v0.9.0 - 2024-12-07
 
 ### Removed
+
+- node v16 is no longer supported
 
 - hdi: remove legacy instance manager code
 
