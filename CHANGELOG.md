@@ -31,6 +31,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+- override [whatwg-url](https://www.npmjs.com/package/whatwg-url) to v14. this fixes a `punycode` incompatibility
+  warning when using the commonjs variant of [node-fetch](https://www.npmjs.com/package/node-fetch) with node v21+.
+
 - fix some internal context call queuing under parallel execution
 
 - fix console output for `--server-start-debugger` and `--version`

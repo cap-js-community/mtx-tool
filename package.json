@@ -37,6 +37,9 @@
   "dependencies": {
     "node-fetch": "^2.7.0"
   },
+  "overrides": {
+    "whatwg-url": "^14.0.0"
+  },
   "devDependencies": {
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",
