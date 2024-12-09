@@ -211,6 +211,7 @@ const _cdsUpgradeMtxs = async (
       }
       lastTimeOfChange = currentTime;
     }
+    lastTaskSummary = taskSummary;
 
     if (status !== JOB_STATUS.RUNNING) {
       break;
