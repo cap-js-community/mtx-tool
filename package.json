@@ -10,6 +10,7 @@
     "src"
   ],
   "scripts": {
+    "prepublishOnly": "npm ci --package-lock --omit=dev && npx shx rm package-lock.json && npm shrinkwrap",
     "patch": "npx patch-package",
     "test": "jest",
     "test:coverage": "jest --coverageReporters=html",
