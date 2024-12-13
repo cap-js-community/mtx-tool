@@ -299,6 +299,9 @@ const cdsOffboardAll = async (context) => {
 };
 
 module.exports = {
+  JOB_STATUS,
+  TASK_STATUS,
+
   cdsList,
   cdsLongList,
   cdsOnboardTenant,
