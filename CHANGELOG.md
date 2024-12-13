@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- order is REMOVED, CHANGED, ADDED, FIXED -->
 
+## v0.9.1 - tbd
+
+### Fixed
+
+- cds: fix cds upgrade safety net for stalled upgrades
+
+- the [whatwg-url](https://www.npmjs.com/package/whatwg-url) override did not reach users, because it only works
+  locally. this should be fixed by using shrinkwrap.
+
 ## v0.9.0 - 2024-12-07
 
 ### Removed

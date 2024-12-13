@@ -203,16 +203,17 @@ const _cdsUpgradeMtxs = async (
       failed,
       finished
     );
-    if (!lastTaskSummary || lastTaskSummary.some((index, value) => taskSummary[index] !== value)) {
-      const currentTime = Date.now();
-      if (currentTime - (lastTimeOfChange ?? currentTime) >= CDS_CHANGE_TIMEOUT) {
-        hasChangeTimeout = true;
-        break;
-      }
-      lastTimeOfChange = currentTime;
+    if (status !== JOB_STATUS.RUNNING) {
+      break;
     }
 
-    if (status !== JOB_STATUS.RUNNING) {
+    const currentTime = Date.now();
+    if (!lastTaskSummary || lastTaskSummary.some((value, index) => taskSummary[index] !== value)) {
+      lastTimeOfChange = currentTime;
+    }
+    lastTaskSummary = taskSummary;
+    if (lastTimeOfChange && currentTime - lastTimeOfChange >= CDS_CHANGE_TIMEOUT) {
+      hasChangeTimeout = true;
       break;
     }
   }
@@ -298,6 +299,9 @@ const cdsOffboardAll = async (context) => {
 };
 
 module.exports = {
+  JOB_STATUS,
+  TASK_STATUS,
+
   cdsList,
   cdsLongList,
   cdsOnboardTenant,
