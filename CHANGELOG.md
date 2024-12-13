@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
+- cds: fix cds upgrade safety net for stalled upgrades
+
 - the [whatwg-url](https://www.npmjs.com/package/whatwg-url) override did not reach users, because it only works
   locally. this should be fixed by using shrinkwrap.
 
