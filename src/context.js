@@ -2,12 +2,12 @@
 
 const urllib = require("url");
 const pathlib = require("path");
-const { writeFileSync } = require("fs");
 const { version } = require("../package.json");
 
 const {
   tryReadJsonSync,
   tryAccessSync,
+  writeJsonSync,
   spawnAsync,
   safeUnshift,
   escapeRegExp,
@@ -184,7 +184,7 @@ const _writeRawAppPersistedCache = (newRuntimeCache, filepath, orgGuid, spaceGui
   const appKey = orgGuid + "##" + spaceGuid + "##" + appName;
   fullCache[appKey] = newRuntimeCache;
   try {
-    writeFileSync(filepath, JSON.stringify(fullCache, null, 2) + "\n");
+    writeJsonSync(filepath, fullCache);
   } catch (err) {
     fail("caught error while writing app cache:", err.message);
   }

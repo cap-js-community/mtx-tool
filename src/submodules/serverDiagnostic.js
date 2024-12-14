@@ -1,7 +1,6 @@
 "use strict";
 
-const { writeFileSync } = require("fs");
-const { orderedStringify } = require("../shared/static");
+const { orderedStringify, writeTextSync } = require("../shared/static");
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
 const { Logger } = require("../shared/logger");
@@ -70,7 +69,7 @@ const serverEnvironment = async (context, [appName]) => {
   const { cfEnvServices, cfEnvApp, cfEnvVariables } = appName
     ? await context.getAppNameInfoCached(appName)
     : await context.getSrvInfo();
-  writeFileSync(
+  writeTextSync(
     DEFAULT_ENV_FILENAME,
     orderedStringify({ VCAP_SERVICES: cfEnvServices, VCAP_APPLICATION: cfEnvApp, ...cfEnvVariables }, null, 2) + "\n"
   );
@@ -80,7 +79,7 @@ const serverCertificates = async (context, [appName, appInstance = 0]) => {
   const { cfSsh, cfAppName } = appName ? await context.getAppNameInfoCached(appName) : await context.getSrvInfo();
   const dumpFile = async (cfFilename, localFilename) => {
     const [file] = await cfSsh({ command: `cat ${cfFilename}`, appInstance });
-    writeFileSync(localFilename, file);
+    writeTextSync(localFilename, file);
   };
   await dumpFile("$CF_INSTANCE_CERT", `certificate-${cfAppName}-${appInstance}.crt`);
   await dumpFile("$CF_INSTANCE_KEY", `certificate-${cfAppName}-${appInstance}.key`);
