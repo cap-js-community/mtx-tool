@@ -2,15 +2,12 @@
 
 const urllib = require("url");
 const pathlib = require("path");
-const {
-  writeFileSync,
-  constants: { R_OK },
-} = require("fs");
 const { version } = require("../package.json");
 
 const {
   tryReadJsonSync,
   tryAccessSync,
+  writeJsonSync,
   spawnAsync,
   safeUnshift,
   escapeRegExp,
@@ -133,7 +130,7 @@ const _resolveDir = (filename) => {
   while (true) {
     const dir = subdirs.length === 0 ? HOME : subdirs.join(pathlib.sep);
     const filepath = dir + pathlib.sep + filename;
-    if (tryAccessSync(filepath, R_OK)) {
+    if (tryAccessSync(filepath)) {
       return {
         dir,
         filepath,
@@ -187,7 +184,7 @@ const _writeRawAppPersistedCache = (newRuntimeCache, filepath, orgGuid, spaceGui
   const appKey = orgGuid + "##" + spaceGuid + "##" + appName;
   fullCache[appKey] = newRuntimeCache;
   try {
-    writeFileSync(filepath, JSON.stringify(fullCache, null, 2) + "\n");
+    writeJsonSync(filepath, fullCache);
   } catch (err) {
     fail("caught error while writing app cache:", err.message);
   }

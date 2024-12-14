@@ -1,13 +1,8 @@
 "use strict";
 
 const pathlib = require("path");
-const {
-  writeFileSync,
-  unlinkSync,
-  constants: { R_OK },
-} = require("fs");
 
-const { question, tryAccessSync } = require("../shared/static");
+const { question, tryAccessSync, writeJsonSync, deleteFileSync } = require("../shared/static");
 const { fail } = require("../shared/error");
 const { SETTING } = require("../setting");
 const { Logger } = require("../shared/logger");
@@ -36,7 +31,7 @@ const _resolveDir = (filename) => {
   while (true) {
     const dir = subdirs.length === 0 ? HOME : subdirs.join(pathlib.sep);
     const filepath = dir + pathlib.sep + filename;
-    if (tryAccessSync(filepath, R_OK)) {
+    if (tryAccessSync(filepath)) {
       return {
         dir,
         filepath,
@@ -52,7 +47,7 @@ const _resolveDir = (filename) => {
 
 const _writeRuntimeConfig = async (runtimeConfig, filepath) => {
   try {
-    writeFileSync(filepath, JSON.stringify(runtimeConfig, null, 2) + "\n");
+    writeJsonSync(filepath, runtimeConfig);
     logger.info("wrote runtime config");
   } catch (err) {
     fail("caught error while writing runtime config:", err.message);
@@ -113,7 +108,7 @@ const setupCleanCache = () => {
       break;
     }
     try {
-      unlinkSync(filepath);
+      deleteFileSync(filepath);
       logger.info(`removed ${location.toLowerCase()} cache`, filepath);
     } catch (err) {
       fail(`could not remove ${filepath}`);

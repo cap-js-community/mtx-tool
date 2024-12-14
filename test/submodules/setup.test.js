@@ -7,19 +7,14 @@ jest.mock("../../src/shared/logger", () => require("../__mocks/shared/logger"));
 const mockStatic = require("../../src/shared/static");
 jest.mock("../../src/shared/static", () => ({
   tryAccessSync: jest.fn(),
+  writeJsonSync: jest.fn(),
+  deleteFileSync: jest.fn(),
   question: jest.fn(),
 }));
 
 const mockContextModule = require("../../src/context");
 jest.mock("../../src/context", () => ({
   readRuntimeConfig: jest.fn(),
-}));
-
-const mockFs = require("fs");
-jest.mock("fs", () => ({
-  writeFileSync: jest.fn(),
-  unlinkSync: jest.fn(),
-  constants: { R_OK: 4 },
 }));
 
 const processCwdSpy = jest.spyOn(process, "cwd");
@@ -71,18 +66,17 @@ describe("set tests", () => {
     expect(await set.setup()).toMatchInlineSnapshot(`undefined`);
     expect(mockStatic.tryAccessSync).toHaveBeenCalledTimes(0);
     expect(mockContextModule.readRuntimeConfig).toHaveBeenCalledTimes(1);
-    expect(mockFs.writeFileSync).toHaveBeenCalledTimes(1);
-    expect(mockFs.writeFileSync.mock.calls[0]).toMatchInlineSnapshot(`
+    expect(mockStatic.writeJsonSync).toHaveBeenCalledTimes(1);
+    expect(mockStatic.writeJsonSync.mock.calls[0]).toMatchInlineSnapshot(`
       [
         "/root/home-dir/.mtxrc.json",
-        "{
-        "uaaAppName": "answer 1",
-        "regAppName": "answer 2",
-        "cdsAppName": "answer 3",
-        "hdiAppName": "answer 4",
-        "srvAppName": "answer 5"
-      }
-      ",
+        {
+          "cdsAppName": "answer 3",
+          "hdiAppName": "answer 4",
+          "regAppName": "answer 2",
+          "srvAppName": "answer 5",
+          "uaaAppName": "answer 1",
+        },
       ]
     `);
     expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
@@ -115,7 +109,7 @@ describe("set tests", () => {
     for (let i = 0; i < Object.keys(mockRuntimeConfig).length; i++) {
       mockStatic.question.mockReturnValueOnce(`answer ${i + 1}`);
     }
-    mockFs.writeFileSync.mockImplementationOnce(() => {
+    mockStatic.writeJsonSync.mockImplementationOnce(() => {
       throw new Error("cannot write");
     });
 
@@ -133,18 +127,17 @@ describe("set tests", () => {
     expect(await set.setupLocal()).toMatchInlineSnapshot(`undefined`);
     expect(mockStatic.tryAccessSync).toHaveBeenCalledTimes(0);
     expect(mockContextModule.readRuntimeConfig).toHaveBeenCalledTimes(1);
-    expect(mockFs.writeFileSync).toHaveBeenCalledTimes(1);
-    expect(mockFs.writeFileSync.mock.calls[0]).toMatchInlineSnapshot(`
+    expect(mockStatic.writeJsonSync).toHaveBeenCalledTimes(1);
+    expect(mockStatic.writeJsonSync.mock.calls[0]).toMatchInlineSnapshot(`
       [
         "/root/local-dir/.mtxrc.json",
-        "{
-        "uaaAppName": "answer 1",
-        "regAppName": "answer 2",
-        "cdsAppName": "answer 3",
-        "hdiAppName": "answer 4",
-        "srvAppName": "answer 5"
-      }
-      ",
+        {
+          "cdsAppName": "answer 3",
+          "hdiAppName": "answer 4",
+          "regAppName": "answer 2",
+          "srvAppName": "answer 5",
+          "uaaAppName": "answer 1",
+        },
       ]
     `);
     expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
@@ -165,27 +158,22 @@ describe("set tests", () => {
       [
         [
           "/root/local-dir/.mtxcache.json",
-          4,
         ],
         [
           "/root/local-dir/.mtxcache.json",
-          4,
         ],
         [
           "/root/.mtxcache.json",
-          4,
         ],
         [
           "/.mtxcache.json",
-          4,
         ],
         [
           "/root/home-dir/.mtxcache.json",
-          4,
         ],
       ]
     `);
-    expect(mockFs.unlinkSync.mock.calls).toMatchInlineSnapshot(`
+    expect(mockStatic.deleteFileSync.mock.calls).toMatchInlineSnapshot(`
       [
         [
           "/root/local-dir/.mtxcache.json",
@@ -203,7 +191,7 @@ describe("set tests", () => {
     for (let i = 0; i < 4; i++) {
       mockStatic.tryAccessSync.mockReturnValueOnce(false);
     }
-    mockFs.unlinkSync.mockImplementationOnce(() => {
+    mockStatic.deleteFileSync.mockImplementationOnce(() => {
       throw new Error("failing delete");
     });
 

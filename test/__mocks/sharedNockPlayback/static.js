@@ -1,7 +1,7 @@
 "use strict";
 
 const { format } = require("util");
-const sharedStatic = jest.requireActual("../../../src/shared/static");
+const realStatic = jest.requireActual("../../../src/shared/static");
 
 const mockCfConfig = {
   OrganizationFields: {
@@ -24,7 +24,7 @@ const mockRuntimeConfig = {
 };
 
 module.exports = {
-  ...sharedStatic,
+  ...realStatic,
   // mock file read and access
   tryReadJsonSync: jest.fn((filepath) => {
     if (filepath.endsWith("config.json")) {
@@ -40,6 +40,7 @@ module.exports = {
       return true;
     }
   }),
+  writeJsonSync: jest.fn(),
   // mock spawn
   spawnAsync: jest.fn(async (command, args, options) => {
     switch (`${command} ${args.join(" ")}`) {
@@ -50,5 +51,5 @@ module.exports = {
     }
   }),
   // speed up sleep
-  sleep: jest.fn(async () => await sharedStatic.sleep(0)),
+  sleep: jest.fn(),
 };
