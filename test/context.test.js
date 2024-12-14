@@ -13,6 +13,7 @@ jest.mock("../src/shared/static", () => {
     makeOneTime,
     tryAccessSync: jest.fn(),
     tryReadJsonSync: jest.fn(),
+    writeJsonSync: jest.fn(),
     spawnAsync: jest.fn(),
   };
 });
