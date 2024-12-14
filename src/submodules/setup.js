@@ -1,11 +1,7 @@
 "use strict";
 
 const pathlib = require("path");
-const {
-  writeFileSync,
-  unlinkSync,
-  constants: { R_OK },
-} = require("fs");
+const { writeFileSync, unlinkSync } = require("fs");
 
 const { question, tryAccessSync } = require("../shared/static");
 const { fail } = require("../shared/error");
@@ -36,7 +32,7 @@ const _resolveDir = (filename) => {
   while (true) {
     const dir = subdirs.length === 0 ? HOME : subdirs.join(pathlib.sep);
     const filepath = dir + pathlib.sep + filename;
-    if (tryAccessSync(filepath, R_OK)) {
+    if (tryAccessSync(filepath)) {
       return {
         dir,
         filepath,

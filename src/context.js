@@ -2,10 +2,7 @@
 
 const urllib = require("url");
 const pathlib = require("path");
-const {
-  writeFileSync,
-  constants: { R_OK },
-} = require("fs");
+const { writeFileSync } = require("fs");
 const { version } = require("../package.json");
 
 const {
@@ -133,7 +130,7 @@ const _resolveDir = (filename) => {
   while (true) {
     const dir = subdirs.length === 0 ? HOME : subdirs.join(pathlib.sep);
     const filepath = dir + pathlib.sep + filename;
-    if (tryAccessSync(filepath, R_OK)) {
+    if (tryAccessSync(filepath)) {
       return {
         dir,
         filepath,

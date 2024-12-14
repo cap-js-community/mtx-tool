@@ -3,7 +3,11 @@
 // NOTE: static here means we only allow imports from the node standard library
 
 const readline = require("readline");
-const { accessSync, readFileSync } = require("fs");
+const {
+  accessSync,
+  readFileSync,
+  constants: { R_OK },
+} = require("fs");
 const net = require("net");
 const childProcess = require("child_process");
 const util = require("util");
@@ -48,7 +52,7 @@ const tryReadJsonSync = (filepath) => {
   }
 };
 
-const tryAccessSync = (filepath, mode) => {
+const tryAccessSync = (filepath, mode = R_OK) => {
   try {
     accessSync(filepath, mode);
     return true;
