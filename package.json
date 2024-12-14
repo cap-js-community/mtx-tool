@@ -13,7 +13,7 @@
   "scripts": {
     "prepublishOnly": "npm ci --package-lock --omit=dev && npx shx rm package-lock.json && npm shrinkwrap",
     "patch": "npx patch-package",
-    "test": "jest",
+    "test": "jest --clearCache && jest",
     "test:coverage": "jest --coverageReporters=html",
     "test:remove-inline-snapshots": "npx replace '\\.toMatchInlineSnapshot\\(\\s*`[\\s\\S]*?`\\s*\\);' '.toMatchInlineSnapshot();' test -r --include='*.test.js'",
     "test:record": "npm run test:record:reg && npm run test:record:cds && npm run test:record:hdi",
