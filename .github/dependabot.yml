@@ -1,4 +1,6 @@
 # https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+# NOTE: all ecosystems are set to 0, because we do our own dependencies upgrades. This configuration is just to make
+#   GitHub aware of the relevant ecosystems we use.
 
 version: 2
 updates:
@@ -15,6 +17,7 @@ updates:
       # https://github.com/node-fetch/node-fetch#commonjs
       - dependency-name: node-fetch
         versions: ["3.x"]
+    open-pull-requests-limit: 0
 
   - package-ecosystem: bundler
     directory: /docs
@@ -24,6 +27,7 @@ updates:
       timezone: Europe/Berlin
     allow:
       - dependency-type: direct
+    open-pull-requests-limit: 0
 
   - package-ecosystem: github-actions
     directory: /.github
@@ -31,3 +35,4 @@ updates:
       interval: daily
       time: "11:00"
       timezone: Europe/Berlin
+    open-pull-requests-limit: 0
