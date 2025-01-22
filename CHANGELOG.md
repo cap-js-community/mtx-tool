@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## v0.9.3 - tbd
 
+### Fixed
+
+- srv: fix debug command type mixture bug where app instance argument was ignored
+
 ## v0.9.2 - 2024-12-13
 
 ### Fixed

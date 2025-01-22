@@ -13,7 +13,7 @@ const DEFAULT_ENV_FILENAME = "default-env.json";
 
 const logger = Logger.getInstance();
 
-const _serverDebug = async (context, { appName, appInstance = 0 } = {}) => {
+const _serverDebug = async (context, { appName, appInstance } = {}) => {
   const { cfBuildpack, cfAppGuid, cfRouteUrl, cfSsh } = appName
     ? await context.getAppNameInfoCached(appName)
     : await context.getSrvInfo();
@@ -34,7 +34,7 @@ const _serverDebug = async (context, { appName, appInstance = 0 } = {}) => {
         url: cfRouteUrl,
         pathname: "/info",
         auth: { token },
-        ...(Number.isInteger(appInstance) && {
+        ...(/\d+/.test(appInstance) && {
           headers: {
             "X-Cf-App-Instance": `${cfAppGuid}:${appInstance}`,
           },
@@ -47,7 +47,7 @@ const _serverDebug = async (context, { appName, appInstance = 0 } = {}) => {
     } catch (err) {} // eslint-disable-line no-empty
   }
   const { instance, debugPort } = responseData;
-  appInstance = instance || appInstance || 0;
+  appInstance = appInstance || instance || "0";
   const remotePort = debugPort || inferredPort;
   assert(remotePort, `could not determine remote debugPort from /info or infer from buildpack`);
 
