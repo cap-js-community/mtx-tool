@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - srv: fix debug command type mixture bug where app instance argument was ignored
 
+- srv: fix certificate dump command
+
 ## v0.9.2 - 2024-12-13
 
 ### Fixed

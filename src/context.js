@@ -211,6 +211,7 @@ const _cfSsh = async (appName, { localPort, remotePort, remoteHostname, appInsta
     const [stdout, stderr] = await _run(...args);
     stderr && logger.error(stderr);
     stdout && logger.info(stdout);
+    return [stdout, stderr];
   } catch (err) {
     return fail(
       "caught error during cf ssh: %s",

@@ -57,7 +57,7 @@ const _serverDebug = async (context, { appName, appInstance } = {}) => {
   logger.info(`connect ${runtime ? runtime + " debugger" : "debugger"} on port ${localPort}`);
   logger.info(`use request header "X-Cf-App-Instance: ${cfAppGuid}:${appInstance}" to target this app instance`);
   logger.info();
-  return cfSsh({ localPort, remotePort, appInstance });
+  await cfSsh({ localPort, remotePort, appInstance });
 };
 
 const serverDebug = async (context, [appName, appInstance = "0"]) => {
@@ -90,7 +90,7 @@ const serverCertificates = async (context, [appName, appInstance = "0"]) => {
 const serverStartDebugger = async (context, [appName, appInstance = "0"]) => {
   assert(/\d+/.test(appInstance), `argument "${appInstance}" is not a valid app instance`);
   const { cfSsh } = appName ? await context.getAppNameInfoCached(appName) : await context.getSrvInfo();
-  return cfSsh({ command: "pkill --signal SIGUSR1 node", appInstance });
+  await cfSsh({ command: "pkill --signal SIGUSR1 node", appInstance });
 };
 
 module.exports = {
