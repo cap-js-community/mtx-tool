@@ -34,11 +34,9 @@ const _serverDebug = async (context, { appName, appInstance } = {}) => {
         url: cfRouteUrl,
         pathname: "/info",
         auth: { token },
-        ...(/\d+/.test(appInstance) && {
-          headers: {
-            "X-Cf-App-Instance": `${cfAppGuid}:${appInstance}`,
-          },
-        }),
+        headers: {
+          "X-Cf-App-Instance": `${cfAppGuid}:${appInstance}`,
+        },
         logged: false,
         checkStatus: false,
       });
@@ -47,7 +45,6 @@ const _serverDebug = async (context, { appName, appInstance } = {}) => {
     } catch (err) {} // eslint-disable-line no-empty
   }
   const { debugPort } = responseData;
-  appInstance = appInstance || "0";
   const remotePort = debugPort || inferredPort;
   assert(remotePort, `could not determine remote debugPort from /info or infer from buildpack`);
 
@@ -63,7 +60,10 @@ const _serverDebug = async (context, { appName, appInstance } = {}) => {
   return cfSsh({ localPort, remotePort, appInstance });
 };
 
-const serverDebug = async (context, [appName, appInstance]) => _serverDebug(context, { appName, appInstance });
+const serverDebug = async (context, [appName, appInstance = "0"]) => {
+  assert(/\d+/.test(appInstance), `argument "${appInstance}" is not a valid app instance`);
+  return _serverDebug(context, { appName, appInstance });
+};
 
 const serverEnvironment = async (context, [appName]) => {
   const { cfEnvServices, cfEnvApp, cfEnvVariables } = appName
@@ -75,7 +75,8 @@ const serverEnvironment = async (context, [appName]) => {
   );
   logger.info(`saved system environment to ${DEFAULT_ENV_FILENAME}`);
 };
-const serverCertificates = async (context, [appName, appInstance = 0]) => {
+const serverCertificates = async (context, [appName, appInstance = "0"]) => {
+  assert(/\d+/.test(appInstance), `argument "${appInstance}" is not a valid app instance`);
   const { cfSsh, cfAppName } = appName ? await context.getAppNameInfoCached(appName) : await context.getSrvInfo();
   const dumpFile = async (cfFilename, localFilename) => {
     const [file] = await cfSsh({ command: `cat ${cfFilename}`, appInstance });
@@ -86,7 +87,8 @@ const serverCertificates = async (context, [appName, appInstance = 0]) => {
   logger.info("saved instance certificates");
 };
 
-const serverStartDebugger = async (context, [appName, appInstance]) => {
+const serverStartDebugger = async (context, [appName, appInstance = "0"]) => {
+  assert(/\d+/.test(appInstance), `argument "${appInstance}" is not a valid app instance`);
   const { cfSsh } = appName ? await context.getAppNameInfoCached(appName) : await context.getSrvInfo();
   return cfSsh({ command: "pkill --signal SIGUSR1 node", appInstance });
 };
