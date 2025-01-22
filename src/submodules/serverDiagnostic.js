@@ -46,8 +46,8 @@ const _serverDebug = async (context, { appName, appInstance } = {}) => {
       responseData = response.ok && (await response.json());
     } catch (err) {} // eslint-disable-line no-empty
   }
-  const { instance, debugPort } = responseData;
-  appInstance = appInstance || instance || "0";
+  const { debugPort } = responseData;
+  appInstance = appInstance || "0";
   const remotePort = debugPort || inferredPort;
   assert(remotePort, `could not determine remote debugPort from /info or infer from buildpack`);
 
