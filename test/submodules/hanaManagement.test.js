@@ -80,6 +80,11 @@ describe("hdi tests", () => {
 
     mockRequest.request.mockReturnValueOnce({
       async json() {
+        return { items: [{ id: "service-offering-id" }] };
+      },
+    });
+    mockRequest.request.mockReturnValueOnce({
+      async json() {
         return { items: [{ id: "service-plan-id" }] };
       },
     });
@@ -131,7 +136,8 @@ describe("hdi tests", () => {
     `);
     expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
       [
-        "GET service-manager-url /v1/service_plans {"fieldQuery":"name eq 'hdi-shared'"}",
+        "GET service-manager-url /v1/service_offerings {"fieldQuery":"name eq 'hana'"}",
+        "GET service-manager-url /v1/service_plans {"fieldQuery":"service_offering_id eq 'service-offering-id' and name eq 'hdi-shared'"}",
         "GET service-manager-url /v1/service_instances {"fieldQuery":"service_plan_id eq 'service-plan-id'"}",
         "GET service-manager-url /v1/service_bindings {"labelQuery":"service_plan_id eq 'service-plan-id'"}",
         "GET service-manager-url /v1/service_instances/instance-id-0/parameters",
@@ -150,6 +156,11 @@ describe("hdi tests", () => {
   });
 
   test("hdi tunnel", async () => {
+    mockRequest.request.mockReturnValueOnce({
+      async json() {
+        return { items: [{ id: "service-offering-id" }] };
+      },
+    });
     mockRequest.request.mockReturnValueOnce({
       async json() {
         return { items: [{ id: "service-plan-id" }] };
@@ -183,7 +194,7 @@ describe("hdi tests", () => {
 
     await expect(hdi.hdiTunnelTenant(mockContext, [testTenantId], [false])).resolves.toBeUndefined();
 
-    expect(mockRequest.request).toHaveBeenCalledTimes(2);
+    expect(mockRequest.request).toHaveBeenCalledTimes(3);
     expect(mockStatic.isPortFree).toHaveBeenCalledTimes(1);
     expect(mockCfSsh).toHaveBeenCalledTimes(1);
     expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
@@ -207,6 +218,11 @@ describe("hdi tests", () => {
   test("hdi rebind tenant", async () => {
     mockRequest.request.mockReturnValueOnce({
       async json() {
+        return { items: [{ id: "service-offering-id" }] };
+      },
+    });
+    mockRequest.request.mockReturnValueOnce({
+      async json() {
         return { items: [{ id: "service-plan-id" }] };
       },
     });
@@ -221,7 +237,8 @@ describe("hdi tests", () => {
     expect(await hdi.hdiRebindTenant(mockContext, [testTenantId])).toBeUndefined();
     expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
       [
-        "GET service-manager-url /v1/service_plans {"fieldQuery":"name eq 'hdi-shared'"}",
+        "GET service-manager-url /v1/service_offerings {"fieldQuery":"name eq 'hana'"}",
+        "GET service-manager-url /v1/service_plans {"fieldQuery":"service_offering_id eq 'service-offering-id' and name eq 'hdi-shared'"}",
         "GET service-manager-url /v1/service_bindings {"labelQuery":"service_plan_id eq 'service-plan-id' and tenant_id eq '5ecc7413-2b7e-414a-9496-ad4a61f6cccf'"}",
         "POST service-manager-url /v1/service_bindings {"async":false}",
         "DELETE service-manager-url /v1/service_bindings/binding-id-0 {"async":false}",
@@ -233,6 +250,11 @@ describe("hdi tests", () => {
 
   test("hdi rebind all", async () => {
     const n = 2;
+    mockRequest.request.mockReturnValueOnce({
+      async json() {
+        return { items: [{ id: "service-offering-id" }] };
+      },
+    });
     mockRequest.request.mockReturnValueOnce({
       async json() {
         return { items: [{ id: "service-plan-id" }] };
@@ -251,7 +273,8 @@ describe("hdi tests", () => {
     expect(await hdi.hdiRebindAll(mockContext, [])).toBeUndefined();
     expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
       [
-        "GET service-manager-url /v1/service_plans {"fieldQuery":"name eq 'hdi-shared'"}",
+        "GET service-manager-url /v1/service_offerings {"fieldQuery":"name eq 'hana'"}",
+        "GET service-manager-url /v1/service_plans {"fieldQuery":"service_offering_id eq 'service-offering-id' and name eq 'hdi-shared'"}",
         "GET service-manager-url /v1/service_bindings {"labelQuery":"service_plan_id eq 'service-plan-id'"}",
         "POST service-manager-url /v1/service_bindings {"async":false}",
         "POST service-manager-url /v1/service_bindings {"async":false}",
@@ -266,6 +289,11 @@ describe("hdi tests", () => {
   });
 
   test("hdi delete tenant", async () => {
+    mockRequest.request.mockReturnValueOnce({
+      async json() {
+        return { items: [{ id: "service-offering-id" }] };
+      },
+    });
     mockRequest.request.mockReturnValueOnce({
       async json() {
         return { items: [{ id: "service-plan-id" }] };
@@ -287,7 +315,8 @@ describe("hdi tests", () => {
     expect(await hdi.hdiDeleteTenant(mockContext, [testTenantId])).toBeUndefined();
     expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
       [
-        "GET service-manager-url /v1/service_plans {"fieldQuery":"name eq 'hdi-shared'"}",
+        "GET service-manager-url /v1/service_offerings {"fieldQuery":"name eq 'hana'"}",
+        "GET service-manager-url /v1/service_plans {"fieldQuery":"service_offering_id eq 'service-offering-id' and name eq 'hdi-shared'"}",
         "GET service-manager-url /v1/service_bindings {"labelQuery":"service_plan_id eq 'service-plan-id' and tenant_id eq '5ecc7413-2b7e-414a-9496-ad4a61f6cccf'"}",
         "DELETE service-manager-url /v1/service_bindings/binding-id-0 {"async":false}",
         "GET service-manager-url /v1/service_instances {"fieldQuery":"service_plan_id eq 'service-plan-id'","labelQuery":"tenant_id eq '5ecc7413-2b7e-414a-9496-ad4a61f6cccf'"}",
@@ -300,6 +329,11 @@ describe("hdi tests", () => {
 
   test("hdi delete all", async () => {
     const n = 2;
+    mockRequest.request.mockReturnValueOnce({
+      async json() {
+        return { items: [{ id: "service-offering-id" }] };
+      },
+    });
     mockRequest.request.mockReturnValueOnce({
       async json() {
         return { items: [{ id: "service-plan-id" }] };
@@ -325,7 +359,8 @@ describe("hdi tests", () => {
     expect(await hdi.hdiDeleteAll(mockContext)).toBeUndefined();
     expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
       [
-        "GET service-manager-url /v1/service_plans {"fieldQuery":"name eq 'hdi-shared'"}",
+        "GET service-manager-url /v1/service_offerings {"fieldQuery":"name eq 'hana'"}",
+        "GET service-manager-url /v1/service_plans {"fieldQuery":"service_offering_id eq 'service-offering-id' and name eq 'hdi-shared'"}",
         "GET service-manager-url /v1/service_bindings {"labelQuery":"service_plan_id eq 'service-plan-id'"}",
         "DELETE service-manager-url /v1/service_bindings/binding-id-0 {"async":false}",
         "DELETE service-manager-url /v1/service_bindings/binding-id-1 {"async":false}",
