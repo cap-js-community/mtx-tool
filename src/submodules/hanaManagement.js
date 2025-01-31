@@ -129,16 +129,16 @@ const _getQuery = (filters) =>
     }, [])
     .join(" and ");
 
-const _getServicePlanId = async (sm_url, token, serviceName, servicePlanName) => {
+const _getServicePlanId = async (sm_url, token, serviceOfferingName, servicePlanName) => {
   const responseOfferings = await request({
     url: sm_url,
     pathname: "/v1/service_offerings",
-    query: { fieldQuery: _getQuery({ name: serviceName }) },
+    query: { fieldQuery: _getQuery({ name: serviceOfferingName }) },
     auth: { token },
   });
   const responseOfferingsData = (await responseOfferings.json()) || {};
   const serviceOfferingId = responseOfferingsData.items?.[0]?.id;
-  assert(serviceOfferingId, `could not find service offering with name ${serviceName}`);
+  assert(serviceOfferingId, `could not find service offering with name ${serviceOfferingName}`);
   const responsePlans = await request({
     url: sm_url,
     pathname: "/v1/service_plans",
