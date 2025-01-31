@@ -26,6 +26,7 @@ const HIDDEN_PASSWORD_TEXT = "*** show with --reveal ***";
 const SERVICE_MANAGER_REQUEST_CONCURRENCY_FALLBACK = 10;
 const SERVICE_MANAGER_IDEAL_BINDING_COUNT = 1;
 const SENSITIVE_CREDENTIAL_FIELDS = ["password", "hdi_password"];
+const HDI_SHARED_SERVICE_NAME = "hana";
 const HDI_SHARED_SERVICE_PLAN_NAME = "hdi-shared";
 
 const logger = Logger.getInstance();
@@ -126,22 +127,30 @@ const _getQuery = (filters) =>
     }, [])
     .join(" and ");
 
-const _getServicePlanId = async (sm_url, token, servicePlanName) => {
-  const response = await request({
+const _getServicePlanId = async (sm_url, token, serviceName, servicePlanName) => {
+  const responseService = await request({
     url: sm_url,
-    pathname: "/v1/service_plans",
-    query: { fieldQuery: _getQuery({ name: servicePlanName }) },
+    pathname: "/v1/service_offerings",
+    query: { fieldQuery: _getQuery({ name: serviceName }) },
     auth: { token },
   });
-  const responseData = (await response.json()) || {};
-  const plans = responseData.items || [];
-  const servicePlanId = plans[0]?.id;
+  const responseServiceData = (await responseService.json()) || {};
+  const serviceOfferingId = responseServiceData.items?.[0]?.id;
+  assert(serviceOfferingId, `could not find service offering with name ${serviceName}`);
+  const responsePlan = await request({
+    url: sm_url,
+    pathname: "/v1/service_plans",
+    query: { fieldQuery: _getQuery({ service_offering_id: serviceOfferingId, name: servicePlanName }) },
+    auth: { token },
+  });
+  const responsePlanData = (await responsePlan.json()) || {};
+  const servicePlanId = responsePlanData.items?.[0]?.id;
   assert(servicePlanId, `could not find service plan with name ${servicePlanName}`);
   return servicePlanId;
 };
 
 const _getHdiSharedPlanId = makeOneTime(
-  async (sm_url, token) => await _getServicePlanId(sm_url, token, HDI_SHARED_SERVICE_PLAN_NAME)
+  async (sm_url, token) => await _getServicePlanId(sm_url, token, HDI_SHARED_SERVICE_NAME, HDI_SHARED_SERVICE_PLAN_NAME)
 );
 
 const _hdiInstancesServiceManager = async (context, { filterTenantId, doEnsureTenantLabel = true } = {}) => {
