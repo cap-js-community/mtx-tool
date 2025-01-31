@@ -26,10 +26,10 @@ const HIDDEN_PASSWORD_TEXT = "*** show with --reveal ***";
 const SERVICE_MANAGER_REQUEST_CONCURRENCY_FALLBACK = 10;
 const SERVICE_MANAGER_IDEAL_BINDING_COUNT = 1;
 const SENSITIVE_CREDENTIAL_FIELDS = ["password", "hdi_password"];
-const HDI_SHARED_SERVICE_NAME = "hana";
-const HDI_SHARED_SERVICE_PLAN_NAME = "hdi-shared";
-const OBJECT_STORE_SERVICE_NAME = "objectstore";
-const OBJECT_STORE_SERVICE_PLAN_NAME = "standard";
+const HDI_SHARED_SERVICE_OFFERING = "hana";
+const HDI_SHARED_SERVICE_PLAN = "hdi-shared";
+const OBJECT_STORE_SERVICE_OFFERING = "objectstore";
+const OBJECT_STORE_SERVICE_PLAN = "standard";
 
 const logger = Logger.getInstance();
 
@@ -130,34 +130,34 @@ const _getQuery = (filters) =>
     .join(" and ");
 
 const _getServicePlanId = async (sm_url, token, serviceName, servicePlanName) => {
-  const responseService = await request({
+  const responseOfferings = await request({
     url: sm_url,
     pathname: "/v1/service_offerings",
     query: { fieldQuery: _getQuery({ name: serviceName }) },
     auth: { token },
   });
-  const responseServiceData = (await responseService.json()) || {};
-  const serviceOfferingId = responseServiceData.items?.[0]?.id;
+  const responseOfferingsData = (await responseOfferings.json()) || {};
+  const serviceOfferingId = responseOfferingsData.items?.[0]?.id;
   assert(serviceOfferingId, `could not find service offering with name ${serviceName}`);
-  const responsePlan = await request({
+  const responsePlans = await request({
     url: sm_url,
     pathname: "/v1/service_plans",
     query: { fieldQuery: _getQuery({ service_offering_id: serviceOfferingId, name: servicePlanName }) },
     auth: { token },
   });
-  const responsePlanData = (await responsePlan.json()) || {};
-  const servicePlanId = responsePlanData.items?.[0]?.id;
+  const responsePlansData = (await responsePlans.json()) || {};
+  const servicePlanId = responsePlansData.items?.[0]?.id;
   assert(servicePlanId, `could not find service plan with name ${servicePlanName}`);
   return servicePlanId;
 };
 
 const _getHdiSharedPlanId = makeOneTime(
-  async (sm_url, token) => await _getServicePlanId(sm_url, token, HDI_SHARED_SERVICE_NAME, HDI_SHARED_SERVICE_PLAN_NAME)
+  async (sm_url, token) => await _getServicePlanId(sm_url, token, HDI_SHARED_SERVICE_OFFERING, HDI_SHARED_SERVICE_PLAN)
 );
 
 const _getObjectStorePlanId = makeOneTime(
   async (sm_url, token) =>
-    await _getServicePlanId(sm_url, token, OBJECT_STORE_SERVICE_NAME, OBJECT_STORE_SERVICE_PLAN_NAME)
+    await _getServicePlanId(sm_url, token, OBJECT_STORE_SERVICE_OFFERING, OBJECT_STORE_SERVICE_PLAN)
 );
 
 const _hdiInstancesServiceManager = async (
