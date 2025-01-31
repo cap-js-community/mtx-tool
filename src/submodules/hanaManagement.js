@@ -28,6 +28,8 @@ const SERVICE_MANAGER_IDEAL_BINDING_COUNT = 1;
 const SENSITIVE_CREDENTIAL_FIELDS = ["password", "hdi_password"];
 const HDI_SHARED_SERVICE_NAME = "hana";
 const HDI_SHARED_SERVICE_PLAN_NAME = "hdi-shared";
+const OBJECT_STORE_SERVICE_NAME = "objectstore";
+const OBJECT_STORE_SERVICE_PLAN_NAME = "standard";
 
 const logger = Logger.getInstance();
 
@@ -153,18 +155,29 @@ const _getHdiSharedPlanId = makeOneTime(
   async (sm_url, token) => await _getServicePlanId(sm_url, token, HDI_SHARED_SERVICE_NAME, HDI_SHARED_SERVICE_PLAN_NAME)
 );
 
-const _hdiInstancesServiceManager = async (context, { filterTenantId, doEnsureTenantLabel = true } = {}) => {
+const _getObjectStorePlanId = makeOneTime(
+  async (sm_url, token) =>
+    await _getServicePlanId(sm_url, token, OBJECT_STORE_SERVICE_NAME, OBJECT_STORE_SERVICE_PLAN_NAME)
+);
+
+const _hdiInstancesServiceManager = async (
+  context,
+  { filterTenantId, doObjectStore, doEnsureTenantLabel = true } = {}
+) => {
   const {
     cfService: { credentials },
   } = await context.getHdiInfo();
   const { sm_url } = credentials;
   const token = await context.getCachedUaaTokenFromCredentials(credentials);
+  const servicePlanId = await (doObjectStore
+    ? _getObjectStorePlanId(sm_url, token)
+    : _getHdiSharedPlanId(sm_url, token));
 
   const response = await request({
     url: sm_url,
     pathname: "/v1/service_instances",
     query: {
-      fieldQuery: _getQuery({ service_plan_id: await _getHdiSharedPlanId(sm_url, token) }),
+      fieldQuery: _getQuery({ service_plan_id: servicePlanId }),
       ...(filterTenantId && { labelQuery: _getQuery({ tenant_id: filterTenantId }) }),
     },
     auth: { token },
@@ -179,20 +192,23 @@ const _hdiInstancesServiceManager = async (context, { filterTenantId, doEnsureTe
 
 const _hdiBindingsServiceManager = async (
   context,
-  { filterTenantId, doReveal = false, doAssertFoundSome = false, doEnsureTenantLabel = true } = {}
+  { filterTenantId, doObjectStore, doReveal = false, doAssertFoundSome = false, doEnsureTenantLabel = true } = {}
 ) => {
   const {
     cfService: { credentials },
   } = await context.getHdiInfo();
   const { sm_url } = credentials;
   const token = await context.getCachedUaaTokenFromCredentials(credentials);
+  const servicePlanId = await (doObjectStore
+    ? _getObjectStorePlanId(sm_url, token)
+    : _getHdiSharedPlanId(sm_url, token));
 
   const getBindingsResponse = await request({
     url: sm_url,
     pathname: "/v1/service_bindings",
     query: {
       labelQuery: _getQuery({
-        service_plan_id: await _getHdiSharedPlanId(sm_url, token),
+        service_plan_id: servicePlanId,
         ...(filterTenantId && { tenant_id: filterTenantId }),
       }),
     },
@@ -431,10 +447,10 @@ const _getBindingsByInstance = (bindings) => {
   }, {});
 };
 
-const hdiListServiceManager = async (context, { filterTenantId, doTimestamps, doJsonOutput } = {}) => {
+const _hdiListServiceManager = async (context, { filterTenantId, doObjectStore, doJsonOutput, doTimestamps } = {}) => {
   const [instances, bindings] = await Promise.all([
-    _hdiInstancesServiceManager(context, { filterTenantId }),
-    _hdiBindingsServiceManager(context, { filterTenantId }),
+    _hdiInstancesServiceManager(context, { filterTenantId, doObjectStore }),
+    _hdiBindingsServiceManager(context, { filterTenantId, doObjectStore }),
   ]);
 
   if (doJsonOutput) {
@@ -465,13 +481,13 @@ const hdiListServiceManager = async (context, { filterTenantId, doTimestamps, do
   return tableList(table, { withRowNumber: !filterTenantId });
 };
 
-const hdiList = async (context, [filterTenantId], [doTimestamps, doJsonOutput]) =>
-  await hdiListServiceManager(context, { filterTenantId, doTimestamps, doJsonOutput });
+const hdiList = async (context, [filterTenantId], [doObjectStore, doJsonOutput, doTimestamps]) =>
+  await _hdiListServiceManager(context, { filterTenantId, doObjectStore, doJsonOutput, doTimestamps });
 
-const _hdiLongListServiceManager = async (context, { filterTenantId, doJsonOutput, doReveal } = {}) => {
+const _hdiLongListServiceManager = async (context, { filterTenantId, doObjectStore, doJsonOutput, doReveal } = {}) => {
   const [instances, bindings] = await Promise.all([
-    _hdiInstancesServiceManager(context, { filterTenantId, doEnsureTenantLabel: false }),
-    _hdiBindingsServiceManager(context, { filterTenantId, doReveal, doEnsureTenantLabel: false }),
+    _hdiInstancesServiceManager(context, { filterTenantId, doObjectStore, doEnsureTenantLabel: false }),
+    _hdiBindingsServiceManager(context, { filterTenantId, doObjectStore, doReveal, doEnsureTenantLabel: false }),
   ]);
 
   if (doJsonOutput) {
@@ -488,8 +504,8 @@ ${_formatOutput(bindings)}
 `;
 };
 
-const hdiLongList = async (context, [filterTenantId], [doJsonOutput, doReveal]) =>
-  await _hdiLongListServiceManager(context, { filterTenantId, doJsonOutput, doReveal });
+const hdiLongList = async (context, [filterTenantId], [doObjectStore, doJsonOutput, doReveal]) =>
+  await _hdiLongListServiceManager(context, { filterTenantId, doObjectStore, doJsonOutput, doReveal });
 
 const _hdiListRelationsServiceManager = async (context, { filterTenantId, doTimestamps, doJsonOutput }) => {
   const [instances, bindings] = await Promise.all([
@@ -674,6 +690,7 @@ module.exports = {
   _: {
     _reset() {
       resetOneTime(_getHdiSharedPlanId);
+      resetOneTime(_getObjectStorePlanId);
     },
   },
 };
