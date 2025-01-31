@@ -45,6 +45,7 @@ const FLAG_ARG = Object.freeze({
   SKIP_UNCHANGED: "--skip-unchanged",
   ONLY_STALE: "--only-stale",
   ONLY_FAILED: "--only-failed",
+  OBJECT_STORE: "--object-store",
 });
 
 const USAGE = `usage: ${NAME} [command]
@@ -304,7 +305,7 @@ const APP_CLI_OPTIONS = Object.freeze({
   HDI_LIST: {
     commandVariants: ["hdil", "--hdi-list"],
     optionalPassArgs: [PASS_ARG.TENANT_ID],
-    optionalFlagArgs: [FLAG_ARG.TIMESTAMPS, FLAG_ARG.JSON_OUTPUT],
+    optionalFlagArgs: [FLAG_ARG.OBJECT_STORE, FLAG_ARG.JSON_OUTPUT, FLAG_ARG.TIMESTAMPS],
     callback: hdi.hdiList,
     useCache: false,
     readonly: true,
@@ -312,7 +313,7 @@ const APP_CLI_OPTIONS = Object.freeze({
   HDI_LONG_LIST: {
     commandVariants: ["hdill", "--hdi-long-list"],
     optionalPassArgs: [PASS_ARG.TENANT_ID],
-    optionalFlagArgs: [FLAG_ARG.JSON_OUTPUT, FLAG_ARG.REVEAL],
+    optionalFlagArgs: [FLAG_ARG.OBJECT_STORE, FLAG_ARG.JSON_OUTPUT, FLAG_ARG.REVEAL],
     callback: hdi.hdiLongList,
     useCache: false,
     readonly: true,
