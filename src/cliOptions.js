@@ -42,6 +42,7 @@ const FLAG_ARG = Object.freeze({
   JSON_OUTPUT: "--json",
   USER_INFO: "--userinfo",
   AUTO_UNDEPLOY: "--auto-undeploy",
+  FIRST_INSTANCE: "--first-instance",
   SKIP_UNCHANGED: "--skip-unchanged",
   ONLY_STALE: "--only-stale",
   ONLY_FAILED: "--only-failed",
@@ -102,6 +103,7 @@ commands:
           ...    --json                              list in json
           ...    --time                              list includes timestamps
           ...    --auto-undeploy                     upgrade with auto undeploy
+          ...    --first-instance                    upgrade only through first app instance
 
    === hana management (hdi) ===
 ~  hdil   --hdi-list [TENANT_ID]                  list all hdi container instances
@@ -290,7 +292,7 @@ const APP_CLI_OPTIONS = Object.freeze({
   },
   CDS_UPGRADE_ALL: {
     commandVariants: ["cdsua", "--cds-upgrade-all"],
-    optionalFlagArgs: [FLAG_ARG.AUTO_UNDEPLOY],
+    optionalFlagArgs: [FLAG_ARG.AUTO_UNDEPLOY, FLAG_ARG.FIRST_INSTANCE],
     callback: cds.cdsUpgradeAll,
     useCache: false,
   },

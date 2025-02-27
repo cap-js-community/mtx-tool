@@ -245,11 +245,11 @@ const cdsUpgradeTenant = async (context, [tenantId], [doAutoUndeploy]) => {
   return await _cdsUpgrade(context, { tenants: [tenantId], doAutoUndeploy });
 };
 
-const cdsUpgradeAll = async (context, _, [doAutoUndeploy]) => {
+const cdsUpgradeAll = async (context, _, [doAutoUndeploy, doFirstInstance]) => {
   const { cfAppName, cfProcess } = await context.getCdsInfo();
   const appInstances = cfProcess && cfProcess.instances;
 
-  if (!appInstances || appInstances <= 1) {
+  if (doFirstInstance || !appInstances || appInstances <= 1) {
     return await _cdsUpgrade(context, { doAutoUndeploy });
   }
 
