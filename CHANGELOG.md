@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- order is REMOVED, CHANGED, ADDED, FIXED -->
 
-## v0.9.4 - tbd
+## v0.9.5 - tbd
+
+## v0.9.4 - 2025-02-27
 
 ### Added
 
