@@ -46,7 +46,6 @@ const FLAG_ARG = Object.freeze({
   SKIP_UNCHANGED: "--skip-unchanged",
   ONLY_STALE: "--only-stale",
   ONLY_FAILED: "--only-failed",
-  OBJECT_STORE: "--object-store",
 });
 
 const USAGE = `usage: ${NAME} [command]
