@@ -210,7 +210,7 @@ describe("cds nock tests", () => {
 
   test("cds upgrade all", async () => {
     await nock.back("cds-upgrade-all.json");
-    expect(await cds.cdsUpgradeAll(await freshContext(), null, [false])).toBeUndefined();
+    expect(await cds.cdsUpgradeAll(await freshContext(), null, [false, false])).toBeUndefined();
     expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
       started upgrade on server with jobId d8c2f77d-5e86-48d7-a877-caebc8aba8ff polling interval 15sec

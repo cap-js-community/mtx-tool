@@ -24,7 +24,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
-      - run: npm ci --package-lock
+      - run: npm ci
       - run: npm test
 
   lint:
@@ -35,5 +35,5 @@ jobs:
         with:
           node-version: 18
           cache: npm
-      - run: npm ci --package-lock
+      - run: npm ci
       - run: npm run lint

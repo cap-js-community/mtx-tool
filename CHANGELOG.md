@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- order is REMOVED, CHANGED, ADDED, FIXED -->
 
+## v0.9.4 - tbd
+
+### Added
+
+- cds: offer an optional flag `--first-instance` for `--cds-upgrade-all` that will cause all tenants to be processed by
+  the first app instance only. this will make the upgrade less resource efficient, but resilient to auto-scaling.
+  (fixes #104)
+
 ## v0.9.3 - 2025-01-22
 
 ### Fixed

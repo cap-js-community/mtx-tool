@@ -45,6 +45,7 @@ Commands for this area are:
           ...    --json                              list in json
           ...    --time                              list includes timestamps
           ...    --auto-undeploy                     upgrade with auto undeploy
+          ...    --first-instance                    upgrade only through first app instance
 
 ~  are read-only commands
 *  are potentially _dangerous_ commands

@@ -62,7 +62,7 @@ describe("cds tests", () => {
 
   test("cds upgrade all", async () => {
     const { nockDone } = await nock.back("cds-upgrade-all.json", { afterRecord: anonymizeNock });
-    await cds.cdsUpgradeAll(await freshContext(), null, [false]);
+    await cds.cdsUpgradeAll(await freshContext(), null, [false, false]);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });

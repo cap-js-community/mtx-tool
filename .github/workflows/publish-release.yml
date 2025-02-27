@@ -20,7 +20,7 @@ jobs:
           cache: npm
           # NOTE: the explicit registry-url is currently needed for the auth token to work
           registry-url: https://registry.npmjs.org/
-      - run: npm ci --package-lock
+      - run: npm ci
       - run: npm test
       - run: npm run lint
       - run: npm publish --access public

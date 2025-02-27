@@ -99,6 +99,7 @@ commands:
           ...    --json                              list in json
           ...    --time                              list includes timestamps
           ...    --auto-undeploy                     upgrade with auto undeploy
+          ...    --first-instance                    upgrade only through first app instance
 
    === hana management (hdi) ===
 ~  hdil   --hdi-list [TENANT_ID]                  list all hdi container instances
