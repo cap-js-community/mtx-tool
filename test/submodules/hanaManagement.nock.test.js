@@ -175,7 +175,7 @@ describe("hdi nock tests", () => {
 
     test("long list revealed", async () => {
       await nock.back("hdi-long-list.json");
-      const output = await hdi.hdiLongList(await freshContext(), [], [true, false]);
+      const output = await hdi.hdiLongList(await freshContext(), [], [false, true]);
       expect(output).toMatchSnapshot();
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
@@ -204,7 +204,7 @@ describe("hdi nock tests", () => {
 
     test("long list filtered revealed", async () => {
       await nock.back("hdi-long-list-filtered.json");
-      const output = await hdi.hdiLongList(await freshContext(), [testTenantId], [true, false]);
+      const output = await hdi.hdiLongList(await freshContext(), [testTenantId], [false, true]);
       expect(output).toMatchSnapshot();
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });

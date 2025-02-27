@@ -433,7 +433,7 @@ const _getBindingsByInstance = (bindings) => {
   }, {});
 };
 
-const _hdiListServiceManager = async (context, { filterTenantId, doJsonOutput, doTimestamps } = {}) => {
+const _hdiListServiceManager = async (context, { filterTenantId, doTimestamps, doJsonOutput } = {}) => {
   const [instances, bindings] = await Promise.all([
     _hdiInstancesServiceManager(context, { filterTenantId }),
     _hdiBindingsServiceManager(context, { filterTenantId }),
@@ -468,7 +468,7 @@ const _hdiListServiceManager = async (context, { filterTenantId, doJsonOutput, d
 };
 
 const hdiList = async (context, [filterTenantId], [doTimestamps, doJsonOutput]) =>
-  await _hdiListServiceManager(context, { filterTenantId, doJsonOutput, doTimestamps });
+  await _hdiListServiceManager(context, { filterTenantId, doTimestamps, doJsonOutput });
 
 const _hdiLongListServiceManager = async (context, { filterTenantId, doJsonOutput, doReveal } = {}) => {
   const [instances, bindings] = await Promise.all([
