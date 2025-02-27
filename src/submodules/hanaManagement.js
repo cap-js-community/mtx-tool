@@ -467,7 +467,7 @@ const _hdiListServiceManager = async (context, { filterTenantId, doJsonOutput, d
   return tableList(table, { withRowNumber: !filterTenantId });
 };
 
-const hdiList = async (context, [filterTenantId], [doJsonOutput, doTimestamps]) =>
+const hdiList = async (context, [filterTenantId], [doTimestamps, doJsonOutput]) =>
   await _hdiListServiceManager(context, { filterTenantId, doJsonOutput, doTimestamps });
 
 const _hdiLongListServiceManager = async (context, { filterTenantId, doJsonOutput, doReveal } = {}) => {
