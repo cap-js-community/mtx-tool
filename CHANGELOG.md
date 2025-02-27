@@ -15,6 +15,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   the first app instance only. this will make the upgrade less resource efficient, but resilient to auto-scaling.
   (fixes #104)
 
+### Fixed
+
+- hdi: change internal logic to identify the relevant service both by offering name `hana` and plan name `hdi-shared`.
+  this takes one more request, but it's much cleaner. before, we had implicitly assumed that no other service offering
+  uses the plan name `hdi-shared`.
+
 ## v0.9.3 - 2025-01-22
 
 ### Fixed
