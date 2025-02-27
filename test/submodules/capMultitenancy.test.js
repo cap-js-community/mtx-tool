@@ -24,16 +24,50 @@ const { outputFromLoggerPartitionFetch } = require("../test-util/static");
 
 const MINUTES_IN_MILLIS = 60 * 1000;
 
-const fakeContext = {
-  getCdsInfo: () => ({
-    cfAppName: "app-mtx-name",
-    cfAppGuid: "app-mtx-guid",
-    cfRouteUrl: "route-url",
-    cfProcess: { instances: 1 },
-  }),
+const mockCdsInfo = {
+  cfAppName: "app-mtx-name",
+  cfAppGuid: "app-mtx-guid",
+  cfRouteUrl: "route-url",
+  cfProcess: { instances: 1 },
+};
+
+const mockCdsInfoMultiInstance = {
+  ...mockCdsInfo,
+  cfProcess: { instances: 2 },
+};
+
+const fakeContext = ({ isMultiInstance = false } = {}) => ({
+  getCdsInfo: () => (isMultiInstance ? mockCdsInfoMultiInstance : mockCdsInfo),
   getCachedUaaToken: () => "token",
   getCachedUaaTokenFromCredentials: () => "token",
-};
+});
+
+const mockTenants = [
+  {
+    subscribedTenantId: "00000000-0000-4000-8000-000000000101",
+    subscribedSubdomain: "virtual001",
+  },
+  {
+    subscribedTenantId: "00000000-0000-4000-8000-000000000102",
+    subscribedSubdomain: "virtual002",
+  },
+  {
+    subscribedTenantId: "00000000-0000-4000-8000-000000000103",
+    subscribedSubdomain: "virtual003",
+  },
+  {
+    subscribedTenantId: "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+    subscribedSubdomain: "skyfin-company",
+  },
+  {
+    subscribedTenantId: "6917dfd6-7590-4033-af2a-140b75263b0d",
+    subscribedSubdomain: "skyfin-debug-company",
+  },
+  {
+    subscribedTenantId: "dde70ec5-983d-4848-b50c-fb2cdac7d359",
+    subscribedSubdomain: "skyfin-test-3",
+  },
+];
 
 const mockJob = { ID: "8fd6894a-91d6-4eed-b772-1be05b8ac6ed", op: "upgrade" };
 const mockJobTasks = [
@@ -69,27 +103,33 @@ const mockJobTasks = [
   },
 ];
 
-const mockInitialResponse = () => {
+const mockInitialResponse = ({ jobId: inputJobId, tenantIds } = {}) => {
+  const jobId = inputJobId ?? mockJob.ID;
+  const jobTasks = tenantIds ? mockJobTasks.filter((entry) => tenantIds.includes(entry.tenant)) : mockJobTasks;
   return {
     ...mockJob,
-    tenants: mockJobTasks.reduce((acc, entry) => {
+    ...(jobId && { ID: jobId }),
+    tenants: jobTasks.reduce((acc, entry) => {
       acc[entry.tenant] = { ID: entry.ID };
       return acc;
     }, {}),
-    tasks: mockJobTasks.reduce((acc, entry) => {
-      acc[entry.tenant] = { ...entry, job_ID: mockJob.ID };
+    tasks: jobTasks.reduce((acc, entry) => {
+      acc[entry.tenant] = { ...entry, job_ID: jobId };
       return acc;
     }, {}),
   };
 };
 
-const mockOngoingResponse = (jobStatus = JOB_STATUS.QUEUED, taskStatuses = []) => {
-  taskStatuses = Array.from({ length: 6 }).map((_, i) => taskStatuses[i] ?? jobStatus);
+const mockOngoingResponse = ({ jobId: inputJobId, tenantIds, jobStatus = JOB_STATUS.QUEUED } = {}) => {
+  const jobId = inputJobId ?? mockJob.ID;
+  const jobTasks = tenantIds ? mockJobTasks.filter((entry) => tenantIds.includes(entry.tenant)) : mockJobTasks;
+  const taskStatuses = Array.from({ length: jobTasks.length }).map(() => jobStatus);
   return {
     ...mockJob,
+    ...(jobId && { ID: jobId }),
     status: jobStatus,
     error: null,
-    tenants: mockJobTasks.reduce((acc, entry, i) => {
+    tenants: jobTasks.reduce((acc, entry, i) => {
       acc[entry.tenant] = {
         ID: entry.ID,
         status: taskStatuses[i],
@@ -97,9 +137,9 @@ const mockOngoingResponse = (jobStatus = JOB_STATUS.QUEUED, taskStatuses = []) =
       };
       return acc;
     }, {}),
-    tasks: mockJobTasks.map((entry, i) => ({
+    tasks: jobTasks.map((entry, i) => ({
       ...entry,
-      job_ID: mockJob.ID,
+      job_ID: jobId,
       status: taskStatuses[i],
       ...(taskStatuses[i] === TASK_STATUS.FAILED && { error: "HDI deployment failed with exit code 1" }),
     })),
@@ -111,16 +151,75 @@ describe("cds tests", () => {
     jest.useFakeTimers();
   });
 
+  test("cds upgrade distributes tenants", async () => {
+    const jobIds = ["jobId-instance-0", "jobId-instance-1"];
+    let jobIdIndexUpgrade = 0;
+    let jobIdIndexPolling = 0;
+    const tenantIdsByJobId = {};
+
+    // GET /-/cds/saas-provisioning/tenant
+    mockRequest.request.mockReturnValueOnce({
+      json: () => mockTenants,
+    });
+
+    // POST /-/cds/saas-provisioning/upgrade (first instance 0, second instance 1)
+    const mockUpgradeResponse = (options) => {
+      const jobId = jobIds[jobIdIndexUpgrade++];
+      const { tenants: tenantIds } = JSON.parse(options.body);
+      tenantIdsByJobId[jobId] = tenantIds;
+      return {
+        text: () => JSON.stringify(mockInitialResponse({ jobId, tenantIds })),
+      };
+    };
+    mockRequest.request.mockImplementationOnce(mockUpgradeResponse);
+    mockRequest.request.mockImplementationOnce(mockUpgradeResponse);
+
+    const mockJobPollResponse = () => {
+      const jobId = jobIds[jobIdIndexPolling++];
+      const tenantIds = tenantIdsByJobId[jobId];
+      return {
+        text: () => JSON.stringify(mockOngoingResponse({ jobId, tenantIds, jobStatus: JOB_STATUS.FINISHED })),
+      };
+    };
+    mockRequest.request.mockImplementationOnce(mockJobPollResponse);
+    mockRequest.request.mockImplementationOnce(mockJobPollResponse);
+
+    await expect(
+      cds.cdsUpgradeAll(fakeContext({ isMultiInstance: true }), [], [false, false])
+    ).resolves.toBeUndefined();
+    expect(mockRequest.request).toHaveBeenCalledTimes(5);
+    expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
+      "splitting tenants across 2 app instances of 'app-mtx-name' as follows:
+      instance 1: processing tenants 00000000-0000-4000-8000-000000000101, 00000000-0000-4000-8000-000000000102, 00000000-0000-4000-8000-000000000103
+      instance 2: processing tenants 5ecc7413-2b7e-414a-9496-ad4a61f6cccf, 6917dfd6-7590-4033-af2a-140b75263b0d, dde70ec5-983d-4848-b50c-fb2cdac7d359
+
+      started upgrade on server with jobId jobId-instance-0 polling interval 15sec
+      started upgrade on server with jobId jobId-instance-1 polling interval 15sec
+      job jobId-instance-0 is FINISHED with tasks queued/running: 0/0 | failed/finished: 0/3
+      #  tenantId                              status    message
+      1  00000000-0000-4000-8000-000000000101  FINISHED         
+      2  00000000-0000-4000-8000-000000000102  FINISHED         
+      3  00000000-0000-4000-8000-000000000103  FINISHED         
+      job jobId-instance-1 is FINISHED with tasks queued/running: 0/0 | failed/finished: 0/3
+      #  tenantId                              status    message
+      1  5ecc7413-2b7e-414a-9496-ad4a61f6cccf  FINISHED         
+      2  6917dfd6-7590-4033-af2a-140b75263b0d  FINISHED         
+      3  dde70ec5-983d-4848-b50c-fb2cdac7d359  FINISHED         
+      "
+    `);
+    expect(mockLogger.error).toHaveBeenCalledTimes(0);
+  });
+
   test("cds upgrade request fails", async () => {
     mockRequest.request.mockReturnValueOnce({
       text: () => JSON.stringify(mockInitialResponse()),
     });
 
     mockRequest.request.mockReturnValueOnce({
-      text: () => JSON.stringify(mockOngoingResponse(JOB_STATUS.FAILED)),
+      text: () => JSON.stringify(mockOngoingResponse({ jobStatus: JOB_STATUS.FAILED })),
     });
 
-    await expect(cds.cdsUpgradeAll(fakeContext, [], [])).rejects.toMatchInlineSnapshot(
+    await expect(cds.cdsUpgradeAll(fakeContext(), [], [])).rejects.toMatchInlineSnapshot(
       `[Error: error happened during tenant upgrade]`
     );
     expect(mockRequest.request).toHaveBeenCalledTimes(2);
@@ -144,22 +243,22 @@ describe("cds tests", () => {
       text: () => JSON.stringify(mockInitialResponse()),
     });
     mockRequest.request.mockReturnValueOnce({
-      text: () => JSON.stringify(mockOngoingResponse(JOB_STATUS.RUNNING)),
+      text: () => JSON.stringify(mockOngoingResponse({ jobStatus: JOB_STATUS.RUNNING })),
     });
     mockRequest.request.mockImplementationOnce(() => {
       jest.advanceTimersByTime(15 * MINUTES_IN_MILLIS);
       return {
-        text: () => JSON.stringify(mockOngoingResponse(JOB_STATUS.RUNNING)),
+        text: () => JSON.stringify(mockOngoingResponse({ jobStatus: JOB_STATUS.RUNNING })),
       };
     });
     mockRequest.request.mockImplementationOnce(() => {
       jest.advanceTimersByTime(15 * MINUTES_IN_MILLIS);
       return {
-        text: () => JSON.stringify(mockOngoingResponse(JOB_STATUS.RUNNING)),
+        text: () => JSON.stringify(mockOngoingResponse({ jobStatus: JOB_STATUS.RUNNING })),
       };
     });
 
-    await expect(cds.cdsUpgradeAll(fakeContext, [], [])).rejects.toMatchInlineSnapshot(
+    await expect(cds.cdsUpgradeAll(fakeContext(), [], [])).rejects.toMatchInlineSnapshot(
       `[Error: no task progress after 30min]`
     );
     expect(mockRequest.request).toHaveBeenCalledTimes(4);
