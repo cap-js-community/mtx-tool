@@ -151,28 +151,26 @@ describe("cds tests", () => {
     jest.useFakeTimers();
   });
 
-  test("cds upgrade distributes tenants", async () => {
+  describe("upgrade distribution", () => {
     const jobIds = ["jobId-instance-0", "jobId-instance-1"];
-    let jobIdIndexUpgrade = 0;
-    let jobIdIndexPolling = 0;
-    const tenantIdsByJobId = {};
+    let jobIdIndexUpgrade;
+    let jobIdIndexPolling;
+    let tenantIdsByJobId;
 
-    // GET /-/cds/saas-provisioning/tenant
-    mockRequest.request.mockReturnValueOnce({
-      json: () => mockTenants,
-    });
-
-    // POST /-/cds/saas-provisioning/upgrade (first instance 0, second instance 1)
     const mockUpgradeResponse = (options) => {
       const jobId = jobIds[jobIdIndexUpgrade++];
       const { tenants: tenantIds } = JSON.parse(options.body);
-      tenantIdsByJobId[jobId] = tenantIds;
-      return {
-        text: () => JSON.stringify(mockInitialResponse({ jobId, tenantIds })),
-      };
+      if (tenantIds.includes("*")) {
+        return {
+          text: () => JSON.stringify(mockInitialResponse({ jobId })),
+        };
+      } else {
+        tenantIdsByJobId[jobId] = tenantIds;
+        return {
+          text: () => JSON.stringify(mockInitialResponse({ jobId, tenantIds })),
+        };
+      }
     };
-    mockRequest.request.mockImplementationOnce(mockUpgradeResponse);
-    mockRequest.request.mockImplementationOnce(mockUpgradeResponse);
 
     const mockJobPollResponse = () => {
       const jobId = jobIds[jobIdIndexPolling++];
@@ -181,14 +179,31 @@ describe("cds tests", () => {
         text: () => JSON.stringify(mockOngoingResponse({ jobId, tenantIds, jobStatus: JOB_STATUS.FINISHED })),
       };
     };
-    mockRequest.request.mockImplementationOnce(mockJobPollResponse);
-    mockRequest.request.mockImplementationOnce(mockJobPollResponse);
 
-    await expect(
-      cds.cdsUpgradeAll(fakeContext({ isMultiInstance: true }), [], [false, false])
-    ).resolves.toBeUndefined();
-    expect(mockRequest.request).toHaveBeenCalledTimes(5);
-    expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
+    beforeEach(() => {
+      jobIdIndexUpgrade = 0;
+      jobIdIndexPolling = 0;
+      tenantIdsByJobId = {};
+    });
+
+    test("does distribute by default", async () => {
+      // GET /-/cds/saas-provisioning/tenant
+      mockRequest.request.mockReturnValueOnce({
+        json: () => mockTenants,
+      });
+
+      // first instance 0, second instance 1
+      mockRequest.request.mockImplementationOnce(mockUpgradeResponse);
+      mockRequest.request.mockImplementationOnce(mockUpgradeResponse);
+
+      mockRequest.request.mockImplementationOnce(mockJobPollResponse);
+      mockRequest.request.mockImplementationOnce(mockJobPollResponse);
+
+      await expect(
+        cds.cdsUpgradeAll(fakeContext({ isMultiInstance: true }), [], [false, false])
+      ).resolves.toBeUndefined();
+      expect(mockRequest.request).toHaveBeenCalledTimes(5);
+      expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "splitting tenants across 2 app instances of 'app-mtx-name' as follows:
       instance 1: processing tenants 00000000-0000-4000-8000-000000000101, 00000000-0000-4000-8000-000000000102, 00000000-0000-4000-8000-000000000103
       instance 2: processing tenants 5ecc7413-2b7e-414a-9496-ad4a61f6cccf, 6917dfd6-7590-4033-af2a-140b75263b0d, dde70ec5-983d-4848-b50c-fb2cdac7d359
@@ -207,7 +222,31 @@ describe("cds tests", () => {
       3  dde70ec5-983d-4848-b50c-fb2cdac7d359  FINISHED         
       "
     `);
-    expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
+    });
+
+    test("does not distribute with first instance enabled", async () => {
+      mockRequest.request.mockImplementationOnce(mockUpgradeResponse);
+      mockRequest.request.mockImplementationOnce(mockJobPollResponse);
+
+      await expect(
+        cds.cdsUpgradeAll(fakeContext({ isMultiInstance: true }), [], [false, true])
+      ).resolves.toBeUndefined();
+      expect(mockRequest.request).toHaveBeenCalledTimes(2);
+      expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
+        "started upgrade on server with jobId jobId-instance-0 polling interval 15sec
+        job jobId-instance-0 is FINISHED with tasks queued/running: 0/0 | failed/finished: 0/6
+        #  tenantId                              status    message
+        1  00000000-0000-4000-8000-000000000101  FINISHED         
+        2  00000000-0000-4000-8000-000000000102  FINISHED         
+        3  00000000-0000-4000-8000-000000000103  FINISHED         
+        4  5ecc7413-2b7e-414a-9496-ad4a61f6cccf  FINISHED         
+        5  6917dfd6-7590-4033-af2a-140b75263b0d  FINISHED         
+        6  dde70ec5-983d-4848-b50c-fb2cdac7d359  FINISHED         
+        "
+      `);
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
+    });
   });
 
   test("cds upgrade request fails", async () => {
