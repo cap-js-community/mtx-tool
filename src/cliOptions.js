@@ -46,7 +46,6 @@ const FLAG_ARG = Object.freeze({
   SKIP_UNCHANGED: "--skip-unchanged",
   ONLY_STALE: "--only-stale",
   ONLY_FAILED: "--only-failed",
-  OBJECT_STORE: "--object-store",
 });
 
 const USAGE = `usage: ${NAME} [command]
@@ -307,7 +306,7 @@ const APP_CLI_OPTIONS = Object.freeze({
   HDI_LIST: {
     commandVariants: ["hdil", "--hdi-list"],
     optionalPassArgs: [PASS_ARG.TENANT_ID],
-    optionalFlagArgs: [FLAG_ARG.JSON_OUTPUT, FLAG_ARG.TIMESTAMPS],
+    optionalFlagArgs: [FLAG_ARG.TIMESTAMPS, FLAG_ARG.JSON_OUTPUT],
     callback: hdi.hdiList,
     useCache: false,
     readonly: true,

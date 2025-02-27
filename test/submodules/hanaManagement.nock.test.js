@@ -92,7 +92,7 @@ describe("hdi nock tests", () => {
 
     test("list timestamps", async () => {
       await nock.back("hdi-list.json");
-      const output = await hdi.hdiList(await freshContext(), [], [false, true]);
+      const output = await hdi.hdiList(await freshContext(), [], [true, false]);
       expect(anonymizeListTimestamps(output)).toMatchInlineSnapshot(`
         "#   tenant_id                             db_tenant_id                          host                                           schema                                       ready  created_on  updated_on
         1   1dd8383c-deb7-4887-a462-b72a96690a3a  511e712a-a874-42a6-a44c-d616e15151a5  service-manager-items-12-credentials-host:443  service-manager-items-12-credentials-schema  true   2025-01-17T10:56:18Z (x days ago)  2025-01-17T10:56:29Z (x days ago)  
@@ -141,7 +141,7 @@ describe("hdi nock tests", () => {
 
     test("list filtered timestamps", async () => {
       await nock.back("hdi-list-filtered.json");
-      const output = await hdi.hdiList(await freshContext(), [testTenantId], [false, true]);
+      const output = await hdi.hdiList(await freshContext(), [testTenantId], [true, false]);
       expect(anonymizeListTimestamps(output)).toMatchInlineSnapshot(`
       "tenant_id                             db_tenant_id                          host                                          schema                                      ready  created_on  updated_on
       5ecc7413-2b7e-414a-9496-ad4a61f6cccf  cd0dd852-4045-4bff-82b5-909d0948c6fb  service-manager-items-0-credentials-host:443  service-manager-items-0-credentials-schema  true   2022-04-26T18:05:44Z (x days ago)  2024-02-07T11:36:53Z (x days ago)  "
@@ -175,7 +175,7 @@ describe("hdi nock tests", () => {
 
     test("long list revealed", async () => {
       await nock.back("hdi-long-list.json");
-      const output = await hdi.hdiLongList(await freshContext(), [], [true, false]);
+      const output = await hdi.hdiLongList(await freshContext(), [], [false, true]);
       expect(output).toMatchSnapshot();
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
@@ -204,7 +204,7 @@ describe("hdi nock tests", () => {
 
     test("long list filtered revealed", async () => {
       await nock.back("hdi-long-list-filtered.json");
-      const output = await hdi.hdiLongList(await freshContext(), [testTenantId], [true, false]);
+      const output = await hdi.hdiLongList(await freshContext(), [testTenantId], [false, true]);
       expect(output).toMatchSnapshot();
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
