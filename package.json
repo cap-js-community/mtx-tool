@@ -1,6 +1,6 @@
 {
   "name": "@cap-js-community/mtx-tool",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "Multitenancy and Extensibility Tool is a cli to reduce operational overhead for multitenant Cloud Foundry applications",
   "bin": {
     "mtx": "bin/mtx.js"
@@ -11,7 +11,7 @@
     "npm-shrinkwrap.json"
   ],
   "scripts": {
-    "prepublishOnly": "npm ci --package-lock --omit=dev && npx shx rm package-lock.json && npm shrinkwrap",
+    "prepublishOnly": "npm ci --omit=dev && npx shx rm package-lock.json && npm shrinkwrap",
     "patch": "npx patch-package",
     "test": "jest",
     "test:coverage": "jest --runInBand --coverageReporters=html --coverageReporters=text-summary",
@@ -29,7 +29,7 @@
     "docs": "cd docs && bundle exec jekyll serve",
     "docs:install": "cd docs && npx shx rm -rf vendor Gemfile.lock && bundle install",
     "cloc": "npx cloc --vcs=git src",
-    "upgrade-lock": "npx shx rm -rf package-lock.json node_modules && npm i --package-lock && npm run patch"
+    "upgrade-lock": "npx shx rm -rf package-lock.json node_modules && npm i && npm run patch"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -43,11 +43,11 @@
   "devDependencies": {
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-jest": "^28.9.0",
+    "eslint-plugin-jest": "^28.11.0",
     "jest": "^29.7.0",
     "nock": "^13.5.6",
-    "prettier": "^3.4.1",
-    "typescript": "^5.7.2"
+    "prettier": "^3.5.2",
+    "typescript": "^5.7.3"
   },
   "homepage": "https://cap-js-community.github.io/mtx-tool/",
   "repository": {
