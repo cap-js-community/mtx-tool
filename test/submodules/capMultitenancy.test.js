@@ -157,6 +157,12 @@ describe("cds tests", () => {
     let jobIdIndexPolling;
     let tenantIdsByJobId;
 
+    beforeEach(() => {
+      jobIdIndexUpgrade = 0;
+      jobIdIndexPolling = 0;
+      tenantIdsByJobId = {};
+    });
+
     const mockUpgradeResponse = (options) => {
       const jobId = jobIds[jobIdIndexUpgrade++];
       const { tenants: tenantIds } = JSON.parse(options.body);
@@ -179,12 +185,6 @@ describe("cds tests", () => {
         text: () => JSON.stringify(mockOngoingResponse({ jobId, tenantIds, jobStatus: JOB_STATUS.FINISHED })),
       };
     };
-
-    beforeEach(() => {
-      jobIdIndexUpgrade = 0;
-      jobIdIndexPolling = 0;
-      tenantIdsByJobId = {};
-    });
 
     test("does distribute by default", async () => {
       // GET /-/cds/saas-provisioning/tenant
