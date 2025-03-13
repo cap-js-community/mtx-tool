@@ -25,8 +25,9 @@ updates:
       interval: daily
       time: "11:00"
       timezone: Europe/Berlin
-    allow:
-      - dependency-type: direct
+    # disable dependabot alerts for gem vulnerabilities that are only part of static documentation
+    ignore:
+      - dependency-name: "*"
     open-pull-requests-limit: 0
 
   - package-ecosystem: github-actions
