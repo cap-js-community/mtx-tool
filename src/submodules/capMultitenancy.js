@@ -156,7 +156,7 @@ const _cdsUpgradeMtxs = async (
     return;
   }
   const autoUndeployOptions = { options: { _: { hdi: { deploy: { auto_undeploy: true } } } } };
-  const { cfAppGuid, cfRouteUrl } = await context.getCdsInfo();
+  const { cfAppGuid, cfRouteUrl, cfSsh } = await context.getCdsInfo();
   const upgradeResponse = await request({
     method: "POST",
     url: cfRouteUrl,
@@ -232,6 +232,12 @@ const _cdsUpgradeMtxs = async (
       return [tenantId, status, error || ""];
     })
   );
+
+  for (const [tenantId] of upgradeTenantEntries) {
+    const i = 0;
+    const [stdout, stderr] = await cfSsh({ command: `cat app/logs/${tenantId}.log || exit 0`, appInstance });
+    const j = 0;
+  }
 
   logger.info(tableList(table));
   assert(!hasError, "error happened during tenant upgrade");
