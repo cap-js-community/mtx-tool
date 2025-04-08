@@ -116,7 +116,7 @@ const cdsOnboardTenant = async (context, [tenantId, rawMetadata]) => {
   return _cdsOnboard(context, tenantId, metadata);
 };
 
-const _cdsUpgradeLogFilepath = (tenantId) => `cds-upgrade-log-${tenantId}.txt`;
+const _cdsUpgradeLogFilepath = (tenantId) => `cds-upgrade-${tenantId}.txt`;
 
 const _safeMaterializeJson = async (response, description) => {
   const responseText = await response.text();
