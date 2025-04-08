@@ -12,6 +12,7 @@ const {
   formatTimestampsWithRelativeDays,
   isObject,
   parseIntWithFallback,
+  writeTextSync,
 } = require("../shared/static");
 const { assert, assertAll } = require("../shared/error");
 const { request } = require("../shared/request");
@@ -114,6 +115,8 @@ const cdsOnboardTenant = async (context, [tenantId, rawMetadata]) => {
   }
   return _cdsOnboard(context, tenantId, metadata);
 };
+
+const _cdsUpgradeLogFilepath = (tenantId) => `cds-upgrade-log-${tenantId}.txt`;
 
 const _safeMaterializeJson = async (response, description) => {
   const responseText = await response.text();
@@ -224,19 +227,21 @@ const _cdsUpgradeMtxs = async (
     accumulator[ID] = task;
     return accumulator;
   }, {});
-  let hasError = false;
-  const table = [["tenantId", "status", "message"]].concat(
-    upgradeTenantEntries.map(([tenantId, { ID: taskId }]) => {
-      const { status, error } = taskMap[taskId];
-      hasError ||= !status || error;
-      return [tenantId, status, error || ""];
-    })
-  );
 
-  for (const [tenantId] of upgradeTenantEntries) {
-    const i = 0;
-    const [stdout, stderr] = await cfSsh({ command: `cat app/logs/${tenantId}.log || exit 0`, appInstance });
-    const j = 0;
+  let hasError = false;
+  const table = [["tenantId", "status", "message", "log"]];
+  for (const [tenantId, { ID: taskId }] of upgradeTenantEntries) {
+    const { status, error } = taskMap[taskId];
+    hasError ||= !status || error;
+
+    const [stdout] = await cfSsh({ command: `cat app/logs/${tenantId}.log || exit 0`, appInstance });
+    let logfile;
+    if (stdout) {
+      logfile = _cdsUpgradeLogFilepath(tenantId);
+      await writeTextSync(logfile, stdout);
+    }
+
+    table.push([tenantId, status, error ?? "", logfile ?? ""]);
   }
 
   logger.info(tableList(table));
