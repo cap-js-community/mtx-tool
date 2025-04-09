@@ -10,6 +10,7 @@ jest.mock("../../src/shared/static", () => {
   return {
     ...staticLib,
     sleep: jest.fn(),
+    writeFileAsync: jest.fn(),
   };
 });
 
@@ -29,6 +30,7 @@ const mockCdsInfo = {
   cfAppGuid: "app-mtx-guid",
   cfRouteUrl: "route-url",
   cfProcess: { instances: 1 },
+  cfSsh: jest.fn().mockReturnValue([]),
 };
 
 const mockCdsInfoMultiInstance = {

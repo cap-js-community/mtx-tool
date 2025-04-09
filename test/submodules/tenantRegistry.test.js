@@ -28,7 +28,6 @@ const fakeContext = {
         appName: "appName",
       },
     },
-    cfSsh: jest.fn(),
   }),
   getCachedUaaTokenFromCredentials: () => "token",
 };

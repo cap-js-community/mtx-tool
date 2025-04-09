@@ -40,7 +40,10 @@ module.exports = {
       return true;
     }
   }),
+  writeTextSync: jest.fn(),
+  writeTextAsync: jest.fn(),
   writeJsonSync: jest.fn(),
+  writeJsonAsync: jest.fn(),
   // mock spawn
   spawnAsync: jest.fn(async (command, args, options) => {
     switch (`${command} ${args.join(" ")}`) {
