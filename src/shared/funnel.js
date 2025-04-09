@@ -68,21 +68,21 @@ class Funnel {
     }
     return results.map(({ value }) => value);
   }
-
-  /**
-   * Defines a promise that resolves when all payloads are processed by the iterator, but limits
-   * the number concurrent executions.
-   *
-   * @param limit     number of concurrent executions
-   * @param payloads  array where each element is an array of arguments passed to the iterator
-   * @param iterator  (async) function to process a payload
-   * @returns {Promise<[]>} promise for an array of iterator results
-   */
-  static async limiter(limit, payloads, iterator) {
-    const funnel = new Funnel(limit);
-    payloads.forEach((payload) => funnel.enqueue(async () => await iterator(payload)));
-    return await funnel.dequeueAll();
-  }
 }
 
-module.exports = Funnel;
+/**
+ * Defines a promise that resolves when all payloads are processed by the iterator, but limits
+ * the number concurrent executions.
+ *
+ * @param limit     number of concurrent executions
+ * @param payloads  array where each element is an array of arguments passed to the iterator
+ * @param iterator  (async) function to process a payload
+ * @returns {Promise<[]>} promise for an array of iterator results
+ */
+const limiter = async (limit, payloads, iterator) => {
+  const funnel = new Funnel(limit);
+  payloads.forEach((payload) => funnel.enqueue(async () => await iterator(payload)));
+  return await funnel.dequeueAll();
+};
+
+module.exports = { Funnel, limiter };

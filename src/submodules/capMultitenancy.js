@@ -8,7 +8,6 @@ const {
   tryJsonParse,
   resolveTenantArg,
   balancedSplit,
-  limiter,
   formatTimestampsWithRelativeDays,
   isObject,
   parseIntWithFallback,
@@ -17,6 +16,7 @@ const {
 const { assert, assertAll } = require("../shared/error");
 const { request } = require("../shared/request");
 const { Logger } = require("../shared/logger");
+const { limiter } = require("../shared/funnel");
 
 const ENV = Object.freeze({
   CDS_CONCURRENCY: "MTX_CDS_CONCURRENCY",
@@ -229,23 +229,24 @@ const _cdsUpgradeMtxs = async (
   }, {});
 
   let hasError = false;
-  const table = [["tenantId", "status", "message", "log"]];
-  for (const [tenantId, { ID: taskId }] of upgradeTenantEntries) {
-    const { status, error } = taskMap[taskId];
-    hasError ||= !status || error;
+  const table = [["tenantId", "status", "message", "log"]].concat(
+    await limiter(3, upgradeTenantEntries, async ([tenantId, { ID: taskId }]) => {
+      const { status, error } = taskMap[taskId];
+      hasError ||= !status || error;
 
-    const [stdout] = await cfSsh({
-      command: `cat app/logs/${tenantId}.log || exit 0`,
-      appInstance,
-      logged: false,
-    });
-    let logfile;
-    if (stdout) {
-      logfile = _cdsUpgradeLogFilepath(tenantId);
-      await writeTextAsync(logfile, stdout);
-    }
-    table.push([tenantId, status, error ?? "", logfile ?? ""]);
-  }
+      const [stdout] = await cfSsh({
+        command: `cat app/logs/${tenantId}.log || exit 0`,
+        appInstance,
+        logged: false,
+      });
+      let logfile;
+      if (stdout) {
+        logfile = _cdsUpgradeLogFilepath(tenantId);
+        await writeTextAsync(logfile, stdout);
+      }
+      return [tenantId, status, error ?? "", logfile ?? ""];
+    })
+  );
 
   logger.info(tableList(table));
   assert(!hasError, "error happened during tenant upgrade");

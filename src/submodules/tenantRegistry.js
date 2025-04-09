@@ -15,12 +15,12 @@ const {
   dateDiffInDays,
   formatTimestampsWithRelativeDays,
   resolveTenantArg,
-  limiter,
   parseIntWithFallback,
 } = require("../shared/static");
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
 const { Logger } = require("../shared/logger");
+const { limiter } = require("../shared/funnel");
 
 const ENV = Object.freeze({
   REG_CONCURRENCY: "MTX_REG_CONCURRENCY",
