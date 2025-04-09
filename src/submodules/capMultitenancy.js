@@ -234,11 +234,16 @@ const _cdsUpgradeMtxs = async (
     const { status, error } = taskMap[taskId];
     hasError ||= !status || error;
 
-    const [stdout] = await cfSsh({ command: `cat app/logs/${tenantId}.log || exit 0`, appInstance });
+    const [stdout, stderr] = await cfSsh({
+      command: `cat app/logs/${tenantId}.log || exit 0`,
+      appInstance,
+      logged: false,
+    });
+    const stdBoth = [stderr, stdout].filter((data) => data).join("\n");
     let logfile;
-    if (stdout) {
+    if (stdBoth) {
       logfile = _cdsUpgradeLogFilepath(tenantId);
-      await writeTextSync(logfile, stdout);
+      await writeTextSync(logfile, stdBoth);
     }
 
     table.push([tenantId, status, error ?? "", logfile ?? ""]);
