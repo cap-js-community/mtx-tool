@@ -10,6 +10,7 @@ const {
   unlinkSync,
   constants: { R_OK },
 } = require("fs");
+const { writeFile: writeFileAsync } = require("fs/promises");
 const net = require("net");
 const childProcess = require("child_process");
 const util = require("util");
@@ -73,7 +74,11 @@ const tryJsonParse = (input) => {
 
 const writeTextSync = (filepath, data) => writeFileSync(filepath, data);
 
+const writeTextAsync = async (filepath, data) => await writeFileAsync(filepath, data);
+
 const writeJsonSync = (filepath, data) => writeFileSync(filepath, JSON.stringify(data, null, 2) + "\n");
+
+const writeJsonAsync = async (filepath, data) => await writeFileAsync(filepath, JSON.stringify(data, null, 2) + "\n");
 
 const deleteFileSync = (filepath) => unlinkSync(filepath);
 
@@ -384,7 +389,9 @@ module.exports = {
   question,
   tryReadJsonSync,
   writeTextSync,
+  writeTextAsync,
   writeJsonSync,
+  writeJsonAsync,
   deleteFileSync,
   tryAccessSync,
   tryJsonParse,

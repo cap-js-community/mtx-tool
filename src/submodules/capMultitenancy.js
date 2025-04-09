@@ -12,7 +12,7 @@ const {
   formatTimestampsWithRelativeDays,
   isObject,
   parseIntWithFallback,
-  writeTextSync,
+  writeTextAsync,
 } = require("../shared/static");
 const { assert, assertAll } = require("../shared/error");
 const { request } = require("../shared/request");
@@ -242,7 +242,7 @@ const _cdsUpgradeMtxs = async (
     let logfile;
     if (stdout) {
       logfile = _cdsUpgradeLogFilepath(tenantId);
-      await writeTextSync(logfile, stdout);
+      await writeTextAsync(logfile, stdout);
     }
     table.push([tenantId, status, error ?? "", logfile ?? ""]);
   }
