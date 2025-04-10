@@ -11,12 +11,15 @@ class Funnel {
     this.__freeCapacity = limit;
     // NOTE: runningPromises are throw-disabled variants of promises active in the funnel
     this.__runningPromises = [];
-    // NOTE: queue are the currently enqueued callback promises in calling order in their original, potentially
-    //   throwing form
-    this.__queue = [];
   }
 
-  async _enqueue(callback, load = 1) {
+  /**
+   * Enqueues a callback function to be executed when capacity becomes available.
+   * @param {Function} callback - The (async) callback function to execute.
+   * @param {number} [load] - The capacity load of this callback. Defaults to 1 and is set to at least 1.
+   * @returns {Promise<*>} A promise that resolves with the result of the callback.
+   */
+  async enqueue(callback, load = 1) {
     load = Math.max(1, load);
     // NOTE: the second condition here means we allow overbooking if the funnel is empty
     while (this.__freeCapacity < load && this.__runningPromises.length) {
@@ -37,7 +40,20 @@ class Funnel {
       });
     this.__runningPromises.push(runningPromise);
 
-    return await callbackPromise;
+    return callbackPromise;
+  }
+}
+
+class FunnelQueue extends Funnel {
+  /**
+   * Creates a new FunnelQueue instance with the specified capacity limit.
+   * @param {number} limit - The maximum capacity of the funnel. Will be set to at least 1.
+   */
+  constructor(limit) {
+    super(limit);
+    // NOTE: queue are the currently enqueued callback promises in calling order in their original, potentially
+    //   throwing form
+    this.__queue = [];
   }
 
   /**
@@ -46,8 +62,7 @@ class Funnel {
    * @param {number} [load] - The capacity load of this callback. Defaults to 1 and is set to at least 1.
    */
   async enqueue(callback, load) {
-    const enqueuePromise = this._enqueue(callback, load);
-    this.__queue.push(enqueuePromise);
+    this.__queue.push(super.enqueue(callback, load));
   }
 
   /**
@@ -78,9 +93,9 @@ class Funnel {
  * @returns {Promise<[]>} promise for an array of iterator results
  */
 const limiter = async (limit, payloads, iterator) => {
-  const funnel = new Funnel(limit);
+  const funnel = new FunnelQueue(limit);
   payloads.forEach((payload) => funnel.enqueue(async () => await iterator(payload)));
   return await funnel.dequeueAll();
 };
 
-module.exports = { Funnel, limiter };
+module.exports = { Funnel, FunnelQueue, limiter };
