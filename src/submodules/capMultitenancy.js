@@ -24,6 +24,7 @@ const ENV = Object.freeze({
 });
 
 const CDS_UPGRADE_APP_INSTANCE = 0;
+const CDS_UPGRADE_LOG_DOWNLOAD_CONCURRENCY = 3;
 const CDS_REQUEST_CONCURRENCY_FALLBACK = 10;
 const CDS_JOB_POLL_FREQUENCY_FALLBACK = 15000;
 const CDS_CHANGE_TIMEOUT = 30 * 60 * 1000;
@@ -230,7 +231,7 @@ const _cdsUpgradeMtxs = async (
 
   let hasError = false;
   const table = [["tenantId", "status", "message", "log"]].concat(
-    await limiter(3, upgradeTenantEntries, async ([tenantId, { ID: taskId }]) => {
+    await limiter(CDS_UPGRADE_LOG_DOWNLOAD_CONCURRENCY, upgradeTenantEntries, async ([tenantId, { ID: taskId }]) => {
       const { status, error } = taskMap[taskId];
       hasError ||= !status || error;
 
