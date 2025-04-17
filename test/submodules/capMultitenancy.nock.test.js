@@ -197,8 +197,8 @@ describe("cds nock tests", () => {
       job 8de6330c-6b52-40b0-86eb-10e0447f0c97 is RUNNING with tasks queued/running: 0/1 | failed/finished: 0/0
       job 8de6330c-6b52-40b0-86eb-10e0447f0c97 is RUNNING with tasks queued/running: 0/1 | failed/finished: 0/0
       job 8de6330c-6b52-40b0-86eb-10e0447f0c97 is FINISHED with tasks queued/running: 0/0 | failed/finished: 0/1
-      #  tenantId                              status    message
-      1  5ecc7413-2b7e-414a-9496-ad4a61f6cccf  FINISHED         
+      #  tenantId                              status    message  log                                                 
+      1  5ecc7413-2b7e-414a-9496-ad4a61f6cccf  FINISHED           cds-upgrade-5ecc7413-2b7e-414a-9496-ad4a61f6cccf.txt
 
       GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='8de6330c-6b52-40b0-86eb-10e0447f0c97') 200 OK (88ms)
       GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='8de6330c-6b52-40b0-86eb-10e0447f0c97') 200 OK (88ms)
@@ -223,17 +223,17 @@ describe("cds nock tests", () => {
       job d8c2f77d-5e86-48d7-a877-caebc8aba8ff is RUNNING with tasks queued/running:  0/ 3 | failed/finished:  0/ 7
       job d8c2f77d-5e86-48d7-a877-caebc8aba8ff is RUNNING with tasks queued/running:  0/ 3 | failed/finished:  0/ 7
       job d8c2f77d-5e86-48d7-a877-caebc8aba8ff is FINISHED with tasks queued/running:  0/ 0 | failed/finished:  0/10
-      #   tenantId                              status    message
-      1   288393a7-972c-4fa8-acfd-12299c4db374  FINISHED         
-      2   4c0909b1-a84e-4763-a26e-532fdb9e40fa  FINISHED         
-      3   5ecc7413-2b7e-414a-9496-ad4a61f6cccf  FINISHED         
-      4   663d2938-be50-44ab-92ca-538855eb594f  FINISHED         
-      5   6917dfd6-7590-4033-af2a-140b75263b0d  FINISHED         
-      6   9c418100-6318-4e8a-b4b2-1114f4f44aef  FINISHED         
-      7   ae2dc112-9745-4f5e-8feb-79ebdc0094bd  FINISHED         
-      8   cb9158ce-f8fd-441b-b443-17219e8f79fa  FINISHED         
-      9   cf528063-6a43-4bf2-8ccc-ca4e6d75d88e  FINISHED         
-      10  dde70ec5-983d-4848-b50c-fb2cdac7d359  FINISHED         
+      #   tenantId                              status    message  log                                                 
+      1   288393a7-972c-4fa8-acfd-12299c4db374  FINISHED           cds-upgrade-288393a7-972c-4fa8-acfd-12299c4db374.txt
+      2   4c0909b1-a84e-4763-a26e-532fdb9e40fa  FINISHED           cds-upgrade-4c0909b1-a84e-4763-a26e-532fdb9e40fa.txt
+      3   5ecc7413-2b7e-414a-9496-ad4a61f6cccf  FINISHED           cds-upgrade-5ecc7413-2b7e-414a-9496-ad4a61f6cccf.txt
+      4   663d2938-be50-44ab-92ca-538855eb594f  FINISHED           cds-upgrade-663d2938-be50-44ab-92ca-538855eb594f.txt
+      5   6917dfd6-7590-4033-af2a-140b75263b0d  FINISHED           cds-upgrade-6917dfd6-7590-4033-af2a-140b75263b0d.txt
+      6   9c418100-6318-4e8a-b4b2-1114f4f44aef  FINISHED           cds-upgrade-9c418100-6318-4e8a-b4b2-1114f4f44aef.txt
+      7   ae2dc112-9745-4f5e-8feb-79ebdc0094bd  FINISHED           cds-upgrade-ae2dc112-9745-4f5e-8feb-79ebdc0094bd.txt
+      8   cb9158ce-f8fd-441b-b443-17219e8f79fa  FINISHED           cds-upgrade-cb9158ce-f8fd-441b-b443-17219e8f79fa.txt
+      9   cf528063-6a43-4bf2-8ccc-ca4e6d75d88e  FINISHED           cds-upgrade-cf528063-6a43-4bf2-8ccc-ca4e6d75d88e.txt
+      10  dde70ec5-983d-4848-b50c-fb2cdac7d359  FINISHED           cds-upgrade-dde70ec5-983d-4848-b50c-fb2cdac7d359.txt
 
       GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='d8c2f77d-5e86-48d7-a877-caebc8aba8ff') 200 OK (88ms)
       GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='d8c2f77d-5e86-48d7-a877-caebc8aba8ff') 200 OK (88ms)

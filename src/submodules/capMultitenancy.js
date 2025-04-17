@@ -8,14 +8,15 @@ const {
   tryJsonParse,
   resolveTenantArg,
   balancedSplit,
-  limiter,
   formatTimestampsWithRelativeDays,
   isObject,
   parseIntWithFallback,
+  writeTextAsync,
 } = require("../shared/static");
 const { assert, assertAll } = require("../shared/error");
 const { request } = require("../shared/request");
 const { Logger } = require("../shared/logger");
+const { limiter } = require("../shared/funnel");
 
 const ENV = Object.freeze({
   CDS_CONCURRENCY: "MTX_CDS_CONCURRENCY",
@@ -23,6 +24,7 @@ const ENV = Object.freeze({
 });
 
 const CDS_UPGRADE_APP_INSTANCE = 0;
+const CDS_UPGRADE_LOG_DOWNLOAD_CONCURRENCY = 3;
 const CDS_REQUEST_CONCURRENCY_FALLBACK = 10;
 const CDS_JOB_POLL_FREQUENCY_FALLBACK = 15000;
 const CDS_CHANGE_TIMEOUT = 30 * 60 * 1000;
@@ -115,6 +117,8 @@ const cdsOnboardTenant = async (context, [tenantId, rawMetadata]) => {
   return _cdsOnboard(context, tenantId, metadata);
 };
 
+const _cdsUpgradeLogFilepath = (tenantId) => `cds-upgrade-${tenantId}.txt`;
+
 const _safeMaterializeJson = async (response, description) => {
   const responseText = await response.text();
   const responseData = tryJsonParse(responseText);
@@ -156,7 +160,7 @@ const _cdsUpgradeMtxs = async (
     return;
   }
   const autoUndeployOptions = { options: { _: { hdi: { deploy: { auto_undeploy: true } } } } };
-  const { cfAppGuid, cfRouteUrl } = await context.getCdsInfo();
+  const { cfAppGuid, cfRouteUrl, cfSsh } = await context.getCdsInfo();
   const upgradeResponse = await request({
     method: "POST",
     url: cfRouteUrl,
@@ -224,12 +228,24 @@ const _cdsUpgradeMtxs = async (
     accumulator[ID] = task;
     return accumulator;
   }, {});
+
   let hasError = false;
-  const table = [["tenantId", "status", "message"]].concat(
-    upgradeTenantEntries.map(([tenantId, { ID: taskId }]) => {
+  const table = [["tenantId", "status", "message", "log"]].concat(
+    await limiter(CDS_UPGRADE_LOG_DOWNLOAD_CONCURRENCY, upgradeTenantEntries, async ([tenantId, { ID: taskId }]) => {
       const { status, error } = taskMap[taskId];
       hasError ||= !status || error;
-      return [tenantId, status, error || ""];
+
+      const [stdout] = await cfSsh({
+        command: `cat app/logs/${tenantId}.log || exit 0`,
+        appInstance,
+        logged: false,
+      });
+      let logfile;
+      if (stdout) {
+        logfile = _cdsUpgradeLogFilepath(tenantId);
+        await writeTextAsync(logfile, stdout);
+      }
+      return [tenantId, status, error ?? "", logfile ?? ""];
     })
   );
 

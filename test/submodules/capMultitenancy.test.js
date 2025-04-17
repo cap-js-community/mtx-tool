@@ -10,6 +10,7 @@ jest.mock("../../src/shared/static", () => {
   return {
     ...staticLib,
     sleep: jest.fn(),
+    writeFileAsync: jest.fn(),
   };
 });
 
@@ -29,6 +30,7 @@ const mockCdsInfo = {
   cfAppGuid: "app-mtx-guid",
   cfRouteUrl: "route-url",
   cfProcess: { instances: 1 },
+  cfSsh: jest.fn().mockReturnValue([]),
 };
 
 const mockCdsInfoMultiInstance = {
@@ -204,24 +206,24 @@ describe("cds tests", () => {
       ).resolves.toBeUndefined();
       expect(mockRequest.request).toHaveBeenCalledTimes(5);
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
-      "splitting tenants across 2 app instances of 'app-mtx-name' as follows:
-      instance 1: processing tenants 00000000-0000-4000-8000-000000000101, 00000000-0000-4000-8000-000000000102, 00000000-0000-4000-8000-000000000103
-      instance 2: processing tenants 5ecc7413-2b7e-414a-9496-ad4a61f6cccf, 6917dfd6-7590-4033-af2a-140b75263b0d, dde70ec5-983d-4848-b50c-fb2cdac7d359
+        "splitting tenants across 2 app instances of 'app-mtx-name' as follows:
+        instance 1: processing tenants 00000000-0000-4000-8000-000000000101, 00000000-0000-4000-8000-000000000102, 00000000-0000-4000-8000-000000000103
+        instance 2: processing tenants 5ecc7413-2b7e-414a-9496-ad4a61f6cccf, 6917dfd6-7590-4033-af2a-140b75263b0d, dde70ec5-983d-4848-b50c-fb2cdac7d359
 
-      started upgrade on server with jobId jobId-instance-0 polling interval 15sec
-      started upgrade on server with jobId jobId-instance-1 polling interval 15sec
-      job jobId-instance-0 is FINISHED with tasks queued/running: 0/0 | failed/finished: 0/3
-      #  tenantId                              status    message
-      1  00000000-0000-4000-8000-000000000101  FINISHED         
-      2  00000000-0000-4000-8000-000000000102  FINISHED         
-      3  00000000-0000-4000-8000-000000000103  FINISHED         
-      job jobId-instance-1 is FINISHED with tasks queued/running: 0/0 | failed/finished: 0/3
-      #  tenantId                              status    message
-      1  5ecc7413-2b7e-414a-9496-ad4a61f6cccf  FINISHED         
-      2  6917dfd6-7590-4033-af2a-140b75263b0d  FINISHED         
-      3  dde70ec5-983d-4848-b50c-fb2cdac7d359  FINISHED         
-      "
-    `);
+        started upgrade on server with jobId jobId-instance-0 polling interval 15sec
+        started upgrade on server with jobId jobId-instance-1 polling interval 15sec
+        job jobId-instance-0 is FINISHED with tasks queued/running: 0/0 | failed/finished: 0/3
+        job jobId-instance-1 is FINISHED with tasks queued/running: 0/0 | failed/finished: 0/3
+        #  tenantId                              status    message  log
+        1  00000000-0000-4000-8000-000000000101  FINISHED              
+        2  00000000-0000-4000-8000-000000000102  FINISHED              
+        3  00000000-0000-4000-8000-000000000103  FINISHED              
+        #  tenantId                              status    message  log
+        1  5ecc7413-2b7e-414a-9496-ad4a61f6cccf  FINISHED              
+        2  6917dfd6-7590-4033-af2a-140b75263b0d  FINISHED              
+        3  dde70ec5-983d-4848-b50c-fb2cdac7d359  FINISHED              
+        "
+      `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
 
@@ -236,13 +238,13 @@ describe("cds tests", () => {
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "started upgrade on server with jobId jobId-instance-0 polling interval 15sec
         job jobId-instance-0 is FINISHED with tasks queued/running: 0/0 | failed/finished: 0/6
-        #  tenantId                              status    message
-        1  00000000-0000-4000-8000-000000000101  FINISHED         
-        2  00000000-0000-4000-8000-000000000102  FINISHED         
-        3  00000000-0000-4000-8000-000000000103  FINISHED         
-        4  5ecc7413-2b7e-414a-9496-ad4a61f6cccf  FINISHED         
-        5  6917dfd6-7590-4033-af2a-140b75263b0d  FINISHED         
-        6  dde70ec5-983d-4848-b50c-fb2cdac7d359  FINISHED         
+        #  tenantId                              status    message  log
+        1  00000000-0000-4000-8000-000000000101  FINISHED              
+        2  00000000-0000-4000-8000-000000000102  FINISHED              
+        3  00000000-0000-4000-8000-000000000103  FINISHED              
+        4  5ecc7413-2b7e-414a-9496-ad4a61f6cccf  FINISHED              
+        5  6917dfd6-7590-4033-af2a-140b75263b0d  FINISHED              
+        6  dde70ec5-983d-4848-b50c-fb2cdac7d359  FINISHED              
         "
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
@@ -265,13 +267,13 @@ describe("cds tests", () => {
     expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "started upgrade on server with jobId 8fd6894a-91d6-4eed-b772-1be05b8ac6ed polling interval 15sec
       job 8fd6894a-91d6-4eed-b772-1be05b8ac6ed is FAILED with tasks queued/running: 0/0 | failed/finished: 6/0
-      #  tenantId                              status  message                               
-      1  00000000-0000-4000-8000-000000000101  FAILED  HDI deployment failed with exit code 1
-      2  00000000-0000-4000-8000-000000000102  FAILED  HDI deployment failed with exit code 1
-      3  00000000-0000-4000-8000-000000000103  FAILED  HDI deployment failed with exit code 1
-      4  5ecc7413-2b7e-414a-9496-ad4a61f6cccf  FAILED  HDI deployment failed with exit code 1
-      5  6917dfd6-7590-4033-af2a-140b75263b0d  FAILED  HDI deployment failed with exit code 1
-      6  dde70ec5-983d-4848-b50c-fb2cdac7d359  FAILED  HDI deployment failed with exit code 1
+      #  tenantId                              status  message                                 log
+      1  00000000-0000-4000-8000-000000000101  FAILED  HDI deployment failed with exit code 1     
+      2  00000000-0000-4000-8000-000000000102  FAILED  HDI deployment failed with exit code 1     
+      3  00000000-0000-4000-8000-000000000103  FAILED  HDI deployment failed with exit code 1     
+      4  5ecc7413-2b7e-414a-9496-ad4a61f6cccf  FAILED  HDI deployment failed with exit code 1     
+      5  6917dfd6-7590-4033-af2a-140b75263b0d  FAILED  HDI deployment failed with exit code 1     
+      6  dde70ec5-983d-4848-b50c-fb2cdac7d359  FAILED  HDI deployment failed with exit code 1     
       "
     `);
     expect(mockLogger.error).toHaveBeenCalledTimes(0);
@@ -306,13 +308,13 @@ describe("cds tests", () => {
       job 8fd6894a-91d6-4eed-b772-1be05b8ac6ed is RUNNING with tasks queued/running: 0/6 | failed/finished: 0/0
       job 8fd6894a-91d6-4eed-b772-1be05b8ac6ed is RUNNING with tasks queued/running: 0/6 | failed/finished: 0/0
       job 8fd6894a-91d6-4eed-b772-1be05b8ac6ed is RUNNING with tasks queued/running: 0/6 | failed/finished: 0/0
-      #  tenantId                              status   message
-      1  00000000-0000-4000-8000-000000000101  RUNNING         
-      2  00000000-0000-4000-8000-000000000102  RUNNING         
-      3  00000000-0000-4000-8000-000000000103  RUNNING         
-      4  5ecc7413-2b7e-414a-9496-ad4a61f6cccf  RUNNING         
-      5  6917dfd6-7590-4033-af2a-140b75263b0d  RUNNING         
-      6  dde70ec5-983d-4848-b50c-fb2cdac7d359  RUNNING         
+      #  tenantId                              status   message  log
+      1  00000000-0000-4000-8000-000000000101  RUNNING              
+      2  00000000-0000-4000-8000-000000000102  RUNNING              
+      3  00000000-0000-4000-8000-000000000103  RUNNING              
+      4  5ecc7413-2b7e-414a-9496-ad4a61f6cccf  RUNNING              
+      5  6917dfd6-7590-4033-af2a-140b75263b0d  RUNNING              
+      6  dde70ec5-983d-4848-b50c-fb2cdac7d359  RUNNING              
       "
     `);
     expect(mockLogger.error).toHaveBeenCalledTimes(0);

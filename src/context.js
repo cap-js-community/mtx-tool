@@ -190,7 +190,7 @@ const _writeRawAppPersistedCache = (newRuntimeCache, filepath, orgGuid, spaceGui
   }
 };
 
-const _cfSsh = async (appName, { localPort, remotePort, remoteHostname, appInstance, command } = {}) => {
+const _cfSsh = async (appName, { logged, localPort, remotePort, remoteHostname, appInstance, command } = {}) => {
   const args = [CF.EXEC, "ssh", appName];
   if (localPort !== undefined && localPort !== null && remotePort !== undefined && remotePort !== null) {
     args.push(
@@ -206,11 +206,11 @@ const _cfSsh = async (appName, { localPort, remotePort, remoteHostname, appInsta
   if (command !== undefined && command !== null) {
     args.push("--command", command);
   }
-  logger.info("running", args.join(" "));
+  logged && logger.info("running", args.join(" "));
   try {
     const [stdout, stderr] = await _run(...args);
-    stderr && logger.error(stderr);
-    stdout && logger.info(stdout);
+    logged && stderr && logger.error(stderr);
+    logged && stdout && logger.info(stdout);
     return [stdout, stderr];
   } catch (err) {
     return fail(
