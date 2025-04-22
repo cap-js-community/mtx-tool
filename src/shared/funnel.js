@@ -56,6 +56,10 @@ class FunnelQueue extends Funnel {
     this.__queue = [];
   }
 
+  size() {
+    return this.__queue.length;
+  }
+
   /**
    * Enqueues a callback function to be executed when capacity becomes available.
    * @param {Function} callback - The (async) callback function to execute.

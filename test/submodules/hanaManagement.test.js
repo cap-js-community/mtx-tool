@@ -130,6 +130,7 @@ describe("hdi tests", () => {
       "skipping 1 already enabled tenants
       enabling 3 tenants tenant-id-1, tenant-id-2, tenant-id-3
       deleting 0 bindings to protect enablement
+      triggering 3 changes
       created 1 missing binding for tenant tenant-id-1
       created 1 missing binding for tenant tenant-id-2
       created 1 missing binding for tenant tenant-id-3"

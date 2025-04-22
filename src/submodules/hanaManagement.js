@@ -11,11 +11,12 @@ const {
   makeOneTime,
   parseIntWithFallback,
   resetOneTime,
+  partition,
 } = require("../shared/static");
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
 const { Logger } = require("../shared/logger");
-const { limiter } = require("../shared/funnel");
+const { limiter, FunnelQueue } = require("../shared/funnel");
 
 const ENV = Object.freeze({
   HDI_CONCURRENCY: "MTX_HDI_CONCURRENCY",
@@ -278,15 +279,16 @@ const _hdiRepairBindingsServiceManager = async (context, { instances, bindings, 
   const bindingsByInstance = _getBindingsByInstance(bindings);
   instances.sort(compareForServiceManagerTenantId);
 
-  const changes = [];
+  const changeQueue = new FunnelQueue(hdiRequestConcurrency);
   for (const instance of instances) {
     const tenantId = instance.labels.tenant_id[0];
-    const instanceBindings = (bindingsByInstance[instance.id] || []).filter((binding) => binding.ready);
+    const instanceBindings = bindingsByInstance[instance.id] ?? [];
     instanceBindings.sort(compareForServiceManagerBindingUpdatedAtDesc);
-    if (instanceBindings.length < SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
+    const [instanceBindingsReady, instanceBindingsUnready] = partition(instanceBindings, (binding) => binding.ready);
+    if (instanceBindingsReady.length < SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
       const missingBindingCount = SERVICE_MANAGER_IDEAL_BINDING_COUNT - instanceBindings.length;
       for (let i = 0; i < missingBindingCount; i++) {
-        changes.push(async () => {
+        changeQueue.enqueue(async () => {
           await _createBindingServiceManagerFromInstance(sm_url, token, instance, { parameters });
           logger.info(
             "created %i missing binding%s for tenant %s",
@@ -296,13 +298,13 @@ const _hdiRepairBindingsServiceManager = async (context, { instances, bindings, 
           );
         });
       }
-    } else if (instanceBindings.length > SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
-      const ambivalentBindings = instanceBindings.slice(1);
+    } else if (instanceBindingsReady.length > SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
+      const ambivalentBindings = instanceBindingsReady.slice(1);
       for (const { id } of ambivalentBindings) {
-        changes.push(async () => {
+        changeQueue.enqueue(async () => {
           await _deleteBindingServiceManager(sm_url, token, id);
           logger.info(
-            "deleted %i ambivalent binding%s for tenant %s",
+            "deleted %i ambivalent ready binding%s for tenant %s",
             ambivalentBindings.length,
             ambivalentBindings.length === 1 ? "" : "s",
             tenantId
@@ -310,10 +312,26 @@ const _hdiRepairBindingsServiceManager = async (context, { instances, bindings, 
         });
       }
     }
+    for (const { id } of instanceBindingsUnready) {
+      changeQueue.enqueue(async () => {
+        await _deleteBindingServiceManager(sm_url, token, id);
+        logger.info(
+          "deleted %i unready binding%s for tenant %s",
+          instanceBindingsUnready.length,
+          instanceBindingsUnready.length === 1 ? "" : "s",
+          tenantId
+        );
+      });
+    }
   }
 
-  await limiter(hdiRequestConcurrency, changes, async (fn) => await fn());
-  changes.length === 0 && logger.info("found exactly one binding for %i instances, all is well", instances.length);
+  const changeCount = changeQueue.size();
+  if (changeCount > 0) {
+    logger.info("triggering %i changes", changeCount);
+    await changeQueue.dequeueAll();
+  } else {
+    logger.info("found exactly one ready binding for %i instances, all is well", instances.length);
+  }
 };
 
 const _nextFreeSidPort = async () => {
