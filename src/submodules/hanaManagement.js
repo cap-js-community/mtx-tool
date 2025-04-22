@@ -15,7 +15,7 @@ const {
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
 const { Logger } = require("../shared/logger");
-const { limiter } = require("../shared/funnel");
+const { limiter, FunnelQueue } = require("../shared/funnel");
 
 const ENV = Object.freeze({
   HDI_CONCURRENCY: "MTX_HDI_CONCURRENCY",
@@ -278,7 +278,7 @@ const _hdiRepairBindingsServiceManager = async (context, { instances, bindings, 
   const bindingsByInstance = _getBindingsByInstance(bindings);
   instances.sort(compareForServiceManagerTenantId);
 
-  const changes = [];
+  const changeFunnel = new FunnelQueue(hdiRequestConcurrency);
   for (const instance of instances) {
     const tenantId = instance.labels.tenant_id[0];
     const instanceBindings = (bindingsByInstance[instance.id] || []).filter((binding) => binding.ready);
@@ -286,7 +286,7 @@ const _hdiRepairBindingsServiceManager = async (context, { instances, bindings, 
     if (instanceBindings.length < SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
       const missingBindingCount = SERVICE_MANAGER_IDEAL_BINDING_COUNT - instanceBindings.length;
       for (let i = 0; i < missingBindingCount; i++) {
-        changes.push(async () => {
+        changeFunnel.enqueue(async () => {
           await _createBindingServiceManagerFromInstance(sm_url, token, instance, { parameters });
           logger.info(
             "created %i missing binding%s for tenant %s",
@@ -299,7 +299,7 @@ const _hdiRepairBindingsServiceManager = async (context, { instances, bindings, 
     } else if (instanceBindings.length > SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
       const ambivalentBindings = instanceBindings.slice(1);
       for (const { id } of ambivalentBindings) {
-        changes.push(async () => {
+        changeFunnel.enqueue(async () => {
           await _deleteBindingServiceManager(sm_url, token, id);
           logger.info(
             "deleted %i ambivalent binding%s for tenant %s",
@@ -312,8 +312,8 @@ const _hdiRepairBindingsServiceManager = async (context, { instances, bindings, 
     }
   }
 
-  await limiter(hdiRequestConcurrency, changes, async (fn) => await fn());
-  changes.length === 0 && logger.info("found exactly one binding for %i instances, all is well", instances.length);
+  const results = await changeFunnel.dequeueAll();
+  results.length === 0 && logger.info("found exactly one binding for %i instances, all is well", instances.length);
 };
 
 const _nextFreeSidPort = async () => {
