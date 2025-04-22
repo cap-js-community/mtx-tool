@@ -282,7 +282,7 @@ const _hdiRepairBindingsServiceManager = async (context, { instances, bindings, 
   const changeQueue = new FunnelQueue(hdiRequestConcurrency);
   for (const instance of instances) {
     const tenantId = instance.labels.tenant_id[0];
-    const instanceBindings = bindingsByInstance[instance.id] || [];
+    const instanceBindings = bindingsByInstance[instance.id] ?? [];
     instanceBindings.sort(compareForServiceManagerBindingUpdatedAtDesc);
     const [instanceBindingsReady, instanceBindingsUnready] = partition(instanceBindings, (binding) => binding.ready);
     if (instanceBindingsReady.length < SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
