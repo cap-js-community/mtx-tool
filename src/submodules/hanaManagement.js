@@ -304,7 +304,7 @@ const _hdiRepairBindingsServiceManager = async (context, { instances, bindings, 
         changeFunnel.enqueue(async () => {
           await _deleteBindingServiceManager(sm_url, token, id);
           logger.info(
-            "deleted %i ambivalent binding%s for tenant %s",
+            "deleted %i ambivalent ready binding%s for tenant %s",
             ambivalentBindings.length,
             ambivalentBindings.length === 1 ? "" : "s",
             tenantId
@@ -326,7 +326,8 @@ const _hdiRepairBindingsServiceManager = async (context, { instances, bindings, 
   }
 
   const results = await changeFunnel.dequeueAll();
-  results.length === 0 && logger.info("found exactly one binding for %i instances, all is well", instances.length);
+  results.length === 0 &&
+    logger.info("found exactly one ready binding for %i instances, all is well", instances.length);
 };
 
 const _nextFreeSidPort = async () => {
