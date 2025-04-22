@@ -235,16 +235,19 @@ const _cdsUpgradeMtxs = async (
       const { status, error } = taskMap[taskId];
       hasError ||= !status || error;
 
-      const [stdout] = await cfSsh({
-        command: `cat app/logs/${tenantId}.log || exit 0`,
-        appInstance,
-        logged: false,
-      });
       let logfile;
-      if (stdout) {
-        logfile = _cdsUpgradeLogFilepath(tenantId);
-        await writeTextAsync(logfile, stdout);
-      }
+      // NOTE: we need to be resilient here for the case that the app is not ssh enabled.
+      try {
+        const [stdout] = await cfSsh({
+          command: `cat app/logs/${tenantId}.log || exit 0`,
+          appInstance,
+          logged: false,
+        });
+        if (stdout) {
+          logfile = _cdsUpgradeLogFilepath(tenantId);
+          await writeTextAsync(logfile, stdout);
+        }
+      } catch (err) {} // eslint-disable-line no-empty
       return [tenantId, status, error ?? "", logfile ?? ""];
     })
   );
