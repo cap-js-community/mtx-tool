@@ -120,8 +120,22 @@ commands:
           ...    --time                           list includes timestamps
           ...    --reveal                         show passwords
 
+   === service manager (svc) ===
+~  svcl   --svc-list [TENANT_ID]                             list all managed service instances and binding relations
+~  svcll  --svc-long-list [TENANT_ID]                        long list all managed service instances and bindings
+*         --svc-refresh-bindings SERVICE TENANT_ID [PARAMS]  delete and recreate bindings
+*         --svc-delete-bindings SERVICE TENANT_ID            delete bindings
+          --svc-repair-bindings SERVICE TENANT_ID [PARAMS]   repair missing and ambivalent bindings
+          ...    SERVICE                                     filter for service offering with "offering"
+                                                               or service plan with "offering:plan"
+                                                               or "all-services" for all
+          ...    TENANT_ID                                   filter for tenant id or "all-tenants" for all
+          ...    [PARAMS]                                    create binding with custom parameters
+          ...    --json                                      list in json
+          ...    --time                                      list includes timestamps
+
    === server diagnostic (srv) ===
-~  srvd    --server-debug [APP_NAME] [APP_INSTANCE]           open ssh tunnel to port /info {debugPort}
+~  srvd    --server-debug [APP_NAME] [APP_INSTANCE]           open ssh tunnel to debug port
 ~  srvenv  --server-env [APP_NAME]                            dump system environment
 ~  srvcrt  --server-certificates [APP_NAME] [APP_INSTANCE]    dump instance certificates
            --server-start-debugger [APP_NAME] [APP_INSTANCE]  start debugger on server node process
