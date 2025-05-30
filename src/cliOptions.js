@@ -8,6 +8,7 @@ const uaa = require("./submodules/userAuthentication");
 const reg = require("./submodules/tenantRegistry");
 const cds = require("./submodules/capMultitenancy");
 const hdi = require("./submodules/hanaManagement");
+const smg = require("./submodules/serviceManager");
 const srv = require("./submodules/serverDiagnostic");
 
 const { name: NAME } = pathlib.parse(process.argv[1]);
@@ -120,12 +121,12 @@ commands:
           ...    --time                           list includes timestamps
           ...    --reveal                         show passwords
 
-   === service manager (svc) ===
-~  svcl   --svc-list [TENANT_ID]                             list all managed service instances and binding relations
-~  svcll  --svc-long-list [TENANT_ID]                        long list all managed service instances and bindings
-*         --svc-refresh-bindings SERVICE TENANT_ID [PARAMS]  delete and recreate bindings
-*         --svc-delete-bindings SERVICE TENANT_ID            delete bindings
-          --svc-repair-bindings SERVICE TENANT_ID [PARAMS]   repair missing and ambivalent bindings
+   === service manager (smg) ===
+~  smgl   --smg-list [TENANT_ID]                             list all managed service instances and binding relations
+~  smgll  --smg-long-list [TENANT_ID]                        long list all managed service instances and bindings
+*         --smg-refresh-bindings SERVICE TENANT_ID [PARAMS]  delete and recreate bindings
+*         --smg-delete-bindings SERVICE TENANT_ID            delete bindings
+          --smg-repair-bindings SERVICE TENANT_ID [PARAMS]   repair missing and ambivalent bindings
           ...    SERVICE                                     filter for service offering with "offering"
                                                                or service plan with "offering:plan"
                                                                or "all-services" for all
@@ -382,6 +383,23 @@ const APP_CLI_OPTIONS = Object.freeze({
     danger: true,
   },
   HDI_DELETE_ALL: { commandVariants: ["--hdi-delete-all"], callback: hdi.hdiDeleteAll, useCache: false, danger: true },
+
+  SMG_LIST: {
+    commandVariants: ["smgl", "--smg-list"],
+    optionalPassArgs: [PASS_ARG.TENANT_ID],
+    optionalFlagArgs: [FLAG_ARG.TIMESTAMPS, FLAG_ARG.JSON_OUTPUT],
+    callback: smg.serviceList,
+    useCache: false,
+    readonly: true,
+  },
+  SMG_LONG_LIST: {
+    commandVariants: ["smgll", "--smg-long-list"],
+    optionalPassArgs: [PASS_ARG.TENANT_ID],
+    optionalFlagArgs: [FLAG_ARG.JSON_OUTPUT, FLAG_ARG.REVEAL],
+    callback: smg.serviceLongList,
+    useCache: false,
+    readonly: true,
+  },
 
   SRV_DEBUG: {
     commandVariants: ["srvd", "--server-debug"],
