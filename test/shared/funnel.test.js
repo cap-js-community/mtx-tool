@@ -9,7 +9,7 @@ describe("funnel", () => {
   describe("Funnel", () => {
     test("should execute a simple callback and return its result", async () => {
       const funnel = new Funnel(2);
-      const result = await funnel.enqueue(() => 42);
+      const result = await funnel.run(() => 42);
       expect(result).toBe(42);
     });
 
@@ -33,9 +33,9 @@ describe("funnel", () => {
       };
 
       // start three tasks. Because capacity is 2, at most 2 tasks should run concurrently.
-      const p1 = funnel.enqueue(task);
-      const p2 = funnel.enqueue(task);
-      const p3 = funnel.enqueue(task);
+      const p1 = funnel.run(task);
+      const p2 = funnel.run(task);
+      const p3 = funnel.run(task);
 
       // wait for all tasks to complete
       await Promise.all([p1, p2, p3]);
@@ -51,11 +51,11 @@ describe("funnel", () => {
       };
 
       // capture the rejection and check error message
-      await expect(funnel.enqueue(errorCallback)).rejects.toThrow("Test error");
+      await expect(funnel.run(errorCallback)).rejects.toThrow("Test error");
 
       // after a rejection, capacity should be restored so we can run another task.
       const successCallback = () => 99;
-      const result = await funnel.enqueue(successCallback);
+      const result = await funnel.run(successCallback);
       expect(result).toBe(99);
     });
   });

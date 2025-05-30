@@ -14,12 +14,12 @@ class Funnel {
   }
 
   /**
-   * Enqueues a callback function to be executed when capacity becomes available.
+   * Runs an async callback function when capacity becomes available.
    * @param {Function} callback - The (async) callback function to execute.
    * @param {number} [load] - The capacity load of this callback. Defaults to 1 and is set to at least 1.
    * @returns {Promise<*>} A promise that resolves with the result of the callback.
    */
-  async enqueue(callback, load = 1) {
+  async run(callback, load = 1) {
     load = Math.max(1, load);
     // NOTE: the second condition here means we allow overbooking if the funnel is empty
     while (this.__freeCapacity < load && this.__runningPromises.length) {
@@ -65,8 +65,8 @@ class FunnelQueue extends Funnel {
    * @param {Function} callback - The (async) callback function to execute.
    * @param {number} [load] - The capacity load of this callback. Defaults to 1 and is set to at least 1.
    */
-  async enqueue(callback, load) {
-    this.__queue.push(super.enqueue(callback, load));
+  enqueue(callback, load) {
+    this.__queue.push(super.run(callback, load));
   }
 
   /**
