@@ -124,10 +124,10 @@ commands:
    === service manager (svm) ===
 ~  svml   --svm-list [TENANT_ID]                             list all managed service instances and binding relations
 ~  svmll  --svm-long-list [TENANT_ID]                        long list all managed service instances and bindings
-          --svm-repair-bindings SERVICE TENANT_ID [PARAMS]   repair missing and ambivalent bindings
-*         --svm-refresh-bindings SERVICE TENANT_ID [PARAMS]  delete and recreate bindings
-*         --svm-delete-bindings SERVICE TENANT_ID            delete bindings
-*         --svm-delete SERVICE TENANT_ID                     delete instances and bindings
+          --svm-repair-bindings SERVICE TENANT_ID [PARAMS]   repair missing and ambivalent service bindings
+*         --svm-refresh-bindings SERVICE TENANT_ID [PARAMS]  delete and recreate service bindings
+*         --svm-delete-bindings SERVICE TENANT_ID            delete service bindings
+*         --svm-delete SERVICE TENANT_ID                     delete service instances and bindings
           ...    SERVICE                                     filter for service offering with "offering"
                                                                or service plan with "offering:plan"
                                                                or "all-services" for all
