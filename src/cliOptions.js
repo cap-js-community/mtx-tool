@@ -119,7 +119,7 @@ commands:
           ...    [PARAMS]                         create binding with custom parameters
           ...    --json                           list in json
           ...    --time                           list includes timestamps
-          ...    --reveal                         show passwords
+          ...    --reveal                         show sensitive information
 
    === service manager (svm) ===
 ~  svml   --svm-list [TENANT_ID]                             list all managed service instances and binding relations
@@ -135,6 +135,7 @@ commands:
           ...    [PARAMS]                                    create binding with custom parameters
           ...    --json                                      list in json
           ...    --time                                      list includes timestamps
+          ...    --reveal                                    show sensitive information
 
    === server diagnostic (srv) ===
 ~  srvd    --server-debug [APP_NAME] [APP_INSTANCE]           open ssh tunnel to debug port
