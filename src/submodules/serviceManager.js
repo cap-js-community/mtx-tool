@@ -60,13 +60,19 @@ const _serviceManagerOfferings = async (context) =>
 const _serviceManagerPlans = async (context) =>
   await _serviceManagerRequest(context, { pathname: "/v1/service_plans" });
 
-const _serviceManagerInstances = async (context, { filterTenantId, doEnsureTenantLabel = true } = {}) => {
+const _serviceManagerInstances = async (
+  context,
+  { filterTenantId, filterServicePlanId, doEnsureTenantLabel = true } = {}
+) => {
+  const hasQuery = filterServicePlanId || filterTenantId;
   let instances = await _serviceManagerRequest(context, {
     pathname: "/v1/service_instances",
-    query: {
-      // fieldQuery: _getQuery({ service_plan_id: servicePlanId }),
-      ...(filterTenantId && { labelQuery: _getQuery({ tenant_id: filterTenantId }) }),
-    },
+    ...(hasQuery && {
+      query: {
+        ...(filterServicePlanId && { fieldQuery: _getQuery({ service_plan_id: filterServicePlanId }) }),
+        ...(filterTenantId && { labelQuery: _getQuery({ tenant_id: filterTenantId }) }),
+      },
+    }),
   });
   if (doEnsureTenantLabel) {
     instances = instances.filter((instance) => instance.labels.tenant_id !== undefined);
@@ -76,16 +82,19 @@ const _serviceManagerInstances = async (context, { filterTenantId, doEnsureTenan
 
 const _serviceManagerBindings = async (
   context,
-  { filterTenantId, doReveal = false, doAssertFoundSome = false, doEnsureTenantLabel = true } = {}
+  { filterTenantId, filterServicePlanId, doReveal = false, doAssertFoundSome = false, doEnsureTenantLabel = true } = {}
 ) => {
+  const hasQuery = filterServicePlanId || filterTenantId;
   let bindings = await _serviceManagerRequest(context, {
     pathname: "/v1/service_bindings",
-    query: {
-      labelQuery: _getQuery({
-        // service_plan_id: servicePlanId,
-        ...(filterTenantId && { tenant_id: filterTenantId }),
-      }),
-    },
+    ...(hasQuery && {
+      query: {
+        labelQuery: _getQuery({
+          ...(filterServicePlanId && { service_plan_id: filterServicePlanId }),
+          ...(filterTenantId && { tenant_id: filterTenantId }),
+        }),
+      },
+    }),
   });
   if (doEnsureTenantLabel) {
     bindings = bindings.filter((instance) => instance.labels.tenant_id !== undefined);
