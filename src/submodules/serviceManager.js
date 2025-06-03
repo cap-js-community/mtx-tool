@@ -21,8 +21,8 @@ const ENV = Object.freeze({
 
 const SERVICE_MANAGER_REQUEST_CONCURRENCY_FALLBACK = 8;
 const SERVICE_MANAGER_IDEAL_BINDING_COUNT = 1;
-const SERVICE_PLAN_ALL_MARKER = "all-services";
-const TENANT_ID_ALL_MARKER = "all-tenants";
+const SERVICE_PLAN_ALL_IDENTIFIER = "all-services";
+const TENANT_ID_ALL_IDENTIFIER = "all-tenants";
 const SENSITIVE_FIELD_MARKERS = ["password", "key"];
 const SENSITIVE_FIELD_HIDDEN_TEXT = "*** show with --reveal ***";
 
@@ -362,12 +362,36 @@ const _resolveServicePlanId = async (context, servicePlanName) => {
 };
 
 const serviceManagerRepairBindings = async (context, [servicePlanName], [rawParameters]) => {
-  const doFilterServicePlan = !servicePlanName.includes(SERVICE_PLAN_ALL_MARKER);
+  const doFilterServicePlan = servicePlanName !== SERVICE_PLAN_ALL_IDENTIFIER;
+  const filterServicePlanId = doFilterServicePlan && (await _resolveServicePlanId(context, servicePlanName));
   const parameters = tryJsonParse(rawParameters);
   assert(!rawParameters || isObject(parameters), `argument "${rawParameters}" needs to be a valid JSON object`);
   return await _serviceManagerRepairBindings(context, {
-    ...(doFilterServicePlan && { filterServicePlanId: await _resolveServicePlanId(context, servicePlanName) }),
+    ...(doFilterServicePlan && { filterServicePlanId }),
     parameters,
+  });
+};
+
+const _serviceManagerDeleteBindings = async (context, { filterServicePlanId, filterTenantId } = {}) => {
+  const [instances, bindings] = await Promise.all([
+    _serviceManagerInstances(context, { filterTenantId, filterServicePlanId }),
+    _serviceManagerBindings(context, { filterTenantId }),
+  ]);
+  // TODO it's le funnelqueue
+  const instancesById = _clusterObjectsByKey(instances, "id");
+  for (const binding of bindings) {
+  }
+};
+
+const serviceManagerDeleteBindings = async (context, [servicePlanName, tenantId]) => {
+  const doFilterServicePlan = servicePlanName !== SERVICE_PLAN_ALL_IDENTIFIER;
+  const filterServicePlanId = doFilterServicePlan && (await _resolveServicePlanId(context, servicePlanName));
+  const doFilterTenantId = tenantId !== TENANT_ID_ALL_IDENTIFIER;
+  const filterTenantId = doFilterTenantId && tenantId;
+  assert(!doFilterTenantId || isValidTenantId(filterTenantId), `argument "${tenantId}" is not a valid tenant id`);
+  return await _serviceManagerDeleteBindings(context, {
+    ...(doFilterServicePlan && { filterServicePlanId }),
+    ...(doFilterTenantId && { filterTenantId }),
   });
 };
 
@@ -375,6 +399,7 @@ module.exports = {
   serviceManagerList,
   serviceManagerLongList,
   serviceManagerRepairBindings,
+  serviceManagerDeleteBindings,
 
   _: {
     _reset() {},
