@@ -122,20 +122,19 @@ commands:
           ...    --reveal                         show sensitive information
 
    === service manager (svm) ===
-~  svml   --svm-list [TENANT_ID]                             list all managed service instances and binding relations
-~  svmll  --svm-long-list [TENANT_ID]                        long list all managed service instances and bindings
-          --svm-repair-bindings SERVICE TENANT_ID [PARAMS]   repair missing and ambivalent service bindings
-*         --svm-refresh-bindings SERVICE TENANT_ID [PARAMS]  delete and recreate service bindings
-*         --svm-delete-bindings SERVICE TENANT_ID            delete service bindings
-*         --svm-delete SERVICE TENANT_ID                     delete service instances and bindings
-          ...    SERVICE                                     filter for service offering with "offering"
-                                                               or service plan with "offering:plan"
-                                                               or "all-services" for all
-          ...    TENANT_ID                                   filter for tenant id or "all-tenants" for all
-          ...    [PARAMS]                                    create binding with custom parameters
-          ...    --json                                      list in json
-          ...    --time                                      list includes timestamps
-          ...    --reveal                                    show sensitive information
+~  svml   --svm-list [TENANT_ID]                                  list all managed service instances and binding relations
+~  svmll  --svm-long-list [TENANT_ID]                             long list all managed service instances and bindings
+          --svm-repair-bindings SERVICE_PLAN TENANT_ID [PARAMS]   repair missing and ambivalent service bindings
+*         --svm-refresh-bindings SERVICE_PLAN TENANT_ID [PARAMS]  delete and recreate service bindings
+*         --svm-delete-bindings SERVICE_PLAN TENANT_ID            delete service bindings
+*         --svm-delete SERVICE_PLAN TENANT_ID                     delete service instances and bindings
+          ...    SERVICE_PLAN                                     filter for service plan with "offering:plan"
+                                                                    or "all-services" for all
+          ...    TENANT_ID                                        filter for tenant id or "all-tenants" for all
+          ...    [PARAMS]                                         create binding with custom parameters
+          ...    --json                                           list in json
+          ...    --time                                           list includes timestamps
+          ...    --reveal                                         show sensitive information
 
    === server diagnostic (srv) ===
 ~  srvd    --server-debug [APP_NAME] [APP_INSTANCE]           open ssh tunnel to debug port

@@ -132,7 +132,7 @@ const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJs
   const bindingsByInstance = _clusterObjectsByKey(bindings, "service_instance_id");
 
   const nowDate = new Date();
-  const headerRow = ["tenant_id", "service", "instance_id", "", "binding_id", "ready"];
+  const headerRow = ["tenant_id", "service_plan", "instance_id", "", "binding_id", "ready"];
   doTimestamps && headerRow.push("created_on", "updated_on");
   const table = [headerRow];
 
