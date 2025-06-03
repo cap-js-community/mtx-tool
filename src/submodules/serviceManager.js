@@ -1,6 +1,6 @@
 "use strict";
 
-const { parseIntWithFallback } = require("../shared/static");
+const { parseIntWithFallback, compareFor, formatTimestampsWithRelativeDays, tableList } = require("../shared/static");
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
 const { Logger } = require("../shared/logger");
@@ -20,6 +20,9 @@ const svmRequestConcurrency = parseIntWithFallback(
   process.env[ENV.SVM_CONCURRENCY],
   SERVICE_MANAGER_REQUEST_CONCURRENCY_FALLBACK
 );
+
+const compareForServiceManagerTenantId = compareFor((a) => a.labels.tenant_id[0].toUpperCase());
+// const compareForServiceManagerBindingUpdatedAtDesc = compareFor((a) => a.updated_at, true);
 
 const _getQuery = (filters) =>
   Object.entries(filters)
@@ -108,6 +111,67 @@ const _serviceManagerBindings = async (
   return bindings;
 };
 
+const _getBindingsByInstance = (bindings) => {
+  return bindings.reduce((result, binding) => {
+    const instance_id = binding.service_instance_id;
+    if (result[instance_id]) {
+      result[instance_id].push(binding);
+    } else {
+      result[instance_id] = [binding];
+    }
+    return result;
+  }, {});
+};
+
+const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJsonOutput }) => {
+  const [instances, bindings] = await Promise.all([
+    _serviceManagerInstances(context, { filterTenantId }),
+    _serviceManagerBindings(context, { filterTenantId }),
+  ]);
+  const bindingsByInstance = _getBindingsByInstance(bindings);
+  instances.sort(compareForServiceManagerTenantId);
+
+  const nowDate = new Date();
+  const headerRow = ["tenant_id", "instance_id", "", "binding_id", "ready"];
+  doTimestamps && headerRow.push("created_on", "updated_on");
+  const table = [headerRow];
+
+  if (doJsonOutput) {
+    return {
+      instances: instances.map((instance) => {
+        return { ...instance, bindings: bindingsByInstance[instance.id] };
+      }),
+    };
+  }
+
+  for (const instance of instances) {
+    const instanceBindings = bindingsByInstance[instance.id];
+    if (instanceBindings) {
+      for (const [index, binding] of instanceBindings.entries()) {
+        const row = [];
+        if (index === 0) {
+          row.push(
+            instance.labels.tenant_id[0],
+            instance.id,
+            instanceBindings.length === 1 ? "---" : "-+-",
+            binding.id,
+            binding.ready
+          );
+        } else {
+          row.push("", "", index === instanceBindings.length - 1 ? " \\-" : " |-", binding.id, binding.ready);
+        }
+        doTimestamps &&
+          row.push(...formatTimestampsWithRelativeDays([binding.created_at, binding.updated_at], nowDate));
+        table.push(row);
+      }
+    } else {
+      table.push([instance.labels.tenant_id[0], instance.id, "-x"]);
+    }
+  }
+
+  return tableList(table, { sortCol: null, withRowNumber: !filterTenantId });
+};
+
 const serviceManagerList = async (context, [tenantId], [doTimestamps, doJsonOutput]) =>
   await _serviceManagerList(context, { filterTenantId: tenantId, doTimestamps, doJsonOutput });
 
@@ -135,7 +199,7 @@ const serviceManagerLongList = async (context, [filterTenantId], [doJsonOutput, 
   await _serviceManagerLongList(context, { filterTenantId, doJsonOutput, doReveal });
 
 module.exports = {
-  serviceManagerList: () => {},
+  serviceManagerList,
   serviceManagerLongList,
 
   _: {
