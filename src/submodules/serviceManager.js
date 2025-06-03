@@ -352,25 +352,23 @@ const _serviceManagerRepairBindings = async (context, { parameters } = {}) => {
 
 const _resolveServicePlanId = async (context, servicePlanName) => {
   const match = /([a-z0-9-_]+):([a-z0-9-_]+)/.exec(servicePlanName);
-  assert(match !== null, `could not detect service offering and plan in "${servicePlanName}"`);
+  assert(match !== null, `could not detect form "offering:plan" in "${servicePlanName}"`);
   const [, offeringName, planName] = match;
   const [offering] = await _serviceManagerOfferings(context, { filterName: offeringName });
-  assert(offering?.id, `could not find offering "${offeringName}"`);
+  assert(offering?.id, `could not find service offering "${offeringName}"`);
   const [plan] = await _serviceManagerPlans(context, { filterName: planName, filterOfferingId: offering.id });
-  assert(plan?.id, `could not find plan "${planName}" within offering "${offeringName}"`);
+  assert(plan?.id, `could not find service plan "${planName}" within offering "${offeringName}"`);
   return plan.id;
 };
 
 const serviceManagerRepairBindings = async (context, [servicePlanName], [rawParameters]) => {
   const doFilterServicePlan = !servicePlanName.includes(SERVICE_PLAN_ALL_MARKER);
-  const filterServicePlanId = doFilterServicePlan && (await _resolveServicePlanId(context, servicePlanName));
-  assert(
-    !doFilterServicePlan || filterServicePlanId,
-    `argument "${servicePlanName}" needs to be either ${SERVICE_PLAN_ALL_MARKER} or use the form offering:plan`
-  );
   const parameters = tryJsonParse(rawParameters);
   assert(!rawParameters || isObject(parameters), `argument "${rawParameters}" needs to be a valid JSON object`);
-  // return await _serviceManagerRepairBindings(context, { parameters });
+  return await _serviceManagerRepairBindings(context, {
+    ...(doFilterServicePlan && { filterServicePlanId: await _resolveServicePlanId(context, servicePlanName) }),
+    parameters,
+  });
 };
 
 module.exports = {
