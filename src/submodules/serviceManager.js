@@ -44,24 +44,30 @@ const _hideSensitiveDataInBindingOrInstance = (entry) => {
   }
 };
 
-const _serviceManagerInstances = async (context, { filterTenantId, doEnsureTenantLabel = true } = {}) => {
+const _serviceManagerRequest = async (context, reqOptions = {}) => {
   const {
     cfService: { credentials },
   } = await context.getHdiInfo();
-  const { sm_url } = credentials;
-  const token = await context.getCachedUaaTokenFromCredentials(credentials);
+  const url = credentials.sm_url;
+  const auth = { token: await context.getCachedUaaTokenFromCredentials(credentials) };
+  const response = await request({ url, auth, ...reqOptions });
+  return (await response.json())?.items ?? [];
+};
 
-  const response = await request({
-    url: sm_url,
+const _serviceManagerOfferings = async (context) =>
+  await _serviceManagerRequest(context, { pathname: "/v1/service_offerings" });
+
+const _serviceManagerPlans = async (context) =>
+  await _serviceManagerRequest(context, { pathname: "/v1/service_plans" });
+
+const _serviceManagerInstances = async (context, { filterTenantId, doEnsureTenantLabel = true } = {}) => {
+  let instances = _serviceManagerRequest(context, {
     pathname: "/v1/service_instances",
     query: {
       // fieldQuery: _getQuery({ service_plan_id: servicePlanId }),
       ...(filterTenantId && { labelQuery: _getQuery({ tenant_id: filterTenantId }) }),
     },
-    auth: { token },
   });
-  const responseData = (await response.json()) || {};
-  let instances = responseData.items || [];
   if (doEnsureTenantLabel) {
     instances = instances.filter((instance) => instance.labels.tenant_id !== undefined);
   }
@@ -72,14 +78,7 @@ const _serviceManagerBindings = async (
   context,
   { filterTenantId, doReveal = false, doAssertFoundSome = false, doEnsureTenantLabel = true } = {}
 ) => {
-  const {
-    cfService: { credentials },
-  } = await context.getHdiInfo();
-  const { sm_url } = credentials;
-  const token = await context.getCachedUaaTokenFromCredentials(credentials);
-
-  const getBindingsResponse = await request({
-    url: sm_url,
+  let bindings = _serviceManagerRequest(context, {
     pathname: "/v1/service_bindings",
     query: {
       labelQuery: _getQuery({
@@ -87,10 +86,7 @@ const _serviceManagerBindings = async (
         ...(filterTenantId && { tenant_id: filterTenantId }),
       }),
     },
-    auth: { token },
   });
-  const responseData = (await getBindingsResponse.json()) || {};
-  let bindings = responseData.items || [];
   if (doEnsureTenantLabel) {
     bindings = bindings.filter((instance) => instance.labels.tenant_id !== undefined);
   }
@@ -124,7 +120,9 @@ const _getBindingsByInstance = (bindings) => {
 };
 
 const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJsonOutput }) => {
-  const [instances, bindings] = await Promise.all([
+  const [offerings, plans, instances, bindings] = await Promise.all([
+    _serviceManagerOfferings(context),
+    _serviceManagerPlans(context),
     _serviceManagerInstances(context, { filterTenantId }),
     _serviceManagerBindings(context, { filterTenantId }),
   ]);
