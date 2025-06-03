@@ -61,7 +61,7 @@ const _serviceManagerPlans = async (context) =>
   await _serviceManagerRequest(context, { pathname: "/v1/service_plans" });
 
 const _serviceManagerInstances = async (context, { filterTenantId, doEnsureTenantLabel = true } = {}) => {
-  let instances = _serviceManagerRequest(context, {
+  let instances = await _serviceManagerRequest(context, {
     pathname: "/v1/service_instances",
     query: {
       // fieldQuery: _getQuery({ service_plan_id: servicePlanId }),
@@ -78,7 +78,7 @@ const _serviceManagerBindings = async (
   context,
   { filterTenantId, doReveal = false, doAssertFoundSome = false, doEnsureTenantLabel = true } = {}
 ) => {
-  let bindings = _serviceManagerRequest(context, {
+  let bindings = await _serviceManagerRequest(context, {
     pathname: "/v1/service_bindings",
     query: {
       labelQuery: _getQuery({
@@ -107,13 +107,13 @@ const _serviceManagerBindings = async (
   return bindings;
 };
 
-const _getBindingsByInstance = (bindings) => {
-  return bindings.reduce((result, binding) => {
-    const instance_id = binding.service_instance_id;
-    if (result[instance_id]) {
-      result[instance_id].push(binding);
+const _clusterObjectsByKey = (dataObjects, key) => {
+  return dataObjects.reduce((result, dataObject) => {
+    const identifier = dataObject[key];
+    if (result[identifier]) {
+      result[identifier].push(dataObject);
     } else {
-      result[instance_id] = [binding];
+      result[identifier] = [dataObject];
     }
     return result;
   }, {});
@@ -126,11 +126,13 @@ const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJs
     _serviceManagerInstances(context, { filterTenantId }),
     _serviceManagerBindings(context, { filterTenantId }),
   ]);
-  const bindingsByInstance = _getBindingsByInstance(bindings);
+  const offeringsById = _clusterObjectsByKey(offerings, "id");
+  const plansById = _clusterObjectsByKey(plans, "id");
   instances.sort(compareForServiceManagerTenantId);
+  const bindingsByInstance = _clusterObjectsByKey(bindings, "service_instance_id");
 
   const nowDate = new Date();
-  const headerRow = ["tenant_id", "instance_id", "", "binding_id", "ready"];
+  const headerRow = ["tenant_id", "service", "instance_id", "", "binding_id", "ready"];
   doTimestamps && headerRow.push("created_on", "updated_on");
   const table = [headerRow];
 
@@ -143,6 +145,8 @@ const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJs
   }
 
   for (const instance of instances) {
+    const [plan] = plansById[instance.service_plan_id];
+    const [offering] = offeringsById[plan.service_offering_id];
     const instanceBindings = bindingsByInstance[instance.id];
     if (instanceBindings) {
       for (const [index, binding] of instanceBindings.entries()) {
@@ -150,6 +154,7 @@ const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJs
         if (index === 0) {
           row.push(
             instance.labels.tenant_id[0],
+            `${offering.name}:${plan.name}`,
             instance.id,
             instanceBindings.length === 1 ? "---" : "-+-",
             binding.id,
