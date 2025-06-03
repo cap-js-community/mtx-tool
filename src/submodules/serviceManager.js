@@ -276,9 +276,9 @@ const _serviceManagerDeleteBinding = async (context, serviceBindingId) =>
     query: { async: false },
   });
 
-const _serviceManagerRepairBindings = async (context, { parameters } = {}) => {
+const _serviceManagerRepairBindings = async (context, { filterServicePlanId, parameters } = {}) => {
   const [instances, bindings] = await Promise.all([
-    _serviceManagerInstances(context),
+    _serviceManagerInstances(context, { filterServicePlanId }),
     _serviceManagerBindings(context),
   ]);
 
