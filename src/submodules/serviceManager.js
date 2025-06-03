@@ -1,9 +1,18 @@
 "use strict";
 
-const { parseIntWithFallback, compareFor, formatTimestampsWithRelativeDays, tableList } = require("../shared/static");
+const {
+  parseIntWithFallback,
+  compareFor,
+  formatTimestampsWithRelativeDays,
+  tableList,
+  tryJsonParse,
+  isObject,
+  partition,
+} = require("../shared/static");
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
 const { Logger } = require("../shared/logger");
+const { FunnelQueue } = require("../shared/funnel");
 
 const ENV = Object.freeze({
   SVM_CONCURRENCY: "MTX_SVM_CONCURRENCY",
@@ -21,8 +30,8 @@ const svmRequestConcurrency = parseIntWithFallback(
   SERVICE_MANAGER_REQUEST_CONCURRENCY_FALLBACK
 );
 
-const compareForServiceManagerTenantId = compareFor((a) => a.labels.tenant_id[0].toUpperCase());
-// const compareForServiceManagerBindingUpdatedAtDesc = compareFor((a) => a.updated_at, true);
+const compareForTenantId = compareFor((a) => a.labels.tenant_id[0].toUpperCase());
+const compareForUpdatedAtDesc = compareFor((a) => a.updated_at, true);
 
 const _getQuery = (filters) =>
   Object.entries(filters)
@@ -80,6 +89,7 @@ const _serviceManagerInstances = async (
   return instances;
 };
 
+// TODO: the servicePlan filter here should probably not be used. The instance determines the service plan, not the binding
 const _serviceManagerBindings = async (
   context,
   { filterTenantId, filterServicePlanId, doReveal = false, doAssertFoundSome = false, doEnsureTenantLabel = true } = {}
@@ -137,7 +147,7 @@ const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJs
   ]);
   const offeringsById = _clusterObjectsByKey(offerings, "id");
   const plansById = _clusterObjectsByKey(plans, "id");
-  instances.sort(compareForServiceManagerTenantId);
+  instances.sort(compareForTenantId);
   const bindingsByInstance = _clusterObjectsByKey(bindings, "service_instance_id");
 
   const nowDate = new Date();
@@ -210,13 +220,92 @@ ${_formatOutput(bindings)}
 const serviceManagerLongList = async (context, [filterTenantId], [doJsonOutput, doReveal]) =>
   await _serviceManagerLongList(context, { filterTenantId, doJsonOutput, doReveal });
 
+const _serviceManagerRepairBindings = async (context, { parameters } = {}) => {
+  const {
+    cfService: { credentials },
+  } = await context.getHdiInfo();
+  const { sm_url } = credentials;
+  const token = await context.getCachedUaaTokenFromCredentials(credentials);
+
+  const [instances, bindings] = await Promise.all([
+    _serviceManagerInstances(context),
+    _serviceManagerBindings(context),
+  ]);
+
+  const bindingsByInstance = _clusterObjectsByKey(bindings, "service_instance_id");
+  instances.sort(compareForTenantId);
+
+  const changeQueue = new FunnelQueue(svmRequestConcurrency);
+  for (const instance of instances) {
+    const tenantId = instance.labels.tenant_id[0];
+    const instanceBindings = bindingsByInstance[instance.id] ?? [];
+    instanceBindings.sort(compareForUpdatedAtDesc);
+    const [instanceBindingsReady, instanceBindingsUnready] = partition(instanceBindings, (binding) => binding.ready);
+    if (instanceBindingsReady.length < SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
+      const missingBindingCount = SERVICE_MANAGER_IDEAL_BINDING_COUNT - instanceBindings.length;
+      for (let i = 0; i < missingBindingCount; i++) {
+        changeQueue.enqueue(async () => {
+          await _createBindingServiceManagerFromInstance(sm_url, token, instance, { parameters });
+          logger.info(
+            "created %i missing binding%s for tenant %s",
+            missingBindingCount,
+            missingBindingCount === 1 ? "" : "s",
+            tenantId
+          );
+        });
+      }
+    } else if (instanceBindingsReady.length > SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
+      const ambivalentBindings = instanceBindingsReady.slice(1);
+      for (const { id } of ambivalentBindings) {
+        changeQueue.enqueue(async () => {
+          await _deleteBindingServiceManager(sm_url, token, id);
+          logger.info(
+            "deleted %i ambivalent ready binding%s for tenant %s",
+            ambivalentBindings.length,
+            ambivalentBindings.length === 1 ? "" : "s",
+            tenantId
+          );
+        });
+      }
+    }
+    for (const { id } of instanceBindingsUnready) {
+      changeQueue.enqueue(async () => {
+        await _deleteBindingServiceManager(sm_url, token, id);
+        logger.info(
+          "deleted %i unready binding%s for tenant %s",
+          instanceBindingsUnready.length,
+          instanceBindingsUnready.length === 1 ? "" : "s",
+          tenantId
+        );
+      });
+    }
+  }
+
+  const changeCount = changeQueue.size();
+  if (changeCount > 0) {
+    logger.info("triggering %i changes", changeCount);
+    await changeQueue.dequeueAll();
+  } else {
+    logger.info(
+      "found ideal binding count %i for %i instances, all is well",
+      SERVICE_MANAGER_IDEAL_BINDING_COUNT,
+      instances.length
+    );
+  }
+};
+
+const serviceManagerRepairBindings = async (context, [rawParameters]) => {
+  const parameters = tryJsonParse(rawParameters);
+  assert(!rawParameters || isObject(parameters), `argument "${rawParameters}" needs to be a valid JSON object`);
+  return await _serviceManagerRepairBindings(context, { parameters });
+};
+
 module.exports = {
   serviceManagerList,
   serviceManagerLongList,
+  serviceManagerRepairBindings,
 
   _: {
-    _reset() {
-      // resetOneTime(_getHdiSharedPlanId);
-    },
+    _reset() {},
   },
 };
