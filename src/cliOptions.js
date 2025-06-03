@@ -21,6 +21,7 @@ const PASS_ARG = Object.freeze({
   USERNAME: "USERNAME",
   PASSWORD: "PASSWORD",
   SERVICE: "SERVICE",
+  SERVICE_PLAN: "SERVICE_PLAN",
   TENANT_ID: "TENANT_ID",
   SKIP_APPS: "SKIP_APPS",
   APP_NAME: "APP_NAME",
@@ -124,7 +125,7 @@ commands:
    === service manager (svm) ===
 ~  svml   --svm-list [TENANT_ID]                                  list all managed service instances and binding
 ~  svmll  --svm-long-list [TENANT_ID]                             long list all managed service instances and bindings
-          --svm-repair-bindings SERVICE_PLAN TENANT_ID [PARAMS]   repair missing and ambivalent service bindings
+          --svm-repair-bindings SERVICE_PLAN [PARAMS]             repair missing and ambivalent service bindings
 *         --svm-refresh-bindings SERVICE_PLAN TENANT_ID [PARAMS]  delete and recreate service bindings
 *         --svm-delete-bindings SERVICE_PLAN TENANT_ID            delete service bindings
 *         --svm-delete SERVICE_PLAN TENANT_ID                     delete service instances and bindings
@@ -400,6 +401,13 @@ const APP_CLI_OPTIONS = Object.freeze({
     callback: svm.serviceManagerLongList,
     useCache: false,
     readonly: true,
+  },
+  SVM_REPAIR_BINDINGS: {
+    commandVariants: ["--svm-repair-bindings"],
+    requiredPassArgs: [PASS_ARG.SERVICE_PLAN],
+    optionalPassArgs: [PASS_ARG.PARAMS],
+    callback: svm.serviceManagerRepairBindings,
+    useCache: false,
   },
 
   SRV_DEBUG: {

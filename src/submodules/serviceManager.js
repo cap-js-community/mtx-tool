@@ -21,6 +21,8 @@ const ENV = Object.freeze({
 
 const SERVICE_MANAGER_REQUEST_CONCURRENCY_FALLBACK = 8;
 const SERVICE_MANAGER_IDEAL_BINDING_COUNT = 1;
+const SERVICE_PLAN_ALL_MARKER = "all-services";
+const TENANT_ID_ALL_MARKER = "all-tenants";
 const SENSITIVE_FIELD_MARKERS = ["password", "key"];
 const SENSITIVE_FIELD_HIDDEN_TEXT = "*** show with --reveal ***";
 
@@ -30,6 +32,9 @@ const svmRequestConcurrency = parseIntWithFallback(
   process.env[ENV.SVM_CONCURRENCY],
   SERVICE_MANAGER_REQUEST_CONCURRENCY_FALLBACK
 );
+
+// TODO
+const isValidTenantId = (input) => input && /^[0-9a-z-_/]+$/i.test(input);
 
 const compareForTenantId = compareFor((a) => a.labels.tenant_id[0].toUpperCase());
 const compareForUpdatedAtDesc = compareFor((a) => a.updated_at, true);
@@ -64,11 +69,30 @@ const _serviceManagerRequest = async (context, reqOptions = {}) => {
   return (await response.json())?.items ?? [];
 };
 
-const _serviceManagerOfferings = async (context) =>
-  await _serviceManagerRequest(context, { pathname: "/v1/service_offerings" });
+const _serviceManagerOfferings = async (context, { filterName } = {}) =>
+  await _serviceManagerRequest(context, {
+    pathname: "/v1/service_offerings",
+    ...(filterName && {
+      query: {
+        fieldQuery: _getQuery({ name: filterName }),
+      },
+    }),
+  });
 
-const _serviceManagerPlans = async (context) =>
-  await _serviceManagerRequest(context, { pathname: "/v1/service_plans" });
+const _serviceManagerPlans = async (context, { filterOfferingId, filterName } = {}) => {
+  const hasQuery = filterOfferingId || filterName;
+  return await _serviceManagerRequest(context, {
+    pathname: "/v1/service_plans",
+    ...(hasQuery && {
+      query: {
+        fieldQuery: _getQuery({
+          ...(filterOfferingId && { service_offering_id: filterOfferingId }),
+          ...(filterName && { name: filterName }),
+        }),
+      },
+    }),
+  });
+};
 
 const _serviceManagerInstances = async (
   context,
@@ -326,10 +350,27 @@ const _serviceManagerRepairBindings = async (context, { parameters } = {}) => {
   }
 };
 
-const serviceManagerRepairBindings = async (context, [rawParameters]) => {
+const _resolveServicePlanId = async (context, servicePlanName) => {
+  const match = /([a-z0-9-_]+):([a-z0-9-_]+)/.exec(servicePlanName);
+  assert(match !== null, `could not detect service offering and plan in "${servicePlanName}"`);
+  const [, offeringName, planName] = match;
+  const [offering] = await _serviceManagerOfferings(context, { filterName: offeringName });
+  assert(offering?.id, `could not find offering "${offeringName}"`);
+  const [plan] = await _serviceManagerPlans(context, { filterName: planName, filterOfferingId: offering.id });
+  assert(plan?.id, `could not find plan "${planName}" within offering "${offeringName}"`);
+  return plan.id;
+};
+
+const serviceManagerRepairBindings = async (context, [servicePlanName], [rawParameters]) => {
+  const doFilterServicePlan = !servicePlanName.includes(SERVICE_PLAN_ALL_MARKER);
+  const filterServicePlanId = doFilterServicePlan && (await _resolveServicePlanId(context, servicePlanName));
+  assert(
+    !doFilterServicePlan || filterServicePlanId,
+    `argument "${servicePlanName}" needs to be either ${SERVICE_PLAN_ALL_MARKER} or use the form offering:plan`
+  );
   const parameters = tryJsonParse(rawParameters);
   assert(!rawParameters || isObject(parameters), `argument "${rawParameters}" needs to be a valid JSON object`);
-  return await _serviceManagerRepairBindings(context, { parameters });
+  // return await _serviceManagerRepairBindings(context, { parameters });
 };
 
 module.exports = {
