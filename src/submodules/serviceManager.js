@@ -8,6 +8,7 @@ const {
   tryJsonParse,
   isObject,
   partition,
+  randomString,
 } = require("../shared/static");
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
@@ -220,13 +221,38 @@ ${_formatOutput(bindings)}
 const serviceManagerLongList = async (context, [filterTenantId], [doJsonOutput, doReveal]) =>
   await _serviceManagerLongList(context, { filterTenantId, doJsonOutput, doReveal });
 
-const _serviceManagerRepairBindings = async (context, { parameters } = {}) => {
-  const {
-    cfService: { credentials },
-  } = await context.getHdiInfo();
-  const { sm_url } = credentials;
-  const token = await context.getCachedUaaTokenFromCredentials(credentials);
+const _serviceManagerCreateBinding = async (
+  context,
+  serviceInstanceId,
+  servicePlanId,
+  tenantId,
+  { name = randomString(32), parameters } = {}
+) => {
+  await _serviceManagerRequest(context, {
+    method: "POST",
+    pathname: `/v1/service_bindings`,
+    query: { async: false },
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name,
+      service_instance_id: serviceInstanceId,
+      labels: {
+        service_plan_id: [servicePlanId],
+        tenant_id: [tenantId],
+      },
+      ...(parameters && { parameters }),
+    }),
+  });
+};
 
+const _serviceManagerDeleteBinding = async (context, serviceBindingId) =>
+  await _serviceManagerRequest({
+    method: "DELETE",
+    pathname: `/v1/service_bindings/${serviceBindingId}`,
+    query: { async: false },
+  });
+
+const _serviceManagerRepairBindings = async (context, { parameters } = {}) => {
   const [instances, bindings] = await Promise.all([
     _serviceManagerInstances(context),
     _serviceManagerBindings(context),
@@ -245,7 +271,13 @@ const _serviceManagerRepairBindings = async (context, { parameters } = {}) => {
       const missingBindingCount = SERVICE_MANAGER_IDEAL_BINDING_COUNT - instanceBindings.length;
       for (let i = 0; i < missingBindingCount; i++) {
         changeQueue.enqueue(async () => {
-          await _createBindingServiceManagerFromInstance(sm_url, token, instance, { parameters });
+          await _serviceManagerCreateBinding(
+            context,
+            instance.id,
+            instance.service_plan_id,
+            instance.labels.tenant_id[0],
+            { parameters }
+          );
           logger.info(
             "created %i missing binding%s for tenant %s",
             missingBindingCount,
@@ -258,7 +290,7 @@ const _serviceManagerRepairBindings = async (context, { parameters } = {}) => {
       const ambivalentBindings = instanceBindingsReady.slice(1);
       for (const { id } of ambivalentBindings) {
         changeQueue.enqueue(async () => {
-          await _deleteBindingServiceManager(sm_url, token, id);
+          await _serviceManagerDeleteBinding(context, id);
           logger.info(
             "deleted %i ambivalent ready binding%s for tenant %s",
             ambivalentBindings.length,
@@ -270,7 +302,7 @@ const _serviceManagerRepairBindings = async (context, { parameters } = {}) => {
     }
     for (const { id } of instanceBindingsUnready) {
       changeQueue.enqueue(async () => {
-        await _deleteBindingServiceManager(sm_url, token, id);
+        await _serviceManagerDeleteBinding(context, id);
         logger.info(
           "deleted %i unready binding%s for tenant %s",
           instanceBindingsUnready.length,
