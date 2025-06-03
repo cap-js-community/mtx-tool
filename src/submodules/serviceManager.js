@@ -188,11 +188,11 @@ const _serviceManagerLongList = async (context, { filterTenantId, doJsonOutput, 
     return { instances, bindings };
   }
   return `
-=== instance${instances.length === 1 ? "" : "s"} ===
+=== ${instances.length} instance${instances.length === 1 ? "" : "s"} ===
 
 ${_formatOutput(instances)}
 
-=== binding${bindings.length === 1 ? "" : "s"} ===
+=== ${bindings.length} binding${bindings.length === 1 ? "" : "s"} ===
 
 ${_formatOutput(bindings)}
 `;

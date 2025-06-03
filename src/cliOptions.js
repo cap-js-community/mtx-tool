@@ -122,7 +122,7 @@ commands:
           ...    --reveal                         show sensitive information
 
    === service manager (svm) ===
-~  svml   --svm-list [TENANT_ID]                                  list all managed service instances and binding relations
+~  svml   --svm-list [TENANT_ID]                                  list all managed service instances and binding
 ~  svmll  --svm-long-list [TENANT_ID]                             long list all managed service instances and bindings
           --svm-repair-bindings SERVICE_PLAN TENANT_ID [PARAMS]   repair missing and ambivalent service bindings
 *         --svm-refresh-bindings SERVICE_PLAN TENANT_ID [PARAMS]  delete and recreate service bindings
