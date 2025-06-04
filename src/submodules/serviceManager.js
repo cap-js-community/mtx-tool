@@ -425,8 +425,7 @@ const _serviceManagerDelete = async (
     await limiter(
       svmRequestConcurrency,
       instances,
-      async (instance) => await sleep(2000)
-      // async (instance) => await _serviceManagerDeleteInstance(context, instance.id)
+      async (instance) => await _serviceManagerDeleteInstance(context, instance.id)
     );
     logger.info("deleted %i instance%s", instances.length, instances.length === 1 ? "" : "s");
   }
