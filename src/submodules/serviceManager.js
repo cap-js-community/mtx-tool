@@ -345,7 +345,7 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
 
   const changeCount = changeQueue.size();
   if (changeCount > 0) {
-    logger.info("triggering %i changes", changeCount);
+    logger.info("triggering %i change%s", changeCount, changeCount === 1 ? "" : "s");
     await changeQueue.dequeueAll();
   } else {
     logger.info(
