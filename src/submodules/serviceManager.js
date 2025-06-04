@@ -9,7 +9,6 @@ const {
   isObject,
   partition,
   randomString,
-  sleep,
 } = require("../shared/static");
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");

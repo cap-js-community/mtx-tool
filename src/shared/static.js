@@ -82,8 +82,20 @@ const writeJsonAsync = async (filepath, data) => await writeFileAsync(filepath, 
 
 const deleteFileSync = (filepath) => unlinkSync(filepath);
 
-const tableList = (table, { sortCol = 0, noHeader = false, withRowNumber = true } = {}) => {
-  if (!table || !table.length || !table[0] || !table[0].length) {
+/**
+ * @typedef TableListOptions
+ * @type options
+ *
+ * @property {number|null}  [sortCol]
+ * @property {boolean}      [noHeader]
+ * @property {boolean}      [withRowNumber]
+ */
+/**
+ * @param rows
+ * @param {TableListOptions} options
+ */
+const tableList = (rows, { sortCol = 0, noHeader = false, withRowNumber = true } = {}) => {
+  if (!rows || !rows.length || !rows[0] || !rows[0].length) {
     return null;
   }
 
@@ -92,14 +104,14 @@ const tableList = (table, { sortCol = 0, noHeader = false, withRowNumber = true 
   if (withRowNumber) {
     hasSortCol && sortCol++;
     if (noHeader) {
-      table = table.map((row, index) => [String(index + 1)].concat(row));
+      rows = rows.map((row, index) => [String(index + 1)].concat(row));
     } else {
-      table = table.map((row, index) => [String(index)].concat(row));
-      table[0][0] = "#";
+      rows = rows.map((row, index) => [String(index)].concat(row));
+      rows[0][0] = "#";
     }
   }
-  const columnCount = table[0].length;
-  const columnWidth = table.reduce((result, row) => {
+  const columnCount = rows[0].length;
+  const columnWidth = rows.reduce((result, row) => {
     row.forEach((cell, index) => {
       if (index < columnCount) {
         result[index] = Math.max(result[index], String(cell).length);
@@ -108,8 +120,8 @@ const tableList = (table, { sortCol = 0, noHeader = false, withRowNumber = true 
     return result;
   }, new Array(columnCount).fill(0));
 
-  const header = noHeader ? [] : table[0];
-  let body = noHeader ? table : table.slice(1);
+  const header = noHeader ? [] : rows[0];
+  let body = noHeader ? rows : rows.slice(1);
 
   if (hasSortCol && sortCol < columnCount) {
     body.sort((rowA, rowB) => {
@@ -122,9 +134,9 @@ const tableList = (table, { sortCol = 0, noHeader = false, withRowNumber = true 
     }
   }
 
-  const sortedTable = noHeader ? table : [header].concat(body);
+  const sortedRows = noHeader ? rows : [header].concat(body);
 
-  return sortedTable
+  return sortedRows
     .map((row) =>
       row
         .slice(0, columnCount)
