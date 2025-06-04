@@ -13,7 +13,7 @@ const {
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
 const { Logger } = require("../shared/logger");
-const { FunnelQueue } = require("../shared/funnel");
+const { FunnelQueue, limiter } = require("../shared/funnel");
 
 const ENV = Object.freeze({
   SVM_CONCURRENCY: "MTX_SVM_CONCURRENCY",
@@ -384,15 +384,13 @@ const _serviceManagerDeleteBindings = async (context, { filterServicePlanId, fil
     _serviceManagerBindings(context, { filterTenantId }),
   ]);
   const instanceById = _indexByKey(instances, "id");
-  const queue = new FunnelQueue(svmRequestConcurrency);
-  for (const binding of bindings) {
-    if (!instanceById[binding.service_instance_id]) {
-      continue;
-    }
-    queue.enqueue(async () => await _serviceManagerDeleteBinding(context, binding.id));
-  }
-  await queue.dequeueAll();
-  logger.info("deleted %i binding%s", queue.size(), queue.size() === 1 ? "" : "s");
+  const filteredBindings = bindings.filter((binding) => instanceById[binding.service_instance_id]);
+  await limiter(
+    svmRequestConcurrency,
+    filteredBindings,
+    async (binding) => await _serviceManagerDeleteBinding(context, binding.id)
+  );
+  logger.info("deleted %i binding%s", filteredBindings.length, filteredBindings.length === 1 ? "" : "s");
 };
 
 const serviceManagerDeleteBindings = async (context, [servicePlanName, tenantId]) => {
