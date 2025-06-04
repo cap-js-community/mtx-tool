@@ -402,7 +402,7 @@ const serviceManagerRepairBindings = async (context, [servicePlanName], [rawPara
 
 const _serviceManagerDelete = async (
   context,
-  { filterServicePlanId, filterTenantId, doDeleteInstances = false, doDeleteBindings = false } = {}
+  { doDeleteInstances = false, doDeleteBindings = false, filterServicePlanId, filterTenantId } = {}
 ) => {
   const [instances, bindings] = await Promise.all([
     _serviceManagerInstances(context, { filterTenantId, filterServicePlanId }),
@@ -471,8 +471,4 @@ module.exports = {
   serviceManagerRepairBindings,
   serviceManagerDeleteBindings,
   serviceManagerDeleteInstancesAndBindings,
-
-  _: {
-    _reset() {},
-  },
 };

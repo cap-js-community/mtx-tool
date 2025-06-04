@@ -427,7 +427,7 @@ const APP_CLI_OPTIONS = Object.freeze({
   SVM_DELETE: {
     commandVariants: ["--svm-delete"],
     requiredPassArgs: [PASS_ARG.SERVICE_PLAN, PASS_ARG.TENANT_ID],
-    callback: () => {},
+    callback: svm.serviceManagerDeleteInstancesAndBindings,
     useCache: false,
     danger: true,
   },
