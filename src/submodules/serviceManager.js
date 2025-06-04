@@ -33,7 +33,7 @@ const svmRequestConcurrency = parseIntWithFallback(
   SERVICE_MANAGER_REQUEST_CONCURRENCY_FALLBACK
 );
 
-// TODO
+// NOTE: the tenant ids for service manager are not necessarily uuids, this is a much broader validator
 const isValidTenantId = (input) => input && /^[0-9a-z-_/]+$/i.test(input);
 
 const compareForTenantId = compareFor((a) => a.labels.tenant_id[0].toUpperCase());
@@ -118,20 +118,15 @@ const _serviceManagerInstances = async (
   return instances;
 };
 
-// TODO: the servicePlan filter here should probably not be used. The instance determines the service plan, not the binding
 const _serviceManagerBindings = async (
   context,
-  { filterTenantId, filterServicePlanId, doReveal = false, doAssertFoundSome = false, doEnsureTenantLabel = true } = {}
+  { filterTenantId, doReveal = false, doAssertFoundSome = false, doEnsureTenantLabel = true } = {}
 ) => {
-  const hasQuery = filterServicePlanId || filterTenantId;
   let bindings = await _serviceManagerRequest(context, {
     pathname: "/v1/service_bindings",
-    ...(hasQuery && {
+    ...(filterTenantId && {
       query: {
-        labelQuery: _getQuery({
-          ...(filterServicePlanId && { service_plan_id: filterServicePlanId }),
-          ...(filterTenantId && { tenant_id: filterTenantId }),
-        }),
+        labelQuery: _getQuery({ tenant_id: filterTenantId }),
       },
     }),
   });
@@ -423,6 +418,7 @@ const serviceManagerRefreshBindings = async (context, [servicePlanName, tenantId
   const filterServicePlanId = doFilterServicePlan && (await _resolveServicePlanId(context, servicePlanName));
   const doFilterTenantId = tenantId !== TENANT_ID_ALL_IDENTIFIER;
   const filterTenantId = doFilterTenantId && tenantId;
+  assert(!doFilterTenantId || isValidTenantId(filterTenantId), `argument "${tenantId}" is not a valid tenant id`);
   const parameters = tryJsonParse(rawParameters);
   assert(!rawParameters || isObject(parameters), `argument "${rawParameters}" needs to be a valid JSON object`);
 
