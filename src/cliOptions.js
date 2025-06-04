@@ -109,15 +109,8 @@ commands:
    === hana management (hdi) ===
 ~  hdil   --hdi-list [TENANT_ID]                  list all hdi container instances
 ~  hdill  --hdi-long-list [TENANT_ID]             long list all hdi container instances and bindings
-~  hdilr  --hdi-list-relations [TENANT_ID]        list all hdi container instance and binding relations
 ~  hditt  --hdi-tunnel-tenant TENANT_ID           open ssh tunnel to tenant db
-   hdirt  --hdi-rebind-tenant TENANT_ID [PARAMS]  rebind tenant hdi container instances
-   hdira  --hdi-rebind-all [PARAMS]               rebind all hdi container instances
-          --hdi-repair-bindings [PARAMS]          create missing and delete ambiguous bindings
-*         --hdi-delete-tenant TENANT_ID           delete hdi container instance and bindings for tenant
-*         --hdi-delete-all                        delete all hdi container instances and bindings
           ...    [TENANT_ID]                      filter for tenant id
-          ...    [PARAMS]                         create binding with custom parameters
           ...    --json                           list in json
           ...    --time                           list includes timestamps
           ...    --reveal                         show sensitive information
