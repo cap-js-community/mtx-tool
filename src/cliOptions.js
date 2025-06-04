@@ -409,6 +409,28 @@ const APP_CLI_OPTIONS = Object.freeze({
     callback: svm.serviceManagerRepairBindings,
     useCache: false,
   },
+  SVM_REFRESH_BINDINGS: {
+    commandVariants: ["--svm-refresh-bindings"],
+    requiredPassArgs: [PASS_ARG.SERVICE_PLAN, PASS_ARG.TENANT_ID],
+    optionalPassArgs: [PASS_ARG.PARAMS],
+    callback: () => {},
+    useCache: false,
+    danger: true,
+  },
+  SVM_DELETE_BINDINGS: {
+    commandVariants: ["--svm-delete-bindings"],
+    requiredPassArgs: [PASS_ARG.SERVICE_PLAN, PASS_ARG.TENANT_ID],
+    callback: svm.serviceManagerDeleteBindings,
+    useCache: false,
+    danger: true,
+  },
+  SVM_DELETE: {
+    commandVariants: ["--svm-delete"],
+    requiredPassArgs: [PASS_ARG.SERVICE_PLAN, PASS_ARG.TENANT_ID],
+    callback: () => {},
+    useCache: false,
+    danger: true,
+  },
 
   SRV_DEBUG: {
     commandVariants: ["srvd", "--server-debug"],
