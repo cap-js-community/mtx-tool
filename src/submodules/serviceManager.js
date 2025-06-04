@@ -9,6 +9,7 @@ const {
   isObject,
   partition,
   randomString,
+  sleep,
 } = require("../shared/static");
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
@@ -409,7 +410,6 @@ const _serviceManagerDelete = async (
     _serviceManagerBindings(context, { filterTenantId }),
   ]);
   const queue = new FunnelQueue(svmRequestConcurrency);
-  const promises = [];
 
   if (doDeleteBindings) {
     const instanceById = _indexByKey(instances, "id");
@@ -417,26 +417,17 @@ const _serviceManagerDelete = async (
     for (const binding of filteredBindings) {
       queue.enqueue(async () => await _serviceManagerDeleteBinding(context, binding.id));
     }
-    promises.push(
-      (async () => {
-        await queue.dequeueAll();
-        logger.info("deleted %i binding%s", filteredBindings.length, filteredBindings.length === 1 ? "" : "s");
-      })()
-    );
+    await queue.dequeueAll();
+    logger.info("deleted %i binding%s", filteredBindings.length, filteredBindings.length === 1 ? "" : "s");
   }
 
   if (doDeleteInstances) {
     for (const instance of instances) {
-      queue.enqueue(async () => await _serviceManagerDeleteInstance(context, instance.id));
+      queue.enqueue(async () => await sleep(2000));
     }
-    promises.push(
-      (async () => {
-        await queue.dequeueAll();
-        logger.info("deleted %i instances%s", instances.length, instances.length === 1 ? "" : "s");
-      })()
-    );
+    await queue.dequeueAll();
+    logger.info("deleted %i instance%s", instances.length, instances.length === 1 ? "" : "s");
   }
-  await Promise.all(promises);
 };
 
 const serviceManagerDeleteBindings = async (context, [servicePlanName, tenantId]) => {
