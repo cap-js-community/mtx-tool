@@ -69,25 +69,29 @@ const _serviceManagerRequest = async (context, reqOptions = {}) => {
   return (await response.json())?.items ?? [];
 };
 
-const _serviceManagerOfferings = async (context, { filterName } = {}) =>
+const _serviceManagerOfferings = async (context, { filterServiceOfferingName } = {}) =>
   await _serviceManagerRequest(context, {
     pathname: "/v1/service_offerings",
-    ...(filterName && {
+    ...(filterServiceOfferingName && {
       query: {
-        fieldQuery: _getQuery({ name: filterName }),
+        fieldQuery: _getQuery({ name: filterServiceOfferingName }),
       },
     }),
   });
 
-const _serviceManagerPlans = async (context, { filterOfferingId, filterName } = {}) => {
-  const hasQuery = filterOfferingId || filterName;
+const _serviceManagerPlans = async (
+  context,
+  { filterServicePlanId, filterServiceOfferingId, filterServicePlanName } = {}
+) => {
+  const hasQuery = filterServicePlanId || filterServiceOfferingId || filterServicePlanName;
   return await _serviceManagerRequest(context, {
     pathname: "/v1/service_plans",
     ...(hasQuery && {
       query: {
         fieldQuery: _getQuery({
-          ...(filterOfferingId && { service_offering_id: filterOfferingId }),
-          ...(filterName && { name: filterName }),
+          ...(filterServicePlanId && { id: filterServicePlanId }),
+          ...(filterServiceOfferingId && { service_offering_id: filterServiceOfferingId }),
+          ...(filterServicePlanName && { name: filterServicePlanName }),
         }),
       },
     }),
@@ -284,6 +288,8 @@ const _serviceManagerDeleteBinding = async (context, serviceBindingId) =>
 
 const _serviceManagerRepairBindings = async (context, { filterServicePlanId, parameters } = {}) => {
   const [instances, bindings] = await Promise.all([
+    _serviceManagerOfferings(context),
+    _serviceManagerPlans(context, { filterServicePlanId }),
     _serviceManagerInstances(context, { filterServicePlanId }),
     _serviceManagerBindings(context),
   ]);
@@ -293,6 +299,8 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
 
   const changeQueue = new FunnelQueue(svmRequestConcurrency);
   for (const instance of instances) {
+    // TODO it would be nice to display the servicePlanName like the tenantId here but how to do it without redundant
+    //   request for the case where _resolveServicePlanName was used
     const tenantId = instance.labels.tenant_id[0];
     const instanceBindings = bindingsByInstance[instance.id] ?? [];
     instanceBindings.sort(compareForUpdatedAtDesc);
@@ -363,9 +371,12 @@ const _resolveServicePlanId = async (context, servicePlanName) => {
     `could not detect form "offering:plan" or "${SERVICE_PLAN_ALL_IDENTIFIER}" in "${servicePlanName}"`
   );
   const [, offeringName, planName] = match;
-  const [offering] = await _serviceManagerOfferings(context, { filterName: offeringName });
+  const [offering] = await _serviceManagerOfferings(context, { filterServiceOfferingName: offeringName });
   assert(offering?.id, `could not find service offering "${offeringName}"`);
-  const [plan] = await _serviceManagerPlans(context, { filterName: planName, filterOfferingId: offering.id });
+  const [plan] = await _serviceManagerPlans(context, {
+    filterServicePlanName: planName,
+    filterServiceOfferingId: offering.id,
+  });
   assert(plan?.id, `could not find service plan "${planName}" within offering "${offeringName}"`);
   return plan.id;
 };
