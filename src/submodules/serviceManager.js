@@ -276,7 +276,7 @@ const _serviceManagerCreateBinding = async (
 };
 
 const _serviceManagerDeleteBinding = async (context, serviceBindingId) =>
-  await _serviceManagerRequest({
+  await _serviceManagerRequest(context, {
     method: "DELETE",
     pathname: `/v1/service_bindings/${serviceBindingId}`,
     query: { async: false },
@@ -358,7 +358,10 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
 
 const _resolveServicePlanId = async (context, servicePlanName) => {
   const match = /([a-z0-9-_]+):([a-z0-9-_]+)/.exec(servicePlanName);
-  assert(match !== null, `could not detect form "offering:plan" in "${servicePlanName}"`);
+  assert(
+    match !== null,
+    `could not detect form "offering:plan" or "${SERVICE_PLAN_ALL_IDENTIFIER}" in "${servicePlanName}"`
+  );
   const [, offeringName, planName] = match;
   const [offering] = await _serviceManagerOfferings(context, { filterName: offeringName });
   assert(offering?.id, `could not find service offering "${offeringName}"`);
