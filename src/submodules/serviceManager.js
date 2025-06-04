@@ -400,19 +400,35 @@ const serviceManagerRepairBindings = async (context, [servicePlanName], [rawPara
   });
 };
 
-const _serviceManagerDeleteBindings = async (context, { filterServicePlanId, filterTenantId } = {}) => {
+const _serviceManagerDelete = async (
+  context,
+  { filterServicePlanId, filterTenantId, doDeleteInstances = false, doDeleteBindings = false } = {}
+) => {
   const [instances, bindings] = await Promise.all([
     _serviceManagerInstances(context, { filterTenantId, filterServicePlanId }),
     _serviceManagerBindings(context, { filterTenantId }),
   ]);
-  const instanceById = _indexByKey(instances, "id");
-  const filteredBindings = bindings.filter((binding) => instanceById[binding.service_instance_id]);
-  await limiter(
-    svmRequestConcurrency,
-    filteredBindings,
-    async (binding) => await _serviceManagerDeleteBinding(context, binding.id)
-  );
-  logger.info("deleted %i binding%s", filteredBindings.length, filteredBindings.length === 1 ? "" : "s");
+  const queue = new FunnelQueue(svmRequestConcurrency);
+
+  if (doDeleteBindings) {
+    const instanceById = _indexByKey(instances, "id");
+    const filteredBindings = bindings.filter((binding) => instanceById[binding.service_instance_id]);
+    for (const binding of filteredBindings) {
+      queue.enqueue(async () => await _serviceManagerDeleteBinding(context, binding.id));
+    }
+    queue.enqueue(() => {
+      logger.info("deleted %i binding%s", filteredBindings.length, filteredBindings.length === 1 ? "" : "s");
+    });
+  }
+  if (doDeleteInstances) {
+    for (const instance of instances) {
+      queue.enqueue(async () => await _serviceManagerDeleteInstance(context, instance.id));
+    }
+    queue.enqueue(() => {
+      logger.info("deleted %i instances%s", instances.length, instances.length === 1 ? "" : "s");
+    });
+  }
+  return await queue.dequeueAll();
 };
 
 const serviceManagerDeleteBindings = async (context, [servicePlanName, tenantId]) => {
@@ -421,7 +437,29 @@ const serviceManagerDeleteBindings = async (context, [servicePlanName, tenantId]
   const doFilterTenantId = tenantId !== TENANT_ID_ALL_IDENTIFIER;
   const filterTenantId = doFilterTenantId && tenantId;
   assert(!doFilterTenantId || isValidTenantId(filterTenantId), `argument "${tenantId}" is not a valid tenant id`);
-  return await _serviceManagerDeleteBindings(context, {
+  return await _serviceManagerDelete(context, {
+    doDeleteBindings: true,
+    ...(doFilterServicePlan && { filterServicePlanId }),
+    ...(doFilterTenantId && { filterTenantId }),
+  });
+};
+
+const _serviceManagerDeleteInstance = async (context, serviceInstanceId) =>
+  await _serviceManagerRequest(context, {
+    method: "DELETE",
+    pathname: `/v1/service_instances/${serviceInstanceId}`,
+    query: { async: false },
+  });
+
+const serviceManagerDeleteInstancesAndBindings = async (context, [servicePlanName, tenantId]) => {
+  const doFilterServicePlan = servicePlanName !== SERVICE_PLAN_ALL_IDENTIFIER;
+  const filterServicePlanId = doFilterServicePlan && (await _resolveServicePlanId(context, servicePlanName));
+  const doFilterTenantId = tenantId !== TENANT_ID_ALL_IDENTIFIER;
+  const filterTenantId = doFilterTenantId && tenantId;
+  assert(!doFilterTenantId || isValidTenantId(filterTenantId), `argument "${tenantId}" is not a valid tenant id`);
+  return await _serviceManagerDelete(context, {
+    doDeleteInstances: true,
+    doDeleteBindings: true,
     ...(doFilterServicePlan && { filterServicePlanId }),
     ...(doFilterTenantId && { filterTenantId }),
   });
@@ -432,6 +470,7 @@ module.exports = {
   serviceManagerLongList,
   serviceManagerRepairBindings,
   serviceManagerDeleteBindings,
+  serviceManagerDeleteInstancesAndBindings,
 
   _: {
     _reset() {},
