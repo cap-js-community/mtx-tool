@@ -188,8 +188,16 @@ const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJs
   const bindingsByInstance = _clusterByKey(bindings, "service_instance_id");
 
   const nowDate = new Date();
-  const headerRow = ["tenant_id", "service_plan", "instance_id", "", "binding_id", "ready"];
-  doTimestamps && headerRow.push("created_on", "updated_on");
+  const headerRow = [
+    "tenant_id",
+    "service_plan",
+    "instance_id",
+    ...(doTimestamps ? ["created_on", "updated_on"] : []),
+    "",
+    "binding_id",
+    "ready",
+    ...(doTimestamps ? ["created_on", "updated_on"] : []),
+  ];
   const table = [headerRow];
 
   if (doJsonOutput) {
@@ -200,29 +208,34 @@ const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJs
     };
   }
 
+  const connectorPiece = (length, index) =>
+    length === 0 ? "-x " : length === 1 ? "---" : index === 0 ? "-+-" : index === length - 1 ? " \\-" : " |-";
+
   for (const instance of instances) {
     const instanceBindings = bindingsByInstance[instance.id];
     if (instanceBindings) {
       for (const [index, binding] of instanceBindings.entries()) {
-        const row = [];
-        if (index === 0) {
-          row.push(
-            instance.labels.tenant_id[0],
-            servicePlanNameById[instance.service_plan_id],
-            instance.id,
-            instanceBindings.length === 1 ? "---" : "-+-",
-            binding.id,
-            binding.ready
-          );
-        } else {
-          row.push("", "", index === instanceBindings.length - 1 ? " \\-" : " |-", binding.id, binding.ready);
-        }
-        doTimestamps &&
-          row.push(...formatTimestampsWithRelativeDays([binding.created_at, binding.updated_at], nowDate));
-        table.push(row);
+        table.push([
+          instance.labels.tenant_id[0],
+          servicePlanNameById[instance.service_plan_id],
+          instance.id,
+          ...(doTimestamps
+            ? formatTimestampsWithRelativeDays([instance.created_at, instance.updated_at], nowDate)
+            : []),
+          connectorPiece(instanceBindings.length, index),
+          binding.id,
+          binding.ready,
+          ...(doTimestamps ? formatTimestampsWithRelativeDays([binding.created_at, binding.updated_at], nowDate) : []),
+        ]);
       }
     } else {
-      table.push([instance.labels.tenant_id[0], instance.id, "-x"]);
+      table.push([
+        instance.labels.tenant_id[0],
+        servicePlanNameById[instance.service_plan_id],
+        instance.id,
+        ...(doTimestamps ? formatTimestampsWithRelativeDays([instance.created_at, instance.updated_at], nowDate) : []),
+        connectorPiece(0, 0),
+      ]);
     }
   }
 
