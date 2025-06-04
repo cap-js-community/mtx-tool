@@ -13,7 +13,7 @@ const {
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
 const { Logger } = require("../shared/logger");
-const { FunnelQueue, limiter } = require("../shared/funnel");
+const { limiter } = require("../shared/funnel");
 
 const ENV = Object.freeze({
   SVM_CONCURRENCY: "MTX_SVM_CONCURRENCY",
