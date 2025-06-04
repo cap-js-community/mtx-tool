@@ -404,6 +404,7 @@ const _serviceManagerRefreshBindings = async (context, { filterServicePlanId, fi
   const instanceById = _indexByKey(instances, "id");
   const filteredBindings = bindings.filter((binding) => instanceById[binding.service_instance_id]);
   await limiter(svmRequestConcurrency, filteredBindings, async (binding) => {
+    // TODO: this should retry
     const instance = instanceById[binding.service_instance_id];
     await _serviceManagerCreateBinding(context, instance.id, instance.service_plan_id, instance.labels.tenant_id[0], {
       parameters,
