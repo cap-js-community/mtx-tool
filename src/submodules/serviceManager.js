@@ -268,6 +268,7 @@ ${_formatOutput(bindings)}
 const serviceManagerLongList = async (context, [filterTenantId], [doJsonOutput, doReveal]) =>
   await _serviceManagerLongList(context, { filterTenantId, doJsonOutput, doReveal });
 
+// TODO: this should retry
 const _serviceManagerCreateBinding = async (
   context,
   serviceInstanceId,
@@ -292,6 +293,7 @@ const _serviceManagerCreateBinding = async (
   });
 };
 
+// TODO: this should retry
 const _serviceManagerDeleteBinding = async (context, serviceBindingId) =>
   await _serviceManagerRequest(context, {
     method: "DELETE",
@@ -418,7 +420,6 @@ const _serviceManagerRefreshBindings = async (context, { filterServicePlanId, fi
   const instanceById = _indexByKey(instances, "id");
   const filteredBindings = bindings.filter((binding) => instanceById[binding.service_instance_id]);
   await limiter(svmRequestConcurrency, filteredBindings, async (binding) => {
-    // TODO: this should retry
     const instance = instanceById[binding.service_instance_id];
     await _serviceManagerCreateBinding(context, instance.id, instance.service_plan_id, instance.labels.tenant_id[0], {
       parameters,
@@ -487,6 +488,7 @@ const serviceManagerDeleteBindings = async (context, [servicePlanName, tenantId]
   });
 };
 
+// TODO: this should retry
 const _serviceManagerDeleteInstance = async (context, serviceInstanceId) =>
   await _serviceManagerRequest(context, {
     method: "DELETE",
