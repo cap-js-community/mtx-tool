@@ -329,14 +329,6 @@ const APP_CLI_OPTIONS = Object.freeze({
     useCache: false,
     readonly: true,
   },
-  HDI_LIST_RELATIONS: {
-    commandVariants: ["hdilr", "--hdi-list-relations"],
-    optionalPassArgs: [PASS_ARG.TENANT_ID],
-    optionalFlagArgs: [FLAG_ARG.TIMESTAMPS, FLAG_ARG.JSON_OUTPUT],
-    callback: hdi.hdiListRelations,
-    useCache: false,
-    readonly: true,
-  },
   HDI_TUNNEL_TENANT: {
     commandVariants: ["hditt", "--hdi-tunnel-tenant"],
     requiredPassArgs: [PASS_ARG.TENANT_ID],
@@ -345,39 +337,12 @@ const APP_CLI_OPTIONS = Object.freeze({
     useCache: false,
     readonly: true,
   },
-  HDI_REBIND_TENANT: {
-    commandVariants: ["hdirt", "--hdi-rebind-tenant"],
-    requiredPassArgs: [PASS_ARG.TENANT_ID],
-    optionalPassArgs: [PASS_ARG.PARAMS],
-    callback: hdi.hdiRebindTenant,
-    useCache: false,
-  },
-  HDI_REBIND_ALL: {
-    commandVariants: ["hdira", "--hdi-rebind-all"],
-    optionalPassArgs: [PASS_ARG.PARAMS],
-    callback: hdi.hdiRebindAll,
-    useCache: false,
-  },
-  HDI_REPAIR_BINDINGS: {
-    commandVariants: ["--hdi-repair-bindings"],
-    optionalPassArgs: [PASS_ARG.PARAMS],
-    callback: hdi.hdiRepairBindings,
-    useCache: false,
-  },
   HDI_ENABLE_NATIVE: {
     commandVariants: ["--hdi-enable-native"],
     optionalPassArgs: [PASS_ARG.TENANT_ID],
     callback: hdi.hdiEnableNative,
     useCache: false,
   },
-  HDI_DELETE_TENANT: {
-    commandVariants: ["--hdi-delete-tenant"],
-    requiredPassArgs: [PASS_ARG.TENANT_ID],
-    callback: hdi.hdiDeleteTenant,
-    useCache: false,
-    danger: true,
-  },
-  HDI_DELETE_ALL: { commandVariants: ["--hdi-delete-all"], callback: hdi.hdiDeleteAll, useCache: false, danger: true },
 
   SVM_LIST: {
     commandVariants: ["svml", "--svm-list"],
