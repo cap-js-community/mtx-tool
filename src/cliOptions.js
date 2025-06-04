@@ -413,7 +413,7 @@ const APP_CLI_OPTIONS = Object.freeze({
     commandVariants: ["--svm-refresh-bindings"],
     requiredPassArgs: [PASS_ARG.SERVICE_PLAN, PASS_ARG.TENANT_ID],
     optionalPassArgs: [PASS_ARG.PARAMS],
-    callback: () => {},
+    callback: svm.serviceManagerRefreshBindings,
     useCache: false,
     danger: true,
   },

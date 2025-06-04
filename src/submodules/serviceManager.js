@@ -401,6 +401,39 @@ const serviceManagerRepairBindings = async (context, [servicePlanName], [rawPara
   });
 };
 
+const _serviceManagerRefreshBindings = async (context, { filterServicePlanId, filterTenantId, parameters } = {}) => {
+  const [instances, bindings] = await Promise.all([
+    _serviceManagerInstances(context, { filterTenantId, filterServicePlanId }),
+    _serviceManagerBindings(context, { filterTenantId }),
+  ]);
+
+  const instanceById = _indexByKey(instances, "id");
+  const filteredBindings = bindings.filter((binding) => instanceById[binding.service_instance_id]);
+  await limiter(svmRequestConcurrency, filteredBindings, async (binding) => {
+    const instance = instanceById[binding.service_instance_id];
+    await _serviceManagerCreateBinding(context, instance.id, instance.service_plan_id, instance.labels.tenant_id[0], {
+      parameters,
+    });
+    await _serviceManagerDeleteBinding(context, binding.id);
+  });
+  logger.info("refreshed %i binding%s", filteredBindings.length, filteredBindings.length === 1 ? "" : "s");
+};
+
+const serviceManagerRefreshBindings = async (context, [servicePlanName, tenantId], [rawParameters]) => {
+  const doFilterServicePlan = servicePlanName !== SERVICE_PLAN_ALL_IDENTIFIER;
+  const filterServicePlanId = doFilterServicePlan && (await _resolveServicePlanId(context, servicePlanName));
+  const doFilterTenantId = tenantId !== TENANT_ID_ALL_IDENTIFIER;
+  const filterTenantId = doFilterTenantId && tenantId;
+  const parameters = tryJsonParse(rawParameters);
+  assert(!rawParameters || isObject(parameters), `argument "${rawParameters}" needs to be a valid JSON object`);
+
+  return await _serviceManagerRefreshBindings(context, {
+    ...(doFilterServicePlan && { filterServicePlanId }),
+    ...(doFilterTenantId && { filterTenantId }),
+    parameters,
+  });
+};
+
 const _serviceManagerDelete = async (
   context,
   { doDeleteInstances = false, doDeleteBindings = false, filterServicePlanId, filterTenantId } = {}
@@ -469,6 +502,7 @@ module.exports = {
   serviceManagerList,
   serviceManagerLongList,
   serviceManagerRepairBindings,
+  serviceManagerRefreshBindings,
   serviceManagerDeleteBindings,
   serviceManagerDeleteInstancesAndBindings,
 };
