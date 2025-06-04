@@ -383,10 +383,16 @@ const _serviceManagerDeleteBindings = async (context, { filterServicePlanId, fil
     _serviceManagerInstances(context, { filterTenantId, filterServicePlanId }),
     _serviceManagerBindings(context, { filterTenantId }),
   ]);
-  // TODO it's le funnelqueue
   const instanceById = _indexByKey(instances, "id");
+  const queue = new FunnelQueue(svmRequestConcurrency);
   for (const binding of bindings) {
+    if (!instanceById[binding.service_instance_id]) {
+      continue;
+    }
+    queue.enqueue(async () => await _serviceManagerDeleteBinding(context, binding.id));
   }
+  await queue.dequeueAll();
+  logger.info("deleted %i binding%s", queue.size(), queue.size() === 1 ? "" : "s");
 };
 
 const serviceManagerDeleteBindings = async (context, [servicePlanName, tenantId]) => {
