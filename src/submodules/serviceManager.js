@@ -409,23 +409,25 @@ const _serviceManagerDelete = async (
     _serviceManagerInstances(context, { filterTenantId, filterServicePlanId }),
     _serviceManagerBindings(context, { filterTenantId }),
   ]);
-  const queue = new FunnelQueue(svmRequestConcurrency);
 
   if (doDeleteBindings) {
     const instanceById = _indexByKey(instances, "id");
     const filteredBindings = bindings.filter((binding) => instanceById[binding.service_instance_id]);
-    for (const binding of filteredBindings) {
-      queue.enqueue(async () => await _serviceManagerDeleteBinding(context, binding.id));
-    }
-    await queue.dequeueAll();
+    await limiter(
+      svmRequestConcurrency,
+      filteredBindings,
+      async (binding) => await _serviceManagerDeleteBinding(context, binding.id)
+    );
     logger.info("deleted %i binding%s", filteredBindings.length, filteredBindings.length === 1 ? "" : "s");
   }
 
   if (doDeleteInstances) {
-    for (const instance of instances) {
-      queue.enqueue(async () => await sleep(2000));
-    }
-    await queue.dequeueAll();
+    await limiter(
+      svmRequestConcurrency,
+      instances,
+      async (instance) => await sleep(2000)
+      // async (instance) => await _serviceManagerDeleteInstance(context, instance.id)
+    );
     logger.info("deleted %i instance%s", instances.length, instances.length === 1 ? "" : "s");
   }
 };
