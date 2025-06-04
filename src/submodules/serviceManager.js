@@ -312,15 +312,17 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
   const servicePlanNameById = _indexServicePlanNameById(offerings, plans);
   const bindingsByInstance = _clusterByKey(bindings, "service_instance_id");
   instances.sort(compareForTenantId);
-  let changeCount = 0;
+  let isIdeal = true;
 
   for (const instance of instances) {
     const tenantId = instance.labels.tenant_id[0];
     const servicePlanName = servicePlanNameById[instance.service_plan_id];
     const instanceBindings = bindingsByInstance[instance.id] ?? [];
     instanceBindings.sort(compareForUpdatedAtDesc);
+
     const [readyBindings, unreadyBindings] = partition(instanceBindings, (binding) => binding.ready);
     if (readyBindings.length < SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
+      isIdeal = false;
       const missingBindingCount = SERVICE_MANAGER_IDEAL_BINDING_COUNT - instanceBindings.length;
       await limiter(
         svmRequestConcurrency,
@@ -334,7 +336,6 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
             { parameters }
           )
       );
-      changeCount += missingBindingCount;
       logger.info(
         "created %i missing binding%s for tenant %s plan %s",
         missingBindingCount,
@@ -343,13 +344,13 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
         servicePlanName
       );
     } else if (readyBindings.length > SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
+      isIdeal = false;
       const ambivalentBindings = readyBindings.slice(1);
       await limiter(
         svmRequestConcurrency,
         ambivalentBindings,
         async (ambivalentBinding) => await _serviceManagerDeleteBinding(context, ambivalentBinding.id)
       );
-      changeCount += ambivalentBindings.length;
       logger.info(
         "deleted %i ambivalent ready binding%s for tenant %s plan %s",
         ambivalentBindings.length,
@@ -359,6 +360,7 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
       );
     }
     if (unreadyBindings.length > 0) {
+      isIdeal = false;
       await limiter(
         svmRequestConcurrency,
         unreadyBindings,
@@ -374,7 +376,7 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
     }
   }
 
-  if (changeCount === 0) {
+  if (isIdeal) {
     logger.info(
       "found ideal binding count %i for %i instances, all is well",
       SERVICE_MANAGER_IDEAL_BINDING_COUNT,
