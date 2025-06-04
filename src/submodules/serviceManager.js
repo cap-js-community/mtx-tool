@@ -173,6 +173,14 @@ const _clusterByKey = (dataObjects, key) =>
     return result;
   }, {});
 
+const _indexServicePlanNameById = (offerings, plans) => {
+  const offeringById = _indexByKey(offerings, "id");
+  return plans.reduce((acc, plan) => {
+    acc[plan.id] = `${offeringById[plan.service_offering_id].name}:${plan.name}`;
+    return acc;
+  }, {});
+};
+
 const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJsonOutput }) => {
   const [offerings, plans, instances, bindings] = await Promise.all([
     _serviceManagerOfferings(context),
@@ -180,8 +188,7 @@ const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJs
     _serviceManagerInstances(context, { filterTenantId }),
     _serviceManagerBindings(context, { filterTenantId }),
   ]);
-  const offeringById = _indexByKey(offerings, "id");
-  const planById = _indexByKey(plans, "id");
+  const servicePlanNameById = _indexServicePlanNameById(offerings, plans);
   instances.sort(compareForTenantId);
   const bindingsByInstance = _clusterByKey(bindings, "service_instance_id");
 
@@ -199,8 +206,6 @@ const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJs
   }
 
   for (const instance of instances) {
-    const plan = planById[instance.service_plan_id];
-    const offering = offeringById[plan.service_offering_id];
     const instanceBindings = bindingsByInstance[instance.id];
     if (instanceBindings) {
       for (const [index, binding] of instanceBindings.entries()) {
@@ -208,7 +213,7 @@ const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJs
         if (index === 0) {
           row.push(
             instance.labels.tenant_id[0],
-            `${offering.name}:${plan.name}`,
+            servicePlanNameById[instance.service_plan_id],
             instance.id,
             instanceBindings.length === 1 ? "---" : "-+-",
             binding.id,
@@ -287,21 +292,21 @@ const _serviceManagerDeleteBinding = async (context, serviceBindingId) =>
   });
 
 const _serviceManagerRepairBindings = async (context, { filterServicePlanId, parameters } = {}) => {
-  const [instances, bindings] = await Promise.all([
+  const [offerings, plans, instances, bindings] = await Promise.all([
     _serviceManagerOfferings(context),
     _serviceManagerPlans(context, { filterServicePlanId }),
     _serviceManagerInstances(context, { filterServicePlanId }),
     _serviceManagerBindings(context),
   ]);
 
+  const servicePlanNameById = _indexServicePlanNameById(offerings, plans);
   const bindingsByInstance = _clusterByKey(bindings, "service_instance_id");
   instances.sort(compareForTenantId);
 
   const changeQueue = new FunnelQueue(svmRequestConcurrency);
   for (const instance of instances) {
-    // TODO it would be nice to display the servicePlanName like the tenantId here but how to do it without redundant
-    //   request for the case where _resolveServicePlanName was used
     const tenantId = instance.labels.tenant_id[0];
+    const servicePlanName = servicePlanNameById[instance.service_plan_id];
     const instanceBindings = bindingsByInstance[instance.id] ?? [];
     instanceBindings.sort(compareForUpdatedAtDesc);
     const [instanceBindingsReady, instanceBindingsUnready] = partition(instanceBindings, (binding) => binding.ready);
@@ -317,10 +322,11 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
             { parameters }
           );
           logger.info(
-            "created %i missing binding%s for tenant %s",
+            "created %i missing binding%s for tenant %s plan %s",
             missingBindingCount,
             missingBindingCount === 1 ? "" : "s",
-            tenantId
+            tenantId,
+            servicePlanName
           );
         });
       }
@@ -330,10 +336,11 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
         changeQueue.enqueue(async () => {
           await _serviceManagerDeleteBinding(context, id);
           logger.info(
-            "deleted %i ambivalent ready binding%s for tenant %s",
+            "deleted %i ambivalent ready binding%s for tenant %s plan %s",
             ambivalentBindings.length,
             ambivalentBindings.length === 1 ? "" : "s",
-            tenantId
+            tenantId,
+            servicePlanName
           );
         });
       }
@@ -342,10 +349,11 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
       changeQueue.enqueue(async () => {
         await _serviceManagerDeleteBinding(context, id);
         logger.info(
-          "deleted %i unready binding%s for tenant %s",
+          "deleted %i unready binding%s for tenant %s plan %s",
           instanceBindingsUnready.length,
           instanceBindingsUnready.length === 1 ? "" : "s",
-          tenantId
+          tenantId,
+          servicePlanName
         );
       });
     }
