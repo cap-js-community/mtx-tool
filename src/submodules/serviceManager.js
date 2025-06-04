@@ -151,8 +151,15 @@ const _serviceManagerBindings = async (
   return bindings;
 };
 
-const _clusterObjectsByKey = (dataObjects, key) => {
-  return dataObjects.reduce((result, dataObject) => {
+const _indexByKey = (dataObjects, key) =>
+  dataObjects.reduce((result, dataObject) => {
+    const identifier = dataObject[key];
+    result[identifier] = dataObject;
+    return result;
+  }, {});
+
+const _clusterByKey = (dataObjects, key) =>
+  dataObjects.reduce((result, dataObject) => {
     const identifier = dataObject[key];
     if (result[identifier]) {
       result[identifier].push(dataObject);
@@ -161,7 +168,6 @@ const _clusterObjectsByKey = (dataObjects, key) => {
     }
     return result;
   }, {});
-};
 
 const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJsonOutput }) => {
   const [offerings, plans, instances, bindings] = await Promise.all([
@@ -170,10 +176,10 @@ const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJs
     _serviceManagerInstances(context, { filterTenantId }),
     _serviceManagerBindings(context, { filterTenantId }),
   ]);
-  const offeringsById = _clusterObjectsByKey(offerings, "id");
-  const plansById = _clusterObjectsByKey(plans, "id");
+  const offeringById = _indexByKey(offerings, "id");
+  const planById = _indexByKey(plans, "id");
   instances.sort(compareForTenantId);
-  const bindingsByInstance = _clusterObjectsByKey(bindings, "service_instance_id");
+  const bindingsByInstance = _clusterByKey(bindings, "service_instance_id");
 
   const nowDate = new Date();
   const headerRow = ["tenant_id", "service_plan", "instance_id", "", "binding_id", "ready"];
@@ -189,8 +195,8 @@ const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJs
   }
 
   for (const instance of instances) {
-    const [plan] = plansById[instance.service_plan_id];
-    const [offering] = offeringsById[plan.service_offering_id];
+    const plan = planById[instance.service_plan_id];
+    const offering = offeringById[plan.service_offering_id];
     const instanceBindings = bindingsByInstance[instance.id];
     if (instanceBindings) {
       for (const [index, binding] of instanceBindings.entries()) {
@@ -282,7 +288,7 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
     _serviceManagerBindings(context),
   ]);
 
-  const bindingsByInstance = _clusterObjectsByKey(bindings, "service_instance_id");
+  const bindingsByInstance = _clusterByKey(bindings, "service_instance_id");
   instances.sort(compareForTenantId);
 
   const changeQueue = new FunnelQueue(svmRequestConcurrency);
@@ -378,7 +384,7 @@ const _serviceManagerDeleteBindings = async (context, { filterServicePlanId, fil
     _serviceManagerBindings(context, { filterTenantId }),
   ]);
   // TODO it's le funnelqueue
-  const instancesById = _clusterObjectsByKey(instances, "id");
+  const instanceById = _indexByKey(instances, "id");
   for (const binding of bindings) {
   }
 };
