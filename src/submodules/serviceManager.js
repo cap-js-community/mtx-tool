@@ -310,25 +310,31 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
   const servicePlanNameById = _indexServicePlanNameById(offerings, plans);
   const bindingsByInstance = _clusterByKey(bindings, "service_instance_id");
   instances.sort(compareForTenantId);
-
   const changeQueue = new FunnelQueue(svmRequestConcurrency);
+  const changeQueuePromises = [];
+
   for (const instance of instances) {
     const tenantId = instance.labels.tenant_id[0];
     const servicePlanName = servicePlanNameById[instance.service_plan_id];
     const instanceBindings = bindingsByInstance[instance.id] ?? [];
     instanceBindings.sort(compareForUpdatedAtDesc);
-    const [instanceBindingsReady, instanceBindingsUnready] = partition(instanceBindings, (binding) => binding.ready);
-    if (instanceBindingsReady.length < SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
+    const [readyBindings, unreadyBindings] = partition(instanceBindings, (binding) => binding.ready);
+    if (readyBindings.length < SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
       const missingBindingCount = SERVICE_MANAGER_IDEAL_BINDING_COUNT - instanceBindings.length;
       for (let i = 0; i < missingBindingCount; i++) {
-        changeQueue.enqueue(async () => {
-          await _serviceManagerCreateBinding(
-            context,
-            instance.id,
-            instance.service_plan_id,
-            instance.labels.tenant_id[0],
-            { parameters }
-          );
+        changeQueue.enqueue(
+          async () =>
+            await _serviceManagerCreateBinding(
+              context,
+              instance.id,
+              instance.service_plan_id,
+              instance.labels.tenant_id[0],
+              { parameters }
+            )
+        );
+      }
+      changeQueuePromises.push(
+        changeQueue.dequeueAll().then(() => {
           logger.info(
             "created %i missing binding%s for tenant %s plan %s",
             missingBindingCount,
@@ -336,13 +342,15 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
             tenantId,
             servicePlanName
           );
-        });
+        })
+      );
+    } else if (readyBindings.length > SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
+      const ambivalentBindings = readyBindings.slice(1);
+      for (const ambivalentBinding of ambivalentBindings) {
+        changeQueue.enqueue(async () => await _serviceManagerDeleteBinding(context, ambivalentBinding.id));
       }
-    } else if (instanceBindingsReady.length > SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
-      const ambivalentBindings = instanceBindingsReady.slice(1);
-      for (const { id } of ambivalentBindings) {
-        changeQueue.enqueue(async () => {
-          await _serviceManagerDeleteBinding(context, id);
+      changeQueuePromises.push(
+        changeQueue.dequeueAll().then(() => {
           logger.info(
             "deleted %i ambivalent ready binding%s for tenant %s plan %s",
             ambivalentBindings.length,
@@ -350,27 +358,29 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
             tenantId,
             servicePlanName
           );
-        });
-      }
+        })
+      );
     }
-    for (const { id } of instanceBindingsUnready) {
-      changeQueue.enqueue(async () => {
-        await _serviceManagerDeleteBinding(context, id);
+    for (const unreadyBinding of unreadyBindings) {
+      changeQueue.enqueue(async () => await _serviceManagerDeleteBinding(context, unreadyBinding.id));
+    }
+    changeQueuePromises.push(
+      changeQueue.dequeueAll().then(() => {
         logger.info(
           "deleted %i unready binding%s for tenant %s plan %s",
-          instanceBindingsUnready.length,
-          instanceBindingsUnready.length === 1 ? "" : "s",
+          unreadyBindings.length,
+          unreadyBindings.length === 1 ? "" : "s",
           tenantId,
           servicePlanName
         );
-      });
-    }
+      })
+    );
   }
 
   const changeCount = changeQueue.size();
   if (changeCount > 0) {
     logger.info("triggering %i change%s", changeCount, changeCount === 1 ? "" : "s");
-    await changeQueue.dequeueAll();
+    await Promise.all(changeQueuePromises);
   } else {
     logger.info(
       "found ideal binding count %i for %i instances, all is well",
