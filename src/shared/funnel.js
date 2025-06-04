@@ -70,6 +70,22 @@ class FunnelQueue extends Funnel {
   }
 
   /**
+   * Enqueues a callback function to be executed when capacity becomes available and all previously enqueued callbacks
+   * are settled.
+   * @param {Function} callback - The (async) callback function to execute.
+   * @param {number} [load] - The capacity load of this callback. Defaults to 1 and is set to at least 1.
+   */
+  enqueueMilestone(callback, load) {
+    const previous = Promise.allSettled(this.__queue);
+    this.__queue.push(
+      super.run(async () => {
+        await previous;
+        return await callback();
+      }, load)
+    );
+  }
+
+  /**
    * Waits for the processing of all currently enqueued callbacks and returns their results in calling order, when all
    * have completed. Clears the current queue in the process.
    * @returns {Promise<Array>} A promise that resolves with the results of all enqueued callbacks.
