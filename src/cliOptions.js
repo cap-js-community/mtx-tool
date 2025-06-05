@@ -107,13 +107,13 @@ commands:
           ...    --first-instance                    upgrade only through first app instance
 
    === hana management (hdi) ===
-~  hdil   --hdi-list [TENANT_ID]                  list all hdi container instances
-~  hdill  --hdi-long-list [TENANT_ID]             long list all hdi container instances and bindings
-~  hditt  --hdi-tunnel-tenant TENANT_ID           open ssh tunnel to tenant db
-          ...    [TENANT_ID]                      filter for tenant id
-          ...    --json                           list in json
-          ...    --time                           list includes timestamps
-          ...    --reveal                         show sensitive information
+~  hdil   --hdi-list [TENANT_ID]         list all hdi container instances
+~  hdill  --hdi-long-list [TENANT_ID]    long list all hdi container instances and bindings
+~  hditt  --hdi-tunnel-tenant TENANT_ID  open ssh tunnel to tenant db
+          ...    [TENANT_ID]             filter for tenant id
+          ...    --json                  list in json
+          ...    --time                  list includes timestamps
+          ...    --reveal                show sensitive information
 
    === service manager (svm) ===
 ~  svml   --svm-list [TENANT_ID]                                  list all managed service instances and binding
