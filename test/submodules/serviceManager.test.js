@@ -26,7 +26,6 @@ const svm = require("../../src/submodules/serviceManager");
 const { outputFromLogger, collectRequestMockCalls } = require("../test-util/static");
 
 const testTenantId = "5ecc7413-2b7e-414a-9496-ad4a61f6cccf";
-const testServicePlanName = "myOffering:myPlan";
 
 const mockCredentials = {
   certurl: "uaa-cert-url",
@@ -51,22 +50,40 @@ const mockContext = {
   },
 };
 
-const mockOfferingFactory = (i) => ({
-  id: `offering-id-${i}`,
-  name: `offering-name-${i}`,
-});
+const testServicePlanName = "myOffering:myPlan";
 
-const mockPlanFactory = (i) => ({
-  id: `plan-id-${i}`,
-  service_offering_id: `offering-id-${i}`,
-  name: `plan-name-${i}`,
-});
+const mockOfferingResponse = {
+  json: () => ({
+    items: [
+      { id: `offering-id-0`, name: `myOffering` },
+      { id: `offering-id-1`, name: `otherOffering` },
+    ],
+  }),
+};
+const mockFilteredOfferingResponse = {
+  json: () => ({
+    items: [{ id: `offering-id-0`, name: `myOffering` }],
+  }),
+};
+const mockPlanResponse = {
+  json: () => ({
+    items: [
+      { id: `plan-id-0`, service_offering_id: `offering-id-0`, name: `myPlan` },
+      { id: `plan-id-1`, service_offering_id: `offering-id-1`, name: `otherPlan` },
+    ],
+  }),
+};
+const mockFilteredPlanResponse = {
+  json: () => ({
+    items: [{ id: `plan-id-0`, service_offering_id: `offering-id-0`, name: `myPlan` }],
+  }),
+};
 
-const mockInstanceFactory = (i) => ({
+const mockInstanceFactory = (i, { isFiltered = false } = {}) => ({
   id: `instance-id-${i}`,
   ready: true,
   name: `instance-name-${i}`,
-  service_plan_id: `plan-id-${i % 2}`,
+  service_plan_id: isFiltered ? "plan-id-0" : `plan-id-${i % 2}`,
   usable: true,
   labels: {
     tenant_id: [`tenant-id-${i}`],
@@ -75,13 +92,12 @@ const mockInstanceFactory = (i) => ({
 
 const mockBindingFactory = (i) => ({
   id: `binding-id-${i}`,
+  service_instance_id: `instance-id-${i}`,
   ready: true,
   name: `binding-name-${i}`,
-  service_instance_id: "service-instance-id",
   usable: true,
   labels: {
     tenant_id: [`tenant-id-${i}`],
-    service_plan_id: [`service-plan-id-${i}`],
   },
 });
 
@@ -90,36 +106,73 @@ describe("svm tests", () => {
     svm._._reset();
   });
 
-  test("svm repair bindings", async () => {
+  test("svm repair bindings all-services", async () => {
+    mockRequest.request.mockReturnValueOnce(mockOfferingResponse);
+    mockRequest.request.mockReturnValueOnce(mockPlanResponse);
     mockRequest.request.mockReturnValueOnce({
-      async json() {
-        return { items: Array.from({ length: 2 }).map((_, i) => mockOfferingFactory(i)) };
-      },
+      json: () => ({
+        items: Array.from({ length: 6 }).map((_, i) => mockInstanceFactory(i)),
+      }),
     });
     mockRequest.request.mockReturnValueOnce({
-      async json() {
-        return { items: Array.from({ length: 2 }).map((_, i) => mockPlanFactory(i)) };
-      },
-    });
-    mockRequest.request.mockReturnValueOnce({
-      async json() {
-        return { items: Array.from({ length: 3 }).map((_, i) => mockInstanceFactory(i)) };
-      },
-    });
-    mockRequest.request.mockReturnValueOnce({
-      async json() {
-        return { items: [mockBindingFactory(0)] };
-      },
+      json: () => ({
+        items: [mockBindingFactory(2), mockBindingFactory(5)],
+      }),
     });
 
-    mockRequest.request.mockReturnValueOnce();
-    mockRequest.request.mockReturnValueOnce();
-    mockRequest.request.mockReturnValueOnce();
-    mockRequest.request.mockReturnValueOnce();
+    expect(await svm.serviceManagerRepairBindings(mockContext, ["all-services"], [])).toBeUndefined();
+    expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
+      [
+        "GET service-manager-url /v1/service_offerings",
+        "GET service-manager-url /v1/service_plans",
+        "GET service-manager-url /v1/service_instances",
+        "GET service-manager-url /v1/service_bindings",
+        "POST service-manager-url /v1/service_bindings {"async":false}",
+        "POST service-manager-url /v1/service_bindings {"async":false}",
+        "POST service-manager-url /v1/service_bindings {"async":false}",
+        "POST service-manager-url /v1/service_bindings {"async":false}",
+      ]
+    `);
+    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
+      "triggering 4 changes
+      created 1 missing binding for tenant tenant-id-0 plan myOffering:myPlan
+      created 1 missing binding for tenant tenant-id-1 plan otherOffering:otherPlan
+      created 1 missing binding for tenant tenant-id-3 plan otherOffering:otherPlan
+      created 1 missing binding for tenant tenant-id-4 plan myOffering:myPlan"
+    `);
+    expect(mockLogger.error).toHaveBeenCalledTimes(0);
+  });
+
+  test("svm repair bindings myPlan", async () => {
+    mockRequest.request.mockReturnValueOnce(mockFilteredOfferingResponse);
+    mockRequest.request.mockReturnValueOnce(mockFilteredPlanResponse);
+    mockRequest.request.mockReturnValueOnce({
+      json: () => ({
+        items: Array.from({ length: 3 }).map((_, i) => mockInstanceFactory(i, { isFiltered: true })),
+      }),
+    });
+    mockRequest.request.mockReturnValueOnce({
+      json: () => ({
+        items: [mockBindingFactory(2)],
+      }),
+    });
 
     expect(await svm.serviceManagerRepairBindings(mockContext, [testServicePlanName], [])).toBeUndefined();
-    expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot();
-    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot();
+    expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
+      [
+        "GET service-manager-url /v1/service_offerings {"fieldQuery":"name eq 'myOffering'"}",
+        "GET service-manager-url /v1/service_plans {"fieldQuery":"service_offering_id eq 'offering-id-0' and name eq 'myPlan'"}",
+        "GET service-manager-url /v1/service_instances {"fieldQuery":"service_plan_id eq 'plan-id-0'"}",
+        "GET service-manager-url /v1/service_bindings",
+        "POST service-manager-url /v1/service_bindings {"async":false}",
+        "POST service-manager-url /v1/service_bindings {"async":false}",
+      ]
+    `);
+    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
+      "triggering 2 changes
+      created 1 missing binding for tenant tenant-id-0 plan myOffering:myPlan
+      created 1 missing binding for tenant tenant-id-1 plan myOffering:myPlan"
+    `);
     expect(mockLogger.error).toHaveBeenCalledTimes(0);
   });
 
