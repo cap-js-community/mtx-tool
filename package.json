@@ -19,6 +19,7 @@
     "test:record:reg": "jest --runInBand --config jest-nock-record.config.js test-nock-record/tenantRegistry.nock.test.js",
     "test:record:cds": "jest --runInBand --config jest-nock-record.config.js test-nock-record/capMultitenancy.nock.test.js",
     "test:record:hdi": "jest --runInBand --config jest-nock-record.config.js test-nock-record/hanaManagement.nock.test.js",
+    "test:record:svm": "jest --runInBand --config jest-nock-record.config.js test-nock-record/serviceManager.nock.test.js",
     "lint": "npm run prettier && npm run eslint",
     "lint:fix": "npm run prettier:fix && npm run eslint:fix",
     "eslint": "eslint .",
