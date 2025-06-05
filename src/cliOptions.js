@@ -337,12 +337,6 @@ const APP_CLI_OPTIONS = Object.freeze({
     useCache: false,
     readonly: true,
   },
-  HDI_ENABLE_NATIVE: {
-    commandVariants: ["--hdi-enable-native"],
-    optionalPassArgs: [PASS_ARG.TENANT_ID],
-    callback: hdi.hdiEnableNative,
-    useCache: false,
-  },
 
   SVM_LIST: {
     commandVariants: ["svml", "--svm-list"],
