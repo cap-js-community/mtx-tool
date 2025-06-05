@@ -11,7 +11,7 @@ const {
   randomString,
 } = require("../shared/static");
 const { assert } = require("../shared/error");
-const { request } = require("../shared/request");
+const { request, RETRY_MODE } = require("../shared/request");
 const { Logger } = require("../shared/logger");
 const { limiter, FunnelQueue } = require("../shared/funnel");
 
@@ -268,7 +268,6 @@ ${_formatOutput(bindings)}
 const serviceManagerLongList = async (context, [filterTenantId], [doJsonOutput, doReveal]) =>
   await _serviceManagerLongList(context, { filterTenantId, doJsonOutput, doReveal });
 
-// TODO: this should retry
 const _serviceManagerCreateBinding = async (
   context,
   serviceInstanceId,
@@ -277,6 +276,7 @@ const _serviceManagerCreateBinding = async (
   { name = randomString(32), parameters } = {}
 ) => {
   await _serviceManagerRequest(context, {
+    retryMode: RETRY_MODE.ALL_FAILED,
     method: "POST",
     pathname: `/v1/service_bindings`,
     query: { async: false },
@@ -293,9 +293,9 @@ const _serviceManagerCreateBinding = async (
   });
 };
 
-// TODO: this should retry
 const _serviceManagerDeleteBinding = async (context, serviceBindingId) =>
   await _serviceManagerRequest(context, {
+    retryMode: RETRY_MODE.ALL_FAILED,
     method: "DELETE",
     pathname: `/v1/service_bindings/${serviceBindingId}`,
     query: { async: false },
@@ -493,9 +493,9 @@ const serviceManagerDeleteBindings = async (context, [servicePlanName, tenantId]
   });
 };
 
-// TODO: this should retry
 const _serviceManagerDeleteInstance = async (context, serviceInstanceId) =>
   await _serviceManagerRequest(context, {
+    retryMode: RETRY_MODE.ALL_FAILED,
     method: "DELETE",
     pathname: `/v1/service_instances/${serviceInstanceId}`,
     query: { async: false },
