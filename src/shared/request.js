@@ -7,11 +7,17 @@ const { sleep } = require("./static");
 const { fail } = require("./error");
 const { Logger } = require("./logger");
 
+const HTTP_TOO_MANY_REQUESTS = 429;
 // NOTE: These times add up to 90sec in total and give an exponential falloff
-const TOO_MANY_POLL_FREQUENCIES = [6000, 12000, 24000, 48000];
+const RETRY_POLL_FREQUENCIES = [6000, 12000, 24000, 48000];
+const RETRY_STOP_MARKER = -1;
+const RETRY_SLEEP_TIMES = [].concat(RETRY_POLL_FREQUENCIES, [RETRY_STOP_MARKER]);
 
-const STOP_SLEEPING_TIME = -1;
-const SLEEP_TIMES = [].concat(TOO_MANY_POLL_FREQUENCIES, [STOP_SLEEPING_TIME]);
+const RETRY_MODE = Object.freeze({
+  OFF: "OFF",
+  TOO_MANY_REQUESTS: "TOO_MANY_REQUESTS",
+  ALL_FAILED: "ALL_FAILED",
+});
 
 const logger = Logger.getInstance();
 
@@ -36,6 +42,7 @@ const _request = async ({
   auth,
   logged = true,
   checkStatus = true,
+  retryMode = RETRY_MODE.TOO_MANY_REQUESTS,
 }) => {
   if (path && !pathname && !search) {
     const searchIndex = path.indexOf("?");
@@ -77,10 +84,10 @@ const _request = async ({
   };
 
   let response;
-  for (const sleepTime of SLEEP_TIMES) {
+  for (const sleepTime of RETRY_SLEEP_TIMES) {
     const startTime = Date.now();
     response = await fetchlib(_url, _options);
-    const isFinalRetry = response.status !== 429 || sleepTime === STOP_SLEEPING_TIME;
+    const isFinalRetry = response.status !== HTTP_TOO_MANY_REQUESTS || sleepTime === RETRY_STOP_MARKER;
     if (logged) {
       logger.info(
         isFinalRetry
@@ -111,5 +118,6 @@ const request = async (options) => {
 };
 
 module.exports = {
+  RETRY_MODE,
   request,
 };
