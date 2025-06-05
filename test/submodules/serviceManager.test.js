@@ -9,15 +9,6 @@ jest.mock("../../src/shared/request", () => {
   };
 });
 
-const mockStatic = require("../../src/shared/static");
-jest.mock("../../src/shared/static", () => {
-  const staticLib = jest.requireActual("../../src/shared/static");
-  return {
-    ...staticLib,
-    sleep: jest.fn(),
-  };
-});
-
 const { Logger: MockLogger } = require("../../src/shared/logger");
 const mockLogger = MockLogger.getInstance();
 jest.mock("../../src/shared/logger", () => require("../__mocks/shared/logger"));
