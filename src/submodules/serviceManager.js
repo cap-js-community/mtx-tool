@@ -390,7 +390,7 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
 };
 
 const _resolveServicePlanId = async (context, servicePlanName) => {
-  const match = /([a-z0-9-_]+):([a-z0-9-_]+)/.exec(servicePlanName);
+  const match = /^(\S+):(\S+)$/i.exec(servicePlanName);
   assert(
     match !== null,
     `could not detect form "offering:plan" or "${SERVICE_PLAN_ALL_IDENTIFIER}" in "${servicePlanName}"`
