@@ -13,7 +13,7 @@ const {
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
 const { Logger } = require("../shared/logger");
-const { limiter } = require("../shared/funnel");
+const { limiter, FunnelQueue } = require("../shared/funnel");
 
 const ENV = Object.freeze({
   SVM_CONCURRENCY: "MTX_SVM_CONCURRENCY",
@@ -312,7 +312,7 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
   const servicePlanNameById = _indexServicePlanNameById(offerings, plans);
   const bindingsByInstance = _clusterByKey(bindings, "service_instance_id");
   instances.sort(compareForTenantId);
-  let isIdeal = true;
+  const changeQueue = new FunnelQueue(svmRequestConcurrency);
 
   for (const instance of instances) {
     const tenantId = instance.labels.tenant_id[0];
@@ -322,66 +322,69 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
 
     const [readyBindings, unreadyBindings] = partition(instanceBindings, (binding) => binding.ready);
     if (readyBindings.length < SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
-      isIdeal = false;
       const missingBindingCount = SERVICE_MANAGER_IDEAL_BINDING_COUNT - instanceBindings.length;
-      await limiter(
-        svmRequestConcurrency,
-        Array.from({ length: missingBindingCount }),
-        async () =>
-          await _serviceManagerCreateBinding(
-            context,
-            instance.id,
-            instance.service_plan_id,
-            instance.labels.tenant_id[0],
-            { parameters }
-          )
-      );
-      logger.info(
-        "created %i missing binding%s for tenant %s plan %s",
-        missingBindingCount,
-        missingBindingCount === 1 ? "" : "s",
-        tenantId,
-        servicePlanName
-      );
+      for (let i = 0; i < missingBindingCount; i++) {
+        changeQueue.enqueue(
+          async () =>
+            await _serviceManagerCreateBinding(
+              context,
+              instance.id,
+              instance.service_plan_id,
+              instance.labels.tenant_id[0],
+              { parameters }
+            )
+        );
+      }
+      changeQueue.milestone().then(() => {
+        logger.info(
+          "created %i missing binding%s for tenant %s plan %s",
+          missingBindingCount,
+          missingBindingCount === 1 ? "" : "s",
+          tenantId,
+          servicePlanName
+        );
+      });
     } else if (readyBindings.length > SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
-      isIdeal = false;
       const ambivalentBindings = readyBindings.slice(1);
-      await limiter(
-        svmRequestConcurrency,
-        ambivalentBindings,
-        async (ambivalentBinding) => await _serviceManagerDeleteBinding(context, ambivalentBinding.id)
-      );
-      logger.info(
-        "deleted %i ambivalent ready binding%s for tenant %s plan %s",
-        ambivalentBindings.length,
-        ambivalentBindings.length === 1 ? "" : "s",
-        tenantId,
-        servicePlanName
-      );
+      for (const ambivalentBinding of ambivalentBindings) {
+        changeQueue.enqueue(async () => await _serviceManagerDeleteBinding(context, ambivalentBinding.id));
+      }
+      changeQueue.milestone().then(() => {
+        logger.info(
+          "deleted %i ambivalent binding%s for tenant %s plan %s",
+          ambivalentBindings.length,
+          ambivalentBindings.length === 1 ? "" : "s",
+          tenantId,
+          servicePlanName
+        );
+      });
     }
     if (unreadyBindings.length > 0) {
-      isIdeal = false;
-      await limiter(
-        svmRequestConcurrency,
-        unreadyBindings,
-        async (unreadyBinding) => await _serviceManagerDeleteBinding(context, unreadyBinding.id)
-      );
-      logger.info(
-        "deleted %i unready binding%s for tenant %s plan %s",
-        unreadyBindings.length,
-        unreadyBindings.length === 1 ? "" : "s",
-        tenantId,
-        servicePlanName
-      );
+      for (const unreadyBinding of unreadyBindings) {
+        changeQueue.enqueue(async () => await _serviceManagerDeleteBinding(context, unreadyBinding.id));
+      }
+      changeQueue.milestone().then(() => {
+        logger.info(
+          "deleted %i unready binding%s for tenant %s plan %s",
+          unreadyBindings.length,
+          unreadyBindings.length === 1 ? "" : "s",
+          tenantId,
+          servicePlanName
+        );
+      });
     }
   }
 
-  if (isIdeal) {
+  const changeCount = changeQueue.size();
+  if (changeCount === 0) {
     logger.info(
       "found ideal binding count %i for %i instances, all is well",
       SERVICE_MANAGER_IDEAL_BINDING_COUNT,
       instances.length
     );
+  } else {
+    logger.info("triggering %i change%s", changeCount, changeCount === 1 ? "" : "s");
+    await changeQueue.dequeueAll();
   }
 };
 
