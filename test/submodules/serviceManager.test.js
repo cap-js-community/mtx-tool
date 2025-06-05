@@ -105,18 +105,19 @@ describe("svm tests", () => {
     svm._._reset();
   });
 
-  test("svm repair bindings all-services", async () => {
-    mockRequest.request.mockReturnValueOnce(mockOfferingResponse);
-    mockRequest.request.mockReturnValueOnce(mockPlanResponse);
-    mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6));
-    mockRequest.request.mockReturnValueOnce({
-      json: () => ({
-        items: [mockBindingFactory(2), mockBindingFactory(5)],
-      }),
-    });
+  describe("svm repair bindings", () => {
+    test("all-services", async () => {
+      mockRequest.request.mockReturnValueOnce(mockOfferingResponse);
+      mockRequest.request.mockReturnValueOnce(mockPlanResponse);
+      mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6));
+      mockRequest.request.mockReturnValueOnce({
+        json: () => ({
+          items: [mockBindingFactory(2), mockBindingFactory(5)],
+        }),
+      });
 
-    expect(await svm.serviceManagerRepairBindings(mockContext, ["all-services"], [])).toBeUndefined();
-    expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
+      expect(await svm.serviceManagerRepairBindings(mockContext, ["all-services"], [])).toBeUndefined();
+      expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
       [
         "GET service-manager-url /v1/service_offerings",
         "GET service-manager-url /v1/service_plans",
@@ -128,28 +129,28 @@ describe("svm tests", () => {
         "POST service-manager-url /v1/service_bindings {"async":false}",
       ]
     `);
-    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
+      expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "triggering 4 changes
       created 1 missing binding for tenant tenant-id-0 plan myOffering:myPlan
       created 1 missing binding for tenant tenant-id-0 plan otherOffering:otherPlan
       created 1 missing binding for tenant tenant-id-1 plan otherOffering:otherPlan
       created 1 missing binding for tenant tenant-id-2 plan myOffering:myPlan"
     `);
-    expect(mockLogger.error).toHaveBeenCalledTimes(0);
-  });
-
-  test("svm repair bindings myPlan", async () => {
-    mockRequest.request.mockReturnValueOnce(mockFilteredOfferingResponse);
-    mockRequest.request.mockReturnValueOnce(mockFilteredPlanResponse);
-    mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isPlanFiltered: true }));
-    mockRequest.request.mockReturnValueOnce({
-      json: () => ({
-        items: [mockBindingFactory(2)],
-      }),
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
 
-    expect(await svm.serviceManagerRepairBindings(mockContext, [testServicePlanName], [])).toBeUndefined();
-    expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
+    test("myPlan", async () => {
+      mockRequest.request.mockReturnValueOnce(mockFilteredOfferingResponse);
+      mockRequest.request.mockReturnValueOnce(mockFilteredPlanResponse);
+      mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isPlanFiltered: true }));
+      mockRequest.request.mockReturnValueOnce({
+        json: () => ({
+          items: [mockBindingFactory(2)],
+        }),
+      });
+
+      expect(await svm.serviceManagerRepairBindings(mockContext, [testServicePlanName], [])).toBeUndefined();
+      expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
       [
         "GET service-manager-url /v1/service_offerings {"fieldQuery":"name eq 'myOffering'"}",
         "GET service-manager-url /v1/service_plans {"fieldQuery":"service_offering_id eq 'offering-id-0' and name eq 'myPlan'"}",
@@ -159,24 +160,142 @@ describe("svm tests", () => {
         "POST service-manager-url /v1/service_bindings {"async":false}",
       ]
     `);
-    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
+      expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "triggering 2 changes
       created 1 missing binding for tenant tenant-id-0 plan myOffering:myPlan
       created 1 missing binding for tenant tenant-id-2 plan myOffering:myPlan"
     `);
-    expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
+    });
   });
 
-  test("hdi delete bindings all-services all-tenants", async () => {
-    mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6));
-    mockRequest.request.mockReturnValueOnce({
-      json: () => ({
-        items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
-      }),
+  describe("svm refresh bindings", () => {
+    test("all-services all-tenants", async () => {
+      mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6));
+      mockRequest.request.mockReturnValueOnce({
+        json: () => ({
+          items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
+        }),
+      });
+
+      expect(await svm.serviceManagerRefreshBindings(mockContext, ["all-services", "all-tenants"], [])).toBeUndefined();
+      expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
+        [
+          "GET service-manager-url /v1/service_instances",
+          "GET service-manager-url /v1/service_bindings",
+          "POST service-manager-url /v1/service_bindings {"async":false}",
+          "POST service-manager-url /v1/service_bindings {"async":false}",
+          "POST service-manager-url /v1/service_bindings {"async":false}",
+          "POST service-manager-url /v1/service_bindings {"async":false}",
+          "POST service-manager-url /v1/service_bindings {"async":false}",
+          "POST service-manager-url /v1/service_bindings {"async":false}",
+          "DELETE service-manager-url /v1/service_bindings/binding-id-0 {"async":false}",
+          "DELETE service-manager-url /v1/service_bindings/binding-id-1 {"async":false}",
+          "DELETE service-manager-url /v1/service_bindings/binding-id-2 {"async":false}",
+          "DELETE service-manager-url /v1/service_bindings/binding-id-3 {"async":false}",
+          "DELETE service-manager-url /v1/service_bindings/binding-id-4 {"async":false}",
+          "DELETE service-manager-url /v1/service_bindings/binding-id-5 {"async":false}",
+        ]
+      `);
+      expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"refreshed 6 bindings"`);
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
 
-    expect(await svm.serviceManagerDeleteBindings(mockContext, ["all-services", "all-tenants"])).toBeUndefined();
-    expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
+    test("myPlan all-tenants", async () => {
+      mockRequest.request.mockReturnValueOnce(mockFilteredOfferingResponse);
+      mockRequest.request.mockReturnValueOnce(mockFilteredPlanResponse);
+      mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isPlanFiltered: true }));
+      mockRequest.request.mockReturnValueOnce({
+        json: () => ({
+          items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
+        }),
+      });
+
+      expect(
+        await svm.serviceManagerRefreshBindings(mockContext, [testServicePlanName, "all-tenants"], [])
+      ).toBeUndefined();
+      expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
+        [
+          "GET service-manager-url /v1/service_offerings {"fieldQuery":"name eq 'myOffering'"}",
+          "GET service-manager-url /v1/service_plans {"fieldQuery":"service_offering_id eq 'offering-id-0' and name eq 'myPlan'"}",
+          "GET service-manager-url /v1/service_instances {"fieldQuery":"service_plan_id eq 'plan-id-0'"}",
+          "GET service-manager-url /v1/service_bindings",
+          "POST service-manager-url /v1/service_bindings {"async":false}",
+          "POST service-manager-url /v1/service_bindings {"async":false}",
+          "POST service-manager-url /v1/service_bindings {"async":false}",
+          "DELETE service-manager-url /v1/service_bindings/binding-id-0 {"async":false}",
+          "DELETE service-manager-url /v1/service_bindings/binding-id-2 {"async":false}",
+          "DELETE service-manager-url /v1/service_bindings/binding-id-4 {"async":false}",
+        ]
+      `);
+      expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"refreshed 3 bindings"`);
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
+    });
+
+    test("all-services myTenant", async () => {
+      mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isTenantFiltered: true }));
+      mockRequest.request.mockReturnValueOnce({
+        json: () => ({
+          items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
+        }),
+      });
+
+      expect(await svm.serviceManagerRefreshBindings(mockContext, ["all-services", testTenantId], [])).toBeUndefined();
+      expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
+        [
+          "GET service-manager-url /v1/service_instances {"labelQuery":"tenant_id eq 'tenant-id-1'"}",
+          "GET service-manager-url /v1/service_bindings {"labelQuery":"tenant_id eq 'tenant-id-1'"}",
+          "POST service-manager-url /v1/service_bindings {"async":false}",
+          "POST service-manager-url /v1/service_bindings {"async":false}",
+          "DELETE service-manager-url /v1/service_bindings/binding-id-2 {"async":false}",
+          "DELETE service-manager-url /v1/service_bindings/binding-id-3 {"async":false}",
+        ]
+      `);
+      expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"refreshed 2 bindings"`);
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
+    });
+
+    test("myPlan myTenant", async () => {
+      mockRequest.request.mockReturnValueOnce(mockFilteredOfferingResponse);
+      mockRequest.request.mockReturnValueOnce(mockFilteredPlanResponse);
+      mockRequest.request.mockReturnValueOnce(
+        mockInstanceResponse(6, { isTenantFiltered: true, isPlanFiltered: true })
+      );
+      mockRequest.request.mockReturnValueOnce({
+        json: () => ({
+          items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
+        }),
+      });
+
+      expect(
+        await svm.serviceManagerRefreshBindings(mockContext, [testServicePlanName, testTenantId], [])
+      ).toBeUndefined();
+      expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
+        [
+          "GET service-manager-url /v1/service_offerings {"fieldQuery":"name eq 'myOffering'"}",
+          "GET service-manager-url /v1/service_plans {"fieldQuery":"service_offering_id eq 'offering-id-0' and name eq 'myPlan'"}",
+          "GET service-manager-url /v1/service_instances {"fieldQuery":"service_plan_id eq 'plan-id-0'","labelQuery":"tenant_id eq 'tenant-id-1'"}",
+          "GET service-manager-url /v1/service_bindings {"labelQuery":"tenant_id eq 'tenant-id-1'"}",
+          "POST service-manager-url /v1/service_bindings {"async":false}",
+          "DELETE service-manager-url /v1/service_bindings/binding-id-2 {"async":false}",
+        ]
+      `);
+      expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"refreshed 1 binding"`);
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe("svm delete bindings", () => {
+    test("all-services all-tenants", async () => {
+      mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6));
+      mockRequest.request.mockReturnValueOnce({
+        json: () => ({
+          items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
+        }),
+      });
+
+      expect(await svm.serviceManagerDeleteBindings(mockContext, ["all-services", "all-tenants"])).toBeUndefined();
+      expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
       [
         "GET service-manager-url /v1/service_instances",
         "GET service-manager-url /v1/service_bindings",
@@ -188,22 +307,22 @@ describe("svm tests", () => {
         "DELETE service-manager-url /v1/service_bindings/binding-id-5 {"async":false}",
       ]
     `);
-    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"deleted 6 bindings"`);
-    expect(mockLogger.error).toHaveBeenCalledTimes(0);
-  });
-
-  test("hdi delete bindings myPlan all-tenants", async () => {
-    mockRequest.request.mockReturnValueOnce(mockFilteredOfferingResponse);
-    mockRequest.request.mockReturnValueOnce(mockFilteredPlanResponse);
-    mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isPlanFiltered: true }));
-    mockRequest.request.mockReturnValueOnce({
-      json: () => ({
-        items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
-      }),
+      expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"deleted 6 bindings"`);
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
 
-    expect(await svm.serviceManagerDeleteBindings(mockContext, [testServicePlanName, "all-tenants"])).toBeUndefined();
-    expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
+    test("myPlan all-tenants", async () => {
+      mockRequest.request.mockReturnValueOnce(mockFilteredOfferingResponse);
+      mockRequest.request.mockReturnValueOnce(mockFilteredPlanResponse);
+      mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isPlanFiltered: true }));
+      mockRequest.request.mockReturnValueOnce({
+        json: () => ({
+          items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
+        }),
+      });
+
+      expect(await svm.serviceManagerDeleteBindings(mockContext, [testServicePlanName, "all-tenants"])).toBeUndefined();
+      expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
       [
         "GET service-manager-url /v1/service_offerings {"fieldQuery":"name eq 'myOffering'"}",
         "GET service-manager-url /v1/service_plans {"fieldQuery":"service_offering_id eq 'offering-id-0' and name eq 'myPlan'"}",
@@ -214,20 +333,20 @@ describe("svm tests", () => {
         "DELETE service-manager-url /v1/service_bindings/binding-id-4 {"async":false}",
       ]
     `);
-    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"deleted 3 bindings"`);
-    expect(mockLogger.error).toHaveBeenCalledTimes(0);
-  });
-
-  test("hdi delete bindings all-services myTenant", async () => {
-    mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isTenantFiltered: true }));
-    mockRequest.request.mockReturnValueOnce({
-      json: () => ({
-        items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
-      }),
+      expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"deleted 3 bindings"`);
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
 
-    expect(await svm.serviceManagerDeleteBindings(mockContext, ["all-services", testTenantId])).toBeUndefined();
-    expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
+    test("all-services myTenant", async () => {
+      mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isTenantFiltered: true }));
+      mockRequest.request.mockReturnValueOnce({
+        json: () => ({
+          items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
+        }),
+      });
+
+      expect(await svm.serviceManagerDeleteBindings(mockContext, ["all-services", testTenantId])).toBeUndefined();
+      expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
       [
         "GET service-manager-url /v1/service_instances {"labelQuery":"tenant_id eq 'tenant-id-1'"}",
         "GET service-manager-url /v1/service_bindings {"labelQuery":"tenant_id eq 'tenant-id-1'"}",
@@ -235,22 +354,24 @@ describe("svm tests", () => {
         "DELETE service-manager-url /v1/service_bindings/binding-id-3 {"async":false}",
       ]
     `);
-    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"deleted 2 bindings"`);
-    expect(mockLogger.error).toHaveBeenCalledTimes(0);
-  });
-
-  test("hdi delete bindings myPlan myTenant", async () => {
-    mockRequest.request.mockReturnValueOnce(mockFilteredOfferingResponse);
-    mockRequest.request.mockReturnValueOnce(mockFilteredPlanResponse);
-    mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isTenantFiltered: true, isPlanFiltered: true }));
-    mockRequest.request.mockReturnValueOnce({
-      json: () => ({
-        items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
-      }),
+      expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"deleted 2 bindings"`);
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
 
-    expect(await svm.serviceManagerDeleteBindings(mockContext, [testServicePlanName, testTenantId])).toBeUndefined();
-    expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
+    test("myPlan myTenant", async () => {
+      mockRequest.request.mockReturnValueOnce(mockFilteredOfferingResponse);
+      mockRequest.request.mockReturnValueOnce(mockFilteredPlanResponse);
+      mockRequest.request.mockReturnValueOnce(
+        mockInstanceResponse(6, { isTenantFiltered: true, isPlanFiltered: true })
+      );
+      mockRequest.request.mockReturnValueOnce({
+        json: () => ({
+          items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
+        }),
+      });
+
+      expect(await svm.serviceManagerDeleteBindings(mockContext, [testServicePlanName, testTenantId])).toBeUndefined();
+      expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
       [
         "GET service-manager-url /v1/service_offerings {"fieldQuery":"name eq 'myOffering'"}",
         "GET service-manager-url /v1/service_plans {"fieldQuery":"service_offering_id eq 'offering-id-0' and name eq 'myPlan'"}",
@@ -259,22 +380,24 @@ describe("svm tests", () => {
         "DELETE service-manager-url /v1/service_bindings/binding-id-2 {"async":false}",
       ]
     `);
-    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"deleted 1 binding"`);
-    expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"deleted 1 binding"`);
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
+    });
   });
 
-  test("hdi delete instances and bindings all-services all-tenants", async () => {
-    mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6));
-    mockRequest.request.mockReturnValueOnce({
-      json: () => ({
-        items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
-      }),
-    });
+  describe("svm delete instances and bindings", () => {
+    test("all-services all-tenants", async () => {
+      mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6));
+      mockRequest.request.mockReturnValueOnce({
+        json: () => ({
+          items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
+        }),
+      });
 
-    expect(
-      await svm.serviceManagerDeleteInstancesAndBindings(mockContext, ["all-services", "all-tenants"])
-    ).toBeUndefined();
-    expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
+      expect(
+        await svm.serviceManagerDeleteInstancesAndBindings(mockContext, ["all-services", "all-tenants"])
+      ).toBeUndefined();
+      expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
       [
         "GET service-manager-url /v1/service_instances",
         "GET service-manager-url /v1/service_bindings",
@@ -292,27 +415,27 @@ describe("svm tests", () => {
         "DELETE service-manager-url /v1/service_instances/instance-id-5 {"async":false}",
       ]
     `);
-    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
+      expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "deleted 6 bindings
       deleted 6 instances"
     `);
-    expect(mockLogger.error).toHaveBeenCalledTimes(0);
-  });
-
-  test("hdi delete instances and bindings myPlan all-tenants", async () => {
-    mockRequest.request.mockReturnValueOnce(mockFilteredOfferingResponse);
-    mockRequest.request.mockReturnValueOnce(mockFilteredPlanResponse);
-    mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isPlanFiltered: true }));
-    mockRequest.request.mockReturnValueOnce({
-      json: () => ({
-        items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
-      }),
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
 
-    expect(
-      await svm.serviceManagerDeleteInstancesAndBindings(mockContext, [testServicePlanName, "all-tenants"])
-    ).toBeUndefined();
-    expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
+    test("myPlan all-tenants", async () => {
+      mockRequest.request.mockReturnValueOnce(mockFilteredOfferingResponse);
+      mockRequest.request.mockReturnValueOnce(mockFilteredPlanResponse);
+      mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isPlanFiltered: true }));
+      mockRequest.request.mockReturnValueOnce({
+        json: () => ({
+          items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
+        }),
+      });
+
+      expect(
+        await svm.serviceManagerDeleteInstancesAndBindings(mockContext, [testServicePlanName, "all-tenants"])
+      ).toBeUndefined();
+      expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
       [
         "GET service-manager-url /v1/service_offerings {"fieldQuery":"name eq 'myOffering'"}",
         "GET service-manager-url /v1/service_plans {"fieldQuery":"service_offering_id eq 'offering-id-0' and name eq 'myPlan'"}",
@@ -326,25 +449,25 @@ describe("svm tests", () => {
         "DELETE service-manager-url /v1/service_instances/instance-id-4 {"async":false}",
       ]
     `);
-    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
+      expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "deleted 3 bindings
       deleted 3 instances"
     `);
-    expect(mockLogger.error).toHaveBeenCalledTimes(0);
-  });
-
-  test("hdi delete instances and bindings all-services myTenant", async () => {
-    mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isTenantFiltered: true }));
-    mockRequest.request.mockReturnValueOnce({
-      json: () => ({
-        items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
-      }),
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
 
-    expect(
-      await svm.serviceManagerDeleteInstancesAndBindings(mockContext, ["all-services", testTenantId])
-    ).toBeUndefined();
-    expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
+    test("all-services myTenant", async () => {
+      mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isTenantFiltered: true }));
+      mockRequest.request.mockReturnValueOnce({
+        json: () => ({
+          items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
+        }),
+      });
+
+      expect(
+        await svm.serviceManagerDeleteInstancesAndBindings(mockContext, ["all-services", testTenantId])
+      ).toBeUndefined();
+      expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
       [
         "GET service-manager-url /v1/service_instances {"labelQuery":"tenant_id eq 'tenant-id-1'"}",
         "GET service-manager-url /v1/service_bindings {"labelQuery":"tenant_id eq 'tenant-id-1'"}",
@@ -354,27 +477,29 @@ describe("svm tests", () => {
         "DELETE service-manager-url /v1/service_instances/instance-id-3 {"async":false}",
       ]
     `);
-    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
+      expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "deleted 2 bindings
       deleted 2 instances"
     `);
-    expect(mockLogger.error).toHaveBeenCalledTimes(0);
-  });
-
-  test("hdi delete instances and bindings myPlan myTenant", async () => {
-    mockRequest.request.mockReturnValueOnce(mockFilteredOfferingResponse);
-    mockRequest.request.mockReturnValueOnce(mockFilteredPlanResponse);
-    mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isTenantFiltered: true, isPlanFiltered: true }));
-    mockRequest.request.mockReturnValueOnce({
-      json: () => ({
-        items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
-      }),
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
 
-    expect(
-      await svm.serviceManagerDeleteInstancesAndBindings(mockContext, [testServicePlanName, testTenantId])
-    ).toBeUndefined();
-    expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
+    test("myPlan myTenant", async () => {
+      mockRequest.request.mockReturnValueOnce(mockFilteredOfferingResponse);
+      mockRequest.request.mockReturnValueOnce(mockFilteredPlanResponse);
+      mockRequest.request.mockReturnValueOnce(
+        mockInstanceResponse(6, { isTenantFiltered: true, isPlanFiltered: true })
+      );
+      mockRequest.request.mockReturnValueOnce({
+        json: () => ({
+          items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
+        }),
+      });
+
+      expect(
+        await svm.serviceManagerDeleteInstancesAndBindings(mockContext, [testServicePlanName, testTenantId])
+      ).toBeUndefined();
+      expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
       [
         "GET service-manager-url /v1/service_offerings {"fieldQuery":"name eq 'myOffering'"}",
         "GET service-manager-url /v1/service_plans {"fieldQuery":"service_offering_id eq 'offering-id-0' and name eq 'myPlan'"}",
@@ -384,10 +509,11 @@ describe("svm tests", () => {
         "DELETE service-manager-url /v1/service_instances/instance-id-2 {"async":false}",
       ]
     `);
-    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
+      expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "deleted 1 binding
       deleted 1 instance"
     `);
-    expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
+    });
   });
 });
