@@ -69,7 +69,7 @@ const _serviceManagerRequest = async (context, reqOptions = {}) => {
   return (await response.json())?.items ?? [];
 };
 
-const _serviceManagerOfferings = async (context, { filterServiceOfferingName } = {}) =>
+const _requestOfferings = async (context, { filterServiceOfferingName } = {}) =>
   await _serviceManagerRequest(context, {
     pathname: "/v1/service_offerings",
     ...(filterServiceOfferingName && {
@@ -79,10 +79,7 @@ const _serviceManagerOfferings = async (context, { filterServiceOfferingName } =
     }),
   });
 
-const _serviceManagerPlans = async (
-  context,
-  { filterServicePlanId, filterServiceOfferingId, filterServicePlanName } = {}
-) => {
+const _requestPlans = async (context, { filterServicePlanId, filterServiceOfferingId, filterServicePlanName } = {}) => {
   const hasQuery = filterServicePlanId || filterServiceOfferingId || filterServicePlanName;
   return await _serviceManagerRequest(context, {
     pathname: "/v1/service_plans",
@@ -98,10 +95,7 @@ const _serviceManagerPlans = async (
   });
 };
 
-const _serviceManagerInstances = async (
-  context,
-  { filterTenantId, filterServicePlanId, doEnsureTenantLabel = true } = {}
-) => {
+const _requestInstances = async (context, { filterTenantId, filterServicePlanId, doEnsureTenantLabel = true } = {}) => {
   const hasQuery = filterServicePlanId || filterTenantId;
   let instances = await _serviceManagerRequest(context, {
     pathname: "/v1/service_instances",
@@ -118,7 +112,7 @@ const _serviceManagerInstances = async (
   return instances;
 };
 
-const _serviceManagerBindings = async (
+const _requestBindings = async (
   context,
   { filterTenantId, doReveal = false, doAssertFoundSome = false, doEnsureTenantLabel = true } = {}
 ) => {
@@ -178,10 +172,10 @@ const _indexServicePlanNameById = (offerings, plans) => {
 
 const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJsonOutput }) => {
   const [offerings, plans, instances, bindings] = await Promise.all([
-    _serviceManagerOfferings(context),
-    _serviceManagerPlans(context),
-    _serviceManagerInstances(context, { filterTenantId }),
-    _serviceManagerBindings(context, { filterTenantId }),
+    _requestOfferings(context),
+    _requestPlans(context),
+    _requestInstances(context, { filterTenantId }),
+    _requestBindings(context, { filterTenantId }),
   ]);
   const servicePlanNameById = _indexServicePlanNameById(offerings, plans);
   instances.sort(compareForTenantId);
@@ -247,8 +241,8 @@ const serviceManagerList = async (context, [tenantId], [doTimestamps, doJsonOutp
 
 const _serviceManagerLongList = async (context, { filterTenantId, doJsonOutput, doReveal } = {}) => {
   const [instances, bindings] = await Promise.all([
-    _serviceManagerInstances(context, { filterTenantId, doEnsureTenantLabel: false }),
-    _serviceManagerBindings(context, { filterTenantId, doReveal, doEnsureTenantLabel: false }),
+    _requestInstances(context, { filterTenantId, doEnsureTenantLabel: false }),
+    _requestBindings(context, { filterTenantId, doReveal, doEnsureTenantLabel: false }),
   ]);
 
   if (doJsonOutput) {
@@ -268,7 +262,7 @@ ${_formatOutput(bindings)}
 const serviceManagerLongList = async (context, [filterTenantId], [doJsonOutput, doReveal]) =>
   await _serviceManagerLongList(context, { filterTenantId, doJsonOutput, doReveal });
 
-const _serviceManagerCreateBinding = async (
+const _requestCreateBinding = async (
   context,
   serviceInstanceId,
   servicePlanId,
@@ -293,7 +287,7 @@ const _serviceManagerCreateBinding = async (
   });
 };
 
-const _serviceManagerDeleteBinding = async (context, serviceBindingId) =>
+const _requestDeleteBinding = async (context, serviceBindingId) =>
   await _serviceManagerRequest(context, {
     retryMode: RETRY_MODE.ALL_FAILED,
     method: "DELETE",
@@ -303,10 +297,10 @@ const _serviceManagerDeleteBinding = async (context, serviceBindingId) =>
 
 const _serviceManagerRepairBindings = async (context, { filterServicePlanId, parameters } = {}) => {
   const [offerings, plans, instances, bindings] = await Promise.all([
-    _serviceManagerOfferings(context),
-    _serviceManagerPlans(context, { filterServicePlanId }),
-    _serviceManagerInstances(context, { filterServicePlanId }),
-    _serviceManagerBindings(context),
+    _requestOfferings(context),
+    _requestPlans(context, { filterServicePlanId }),
+    _requestInstances(context, { filterServicePlanId }),
+    _requestBindings(context),
   ]);
 
   const servicePlanNameById = _indexServicePlanNameById(offerings, plans);
@@ -326,13 +320,9 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
       for (let i = 0; i < missingBindingCount; i++) {
         changeQueue.enqueue(
           async () =>
-            await _serviceManagerCreateBinding(
-              context,
-              instance.id,
-              instance.service_plan_id,
-              instance.labels.tenant_id[0],
-              { parameters }
-            )
+            await _requestCreateBinding(context, instance.id, instance.service_plan_id, instance.labels.tenant_id[0], {
+              parameters,
+            })
         );
       }
       changeQueue.milestone().then(() => {
@@ -347,7 +337,7 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
     } else if (readyBindings.length > SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
       const ambivalentBindings = readyBindings.slice(1);
       for (const ambivalentBinding of ambivalentBindings) {
-        changeQueue.enqueue(async () => await _serviceManagerDeleteBinding(context, ambivalentBinding.id));
+        changeQueue.enqueue(async () => await _requestDeleteBinding(context, ambivalentBinding.id));
       }
       changeQueue.milestone().then(() => {
         logger.info(
@@ -361,7 +351,7 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
     }
     if (unreadyBindings.length > 0) {
       for (const unreadyBinding of unreadyBindings) {
-        changeQueue.enqueue(async () => await _serviceManagerDeleteBinding(context, unreadyBinding.id));
+        changeQueue.enqueue(async () => await _requestDeleteBinding(context, unreadyBinding.id));
       }
       changeQueue.milestone().then(() => {
         logger.info(
@@ -395,9 +385,9 @@ const _resolveServicePlanId = async (context, servicePlanName) => {
     `could not detect form "offering:plan" or "${SERVICE_PLAN_ALL_IDENTIFIER}" in "${servicePlanName}"`
   );
   const [, offeringName, planName] = match;
-  const [offering] = await _serviceManagerOfferings(context, { filterServiceOfferingName: offeringName });
+  const [offering] = await _requestOfferings(context, { filterServiceOfferingName: offeringName });
   assert(offering?.id, `could not find service offering "${offeringName}"`);
-  const [plan] = await _serviceManagerPlans(context, {
+  const [plan] = await _requestPlans(context, {
     filterServicePlanName: planName,
     filterServiceOfferingId: offering.id,
   });
@@ -418,18 +408,18 @@ const serviceManagerRepairBindings = async (context, [servicePlanName], [rawPara
 
 const _serviceManagerRefreshBindings = async (context, { filterServicePlanId, filterTenantId, parameters } = {}) => {
   const [instances, bindings] = await Promise.all([
-    _serviceManagerInstances(context, { filterTenantId, filterServicePlanId }),
-    _serviceManagerBindings(context, { filterTenantId }),
+    _requestInstances(context, { filterTenantId, filterServicePlanId }),
+    _requestBindings(context, { filterTenantId }),
   ]);
 
   const instanceById = _indexByKey(instances, "id");
   const filteredBindings = bindings.filter((binding) => instanceById[binding.service_instance_id]);
   await limiter(svmRequestConcurrency, filteredBindings, async (binding) => {
     const instance = instanceById[binding.service_instance_id];
-    await _serviceManagerCreateBinding(context, instance.id, instance.service_plan_id, instance.labels.tenant_id[0], {
+    await _requestCreateBinding(context, instance.id, instance.service_plan_id, instance.labels.tenant_id[0], {
       parameters,
     });
-    await _serviceManagerDeleteBinding(context, binding.id);
+    await _requestDeleteBinding(context, binding.id);
   });
   logger.info("refreshed %i binding%s", filteredBindings.length, filteredBindings.length === 1 ? "" : "s");
 };
@@ -455,8 +445,8 @@ const _serviceManagerDelete = async (
   { doDeleteInstances = false, doDeleteBindings = false, filterServicePlanId, filterTenantId } = {}
 ) => {
   const [instances, bindings] = await Promise.all([
-    _serviceManagerInstances(context, { filterTenantId, filterServicePlanId }),
-    _serviceManagerBindings(context, { filterTenantId }),
+    _requestInstances(context, { filterTenantId, filterServicePlanId }),
+    _requestBindings(context, { filterTenantId }),
   ]);
 
   if (doDeleteBindings) {
@@ -465,7 +455,7 @@ const _serviceManagerDelete = async (
     await limiter(
       svmRequestConcurrency,
       filteredBindings,
-      async (binding) => await _serviceManagerDeleteBinding(context, binding.id)
+      async (binding) => await _requestDeleteBinding(context, binding.id)
     );
     logger.info("deleted %i binding%s", filteredBindings.length, filteredBindings.length === 1 ? "" : "s");
   }
@@ -474,7 +464,7 @@ const _serviceManagerDelete = async (
     await limiter(
       svmRequestConcurrency,
       instances,
-      async (instance) => await _serviceManagerDeleteInstance(context, instance.id)
+      async (instance) => await _requestDeleteInstance(context, instance.id)
     );
     logger.info("deleted %i instance%s", instances.length, instances.length === 1 ? "" : "s");
   }
@@ -493,7 +483,7 @@ const serviceManagerDeleteBindings = async (context, [servicePlanName, tenantId]
   });
 };
 
-const _serviceManagerDeleteInstance = async (context, serviceInstanceId) =>
+const _requestDeleteInstance = async (context, serviceInstanceId) =>
   await _serviceManagerRequest(context, {
     retryMode: RETRY_MODE.ALL_FAILED,
     method: "DELETE",
