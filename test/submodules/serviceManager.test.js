@@ -25,8 +25,6 @@ jest.mock("../../src/shared/logger", () => require("../__mocks/shared/logger"));
 const svm = require("../../src/submodules/serviceManager");
 const { outputFromLogger, collectRequestMockCalls } = require("../test-util/static");
 
-const testTenantId = "5ecc7413-2b7e-414a-9496-ad4a61f6cccf";
-
 const mockCredentials = {
   certurl: "uaa-cert-url",
   clientid: "clientid",
@@ -51,6 +49,8 @@ const mockContext = {
 };
 
 const testServicePlanName = "myOffering:myPlan";
+const testServicePlanId = "plan-id-0";
+const testTenantId = "tenant-id-1";
 
 const mockOfferingResponse = {
   json: () => ({
@@ -79,15 +79,23 @@ const mockFilteredPlanResponse = {
   }),
 };
 
-const mockInstanceFactory = (i, { isFiltered = false } = {}) => ({
+const mockInstanceFactory = (i) => ({
   id: `instance-id-${i}`,
   ready: true,
   name: `instance-name-${i}`,
-  service_plan_id: isFiltered ? "plan-id-0" : `plan-id-${i % 2}`,
+  service_plan_id: `plan-id-${i % 2}`,
   usable: true,
   labels: {
-    tenant_id: [`tenant-id-${i}`],
+    tenant_id: [`tenant-id-${Math.floor(i / 2)}`],
   },
+});
+const mockInstanceResponse = (n, { isPlanFiltered = false, isTenantFiltered = false } = {}) => ({
+  json: () => ({
+    items: Array.from({ length: n })
+      .map((_, i) => mockInstanceFactory(i))
+      .filter((a) => !isPlanFiltered || a.service_plan_id === testServicePlanId)
+      .filter((a) => !isTenantFiltered || a.labels.tenant_id[0] === testTenantId),
+  }),
 });
 
 const mockBindingFactory = (i) => ({
@@ -109,11 +117,7 @@ describe("svm tests", () => {
   test("svm repair bindings all-services", async () => {
     mockRequest.request.mockReturnValueOnce(mockOfferingResponse);
     mockRequest.request.mockReturnValueOnce(mockPlanResponse);
-    mockRequest.request.mockReturnValueOnce({
-      json: () => ({
-        items: Array.from({ length: 6 }).map((_, i) => mockInstanceFactory(i)),
-      }),
-    });
+    mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6));
     mockRequest.request.mockReturnValueOnce({
       json: () => ({
         items: [mockBindingFactory(2), mockBindingFactory(5)],
@@ -136,9 +140,9 @@ describe("svm tests", () => {
     expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "triggering 4 changes
       created 1 missing binding for tenant tenant-id-0 plan myOffering:myPlan
+      created 1 missing binding for tenant tenant-id-0 plan otherOffering:otherPlan
       created 1 missing binding for tenant tenant-id-1 plan otherOffering:otherPlan
-      created 1 missing binding for tenant tenant-id-3 plan otherOffering:otherPlan
-      created 1 missing binding for tenant tenant-id-4 plan myOffering:myPlan"
+      created 1 missing binding for tenant tenant-id-2 plan myOffering:myPlan"
     `);
     expect(mockLogger.error).toHaveBeenCalledTimes(0);
   });
@@ -146,11 +150,7 @@ describe("svm tests", () => {
   test("svm repair bindings myPlan", async () => {
     mockRequest.request.mockReturnValueOnce(mockFilteredOfferingResponse);
     mockRequest.request.mockReturnValueOnce(mockFilteredPlanResponse);
-    mockRequest.request.mockReturnValueOnce({
-      json: () => ({
-        items: Array.from({ length: 3 }).map((_, i) => mockInstanceFactory(i, { isFiltered: true })),
-      }),
-    });
+    mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isPlanFiltered: true }));
     mockRequest.request.mockReturnValueOnce({
       json: () => ({
         items: [mockBindingFactory(2)],
@@ -171,48 +171,80 @@ describe("svm tests", () => {
     expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "triggering 2 changes
       created 1 missing binding for tenant tenant-id-0 plan myOffering:myPlan
-      created 1 missing binding for tenant tenant-id-1 plan myOffering:myPlan"
+      created 1 missing binding for tenant tenant-id-2 plan myOffering:myPlan"
     `);
     expect(mockLogger.error).toHaveBeenCalledTimes(0);
   });
 
-  test("hdi rebind all", async () => {
-    const n = 2;
+  test("hdi delete bindings all-services all-tenants", async () => {
+    mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6));
     mockRequest.request.mockReturnValueOnce({
-      async json() {
-        return { items: [{ id: "service-offering-id" }] };
-      },
+      json: () => ({
+        items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
+      }),
     });
-    mockRequest.request.mockReturnValueOnce({
-      async json() {
-        return { items: [{ id: "service-plan-id" }] };
-      },
-    });
-    mockRequest.request.mockReturnValueOnce({
-      async json() {
-        return { items: Array.from({ length: n }).map((_, i) => mockBindingFactory(i)) };
-      },
-    });
-    for (let i = 0; i < n; i++) {
-      mockRequest.request.mockReturnValueOnce();
-      mockRequest.request.mockReturnValueOnce();
-    }
 
-    expect(await hdi.hdiRebindAll(mockContext, [])).toBeUndefined();
+    expect(await svm.serviceManagerDeleteBindings(mockContext, ["all-services", "all-tenants"])).toBeUndefined();
     expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
       [
-        "GET service-manager-url /v1/service_offerings {"fieldQuery":"name eq 'hana'"}",
-        "GET service-manager-url /v1/service_plans {"fieldQuery":"service_offering_id eq 'service-offering-id' and name eq 'hdi-shared'"}",
-        "GET service-manager-url /v1/service_bindings {"labelQuery":"service_plan_id eq 'service-plan-id'"}",
-        "POST service-manager-url /v1/service_bindings {"async":false}",
-        "POST service-manager-url /v1/service_bindings {"async":false}",
+        "GET service-manager-url /v1/service_instances",
+        "GET service-manager-url /v1/service_bindings",
         "DELETE service-manager-url /v1/service_bindings/binding-id-0 {"async":false}",
         "DELETE service-manager-url /v1/service_bindings/binding-id-1 {"async":false}",
+        "DELETE service-manager-url /v1/service_bindings/binding-id-2 {"async":false}",
+        "DELETE service-manager-url /v1/service_bindings/binding-id-3 {"async":false}",
+        "DELETE service-manager-url /v1/service_bindings/binding-id-4 {"async":false}",
+        "DELETE service-manager-url /v1/service_bindings/binding-id-5 {"async":false}",
       ]
     `);
-    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(
-      `"rebinding tenants tenant-id-0, tenant-id-1"`
-    );
+    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"deleted 6 bindings"`);
+    expect(mockLogger.error).toHaveBeenCalledTimes(0);
+  });
+
+  test("hdi delete bindings myPlan all-tenants", async () => {
+    mockRequest.request.mockReturnValueOnce(mockFilteredOfferingResponse);
+    mockRequest.request.mockReturnValueOnce(mockFilteredPlanResponse);
+    mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isPlanFiltered: true }));
+    mockRequest.request.mockReturnValueOnce({
+      json: () => ({
+        items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
+      }),
+    });
+
+    expect(await svm.serviceManagerDeleteBindings(mockContext, [testServicePlanName, "all-tenants"])).toBeUndefined();
+    expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
+      [
+        "GET service-manager-url /v1/service_offerings {"fieldQuery":"name eq 'myOffering'"}",
+        "GET service-manager-url /v1/service_plans {"fieldQuery":"service_offering_id eq 'offering-id-0' and name eq 'myPlan'"}",
+        "GET service-manager-url /v1/service_instances {"fieldQuery":"service_plan_id eq 'plan-id-0'"}",
+        "GET service-manager-url /v1/service_bindings",
+        "DELETE service-manager-url /v1/service_bindings/binding-id-0 {"async":false}",
+        "DELETE service-manager-url /v1/service_bindings/binding-id-2 {"async":false}",
+        "DELETE service-manager-url /v1/service_bindings/binding-id-4 {"async":false}",
+      ]
+    `);
+    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"deleted 3 bindings"`);
+    expect(mockLogger.error).toHaveBeenCalledTimes(0);
+  });
+
+  test("hdi delete bindings all-services myTenant", async () => {
+    mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isTenantFiltered: true }));
+    mockRequest.request.mockReturnValueOnce({
+      json: () => ({
+        items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
+      }),
+    });
+
+    expect(await svm.serviceManagerDeleteBindings(mockContext, ["all-services", testTenantId])).toBeUndefined();
+    expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
+      [
+        "GET service-manager-url /v1/service_instances {"labelQuery":"tenant_id eq 'tenant-id-1'"}",
+        "GET service-manager-url /v1/service_bindings {"labelQuery":"tenant_id eq 'tenant-id-1'"}",
+        "DELETE service-manager-url /v1/service_bindings/binding-id-2 {"async":false}",
+        "DELETE service-manager-url /v1/service_bindings/binding-id-3 {"async":false}",
+      ]
+    `);
+    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"deleted 2 bindings"`);
     expect(mockLogger.error).toHaveBeenCalledTimes(0);
   });
 
