@@ -25,7 +25,7 @@ const SERVICE_MANAGER_REQUEST_CONCURRENCY_FALLBACK = 8;
 const SERVICE_MANAGER_IDEAL_BINDING_COUNT = 1;
 const SERVICE_PLAN_ALL_IDENTIFIER = "all-services";
 const TENANT_ID_ALL_IDENTIFIER = "all-tenants";
-const SENSITIVE_FIELD_MARKERS = ["password", "key"];
+const SENSITIVE_FIELD_MARKERS = ["password", "key", "uri"];
 const SENSITIVE_FIELD_HIDDEN_TEXT = "*** show with --reveal ***";
 
 const logger = Logger.getInstance();
