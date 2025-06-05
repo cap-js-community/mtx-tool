@@ -9,6 +9,8 @@ const {
   isObject,
   partition,
   randomString,
+  makeOneTime,
+  resetOneTime,
 } = require("../shared/static");
 const { assert } = require("../shared/error");
 const { request, RETRY_MODE } = require("../shared/request");
@@ -69,31 +71,35 @@ const _serviceManagerRequest = async (context, reqOptions = {}) => {
   return (await response.json())?.items ?? [];
 };
 
-const _requestOfferings = async (context, { filterServiceOfferingName } = {}) =>
-  await _serviceManagerRequest(context, {
-    pathname: "/v1/service_offerings",
-    ...(filterServiceOfferingName && {
-      query: {
-        fieldQuery: _getQuery({ name: filterServiceOfferingName }),
-      },
-    }),
-  });
+const _requestOfferings = makeOneTime(
+  async (context, { filterServiceOfferingName } = {}) =>
+    await _serviceManagerRequest(context, {
+      pathname: "/v1/service_offerings",
+      ...(filterServiceOfferingName && {
+        query: {
+          fieldQuery: _getQuery({ name: filterServiceOfferingName }),
+        },
+      }),
+    })
+);
 
-const _requestPlans = async (context, { filterServicePlanId, filterServiceOfferingId, filterServicePlanName } = {}) => {
-  const hasQuery = filterServicePlanId || filterServiceOfferingId || filterServicePlanName;
-  return await _serviceManagerRequest(context, {
-    pathname: "/v1/service_plans",
-    ...(hasQuery && {
-      query: {
-        fieldQuery: _getQuery({
-          ...(filterServicePlanId && { id: filterServicePlanId }),
-          ...(filterServiceOfferingId && { service_offering_id: filterServiceOfferingId }),
-          ...(filterServicePlanName && { name: filterServicePlanName }),
-        }),
-      },
-    }),
-  });
-};
+const _requestPlans = makeOneTime(
+  async (context, { filterServicePlanId, filterServiceOfferingId, filterServicePlanName } = {}) => {
+    const hasQuery = filterServicePlanId || filterServiceOfferingId || filterServicePlanName;
+    return await _serviceManagerRequest(context, {
+      pathname: "/v1/service_plans",
+      ...(hasQuery && {
+        query: {
+          fieldQuery: _getQuery({
+            ...(filterServicePlanId && { id: filterServicePlanId }),
+            ...(filterServiceOfferingId && { service_offering_id: filterServiceOfferingId }),
+            ...(filterServicePlanName && { name: filterServicePlanName }),
+          }),
+        },
+      }),
+    });
+  }
+);
 
 const _requestInstances = async (context, { filterTenantId, filterServicePlanId, doEnsureTenantLabel = true } = {}) => {
   const hasQuery = filterServicePlanId || filterTenantId;
@@ -512,4 +518,11 @@ module.exports = {
   serviceManagerRefreshBindings,
   serviceManagerDeleteBindings,
   serviceManagerDeleteInstancesAndBindings,
+
+  _: {
+    _reset() {
+      resetOneTime(_requestOfferings);
+      resetOneTime(_requestPlans);
+    },
+  },
 };
