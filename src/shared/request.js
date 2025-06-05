@@ -21,6 +21,19 @@ const RETRY_MODE = Object.freeze({
 
 const logger = Logger.getInstance();
 
+const _doStopRetry = (mode, response) => {
+  switch (mode) {
+    case RETRY_MODE.OFF:
+      return true;
+    case RETRY_MODE.TOO_MANY_REQUESTS:
+      return response.status !== HTTP_TOO_MANY_REQUESTS;
+    case RETRY_MODE.ALL_FAILED:
+      return response.ok;
+    default:
+      throw new Error("unknown retry mode");
+  }
+};
+
 const _request = async ({
   // https://nodejs.org/docs/latest-v10.x/api/url.html
   url,
@@ -87,15 +100,15 @@ const _request = async ({
   for (const sleepTime of RETRY_SLEEP_TIMES) {
     const startTime = Date.now();
     response = await fetchlib(_url, _options);
-    const isFinalRetry = response.status !== HTTP_TOO_MANY_REQUESTS || sleepTime === RETRY_STOP_MARKER;
+    const doStopRetry = sleepTime === RETRY_STOP_MARKER || _doStopRetry(retryMode, response);
     if (logged) {
       logger.info(
-        isFinalRetry
+        doStopRetry
           ? `${_method} ${_url} ${response.status} ${response.statusText} (${Date.now() - startTime}ms)`
           : `${_method} ${_url} ${response.status} ${response.statusText} (${Date.now() - startTime}ms) retrying in ${sleepTime / 1000}sec`
       );
     }
-    if (isFinalRetry) {
+    if (doStopRetry) {
       break;
     }
     await sleep(sleepTime);
