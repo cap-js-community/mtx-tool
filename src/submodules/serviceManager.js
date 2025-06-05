@@ -68,6 +68,11 @@ const _serviceManagerRequest = async (context, reqOptions = {}) => {
   const url = credentials.sm_url;
   const auth = { token: await context.getCachedUaaTokenFromCredentials(credentials) };
   const response = await request({ url, auth, ...reqOptions });
+
+  if (reqOptions.method) {
+    return response;
+  }
+  // NOTE: no method here means GET and all service endpoints we use have this structure
   return (await response.json())?.items ?? [];
 };
 
