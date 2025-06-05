@@ -8,10 +8,7 @@ const { join } = require("path");
 
 const { USAGE, GENERIC_CLI_OPTIONS, APP_CLI_OPTIONS } = require("../src/cliOptions");
 
-const HIDDEN_COMMANDS = ["--hdi-enable-native"];
-const appCliOptions = Object.values(APP_CLI_OPTIONS).filter((option) =>
-  option.commandVariants.every((command) => !HIDDEN_COMMANDS.includes(command))
-);
+const appCliOptions = Object.values(APP_CLI_OPTIONS);
 
 /*
  NOTE: Just internal consistency tests for now.
