@@ -25,7 +25,8 @@ const SERVICE_MANAGER_REQUEST_CONCURRENCY_FALLBACK = 8;
 const SERVICE_MANAGER_IDEAL_BINDING_COUNT = 1;
 const SERVICE_PLAN_ALL_IDENTIFIER = "all-services";
 const TENANT_ID_ALL_IDENTIFIER = "all-tenants";
-const SENSITIVE_FIELD_MARKERS = ["password", "key", "uri"];
+const SENSITIVE_FIELD_NAMES = ["uri"];
+const SENSITIVE_FIELD_MARKERS = ["password", "key"];
 const SENSITIVE_FIELD_HIDDEN_TEXT = "*** show with --reveal ***";
 
 const logger = Logger.getInstance();
@@ -55,7 +56,7 @@ const _formatOutput = (output) =>
 const _hideSensitiveDataInBindingOrInstance = (entry) => {
   const fields = entry?.credentials ? Object.keys(entry.credentials) : [];
   for (const field of fields) {
-    if (SENSITIVE_FIELD_MARKERS.some((marker) => field.includes(marker))) {
+    if (SENSITIVE_FIELD_MARKERS.some((marker) => field.includes(marker)) || SENSITIVE_FIELD_NAMES.includes(field)) {
       entry.credentials[field] = SENSITIVE_FIELD_HIDDEN_TEXT;
     }
   }
