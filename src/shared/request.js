@@ -7,13 +7,32 @@ const { sleep } = require("./static");
 const { fail } = require("./error");
 const { Logger } = require("./logger");
 
+const HTTP_TOO_MANY_REQUESTS = 429;
 // NOTE: These times add up to 90sec in total and give an exponential falloff
-const TOO_MANY_POLL_FREQUENCIES = [6000, 12000, 24000, 48000];
+const RETRY_POLL_FREQUENCIES = [6000, 12000, 24000, 48000];
+const RETRY_STOP_MARKER = -1;
+const RETRY_SLEEP_TIMES = [].concat(RETRY_POLL_FREQUENCIES, [RETRY_STOP_MARKER]);
 
-const STOP_SLEEPING_TIME = -1;
-const SLEEP_TIMES = [].concat(TOO_MANY_POLL_FREQUENCIES, [STOP_SLEEPING_TIME]);
+const RETRY_MODE = Object.freeze({
+  OFF: "OFF",
+  TOO_MANY_REQUESTS: "TOO_MANY_REQUESTS",
+  ALL_FAILED: "ALL_FAILED",
+});
 
 const logger = Logger.getInstance();
+
+const _doStopRetry = (mode, response) => {
+  switch (mode) {
+    case RETRY_MODE.OFF:
+      return true;
+    case RETRY_MODE.TOO_MANY_REQUESTS:
+      return response.status !== HTTP_TOO_MANY_REQUESTS;
+    case RETRY_MODE.ALL_FAILED:
+      return response.ok;
+    default:
+      throw new Error("unknown retry mode");
+  }
+};
 
 const _request = async ({
   // https://nodejs.org/docs/latest-v10.x/api/url.html
@@ -36,6 +55,7 @@ const _request = async ({
   auth,
   logged = true,
   checkStatus = true,
+  retryMode = RETRY_MODE.TOO_MANY_REQUESTS,
 }) => {
   if (path && !pathname && !search) {
     const searchIndex = path.indexOf("?");
@@ -77,18 +97,18 @@ const _request = async ({
   };
 
   let response;
-  for (const sleepTime of SLEEP_TIMES) {
+  for (const sleepTime of RETRY_SLEEP_TIMES) {
     const startTime = Date.now();
     response = await fetchlib(_url, _options);
-    const isFinalRetry = response.status !== 429 || sleepTime === STOP_SLEEPING_TIME;
+    const doStopRetry = sleepTime === RETRY_STOP_MARKER || _doStopRetry(retryMode, response);
     if (logged) {
       logger.info(
-        isFinalRetry
+        doStopRetry
           ? `${_method} ${_url} ${response.status} ${response.statusText} (${Date.now() - startTime}ms)`
           : `${_method} ${_url} ${response.status} ${response.statusText} (${Date.now() - startTime}ms) retrying in ${sleepTime / 1000}sec`
       );
     }
-    if (isFinalRetry) {
+    if (doStopRetry) {
       break;
     }
     await sleep(sleepTime);
@@ -111,5 +131,6 @@ const request = async (options) => {
 };
 
 module.exports = {
+  RETRY_MODE,
   request,
 };

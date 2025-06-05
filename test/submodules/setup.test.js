@@ -48,7 +48,7 @@ describe("set tests", () => {
       "1/5 | cf app bound to xsuaa service (optional)? mock-uaa-app
       2/5 | cf app bound to saas-registry service (optional)? mock-reg-app
       3/5 | cf app running @sap/cds-mtx or @sap/cds-mtxs library (optional)? mock-cds-app
-      4/5 | cf app bound to service-manager or managed-hana service (optional)? mock-hdi-app
+      4/5 | cf app bound to service-manager (optional)? mock-hdi-app
       5/5 | cf app with server (optional)? mock-srv-app"
     `);
     expect(mockStatic.tryAccessSync).toHaveBeenCalledTimes(1);

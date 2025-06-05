@@ -8,6 +8,8 @@ const ENV = Object.freeze({
   CDS_APP: "MTX_CDS_APP",
   HDI_APP: "MTX_HDI_APP",
   HDI_KEY: "MTX_HDI_KEY",
+  SVM_APP: "MTX_SVM_APP",
+  SVM_KEY: "MTX_SVM_KEY",
   SERVER_APP: "MTX_SRV_APP",
 });
 
@@ -19,6 +21,8 @@ const SETTING_TYPE = {
   CDS_APP: "CDS_APP",
   HDI_APP: "HDI_APP",
   HDI_KEY: "HDI_KEY",
+  SVM_APP: "SVM_APP",
+  SVM_KEY: "SVM_KEY",
   SERVER_APP: "SERVER_APP",
 };
 
@@ -40,6 +44,7 @@ const SETTING = {
       },
     ],
   },
+
   [SETTING_TYPE.REGISTRY_APP]: {
     config: "regAppName",
     name: "saas-registry app",
@@ -57,6 +62,7 @@ const SETTING = {
       },
     ],
   },
+
   [SETTING_TYPE.CDS_APP]: {
     config: "cdsAppName",
     name: "cds-mtx app",
@@ -65,24 +71,21 @@ const SETTING = {
     failMessage: "option requires configured app running @sap/cds-mtx",
     requireRoute: true,
   },
+
   [SETTING_TYPE.HDI_APP]: {
     config: "hdiAppName",
     name: "service-manager app",
     envVariable: ENV.HDI_APP,
-    question: "cf app bound to service-manager or managed-hana service (optional)?",
-    failMessage:
-      "option requires configured app bound to service label:managed-hana plan:hdi-shared OR label:service-manager plan:container",
+    question: "cf app bound to service-manager (optional)?",
+    failMessage: "option requires configured app bound to service label:service-manager",
     requireServices: [
       {
         label: "service-manager",
         plan: "container",
       },
-      {
-        label: "managed-hana",
-        plan: "hdi-shared",
-      },
     ],
   },
+
   [SETTING_TYPE.SERVER_APP]: {
     config: "srvAppName",
     name: "server app",

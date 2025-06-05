@@ -8,6 +8,7 @@ const uaa = require("./submodules/userAuthentication");
 const reg = require("./submodules/tenantRegistry");
 const cds = require("./submodules/capMultitenancy");
 const hdi = require("./submodules/hanaManagement");
+const svm = require("./submodules/serviceManager");
 const srv = require("./submodules/serverDiagnostic");
 
 const { name: NAME } = pathlib.parse(process.argv[1]);
@@ -20,6 +21,7 @@ const PASS_ARG = Object.freeze({
   USERNAME: "USERNAME",
   PASSWORD: "PASSWORD",
   SERVICE: "SERVICE",
+  SERVICE_PLAN: "SERVICE_PLAN",
   TENANT_ID: "TENANT_ID",
   SKIP_APPS: "SKIP_APPS",
   APP_NAME: "APP_NAME",
@@ -105,23 +107,31 @@ commands:
           ...    --first-instance                    upgrade only through first app instance
 
    === hana management (hdi) ===
-~  hdil   --hdi-list [TENANT_ID]                  list all hdi container instances
-~  hdill  --hdi-long-list [TENANT_ID]             long list all hdi container instances and bindings
-~  hdilr  --hdi-list-relations [TENANT_ID]        list all hdi container instance and binding relations
-~  hditt  --hdi-tunnel-tenant TENANT_ID           open ssh tunnel to tenant db
-   hdirt  --hdi-rebind-tenant TENANT_ID [PARAMS]  rebind tenant hdi container instances
-   hdira  --hdi-rebind-all [PARAMS]               rebind all hdi container instances
-          --hdi-repair-bindings [PARAMS]          create missing and delete ambiguous bindings
-*         --hdi-delete-tenant TENANT_ID           delete hdi container instance and bindings for tenant
-*         --hdi-delete-all                        delete all hdi container instances and bindings
-          ...    [TENANT_ID]                      filter for tenant id
-          ...    [PARAMS]                         create binding with custom parameters
-          ...    --json                           list in json
-          ...    --time                           list includes timestamps
-          ...    --reveal                         show passwords
+~  hdil   --hdi-list [TENANT_ID]         list all hdi container instances
+~  hdill  --hdi-long-list [TENANT_ID]    long list all hdi container instances and bindings
+~  hditt  --hdi-tunnel-tenant TENANT_ID  open ssh tunnel to tenant db
+          ...    [TENANT_ID]             filter for tenant id
+          ...    --json                  list in json
+          ...    --time                  list includes timestamps
+          ...    --reveal                show sensitive information
+
+   === service manager (svm) ===
+~  svml   --svm-list [TENANT_ID]                                  list all managed service instances and binding
+~  svmll  --svm-long-list [TENANT_ID]                             long list all managed service instances and bindings
+          --svm-repair-bindings SERVICE_PLAN [PARAMS]             repair missing and ambivalent service bindings
+          --svm-refresh-bindings SERVICE_PLAN TENANT_ID [PARAMS]  delete and recreate service bindings
+*         --svm-delete-bindings SERVICE_PLAN TENANT_ID            delete service bindings
+*         --svm-delete SERVICE_PLAN TENANT_ID                     delete service instances and bindings
+          ...    SERVICE_PLAN                                     filter for service plan with "offering:plan"
+                                                                    or "all-services" for all
+          ...    TENANT_ID                                        filter for tenant id or "all-tenants" for all
+          ...    [PARAMS]                                         create binding with custom parameters
+          ...    --json                                           list in json
+          ...    --time                                           list includes timestamps
+          ...    --reveal                                         show sensitive information
 
    === server diagnostic (srv) ===
-~  srvd    --server-debug [APP_NAME] [APP_INSTANCE]           open ssh tunnel to port /info {debugPort}
+~  srvd    --server-debug [APP_NAME] [APP_INSTANCE]           open ssh tunnel to debug port
 ~  srvenv  --server-env [APP_NAME]                            dump system environment
 ~  srvcrt  --server-certificates [APP_NAME] [APP_INSTANCE]    dump instance certificates
            --server-start-debugger [APP_NAME] [APP_INSTANCE]  start debugger on server node process
@@ -319,14 +329,6 @@ const APP_CLI_OPTIONS = Object.freeze({
     useCache: false,
     readonly: true,
   },
-  HDI_LIST_RELATIONS: {
-    commandVariants: ["hdilr", "--hdi-list-relations"],
-    optionalPassArgs: [PASS_ARG.TENANT_ID],
-    optionalFlagArgs: [FLAG_ARG.TIMESTAMPS, FLAG_ARG.JSON_OUTPUT],
-    callback: hdi.hdiListRelations,
-    useCache: false,
-    readonly: true,
-  },
   HDI_TUNNEL_TENANT: {
     commandVariants: ["hditt", "--hdi-tunnel-tenant"],
     requiredPassArgs: [PASS_ARG.TENANT_ID],
@@ -335,39 +337,51 @@ const APP_CLI_OPTIONS = Object.freeze({
     useCache: false,
     readonly: true,
   },
-  HDI_REBIND_TENANT: {
-    commandVariants: ["hdirt", "--hdi-rebind-tenant"],
-    requiredPassArgs: [PASS_ARG.TENANT_ID],
-    optionalPassArgs: [PASS_ARG.PARAMS],
-    callback: hdi.hdiRebindTenant,
-    useCache: false,
-  },
-  HDI_REBIND_ALL: {
-    commandVariants: ["hdira", "--hdi-rebind-all"],
-    optionalPassArgs: [PASS_ARG.PARAMS],
-    callback: hdi.hdiRebindAll,
-    useCache: false,
-  },
-  HDI_REPAIR_BINDINGS: {
-    commandVariants: ["--hdi-repair-bindings"],
-    optionalPassArgs: [PASS_ARG.PARAMS],
-    callback: hdi.hdiRepairBindings,
-    useCache: false,
-  },
-  HDI_ENABLE_NATIVE: {
-    commandVariants: ["--hdi-enable-native"],
+
+  SVM_LIST: {
+    commandVariants: ["svml", "--svm-list"],
     optionalPassArgs: [PASS_ARG.TENANT_ID],
-    callback: hdi.hdiEnableNative,
+    optionalFlagArgs: [FLAG_ARG.TIMESTAMPS, FLAG_ARG.JSON_OUTPUT],
+    callback: svm.serviceManagerList,
+    useCache: false,
+    readonly: true,
+  },
+  SVM_LONG_LIST: {
+    commandVariants: ["svmll", "--svm-long-list"],
+    optionalPassArgs: [PASS_ARG.TENANT_ID],
+    optionalFlagArgs: [FLAG_ARG.JSON_OUTPUT, FLAG_ARG.REVEAL],
+    callback: svm.serviceManagerLongList,
+    useCache: false,
+    readonly: true,
+  },
+  SVM_REPAIR_BINDINGS: {
+    commandVariants: ["--svm-repair-bindings"],
+    requiredPassArgs: [PASS_ARG.SERVICE_PLAN],
+    optionalPassArgs: [PASS_ARG.PARAMS],
+    callback: svm.serviceManagerRepairBindings,
     useCache: false,
   },
-  HDI_DELETE_TENANT: {
-    commandVariants: ["--hdi-delete-tenant"],
-    requiredPassArgs: [PASS_ARG.TENANT_ID],
-    callback: hdi.hdiDeleteTenant,
+  SVM_REFRESH_BINDINGS: {
+    commandVariants: ["--svm-refresh-bindings"],
+    requiredPassArgs: [PASS_ARG.SERVICE_PLAN, PASS_ARG.TENANT_ID],
+    optionalPassArgs: [PASS_ARG.PARAMS],
+    callback: svm.serviceManagerRefreshBindings,
+    useCache: false,
+  },
+  SVM_DELETE_BINDINGS: {
+    commandVariants: ["--svm-delete-bindings"],
+    requiredPassArgs: [PASS_ARG.SERVICE_PLAN, PASS_ARG.TENANT_ID],
+    callback: svm.serviceManagerDeleteBindings,
     useCache: false,
     danger: true,
   },
-  HDI_DELETE_ALL: { commandVariants: ["--hdi-delete-all"], callback: hdi.hdiDeleteAll, useCache: false, danger: true },
+  SVM_DELETE: {
+    commandVariants: ["--svm-delete"],
+    requiredPassArgs: [PASS_ARG.SERVICE_PLAN, PASS_ARG.TENANT_ID],
+    callback: svm.serviceManagerDeleteInstancesAndBindings,
+    useCache: false,
+    danger: true,
+  },
 
   SRV_DEBUG: {
     commandVariants: ["srvd", "--server-debug"],

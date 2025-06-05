@@ -70,6 +70,13 @@ class FunnelQueue extends Funnel {
   }
 
   /**
+   * Returns a promise that all currently enqueued callbacks are settled.
+   */
+  milestone() {
+    return Promise.allSettled(this.__queue);
+  }
+
+  /**
    * Waits for the processing of all currently enqueued callbacks and returns their results in calling order, when all
    * have completed. Clears the current queue in the process.
    * @returns {Promise<Array>} A promise that resolves with the results of all enqueued callbacks.

@@ -8,10 +8,7 @@ const { join } = require("path");
 
 const { USAGE, GENERIC_CLI_OPTIONS, APP_CLI_OPTIONS } = require("../src/cliOptions");
 
-const HIDDEN_COMMANDS = ["--hdi-enable-native"];
-const appCliOptions = Object.values(APP_CLI_OPTIONS).filter((option) =>
-  option.commandVariants.every((command) => !HIDDEN_COMMANDS.includes(command))
-);
+const appCliOptions = Object.values(APP_CLI_OPTIONS);
 
 /*
  NOTE: Just internal consistency tests for now.
@@ -49,24 +46,28 @@ describe("consistency tests", () => {
     const cliOptionsReadonly = cliOptions.filter((cliOption) => cliOption.readonly);
     const cliOptionsOther = cliOptions.filter((cliOption) => !cliOption.danger && !cliOption.readonly);
 
-    const usageOptionsLinesWithLegend = text
-      .split("\n")
-      .filter((line) => line.length !== 0 && !line.startsWith("   ==") && !/^ +\.\.\./.test(line));
+    const usageOptionsLinesWithLegend = text.split("\n").filter(
+      (line) =>
+        line.length !== 0 && // empty
+        !line.startsWith("   ==") && // section headers
+        !/^ +\.\.\./.test(line) && // argument
+        !/^ {40}/.test(line) // line continuation
+    );
 
     const usageOptionsLines = usageOptionsLinesWithLegend
       .filter((line) => !line.startsWith("*  are") && !line.startsWith("~  are"))
       .map((line) => line.replace(/(.*--[a-z-]+)((?: [A-Z_[\]]+)*).*?$/, "$1$2")); // remove everything after last "word with dashes"
 
     const legendDangerous = usageOptionsLinesWithLegend.filter((line) => line.startsWith("*  are"));
-    const legendReadlonly = usageOptionsLinesWithLegend.filter((line) => line.startsWith("~  are"));
+    const legendReadonly = usageOptionsLinesWithLegend.filter((line) => line.startsWith("~  are"));
 
     expect(
       (cliOptionsDangerous.length === 0 && legendDangerous.length === 0) ||
         (cliOptionsDangerous.length !== 0 && legendDangerous.length !== 0)
     ).toBe(true);
     expect(
-      (cliOptionsReadonly.length === 0 && legendReadlonly.length === 0) ||
-        (cliOptionsReadonly.length !== 0 && legendReadlonly.length !== 0)
+      (cliOptionsReadonly.length === 0 && legendReadonly.length === 0) ||
+        (cliOptionsReadonly.length !== 0 && legendReadonly.length !== 0)
     ).toBe(true);
 
     const usageDangerousLines = usageOptionsLines
