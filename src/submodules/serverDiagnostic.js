@@ -2,12 +2,16 @@
 
 const { orderedStringify, writeTextSync } = require("../shared/static");
 const { assert } = require("../shared/error");
-const { request } = require("../shared/request");
 const { Logger } = require("../shared/logger");
 
+const RUNTIME = {
+  NODE: "node",
+  JAVA: "java",
+};
+
 const BUILDPACK_INFO = {
-  nodejs_buildpack: { runtime: "node", debugPort: 9229 },
-  java_buildpack: { runtime: "java", debugPort: 8000 },
+  nodejs_buildpack: { runtime: RUNTIME.NODE, debugPort: 9229 },
+  java_buildpack: { runtime: RUNTIME.JAVA, debugPort: 8000 },
 };
 const DEFAULT_ENV_FILENAME = "default-env.json";
 
@@ -24,35 +28,17 @@ const _serverDebug = async (context, { appName, appInstance } = {}) => {
         cfBuildpack.includes(cfBuildpackName) || cfBuildpack.includes(cfBuildpackName.replace(/_/g, "-"))
     );
   const { runtime, debugPort: inferredPort } = (cfBuildpackInfoKey && BUILDPACK_INFO[cfBuildpackInfoKey]) || {};
-  const localPort = inferredPort || 8000;
-
-  let responseData = {};
-  if (cfRouteUrl) {
-    try {
-      const token = await context.getCachedUaaToken();
-      const response = await request({
-        url: cfRouteUrl,
-        pathname: "/info",
-        auth: { token },
-        headers: {
-          "X-Cf-App-Instance": `${cfAppGuid}:${appInstance}`,
-        },
-        logged: false,
-        checkStatus: false,
-      });
-
-      responseData = response.ok && (await response.json());
-    } catch (err) {} // eslint-disable-line no-empty
-  }
-  const { debugPort } = responseData;
-  const remotePort = debugPort || inferredPort;
-  assert(remotePort, `could not determine remote debugPort from /info or infer from buildpack`);
+  assert(inferredPort, `could not infer remote debugPort from buildpack "${cfBuildpack}"`);
+  const localPort = inferredPort;
+  const remotePort = inferredPort;
 
   logger.info();
-  if (!debugPort) {
-    logger.info(
-      `could not determine remote debugPort from /info, falling back to ${cfBuildpack} default ${remotePort}`
-    );
+  if (runtime === RUNTIME.NODE) {
+    try {
+      await _serverStartNodeDebugger(cfSsh, appInstance);
+    } catch (err) {
+      logger.warning("warning: could not enable debugging for node process: ", err.message);
+    }
   }
   logger.info(`connect ${runtime ? runtime + " debugger" : "debugger"} on port ${localPort}`);
   logger.info(`use request header "X-Cf-App-Instance: ${cfAppGuid}:${appInstance}" to target this app instance`);
@@ -87,10 +73,14 @@ const serverCertificates = async (context, [appName, appInstance = "0"]) => {
   logger.info("saved instance certificates");
 };
 
+const _serverStartNodeDebugger = async (cfSsh, appInstance) => {
+  await cfSsh({ command: "pkill --signal SIGUSR1 node", appInstance });
+};
+
 const serverStartDebugger = async (context, [appName, appInstance = "0"]) => {
   assert(/\d+/.test(appInstance), `argument "${appInstance}" is not a valid app instance`);
   const { cfSsh } = appName ? await context.getAppNameInfoCached(appName) : await context.getSrvInfo();
-  await cfSsh({ command: "pkill --signal SIGUSR1 node", appInstance });
+  await _serverStartNodeDebugger(cfSsh, appInstance);
 };
 
 module.exports = {
