@@ -18,7 +18,7 @@ const DEFAULT_ENV_FILENAME = "default-env.json";
 const logger = Logger.getInstance();
 
 const _serverDebug = async (context, { appName, appInstance } = {}) => {
-  const { cfBuildpack, cfAppGuid, cfRouteUrl, cfSsh } = appName
+  const { cfBuildpack, cfAppGuid, cfSsh } = appName
     ? await context.getAppNameInfoCached(appName)
     : await context.getSrvInfo();
   const cfBuildpackInfoKey =
