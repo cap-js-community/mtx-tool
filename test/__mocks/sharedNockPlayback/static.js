@@ -45,12 +45,12 @@ module.exports = {
   writeJsonSync: jest.fn(),
   writeJsonAsync: jest.fn(),
   // mock spawn
-  spawnAsync: jest.fn(async (command, args, options) => {
+  spawnAsync: jest.fn(async (command, args) => {
     switch (`${command} ${args.join(" ")}`) {
       case "cf oauth-token":
         return ["bearer xxx"];
       default:
-        return [format("%s %O %O", command, args, options)];
+        return [format("%s %O", command, args)];
     }
   }),
   // speed up sleep
