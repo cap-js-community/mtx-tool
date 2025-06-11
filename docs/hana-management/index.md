@@ -18,7 +18,7 @@ nav_order: 6
 The HANA Management commands offer convenience for interacting with HANA instances via BTP's Service Manager service
 (technical name `service-manager`).
 
-The HANA Management is the third of three perspectives that MTX Tool offers on tenant information. This is the
+HANA Management is the third of three perspectives that MTX Tool offers on tenant information. This is the
 lowest layer, the higher layers being [CAP Multitenancy]({{ site.baseurl }}/cap-multitenancy/) and still higher
 [Tenant Registry]({{ site.baseurl }}/tenant-registry/). For an overview of the layers see
 [Tenant Layers]({{ site.baseurl }}/tenant-registry/#summary).
