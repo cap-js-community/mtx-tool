@@ -131,10 +131,9 @@ commands:
           ...    --reveal                                         show sensitive information
 
    === server diagnostic (srv) ===
-~  srvd    --server-debug [APP_NAME] [APP_INSTANCE]           open ssh tunnel to debug port
 ~  srvenv  --server-env [APP_NAME]                            dump system environment
 ~  srvcrt  --server-certificates [APP_NAME] [APP_INSTANCE]    dump instance certificates
-           --server-start-debugger [APP_NAME] [APP_INSTANCE]  start debugger on server node process
+   srvd    --server-debug [APP_NAME] [APP_INSTANCE]           open ssh tunnel to debug port
            ...    [APP_NAME]                                  run server commands for a specific app
            ...    [APP_INSTANCE]                              tunnel to specific app instance, fallback to 0
 
@@ -383,12 +382,6 @@ const APP_CLI_OPTIONS = Object.freeze({
     danger: true,
   },
 
-  SRV_DEBUG: {
-    commandVariants: ["srvd", "--server-debug"],
-    optionalPassArgs: [PASS_ARG.APP_NAME, PASS_ARG.APP_INSTANCE],
-    callback: srv.serverDebug,
-    readonly: true,
-  },
   SRV_ENVIRONMENT: {
     commandVariants: ["srvenv", "--server-env"],
     optionalPassArgs: [PASS_ARG.APP_NAME],
@@ -403,10 +396,10 @@ const APP_CLI_OPTIONS = Object.freeze({
     useCache: false,
     readonly: true,
   },
-  SRV_START_DEBUGGER: {
-    commandVariants: ["--server-start-debugger"],
+  SRV_DEBUG: {
+    commandVariants: ["srvd", "--server-debug"],
     optionalPassArgs: [PASS_ARG.APP_NAME, PASS_ARG.APP_INSTANCE],
-    callback: srv.serverStartDebugger,
+    callback: srv.serverDebug,
   },
 });
 
