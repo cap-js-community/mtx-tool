@@ -40,14 +40,7 @@ describe("srv nock tests", () => {
         "GET https://api.cf.sap.hana.ondemand.com:443": 5,
       }
     `);
-    expect(collectRequestCount(require(`${nock.back.fixtures}/srv-cert-custom-instance-0.json`)))
-      .toMatchInlineSnapshot(`
-      {
-        "GET https://api.cf.sap.hana.ondemand.com:443": 5,
-      }
-    `);
-    expect(collectRequestCount(require(`${nock.back.fixtures}/srv-cert-custom-instance-1.json`)))
-      .toMatchInlineSnapshot(`
+    expect(collectRequestCount(require(`${nock.back.fixtures}/srv-cert-custom.json`))).toMatchInlineSnapshot(`
       {
         "GET https://api.cf.sap.hana.ondemand.com:443": 5,
       }
@@ -83,7 +76,7 @@ describe("srv nock tests", () => {
     });
 
     test("custom instance 0", async () => {
-      await nock.back("srv-cert-custom-instance-0.json");
+      await nock.back("srv-cert-custom.json");
       await expect(srv.serverCertificates(await freshContext(), ["afc-frontend", "0"])).resolves.toBeUndefined();
       expect(mockStatic.writeTextSync).toHaveBeenCalledTimes(2);
       expect(mockStatic.writeTextSync.mock.calls[0]).toMatchSnapshot();
@@ -92,7 +85,7 @@ describe("srv nock tests", () => {
     });
 
     test("custom instance 1", async () => {
-      await nock.back("srv-cert-custom-instance-1.json");
+      await nock.back("srv-cert-custom.json");
       await expect(srv.serverCertificates(await freshContext(), ["afc-frontend", "1"])).resolves.toBeUndefined();
       expect(mockStatic.writeTextSync).toHaveBeenCalledTimes(2);
       expect(mockStatic.writeTextSync.mock.calls[0]).toMatchSnapshot();

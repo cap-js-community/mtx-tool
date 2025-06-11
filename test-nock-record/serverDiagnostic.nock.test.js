@@ -51,16 +51,9 @@ describe("srv nock", () => {
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
 
-  test("record srv certificates custom instance 0", async () => {
-    const { nockDone } = await nock.back("srv-cert-custom-instance-0.json", { afterRecord: anonymizeNock });
+  test("record srv certificates custom", async () => {
+    const { nockDone } = await nock.back("srv-cert-custom.json", { afterRecord: anonymizeNock });
     await srv.serverCertificates(await freshContext(), ["afc-frontend", "0"]);
-    nockDone();
-    expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
-  });
-
-  test("record srv certificates custom instance 1", async () => {
-    const { nockDone } = await nock.back("srv-cert-custom-instance-1.json", { afterRecord: anonymizeNock });
-    await srv.serverCertificates(await freshContext(), ["afc-frontend", "1"]);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
