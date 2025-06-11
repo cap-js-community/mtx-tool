@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- order is REMOVED, CHANGED, ADDED, FIXED -->
 
-## v0.10.0 - tbd
+## v0.10.0 - 2025-06-11
 
 ⚠️ This release is potentially disruptive. We carved out the service-manager interactions from `hdi` into a new section
 `svm`. Among other things, this allows us to handle credentials rotation for all managed service plans consistently, not
@@ -21,6 +21,10 @@ just for HANA containers.
 | `--hdi-repair-bindings`         | `--svm-repair-bindings hana:hdi-shared`              |
 | `--hdi-delete-tenant TENANT_ID` | `--svm-delete hana:hdi-shared TENANT_ID`             |
 | `--hdi-delete-all`              | `--svm-delete hana:hdi-shared all-tenants`           |
+
+### REMOVED
+
+- srv: command `--server-start-debugger` is not needed anymore, this happens implicitly now with `--server-debug`.
 
 ### CHANGED
 

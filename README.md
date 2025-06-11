@@ -9,22 +9,22 @@ Multitenancy and Extensibility Tool is a cli to reduce operational overhead for 
 
 ## Install or Upgrade
 
-Prerequisite is an installed [CF cli](https://github.com/cloudfoundry/cli) v7 or newer. The tool can be installed either globally or locally for a specific project.
+Prerequisite is an installed [CF cli](https://github.com/cloudfoundry/cli) v8 or newer. We recommend running the tool via `npx`:
+
+```bash
+# ad-hoc
+npx @cap-js-community/mtx-tool
+# ad-hoc with fixed version, e.g. for stable pipelines
+npx @cap-js-community/mtx-tool@0.10.0
+```
+
+Alternatively, the tool can be installed either globally or locally for a specific project.
 
 ```bash
 # globally
 npm install --global @cap-js-community/mtx-tool
 # project local
 npm install --save-dev @cap-js-community/mtx-tool
-```
-
-You can also not install the tool and use it ad-hoc.
-
-```bash
-# ad-hoc
-npx @cap-js-community/mtx-tool
-# ad-hoc with fixed version, e.g. for stable pipelines
-npx @cap-js-community/mtx-tool@0.9.4
 ```
 
 ## Support, Feedback, Contributing
