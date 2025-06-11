@@ -107,7 +107,7 @@ with HANA Cloud containers. The `localUrl` approach allows you to use the promin
 advanced performance analysis functionalities.
 
 For either case, MTX Tool gives connection details for two database schemas. Each HDI container is organized into a
-_runtime schema_ with the actual data and a _design-time schema_, which contains metadata, for example to track schema
+_runtime schema_ with the actual data and a _design time schema_, which contains metadata, for example to track schema
 evolution.
 
 {: .info}
