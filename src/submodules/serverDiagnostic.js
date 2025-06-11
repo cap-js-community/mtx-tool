@@ -17,40 +17,6 @@ const DEFAULT_ENV_FILENAME = "default-env.json";
 
 const logger = Logger.getInstance();
 
-const _serverDebug = async (context, { appName, appInstance } = {}) => {
-  const { cfBuildpack, cfAppGuid, cfSsh } = appName
-    ? await context.getAppNameInfoCached(appName)
-    : await context.getSrvInfo();
-  const cfBuildpackInfoKey =
-    cfBuildpack &&
-    Object.keys(BUILDPACK_INFO).find(
-      (cfBuildpackName) =>
-        cfBuildpack.includes(cfBuildpackName) || cfBuildpack.includes(cfBuildpackName.replace(/_/g, "-"))
-    );
-  const { runtime, debugPort: inferredPort } = (cfBuildpackInfoKey && BUILDPACK_INFO[cfBuildpackInfoKey]) || {};
-  assert(inferredPort, `could not infer remote debugPort from buildpack "${cfBuildpack}"`);
-  const localPort = inferredPort;
-  const remotePort = inferredPort;
-
-  logger.info();
-  if (runtime === RUNTIME.NODE) {
-    try {
-      await _serverStartNodeDebugger(cfSsh, appInstance);
-    } catch (err) {
-      logger.warning("warning: could not enable debugging for node process: ", err.message);
-    }
-  }
-  logger.info(`connect ${runtime ? runtime + " debugger" : "debugger"} on port ${localPort}`);
-  logger.info(`use request header "X-Cf-App-Instance: ${cfAppGuid}:${appInstance}" to target this app instance`);
-  logger.info();
-  await cfSsh({ localPort, remotePort, appInstance });
-};
-
-const serverDebug = async (context, [appName, appInstance = "0"]) => {
-  assert(/\d+/.test(appInstance), `argument "${appInstance}" is not a valid app instance`);
-  return _serverDebug(context, { appName, appInstance });
-};
-
 const serverEnvironment = async (context, [appName]) => {
   const { cfEnvServices, cfEnvApp, cfEnvVariables } = appName
     ? await context.getAppNameInfoCached(appName)
@@ -73,19 +39,42 @@ const serverCertificates = async (context, [appName, appInstance = "0"]) => {
   logger.info("saved instance certificates");
 };
 
-const _serverStartNodeDebugger = async (cfSsh, appInstance) => {
-  await cfSsh({ command: "pkill --signal SIGUSR1 node", appInstance });
+const _serverDebug = async (context, { appName, appInstance } = {}) => {
+  const { cfBuildpack, cfAppGuid, cfSsh } = appName
+    ? await context.getAppNameInfoCached(appName)
+    : await context.getSrvInfo();
+  const cfBuildpackInfoKey =
+    cfBuildpack &&
+    Object.keys(BUILDPACK_INFO).find(
+      (cfBuildpackName) =>
+        cfBuildpack.includes(cfBuildpackName) || cfBuildpack.includes(cfBuildpackName.replace(/_/g, "-"))
+    );
+  const { runtime, debugPort: inferredPort } = (cfBuildpackInfoKey && BUILDPACK_INFO[cfBuildpackInfoKey]) || {};
+  assert(inferredPort, `could not infer remote debugPort from buildpack "${cfBuildpack}"`);
+  const localPort = inferredPort;
+  const remotePort = inferredPort;
+
+  logger.info();
+  if (runtime === RUNTIME.NODE) {
+    try {
+      await cfSsh({ command: "pkill --signal SIGUSR1 node", appInstance });
+    } catch (err) {
+      logger.warning("warning: could not enable debugging for node process: ", err.message);
+    }
+  }
+  logger.info(`connect ${runtime ? runtime + " debugger" : "debugger"} on port ${localPort}`);
+  logger.info(`use request header "X-Cf-App-Instance: ${cfAppGuid}:${appInstance}" to target this app instance`);
+  logger.info();
+  await cfSsh({ localPort, remotePort, appInstance });
 };
 
-const serverStartDebugger = async (context, [appName, appInstance = "0"]) => {
+const serverDebug = async (context, [appName, appInstance = "0"]) => {
   assert(/\d+/.test(appInstance), `argument "${appInstance}" is not a valid app instance`);
-  const { cfSsh } = appName ? await context.getAppNameInfoCached(appName) : await context.getSrvInfo();
-  await _serverStartNodeDebugger(cfSsh, appInstance);
+  return _serverDebug(context, { appName, appInstance });
 };
 
 module.exports = {
-  serverDebug,
   serverEnvironment,
   serverCertificates,
-  serverStartDebugger,
+  serverDebug,
 };
