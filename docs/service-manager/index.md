@@ -16,9 +16,8 @@ nav_order: 7
 ## Summary
 
 The service manager section is a close cousin of [HANA Management]({{ site.baseurl }}/hana-management/). While HANA
-Management is concerned particularly with service instances representing HDI containers, here we treat all instances
-equally to perform common actions on all bindings of one particular service plan, or for all service plans
-simultaneously.
+Management is concerned particularly with service instances representing HDI containers, here we treat all service
+instances abstractly to perform common actions, usually on their bindings.
 
 For details and background information, please consult the official documentation:
 
@@ -97,23 +96,30 @@ The refresh command
 mtx --svm-refresh-bindings SERVICE_PLAN TENANT_ID
 ```
 
-will create a new binding and afterward remove the current binding. Potential combinations are:
+will create a new binding and afterward remove the current binding. Regular credential rotation is recommended to
+increase security.
 
-| SERVICE_PLAN                        | TENANT_ID     | COMMENT                                                                          |
-| :---------------------------------- | :------------ | :------------------------------------------------------------------------------- |
-| `all-services`                      | `all-tenants` | this will refresh all managed bindings                                           |
-| `all-services`                      | `<tenant-id>` | this will refresh all managed bindings for a given tenant                        |
-| `<service-offering>:<service-plan>` | `all-tenants` | this will refresh all managed bindings for a given plan, e.g., `hana:hdi-shared` |
-| `<service-offering>:<service-plan>` | `<tenant-id>` | this will refresh all managed bindings for a given tenant and plan               |
+You can select which managed bindings you want to include with the following combinations:
 
-Regular credential rotation is recommended to increase security.
+| SERVICE_PLAN                        | TENANT_ID     | selects                                                        |
+| :---------------------------------- | :------------ | :------------------------------------------------------------- |
+| `all-services`                      | `all-tenants` | all managed bindings                                           |
+| `all-services`                      | `<tenant-id>` | all managed bindings for a given tenant                        |
+| `<service-offering>:<service-plan>` | `all-tenants` | all managed bindings for a given plan, e.g., `hana:hdi-shared` |
+| `<service-offering>:<service-plan>` | `<tenant-id>` | all managed bindings for a given tenant and plan               |
 
 {: .warn}
-Refreshing will invalidate current credentials, i.e, all applications that have them in memory need to either handle
+Refreshing will invalidate current credentials, i.e., all applications that have them in memory need to either handle
 this gracefully or be restarted.
 
 The refresh command allows you to pass arbitrary parameters to the service binding that gets created in service
-manager. In other words, `mtx --svm-refresh-bindings SERVICE_PLAN TENANT_ID '{"special":true}'` corresponds to
+manager. In other words,
+
+```bash
+mtx --svm-refresh-bindings SERVICE_PLAN TENANT_ID '{"special":true}'
+```
+
+corresponds to
 
 ```bash
 cf bind-service <some-app> <service-instance matching tenant and service-plan> -c '{"special":true}'
