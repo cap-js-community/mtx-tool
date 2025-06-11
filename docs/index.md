@@ -30,13 +30,14 @@ npm install --save-dev @cap-js-community/mtx-tool
 
 ## Content
 
-| Area                                       | Purpose                                                    | Related                                                                                                |
-| :----------------------------------------- | :--------------------------------------------------------- | :----------------------------------------------------------------------------------------------------- |
-| [Tool Setup](tool-setup)                   | initial, project, or ad-hoc setup                          |                                                                                                        |
-| [User Authentication](user-authentication) | obtain and decode access tokens                            | service:&nbsp;[xsuaa](https://services.tools.sap/#/perspective/services/service/SERVICE-92)            |
-| [Tenant Registry](tenant-registry)         | list subscribed subaccounts and service dependencies       | service:&nbsp;[saas-registry](https://services.tools.sap/#/perspective/services/service/SERVICE-380)   |
-| [CAP Multitenancy](cap-multitenancy)       | list, onboard, offboard, and upgrade tenants               | library:&nbsp;[@sap/cds-mtx](https://github.tools.sap/cdx/cds-mtx)                                     |
-| [HANA Management](hana-management)         | list, access, and delete hdi container instances, bindings | service:&nbsp;[service-manager](https://services.tools.sap/#/perspective/services/service/SERVICE-324) |
+| Area                                       | Purpose                                                          | Related                                                                                                |
+| :----------------------------------------- | :--------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------- |
+| [Tool Setup](tool-setup)                   | initial, project, or ad-hoc setup                                |                                                                                                        |
+| [User Authentication](user-authentication) | obtain and decode access tokens                                  | service:&nbsp;[xsuaa](https://services.tools.sap/#/perspective/services/service/SERVICE-92)            |
+| [Tenant Registry](tenant-registry)         | list subscribed subaccounts and service dependencies             | service:&nbsp;[saas-registry](https://services.tools.sap/#/perspective/services/service/SERVICE-380)   |
+| [CAP Multitenancy](cap-multitenancy)       | list, onboard, offboard, and upgrade tenants                     | library:&nbsp;[@sap/cds-mtx](https://github.tools.sap/cdx/cds-mtx)                                     |
+| [HANA Management](hana-management)         | list and access hdi container                                    | service:&nbsp;[service-manager](https://services.tools.sap/#/perspective/services/service/SERVICE-324) |
+| [Service Manager](service-manager)         | list, refresh, and delete managed service instances and bindings | service:&nbsp;[service-manager](https://services.tools.sap/#/perspective/services/service/SERVICE-324) |
 
 <!--
 | [Server Diagnostic](server-diagnostic)     | debugging runtime server instances                   |                                                                                                    |

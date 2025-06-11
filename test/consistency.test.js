@@ -116,6 +116,10 @@ describe("consistency tests", () => {
         commandPrefix: "hdi",
         readmePath: join(__dirname, "..", "docs", "hana-management", "index.md"),
       },
+      {
+        commandPrefix: "svm",
+        readmePath: join(__dirname, "..", "docs", "service-manager", "index.md"),
+      },
     ];
 
     for (const { commandPrefix, readmePath } of areas) {

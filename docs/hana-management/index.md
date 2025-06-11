@@ -15,14 +15,17 @@ nav_order: 6
 
 ## Summary
 
-The HANA Management commands offer convenience for interacting with BTP's Service Manager service (technical name
-`service-manager`). The now deprecated predecessor for Service Manager was named Instance Manager and is currently
-still supported by MTX Tool.
+The HANA Management commands offer convenience for interacting with HANA instances via BTP's Service Manager service
+(technical name `service-manager`).
 
-The service manager is the third of three perspectives that MTX Tool offers on tenant information. This is the
+HANA Management is the third of three perspectives that MTX Tool offers on tenant information. This is the
 lowest layer, the higher layers being [CAP Multitenancy]({{ site.baseurl }}/cap-multitenancy/) and still higher
 [Tenant Registry]({{ site.baseurl }}/tenant-registry/). For an overview of the layers see
 [Tenant Layers]({{ site.baseurl }}/tenant-registry/#summary).
+
+A close cousin of this section is the [Service Manager]({{ site.baseurl }}/service-manager/). In it there are some
+common interactions for all managed service instances and bindings, most notably credential rotation. This is
+conceptually broader than just managed service instances that represent HDI containers.
 
 For details and background information, please consult the official documentation:
 
@@ -77,38 +80,13 @@ mtx hdil --json | jq '.bindings.[] | { binding: .id, ready: .ready }'
 
 {: .info}
 Note that due to the way `@sap/cds-mtx` works, the number of hdi 'tenants' does not correspond 1:1 with subscribed
-subaccounts. Rather there are 2 hdi tenants for each subscribed subaccount, as well as one additional `__META__` hdi
-tenant.
+subaccounts. Rather there is an additional `t0` hdi tenant for multitenancy metadata.
 
 ## Example for List
 
 Here is an example of listing all container bindings:
 
 ![](hana-management-list.gif)
-
-## List Instances and Bindings
-
-The list instances command `mtx hdili` is designed to give you an overview of the instances in relationship to their
-bindings. Instances represent acutal HDI containers in the SAP HANA database and bindings represent access credentials
-for these containers. The most common situation you will have is that there is exactly one binding for each instance.
-
-You can also have the case that an instance has several bindings or no bindings at all. This can happen, e.g., when
-there are sporadic problems during key rotation and a binding is leaked. This listing will make it visually obvious
-when these cases occur:
-
-- One instance with one binding
-  ```
-  tenant_id  instance_id  ---  binding-id  ready_state
-  ```
-- One instance without binding (no access possible)
-  ```
-  tenant_id  instance_id  -x
-  ```
-- One instance with two bindings (access is ambivalent)
-  ```
-  tenant_id  instance_id  -+-  first-binding-id   ready_state
-                           \-  second-binding-id  ready_state
-  ```
 
 ## HDI Tunnel
 
@@ -128,37 +106,12 @@ with HANA Cloud containers. The `localUrl` approach allows you to use the promin
 [SAP HANA Tools](https://tools.eu1.hana.ondemand.com/#hanatools) with the remote database. This plugin has various
 advanced performance analysis functionalities.
 
-For either case, MTX Tools gives connection details for two database schemas. Each HDI container is organized into a
-_runtime schema_ with the actual data and a _designtime schema_, which contains metadata, for example to track schema
+For either case, MTX Tool gives connection details for two database schemas. Each HDI container is organized into a
+_runtime schema_ with the actual data and a _design time schema_, which contains metadata, for example to track schema
 evolution.
 
 {: .info}
-By default MTX Tool hides passwords, to protect the user from revealing them inadvertantly in screen sharing sessions.
+By default MTX Tool hides passwords, to protect the user from revealing them inadvertently in screen sharing sessions.
 When you first set up connections and want to reveal the passwords, use the `--reveal` flag.
 
 ![](hana-management-tunnel.gif)
-
-## HDI Rebind
-
-The rebind commands `mtx hdirt <tenant_id>` and `mtx --hdi-rebind-all` will create a new binding and afterwards remove
-the old binding for either a given hdi container or all hdi containers. This type of credential rotation is desirable
-for increased security.
-
-{: .warn}
-Rebinding will invalidate current credentials, i.e, all applications that have them in memory need to either handle
-this gracefully or be restarted.
-
-Either rebind command allows you to pass arbitrary parameters to the service binding that gets created in service
-manager. In other words, `mtx hdirt <tenant_id> '{"special":true}'` corresponds to
-
-```
-cf bind-service <service-manager> <hdi-shared service-instance of tenant_id> -c '{"special":true}'
-```
-
-## HDI Delete
-
-The deletion commands are only sensible for cleanup after some mocking/testing purposes.
-
-{: .warn}
-In most cases, the BTP cockpit's subaccount _unsubscribe_ funcationality, or even
-[Offboard Tenant]({{ site.baseurl }}/cap-multitenancy/#offboard-tenant), should be used instead.
