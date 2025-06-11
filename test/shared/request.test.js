@@ -11,7 +11,7 @@ jest.mock("../../src/shared/static", () => ({
   sleep: jest.fn(),
 }));
 
-const { request } = require("../../src/shared/request");
+const { request, RETRY_MODE } = require("../../src/shared/request");
 
 const { outputFromLogger } = require("../test-util/static");
 
@@ -27,6 +27,15 @@ const baseBadRequestResponse = {
   statusText: "Bad Request",
   text() {
     return "failure reason";
+  },
+};
+
+const baseTooManyRequestsResponse = {
+  ok: false,
+  status: 429,
+  statusText: "Too Many Requests",
+  text() {
+    return "too many requests";
   },
 };
 
@@ -150,7 +159,122 @@ describe("request tests", () => {
     expect(mockLogger.error).toHaveBeenCalledTimes(0);
   });
 
-  test("unknown retry mode", async () => {
+  test("retry mode off", async () => {
+    mockFetchLib.mockReturnValueOnce(baseTooManyRequestsResponse);
+    await expect(request({ url: "https://fake-server.com", pathname: "/path", retryMode: RETRY_MODE.OFF })).rejects
+      .toMatchInlineSnapshot(`
+            [Error: got bad response 429 from https://fake-server.com/path
+            too many requests]
+          `);
+    mockFetchLib.mockReturnValueOnce(baseBadRequestResponse);
+    await expect(request({ url: "https://fake-server.com", pathname: "/path", retryMode: RETRY_MODE.OFF })).rejects
+      .toMatchInlineSnapshot(`
+            [Error: got bad response 400 from https://fake-server.com/path
+            failure reason]
+          `);
+    mockFetchLib.mockReturnValueOnce(baseOkResponse);
+    await expect(request({ url: "https://fake-server.com", pathname: "/path", retryMode: RETRY_MODE.OFF })).resolves
+      .toMatchInlineSnapshot(`
+            {
+              "ok": true,
+              "status": 200,
+              "statusText": "OK",
+            }
+          `);
+    expect(mockFetchLib).toHaveBeenCalledTimes(3);
+    expect(outputFromLoggerWithTimestamps(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
+      "GET https://fake-server.com/path 429 Too Many Requests (88ms)
+      GET https://fake-server.com/path 400 Bad Request (88ms)
+      GET https://fake-server.com/path 200 OK (88ms)"
+    `);
+  });
+
+  test("retry mode too many requests", async () => {
+    mockFetchLib.mockReturnValueOnce(baseTooManyRequestsResponse);
+    mockFetchLib.mockReturnValueOnce(baseTooManyRequestsResponse);
+    mockFetchLib.mockReturnValueOnce(baseOkResponse);
+    await expect(
+      request({ url: "https://fake-server.com", pathname: "/path", retryMode: RETRY_MODE.TOO_MANY_REQUESTS })
+    ).resolves.toMatchInlineSnapshot(`
+            {
+              "ok": true,
+              "status": 200,
+              "statusText": "OK",
+            }
+          `);
+    mockFetchLib.mockReturnValueOnce(baseBadRequestResponse);
+    await expect(
+      request({ url: "https://fake-server.com", pathname: "/path", retryMode: RETRY_MODE.TOO_MANY_REQUESTS })
+    ).rejects.toMatchInlineSnapshot(`
+            [Error: got bad response 400 from https://fake-server.com/path
+            failure reason]
+          `);
+    mockFetchLib.mockReturnValueOnce(baseOkResponse);
+    await expect(
+      request({ url: "https://fake-server.com", pathname: "/path", retryMode: RETRY_MODE.TOO_MANY_REQUESTS })
+    ).resolves.toMatchInlineSnapshot(`
+            {
+              "ok": true,
+              "status": 200,
+              "statusText": "OK",
+            }
+          `);
+    expect(mockFetchLib).toHaveBeenCalledTimes(5);
+    expect(outputFromLoggerWithTimestamps(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
+      "GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+      GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 12sec
+      GET https://fake-server.com/path 200 OK (88ms)
+      GET https://fake-server.com/path 400 Bad Request (88ms)
+      GET https://fake-server.com/path 200 OK (88ms)"
+    `);
+  });
+
+  test("retry mode all", async () => {
+    mockFetchLib.mockReturnValueOnce(baseTooManyRequestsResponse);
+    mockFetchLib.mockReturnValueOnce(baseTooManyRequestsResponse);
+    mockFetchLib.mockReturnValueOnce(baseOkResponse);
+    await expect(request({ url: "https://fake-server.com", pathname: "/path", retryMode: RETRY_MODE.ALL_FAILED }))
+      .resolves.toMatchInlineSnapshot(`
+            {
+              "ok": true,
+              "status": 200,
+              "statusText": "OK",
+            }
+          `);
+    mockFetchLib.mockReturnValueOnce(baseBadRequestResponse);
+    mockFetchLib.mockReturnValueOnce(baseBadRequestResponse);
+    mockFetchLib.mockReturnValueOnce(baseOkResponse);
+    await expect(
+              request({ url: "https://fake-server.com", pathname: "/path", retryMode: RETRY_MODE.ALL_FAILED })
+            ).resolves.toMatchInlineSnapshot(`
+            {
+              "ok": true,
+              "status": 200,
+              "statusText": "OK",
+            }
+          `);
+    mockFetchLib.mockReturnValueOnce(baseOkResponse);
+    await expect(request({ url: "https://fake-server.com", pathname: "/path", retryMode: RETRY_MODE.ALL_FAILED }))
+      .resolves.toMatchInlineSnapshot(`
+            {
+              "ok": true,
+              "status": 200,
+              "statusText": "OK",
+            }
+          `);
+    expect(mockFetchLib).toHaveBeenCalledTimes(7);
+    expect(outputFromLoggerWithTimestamps(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
+      "GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+      GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 12sec
+      GET https://fake-server.com/path 200 OK (88ms)
+      GET https://fake-server.com/path 400 Bad Request (88ms) retrying in 6sec
+      GET https://fake-server.com/path 400 Bad Request (88ms) retrying in 12sec
+      GET https://fake-server.com/path 200 OK (88ms)
+      GET https://fake-server.com/path 200 OK (88ms)"
+    `);
+  });
+
+  test("retry mode invalid", async () => {
     mockFetchLib.mockReturnValueOnce(baseOkResponse);
     await expect(
       request({ url: "https://fake-server.com", pathname: "/path", retryMode: "invalid-mode" })
@@ -176,6 +300,8 @@ describe("request tests", () => {
     });
     expect(mockFetchLib).toHaveBeenCalledTimes(1);
     expect(mockLogger.info).toHaveBeenCalledTimes(1);
-    expect(outputFromLoggerWithTimestamps(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"GET https://fake-server.com/path 200 OK (88ms)"`);
+    expect(outputFromLoggerWithTimestamps(mockLogger.info.mock.calls)).toMatchInlineSnapshot(
+      `"GET https://fake-server.com/path 200 OK (88ms)"`
+    );
   });
 });
