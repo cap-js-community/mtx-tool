@@ -149,4 +149,33 @@ describe("request tests", () => {
     `);
     expect(mockLogger.error).toHaveBeenCalledTimes(0);
   });
+
+  test("unknown retry mode", async () => {
+    mockFetchLib.mockReturnValueOnce(baseOkResponse);
+    await expect(
+      request({ url: "https://fake-server.com", pathname: "/path", retryMode: "invalid-mode" })
+    ).rejects.toMatchInlineSnapshot(`[Error: unknown retry mode]`);
+    expect(mockFetchLib).toHaveBeenCalledTimes(1);
+  });
+
+  test("fetch throws exception", async () => {
+    mockFetchLib.mockImplementationOnce(() => {
+      throw new Error("fetch failed");
+    });
+    await expect(request({ url: "https://fake-server.com" })).rejects.toMatchInlineSnapshot(`[Error: fetch failed]`);
+  });
+
+  test("ok with all options flipped", async () => {
+    mockFetchLib.mockReturnValueOnce(baseOkResponse);
+    await request({
+      url: "https://fake-server.com",
+      pathname: "/path",
+      checkStatus: true,
+      logged: true,
+      redirect: false,
+    });
+    expect(mockFetchLib).toHaveBeenCalledTimes(1);
+    expect(mockLogger.info).toHaveBeenCalledTimes(1);
+    expect(outputFromLoggerWithTimestamps(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"GET https://fake-server.com/path 200 OK (88ms)"`);
+  });
 });
