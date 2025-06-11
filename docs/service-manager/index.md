@@ -144,6 +144,6 @@ mtx --svm-delete SERVICE_PLAN TENANT_ID
 
 to clean up both bindings and instances.
 
-{: .warn}
+{: .info}
 In most cases, the BTP cockpit's subaccount _unsubscribe_ functionality, or even
 [Offboard Tenant]({{ site.baseurl }}/cap-multitenancy/#offboard-tenant), should be used instead.
