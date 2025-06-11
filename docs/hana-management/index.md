@@ -23,7 +23,7 @@ lowest layer, the higher layers being [CAP Multitenancy]({{ site.baseurl }}/cap-
 [Tenant Registry]({{ site.baseurl }}/tenant-registry/). For an overview of the layers see
 [Tenant Layers]({{ site.baseurl }}/tenant-registry/#summary).
 
-A close cousin of this section is the [Service Manager]({{ site.baseurl }}/service-manager/) section. In it there are
+A close cousin of this section is the [Service Manager]({{ site.baseurl }}/service-manager/). In it there are
 some common interactions for all managed service instances and bindings, most notably credential rotation. This is
 conceptually broader than just managed service instances that represent HDI containers.
 
