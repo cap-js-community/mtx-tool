@@ -95,9 +95,11 @@ Multitenancy and Extensibility Tool is a cli to reduce operational overhead for 
 *  are potentially _dangerous_ commands
 ```
 
-### Pipelines
+Adding `--force` to any _dangerous_ command will override the safeguard, use at your own risk.
 
-For pipelines, you can save the setup configuration locally in a project and run MTX Tool via npx with a stable version:
+## Pipelines
+
+You can save the setup configuration locally in a project and run MTX Tool via npx with a stable version:
 
 - in the project `mtx --setup-local`
 - in the pipeline, e.g.

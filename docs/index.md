@@ -2,31 +2,12 @@
 layout: home
 title: Home
 nav_order: 1
+
 ---
 
 # MTX Tool
 
 Multitenancy and Extensibility Tool is a cli to reduce operational overhead for multitenant Cloud Foundry applications, particularly in the areas user authentication, tenant registration, CAP multitenancy, and HANA container management.
-
-## Install or Upgrade
-
-Prerequisite is an installed [CF cli](https://github.com/cloudfoundry/cli) v8 or newer. We recommend running the tool via `npx`:
-
-```bash
-# ad-hoc
-npx @cap-js-community/mtx-tool
-# ad-hoc with fixed version, e.g. for stable pipelines
-npx @cap-js-community/mtx-tool@0.10.0
-```
-
-Alternatively, the tool can be installed either globally or locally for a specific project.
-
-```bash
-# globally
-npm install --global @cap-js-community/mtx-tool
-# project local
-npm install --save-dev @cap-js-community/mtx-tool
-```
 
 ## Content
 
@@ -43,21 +24,15 @@ npm install --save-dev @cap-js-community/mtx-tool
 | [Server Diagnostic](server-diagnostic)     | debugging runtime server instances                   |                                                                                                    |
 -->
 
-## Quickstart
+## Getting Started
+
+- prerequisite is an installed [CF cli](https://github.com/cloudfoundry/cli) v8 or newer
+- `npm install --global @cap-js-community/mtx-tool`
+- `mtx --setup`
+- `cf target -o <my-org> -s <my-space>`
+- run commands
 
 ```
-usage: mtx [command]
-
-commands:
-   h  -h  --help     show complete help
-   v  -v  --version  show version
-
-   === tool setup (set) ===
-~  setl    --setup-list   list runtime config
-   set     --setup        interactive setup for global config
-   setcwd  --setup-local  interactive setup for local config
-   setcc   --clean-cache  clean all app caches
-
    === user authentication (uaa) ===
 ~  uaad   --uaa-decode TOKEN                                     decode JSON web token
 ~  uaac   --uaa-client [TENANT]                                  obtain uaa token for generic client
@@ -137,12 +112,4 @@ commands:
 *  are potentially _dangerous_ commands
 ```
 
-- adding `--force` to any _dangerous_ command will override the safeguard, use at your own risk
-- `--registry-offboard-skip` apps to skip are comma separated without spaces
-- `--registry-offboard-skip` can be used for app/services failing to offboard
-- `--cds-offboard-tenant` and `--cds-offboard-all` will delete the related hdi containers
-- `--hdi-rebind-tenant` will invalidate current credentials, i.e, all applications that have them in memory need to
-  either handle this gracefully or be restarted
-- `--server-start-debugger` will send SIGUSR1 to node process (requires ssh enabled on cf), which starts debugger _
-  without restart_
-- `TENANT` means you can enter either the subdomain or tenant id and both will work
+Adding `--force` to any _dangerous_ command will override the safeguard, use at your own risk.
