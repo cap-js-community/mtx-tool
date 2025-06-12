@@ -244,9 +244,8 @@ describe("request tests", () => {
     mockFetchLib.mockReturnValueOnce(baseBadRequestResponse);
     mockFetchLib.mockReturnValueOnce(baseBadRequestResponse);
     mockFetchLib.mockReturnValueOnce(baseOkResponse);
-    await expect(
-              request({ url: "https://fake-server.com", pathname: "/path", retryMode: RETRY_MODE.ALL_FAILED })
-            ).resolves.toMatchInlineSnapshot(`
+    await expect(request({ url: "https://fake-server.com", pathname: "/path", retryMode: RETRY_MODE.ALL_FAILED }))
+      .resolves.toMatchInlineSnapshot(`
             {
               "ok": true,
               "status": 200,
