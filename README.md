@@ -133,6 +133,11 @@ MTX Tool is subdivided in several contextual sections, each with several command
 
 Adding `--force` to any _dangerous_ command will override the safeguard, use at your own risk.
 
+## Peers
+
+- [SAP BTP Command Line Interface](https://help.sap.com/docs/btp/btp-cli-command-reference/btp-cli-command-reference), [Download](https://tools.hana.ondemand
+- [Service Manager Control command line tool](https://github.com/Peripli/service-manager-cli) -- will be archived 12/08/2025
+
 ## Documentation
 
 Head over to our [Documentation](https://cap-js-community.github.io/mtx-tool/) to learn more.
