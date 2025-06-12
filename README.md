@@ -108,6 +108,7 @@ For pipelines, we recommend saving the setup configuration locally in your proje
 ```bash
 # in the project
 mtx --setup-local
+git add . && git commit -m "mtx-tool config"
 
 # in the pipeline, e.g.
 npx @cap-js-community/mtx-tool@0.10.0 --svm-repair-bindings all-services
