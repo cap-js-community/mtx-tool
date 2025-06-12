@@ -9,11 +9,15 @@ Multitenancy and Extensibility Tool is a cli to reduce operational overhead for 
 
 ## Getting Started
 
-- prerequisite is an installed [CF cli](https://github.com/cloudfoundry/cli) v8 or newer
-- `npm install --global @cap-js-community/mtx-tool`
-- `mtx --setup`
-- `cf target -o <my-org> -s <my-space>`
-- run commands
+prerequisite is an installed [CF cli](https://github.com/cloudfoundry/cli) v8 or newer
+
+`npm install --global @cap-js-community/mtx-tool`
+
+`mtx --setup`
+
+`cf target -o <my-org> -s <my-space>`
+
+run commands...
 
 ```
    === user authentication (uaa) ===
@@ -101,17 +105,20 @@ Adding `--force` to any _dangerous_ command will override the safeguard, use at 
 
 For pipelines, we recommend saving the setup configuration locally in your project and running MTX Tool via npx with a stable version:
 
-- in the project
-  ```bash
-  mtx --setup-local
-  ```
-- in the pipeline, e.g.
-  ```bash
-  npx @cap-js-community/mtx-tool@0.10.0 --svm-repair-bindings all-services
-  npx @cap-js-community/mtx-tool@0.10.0 --svm-refresh-bindings all-services all-tenants
-  ...
-  npx @cap-js-community/mtx-tool@0.10.0 --cds-upgrade-all
-  ```
+in the project
+
+```bash
+mtx --setup-local
+```
+
+in the pipeline, e.g.
+
+```bash
+npx @cap-js-community/mtx-tool@0.10.0 --svm-repair-bindings all-services
+npx @cap-js-community/mtx-tool@0.10.0 --svm-refresh-bindings all-services all-tenants
+...
+npx @cap-js-community/mtx-tool@0.10.0 --cds-upgrade-all
+```
 
 ## Documentation
 
