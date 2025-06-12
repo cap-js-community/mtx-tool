@@ -9,15 +9,17 @@ Multitenancy and Extensibility Tool is a cli to reduce operational overhead for 
 
 ## Getting Started
 
-prerequisite is an installed [CF cli](https://github.com/cloudfoundry/cli) v8 or newer
+Prerequisite is an installed [CF cli](https://github.com/cloudfoundry/cli) v8 or newer.
 
-`npm install --global @cap-js-community/mtx-tool`
+**Prepare**
 
-`mtx --setup`
+```
+npm install --global @cap-js-community/mtx-tool
+mtx --setup
+cf target -o <my-org> -s <my-space>
+```
 
-`cf target -o <my-org> -s <my-space>`
-
-run commands...
+**Commands**
 
 ```
    === user authentication (uaa) ===
