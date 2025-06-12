@@ -99,12 +99,18 @@ Adding `--force` to any _dangerous_ command will override the safeguard, use at 
 
 ## Pipelines
 
-You can save the setup configuration locally in a project and run MTX Tool via npx with a stable version:
+For pipelines, we recommend saving the setup configuration locally in your project and running MTX Tool via npx with a stable version:
 
-- in the project `mtx --setup-local`
+- in the project
+  ```bash
+  mtx --setup-local
+  ```
 - in the pipeline, e.g.
   ```bash
+  npx @cap-js-community/mtx-tool@0.10.0 --svm-repair-bindings all-services
   npx @cap-js-community/mtx-tool@0.10.0 --svm-refresh-bindings all-services all-tenants
+  ...
+  npx @cap-js-community/mtx-tool@0.10.0 --cds-upgrade-all
   ```
 
 ## Documentation
