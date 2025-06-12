@@ -103,7 +103,8 @@ Adding `--force` to any _dangerous_ command will override the safeguard, use at 
 
 ## Pipelines
 
-For pipelines, we recommend saving the setup configuration locally in your project and running MTX Tool via npx with a stable version:
+For pipelines, we recommend committing the setup configuration to your project and running MTX Tool on the server in the
+corresponding directory through npx with a stable version:
 
 ```bash
 # in the project
