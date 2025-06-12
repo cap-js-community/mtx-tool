@@ -59,7 +59,7 @@ Service instances are some kind of managed service instance. For example, this c
 store. The corresponding bindings represent access credentials for these instances. In most cases, you will have exactly
 one binding for each instance.
 
-You can also have the case that an instance has several bindings or no bindings at all. This can happen, e.g., when
+You can also have the case that an instance has several bindings or no bindings at all. This can happen, e.g. when
 there are sporadic problems during credential rotation. This listing will make it visually obvious when these cases
 occur:
 
@@ -81,18 +81,18 @@ occur:
 
 The repair command
 
-```bash
+```
 mtx --svm-repair-bindings SERVICE_PLAN
 ```
 
 will normalize all service instances, so that they have exactly one binding. Missing bindings are created and ambivalent
-ones are removed. This happens either for a given service plan, e.g., `objectstore:standard`, or for `all-services`.
+ones are removed. This happens either for a given service plan, e.g. `objectstore:standard`, or for `all-services`.
 
 ## Refresh Bindings
 
 The refresh command
 
-```bash
+```
 mtx --svm-refresh-bindings SERVICE_PLAN TENANT_ID
 ```
 
@@ -101,27 +101,27 @@ increase security.
 
 You can select which managed bindings you want to include with the following combinations:
 
-| SERVICE_PLAN                        | TENANT_ID     | selects                                                        |
-| :---------------------------------- | :------------ | :------------------------------------------------------------- |
-| `all-services`                      | `all-tenants` | all managed bindings                                           |
-| `all-services`                      | `<tenant-id>` | all managed bindings for a given tenant                        |
-| `<service-offering>:<service-plan>` | `all-tenants` | all managed bindings for a given plan, e.g., `hana:hdi-shared` |
-| `<service-offering>:<service-plan>` | `<tenant-id>` | all managed bindings for a given tenant and plan               |
+| SERVICE_PLAN                        | TENANT_ID     | selects                                                       |
+| :---------------------------------- | :------------ | :------------------------------------------------------------ |
+| `all-services`                      | `all-tenants` | all managed bindings                                          |
+| `all-services`                      | `<tenant-id>` | all managed bindings for a given tenant                       |
+| `<service-offering>:<service-plan>` | `all-tenants` | all managed bindings for a given plan, e.g. `hana:hdi-shared` |
+| `<service-offering>:<service-plan>` | `<tenant-id>` | all managed bindings for a given tenant and plan              |
 
 {: .warn}
-Refreshing will invalidate current credentials, i.e., all applications that have them in memory need to either handle
+Refreshing will invalidate current credentials, i.e. all applications that have them in memory need to either handle
 this gracefully or be restarted.
 
 The refresh command allows you to pass arbitrary parameters to the service binding that gets created in service
 manager. In other words,
 
-```bash
+```
 mtx --svm-refresh-bindings SERVICE_PLAN TENANT_ID '{"special":true}'
 ```
 
 corresponds to
 
-```bash
+```
 cf bind-service <some-app> <service-instance matching tenant and service-plan> -c '{"special":true}'
 ```
 
@@ -132,13 +132,13 @@ The deletion commands are only sensible for cleanup after some mocking/testing p
 
 Use
 
-```bash
+```
 mtx --svm-delete-bindings SERVICE_PLAN TENANT_ID
 ```
 
 to clean up just the bindings, or use
 
-```bash
+```
 mtx --svm-delete SERVICE_PLAN TENANT_ID
 ```
 

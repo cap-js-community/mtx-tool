@@ -68,7 +68,7 @@ If the provided information is insufficient or seems incomplete, then you can al
 `mtx hdill`, which will show the endpoint's full unparsed response data.
 
 If you already know which tenant id you want the information for, then you can filter the list or long list, by
-providing that information, e.g., `mtx hdill <tenant_id>`.
+providing that information, e.g. `mtx hdill <tenant_id>`.
 
 For automated processes, you can use the `--json` flag and consume the list data as JSON. With the
 `--json` flag active, you will get the same data for `hdil` and `hdill`. For example, to get the ready state of

@@ -19,7 +19,7 @@ The central point of the user authentication commands is obtaining
 [JSON web tokens](https://en.wikipedia.org/wiki/JSON_Web_Token) or JWTs. Either
 
 - to decode them and see which privileges and other information are passed along within them, or
-- to use them as authorization for related rest APIs, e.g., services or the server.
+- to use them as authorization for related rest APIs, e.g. services or the server.
 
 Obtaining the tokens always happens through a service instance of the "User Account and Authentication Service"
 (technical name `xsuaa`).
@@ -70,7 +70,7 @@ Beyond this simple use case you might want to decode, for example, a user's sess
 privileges that particular user has. In order to achieve this:
 
 - Ask for the user's subdomain. In our example it will be `skyfin-company`.
-- Run `mtx uaap 123 skyfin-company`, i.e., use a made up passcode.
+- Run `mtx uaap 123 skyfin-company`, i.e. use a made up passcode.
 - MTX Tool will tell you the correct, landscape-dependent UAA url, which the user should use to get their one-time
   passcode. In our example it is `https://skyfin-company.authentication.sap.hana.ondemand.com/passcode`.
 - Using the user's one-time passcode run `mtx uaap vjcOkwoVFL4ig17YIebYJYgKODSK6rsL skyfin-company --decode`.
@@ -165,7 +165,7 @@ All uaa commands support the `--json` flag. When this flag is active, the tool w
 | `--json`, `--decode` | `{ "header": "<JWT header>", "body": "<JWT body>" }` |
 
 When this flag is active, the regular logging is disabled, so that the
-output processing can be automated with, e.g., [jq](https://jqlang.github.io/jq/).
+output processing can be automated with, e.g. [jq](https://jqlang.github.io/jq/).
 
 ```
 mtx uaac --json | jq .token
