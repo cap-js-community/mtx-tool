@@ -111,7 +111,7 @@ corresponding directory through npx with a stable version:
 mtx --setup-local
 git add . && git commit -m "mtx-tool config"
 
-# in the pipeline, e.g.
+# in the pipeline, for example
 npx @cap-js-community/mtx-tool@0.10.0 --svm-repair-bindings all-services
 npx @cap-js-community/mtx-tool@0.10.0 --svm-refresh-bindings all-services all-tenants
 ...
