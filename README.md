@@ -16,7 +16,14 @@ Prerequisite is an installed [CF cli](https://github.com/cloudfoundry/cli) v8 or
 ```
 npm install --global @cap-js-community/mtx-tool
 mtx --setup
+```
+
+**Use, for example**
+
+```
 cf target -o <my-org> -s <my-space>
+mtx regl
+mtx hdil
 ```
 
 **Commands**
