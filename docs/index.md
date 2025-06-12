@@ -25,11 +25,47 @@ Multitenancy and Extensibility Tool is a cli to reduce operational overhead for 
 
 ## Getting Started
 
-- prerequisite is an installed [CF cli](https://github.com/cloudfoundry/cli) v8 or newer
-- `npm install --global @cap-js-community/mtx-tool`
-- `mtx --setup`
-- `cf target -o <my-org> -s <my-space>`
-- run commands
+Prerequisite is an installed [CF cli](https://github.com/cloudfoundry/cli) v8 or newer.
+
+**Prepare**
+
+```
+npm install --global @cap-js-community/mtx-tool
+mtx --setup
+```
+
+**Use, for example**
+
+```
+cf target -o <my-org> -s <my-space>
+mtx regl
+mtx hdil
+```
+
+## Pipelines
+
+For pipelines, we recommend committing the setup configuration to your project and running MTX Tool on the server in the
+corresponding directory through npx with a stable version:
+
+**In project**
+
+```
+mtx --setup-local
+git add . && git commit -m "mtx-tool config"
+```
+
+**In pipeline, for example**
+
+```
+npx @cap-js-community/mtx-tool@0.10.0 --svm-repair-bindings all-services
+npx @cap-js-community/mtx-tool@0.10.0 --svm-refresh-bindings all-services all-tenants
+...
+npx @cap-js-community/mtx-tool@0.10.0 --cds-upgrade-all
+```
+
+## Features
+
+MTX Tool is subdivided in contextual sections, each with several commands.
 
 ```
    === user authentication (uaa) ===

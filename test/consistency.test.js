@@ -15,30 +15,40 @@ const appCliOptions = Object.values(APP_CLI_OPTIONS);
  */
 
 describe("consistency tests", () => {
-  test("readme version is up-to-date with latest changelog release", async () => {
+  test("readme pipelines version is up-to-date with leading changelog release", async () => {
     const readme = readFileSync(join(__dirname, "..", "README.md")).toString();
     const changelog = readFileSync(join(__dirname, "..", "CHANGELOG.md")).toString();
-    const readmeInstall = /(## Install or Upgrade\n\n[\s\S]*?)\n##/g.exec(readme)[1];
+    const readmePipelines = /(## Pipelines\n\n[\s\S]*?)\n##/g.exec(readme)[1];
 
-    const changelogVersion = /^## v(\d+\.\d+\.\d+) - \d\d\d\d-\d\d-\d\d/gm.exec(changelog)[1];
-    const readmeVersion = /@cap-js-community\/mtx-tool@(\d+\.\d+\.\d+)/g.exec(readmeInstall)[1];
+    const leadingChangelogVersion = changelog.match(/^## v(\d+\.\d+\.\d+) - \d\d\d\d-\d\d-\d\d/m)[1];
+    const readmeVersions = [...readmePipelines.matchAll(/@cap-js-community\/mtx-tool@(\d+\.\d+\.\d+)/g)].map(
+      (m) => m[1]
+    );
+    const uniqueReadmeVersions = Object.keys(readmeVersions.reduce((acc, v) => ((acc[v] = 1), acc), {}));
 
-    expect(readmeVersion).toEqual(changelogVersion);
+    expect(uniqueReadmeVersions.length).toEqual(1);
+    expect(uniqueReadmeVersions[0]).toStrictEqual(leadingChangelogVersion);
   });
 
-  test("readme install matches docs", async () => {
+  test("readme sections match home docs", async () => {
     const readme = readFileSync(join(__dirname, "..", "README.md")).toString();
-    const readmeInstall = /(## Install or Upgrade\n\n[\s\S]*?)\n##/g.exec(readme)[1];
+    const readmeGettingStarted = /(## Getting Started\n\n[\s\S]*?)(?:\n##|$)/.exec(readme)[1];
+    const readmePipelines = /(## Pipelines\n\n[\s\S]*?)(?:\n##|$)/.exec(readme)[1];
+    const readmeFeatures = /(## Features\n\n[\s\S]*?)(?:\n##|$)/.exec(readme)[1];
     const docs = readFileSync(join(__dirname, "..", "docs", "index.md")).toString();
-    const docsInstall = /(## Install or Upgrade\n\n[\s\S]*?)\n##/g.exec(docs)[1];
-    expect(readmeInstall).toEqual(docsInstall);
+    const docsGettingStarted = /(## Getting Started\n\n[\s\S]*?)(?:\n##|$)/.exec(docs)[1];
+    const docsPipelines = /(## Pipelines\n\n[\s\S]*?)(?:\n##|$)/.exec(docs)[1];
+    const docsFeatures = /(## Features\n\n[\s\S]*?)(?:\n##|$)/.exec(docs)[1];
+    expect(readmeGettingStarted).toEqual(docsGettingStarted);
+    expect(readmePipelines).toEqual(docsPipelines);
+    expect(readmeFeatures).toEqual(docsFeatures);
   });
 
-  test("documentation quickstart usage / cli usage consistency check", async () => {
+  test("documentation features / cli usage consistency check", async () => {
     const readme = readFileSync(join(__dirname, "..", "docs", "index.md")).toString();
-    const readmeUsage = /## Quickstart\n\n```\n([\s\S]*?)```/g.exec(readme)[1];
-    const cliUsage = USAGE.replace(/usage: (?:processChild|jest) \[command]/g, "usage: mtx [command]");
-    expect(cliUsage).toEqual(readmeUsage);
+    const readmeFeatures = /## Features\n\n[\s\S]*```\n([\s\S]*?)```/.exec(readme)[1];
+    const cliFeatures = / {3}=== user authentication \(uaa\) ===[\s\S]*/.exec(USAGE)[0];
+    expect(cliFeatures).toEqual(readmeFeatures);
   });
 
   const _validateOptions = (cliOptions, text, expect) => {
