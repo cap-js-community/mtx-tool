@@ -114,10 +114,8 @@ const _request = async ({
     await sleep(sleepTime);
   }
 
-  if (checkStatus) {
-    if (!response.ok) {
-      throw new Error(`got bad response ${response.status} from ${_url}\n${await response.text()}`);
-    }
+  if (checkStatus && !response.ok) {
+    throw new Error(`got bad response ${response.status} from ${_url}\n${await response.text()}`);
   }
   return response;
 };
