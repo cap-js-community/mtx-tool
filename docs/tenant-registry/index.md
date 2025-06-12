@@ -75,7 +75,7 @@ If the provided information is insufficient or seems incomplete, then you can al
 `mtx regll`, which will show the service's full unparsed response data.
 
 If you already know which subaccount or tenant id you want the information for, then you can filter the list or long
-list, by providing that information, e.g., `mtx regl skyfin-company`.
+list, by providing that information, e.g. `mtx regl skyfin-company`.
 
 For automated processes, you can use the `--json` flag and consume the list data as JSON. With the `--json` flag
 active, you will get the same data for `regl` and `regll`. For example, to get the subscription url and state for each
@@ -99,7 +99,7 @@ meaning of the configuration, please consult the official BTP documentation (see
 ## Update Dependencies
 
 The point of this command is comparatively complex and it will be rarely needed. The first part of the tenant
-onboarding process requires an xsapp to publish a list of multitenancy services, i.e., it's "dependencies". These
+onboarding process requires an xsapp to publish a list of multitenancy services, i.e. it's "dependencies". These
 services will then trust JWTs from the xsapp's uaa for that tenant's subaccont.
 
 Now, if the xsapp developers want to add a new multitenancy service, but already have subscribed tenants, then you get
@@ -113,7 +113,7 @@ control and trigger the update just for a single subscribed subaccount with `mtx
 
 ## Offboarding
 
-Offboarding is the process of removing a tenant from the registry. Tenants, i.e., customer subaccount admins or test
+Offboarding is the process of removing a tenant from the registry. Tenants, i.e. customer subaccount admins or test
 subaccounts admins will usually trigger this process themselves in the BTP cockpit by unsubscribing from an xsapp. In
 rare cases you, as the xsapp maintainer, may want to trigger this offboarding for a tenant. To achieve this run
 `mtx --registry-offboard <tenant_id>`.

@@ -68,7 +68,7 @@ If the provided information is insufficient or seems incomplete, then you can al
 `mtx cdsll`, which will show the endpoint's full unparsed response data.
 
 If you already know which subaccount or tenant id you want the information for, then you can filter the list or long
-list, by providing that information, e.g., `mtx cdsl skyfin-company`.
+list, by providing that information, e.g. `mtx cdsl skyfin-company`.
 
 For automated processes, you can use the `--json` flag and consume the list data as JSON. With the
 `--json` flag active, you will get the same data for `cdsl` and `cdsll`. For example, you could get the tenant, global
@@ -144,7 +144,7 @@ Running upgrade all on an app with _multiple instances_ will cause mtx to
 - sort them lexicographically, and
 - divide them up equally between each app instance.
 
-In this way, the division of labor is pseudo-random and each app instance should be unbiased towards, e.g., upgrading
+In this way, the division of labor is pseudo-random and each app instance should be unbiased towards, e.g. upgrading
 all tenants running on the same database.
 
 ## Example for Upgrade Tenant
