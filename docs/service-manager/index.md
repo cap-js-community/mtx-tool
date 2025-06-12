@@ -81,7 +81,7 @@ occur:
 
 The repair command
 
-```bash
+```
 mtx --svm-repair-bindings SERVICE_PLAN
 ```
 
@@ -92,7 +92,7 @@ ones are removed. This happens either for a given service plan, e.g. `objectstor
 
 The refresh command
 
-```bash
+```
 mtx --svm-refresh-bindings SERVICE_PLAN TENANT_ID
 ```
 
@@ -115,13 +115,13 @@ this gracefully or be restarted.
 The refresh command allows you to pass arbitrary parameters to the service binding that gets created in service
 manager. In other words,
 
-```bash
+```
 mtx --svm-refresh-bindings SERVICE_PLAN TENANT_ID '{"special":true}'
 ```
 
 corresponds to
 
-```bash
+```
 cf bind-service <some-app> <service-instance matching tenant and service-plan> -c '{"special":true}'
 ```
 
@@ -132,13 +132,13 @@ The deletion commands are only sensible for cleanup after some mocking/testing p
 
 Use
 
-```bash
+```
 mtx --svm-delete-bindings SERVICE_PLAN TENANT_ID
 ```
 
 to clean up just the bindings, or use
 
-```bash
+```
 mtx --svm-delete SERVICE_PLAN TENANT_ID
 ```
 

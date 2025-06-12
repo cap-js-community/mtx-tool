@@ -6,7 +6,7 @@ The documentation is based on the excellent package [Just the Docs](https://just
 
 Running documentation locally:
 
-```bash
+```
 bundle install
 bundle exec jekyll serve
 ```
