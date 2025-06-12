@@ -108,12 +108,16 @@ Adding `--force` to any _dangerous_ command will override the safeguard, use at 
 For pipelines, we recommend committing the setup configuration to your project and running MTX Tool on the server in the
 corresponding directory through npx with a stable version:
 
+**In project**
+
 ```
-# in the project
 mtx --setup-local
 git add . && git commit -m "mtx-tool config"
+```
 
-# in the pipeline, for example
+**In pipeline, for example**
+
+```
 npx @cap-js-community/mtx-tool@0.10.0 --svm-repair-bindings all-services
 npx @cap-js-community/mtx-tool@0.10.0 --svm-refresh-bindings all-services all-tenants
 ...
