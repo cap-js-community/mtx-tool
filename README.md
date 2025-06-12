@@ -49,7 +49,7 @@ npx @cap-js-community/mtx-tool@0.10.0 --cds-upgrade-all
 
 ## Features
 
-MTX Tool is subdivided in several contextual sections, each with several commands.
+MTX Tool is subdivided in contextual sections, each with several commands.
 
 ```
    === user authentication (uaa) ===
