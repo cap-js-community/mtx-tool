@@ -47,7 +47,9 @@ npx @cap-js-community/mtx-tool@0.10.0 --svm-refresh-bindings all-services all-te
 npx @cap-js-community/mtx-tool@0.10.0 --cds-upgrade-all
 ```
 
-## Commands
+## Features
+
+MTX Tool is subdivided in several contextual sections, each with several commands:
 
 ```
    === user authentication (uaa) ===
