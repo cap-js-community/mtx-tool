@@ -13,7 +13,7 @@ const ENV = Object.freeze({
   SERVER_APP: "MTX_SRV_APP",
 });
 
-const SETTING_TYPE = {
+const CONFIG_TYPE = {
   UAA_APP: "UAA_APP",
   UAA_KEY: "UAA_KEY",
   REGISTRY_APP: "REGISTRY_APP",
@@ -26,8 +26,8 @@ const SETTING_TYPE = {
   SERVER_APP: "SERVER_APP",
 };
 
-const SETTING = {
-  [SETTING_TYPE.UAA_APP]: {
+const CONFIG_INFOS = {
+  [CONFIG_TYPE.UAA_APP]: {
     config: "uaaAppName",
     name: "uaa app",
     envVariable: ENV.UAA_APP,
@@ -45,7 +45,7 @@ const SETTING = {
     ],
   },
 
-  [SETTING_TYPE.REGISTRY_APP]: {
+  [CONFIG_TYPE.REGISTRY_APP]: {
     config: "regAppName",
     name: "saas-registry app",
     envVariable: ENV.REGISTRY_APP,
@@ -63,7 +63,7 @@ const SETTING = {
     ],
   },
 
-  [SETTING_TYPE.CDS_APP]: {
+  [CONFIG_TYPE.CDS_APP]: {
     config: "cdsAppName",
     name: "cds-mtx app",
     envVariable: ENV.CDS_APP,
@@ -72,7 +72,7 @@ const SETTING = {
     requireRoute: true,
   },
 
-  [SETTING_TYPE.HDI_APP]: {
+  [CONFIG_TYPE.HDI_APP]: {
     config: "hdiAppName",
     name: "service-manager app",
     envVariable: ENV.HDI_APP,
@@ -86,7 +86,7 @@ const SETTING = {
     ],
   },
 
-  [SETTING_TYPE.SERVER_APP]: {
+  [CONFIG_TYPE.SERVER_APP]: {
     config: "srvAppName",
     name: "server app",
     envVariable: ENV.SERVER_APP,
@@ -98,6 +98,6 @@ const SETTING = {
 
 module.exports = {
   ENV,
-  SETTING_TYPE,
-  SETTING,
+  CONFIG_TYPE,
+  CONFIG_INFOS,
 };
