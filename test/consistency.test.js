@@ -56,7 +56,7 @@ describe("consistency tests", () => {
     const readOnlyCommandInfos = commandInfos.filter((info) => info.readonly);
     const otherCommandInfos = commandInfos.filter((info) => !info.danger && !info.readonly);
 
-    const usageOptionsLinesWithLegend = text.split("\n").filter(
+    const usageLinesWithLegend = text.split("\n").filter(
       (line) =>
         line.length !== 0 && // empty
         !line.startsWith("   ==") && // section headers
@@ -64,12 +64,12 @@ describe("consistency tests", () => {
         !/^ {40}/.test(line) // line continuation
     );
 
-    const usageOptionsLines = usageOptionsLinesWithLegend
+    const usageLines = usageLinesWithLegend
       .filter((line) => !line.startsWith("*  are") && !line.startsWith("~  are"))
       .map((line) => line.replace(/(.*--[a-z-]+)((?: [A-Z_[\]]+)*).*?$/, "$1$2")); // remove everything after last "word with dashes"
 
-    const legendDangerous = usageOptionsLinesWithLegend.filter((line) => line.startsWith("*  are"));
-    const legendReadonly = usageOptionsLinesWithLegend.filter((line) => line.startsWith("~  are"));
+    const legendDangerous = usageLinesWithLegend.filter((line) => line.startsWith("*  are"));
+    const legendReadonly = usageLinesWithLegend.filter((line) => line.startsWith("~  are"));
 
     expect(
       (dangerousCommandInfos.length === 0 && legendDangerous.length === 0) ||
@@ -80,19 +80,17 @@ describe("consistency tests", () => {
         (readOnlyCommandInfos.length !== 0 && legendReadonly.length !== 0)
     ).toBe(true);
 
-    const usageDangerousLines = usageOptionsLines
+    const usageDangerousLines = usageLines
       .filter((line) => line.startsWith("*  "))
       .map((line) => line.replace(/^.{3}\s*(.*)/, "$1").replace(/ +-/, "  -"));
-    const usageReadonlyLines = usageOptionsLines
+    const usageReadonlyLines = usageLines
       .filter((line) => line.startsWith("~  "))
       .map((line) => line.replace(/^.{3}\s*(.*)/, "$1").replace(/ +-/, "  -"));
-    const usageOtherLines = usageOptionsLines
+    const usageOtherLines = usageLines
       .filter((line) => line.startsWith("   "))
       .map((line) => line.replace(/^.{3}\s*(.*)/, "$1").replace(/ +-/, "  -"));
     // same count, content, and order
-    expect(usageOptionsLines.length).toEqual(
-      usageDangerousLines.length + usageReadonlyLines.length + usageOtherLines.length
-    );
+    expect(usageLines.length).toEqual(usageDangerousLines.length + usageReadonlyLines.length + usageOtherLines.length);
     const expectedLine = ({ commandVariants, requiredPassArgs, optionalPassArgs }) =>
       commandVariants.join("  ") +
       (requiredPassArgs ? " " + requiredPassArgs.join(" ") : "") +
@@ -133,13 +131,13 @@ describe("consistency tests", () => {
     ];
 
     for (const { commandPrefix, readmePath } of areas) {
-      const cliOptions = appCommandInfos.filter(
+      const commandInfos = appCommandInfos.filter(
         ({ commandVariants }) =>
           commandVariants[0].startsWith(commandPrefix) || commandVariants[0].startsWith(`--${commandPrefix}`)
       );
       const readme = readFileSync(readmePath).toString();
       const readmeUsage = /Commands for this area are:\n\n```\n([\s\S]*?)```/g.exec(readme)[1];
-      _validateCommandInfos(cliOptions, readmeUsage, expect);
+      _validateCommandInfos(commandInfos, readmeUsage, expect);
     }
   });
 });
