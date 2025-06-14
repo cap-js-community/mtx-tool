@@ -4,7 +4,7 @@
 const { sleep, partition, question, isObject } = require("./shared/static");
 const { assert, fail, ApplicationError } = require("./shared/error");
 const { newContext } = require("./context");
-const { PASS_ARG_META, FLAG_ARG, USAGE, GENERIC_CLI_OPTIONS, APP_CLI_OPTIONS } = require("./cliOptions");
+const { PASS_ARG_META, FLAG_ARG, USAGE, GENERIC_COMMAND_INFOS, APP_COMMAND_INFOS } = require("./commands");
 const { LEVEL, Logger } = require("./shared/logger");
 
 const logger = Logger.getInstance();
@@ -101,8 +101,8 @@ const cli = async (args) => {
     }
 
     for (const appCliOption of [].concat(
-      [GENERIC_CLI_OPTIONS.HELP, GENERIC_CLI_OPTIONS.VERSION],
-      Object.values(APP_CLI_OPTIONS)
+      [GENERIC_COMMAND_INFOS.HELP, GENERIC_COMMAND_INFOS.VERSION],
+      Object.values(APP_COMMAND_INFOS)
     )) {
       if (await checkOption(appCliOption, args)) {
         return;

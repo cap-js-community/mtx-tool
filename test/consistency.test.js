@@ -6,9 +6,9 @@
 const { readFileSync } = require("fs");
 const { join } = require("path");
 
-const { USAGE, GENERIC_CLI_OPTIONS, APP_CLI_OPTIONS } = require("../src/cliOptions");
+const { USAGE, GENERIC_COMMAND_INFOS, APP_COMMAND_INFOS } = require("../src/commands");
 
-const appCliOptions = Object.values(APP_CLI_OPTIONS);
+const appCommandInfos = Object.values(APP_COMMAND_INFOS);
 
 /*
  NOTE: Just internal consistency tests for now.
@@ -30,7 +30,7 @@ describe("consistency tests", () => {
     expect(uniqueReadmeVersions[0]).toStrictEqual(leadingChangelogVersion);
   });
 
-  test("readme sections match home docs", async () => {
+  test("readme sections / home docs consistency check", async () => {
     const readme = readFileSync(join(__dirname, "..", "README.md")).toString();
     const readmeGettingStarted = /(## Getting Started\n\n[\s\S]*?)(?:\n##|$)/.exec(readme)[1];
     const readmePipelines = /(## Pipelines\n\n[\s\S]*?)(?:\n##|$)/.exec(readme)[1];
@@ -44,19 +44,19 @@ describe("consistency tests", () => {
     expect(readmeFeatures).toEqual(docsFeatures);
   });
 
-  test("documentation features / cli usage consistency check", async () => {
+  test("documentation features / usage consistency check", async () => {
     const readme = readFileSync(join(__dirname, "..", "docs", "index.md")).toString();
     const readmeFeatures = /## Features\n\n[\s\S]*```\n([\s\S]*?)```/.exec(readme)[1];
     const cliFeatures = / {3}=== user authentication \(uaa\) ===[\s\S]*/.exec(USAGE)[0];
     expect(cliFeatures).toEqual(readmeFeatures);
   });
 
-  const _validateOptions = (cliOptions, text, expect) => {
-    const cliOptionsDangerous = cliOptions.filter((cliOption) => cliOption.danger);
-    const cliOptionsReadonly = cliOptions.filter((cliOption) => cliOption.readonly);
-    const cliOptionsOther = cliOptions.filter((cliOption) => !cliOption.danger && !cliOption.readonly);
+  const _validateCommandInfos = (commandInfos, text, expect) => {
+    const dangerousCommandInfos = commandInfos.filter((info) => info.danger);
+    const readOnlyCommandInfos = commandInfos.filter((info) => info.readonly);
+    const otherCommandInfos = commandInfos.filter((info) => !info.danger && !info.readonly);
 
-    const usageOptionsLinesWithLegend = text.split("\n").filter(
+    const usageLinesWithLegend = text.split("\n").filter(
       (line) =>
         line.length !== 0 && // empty
         !line.startsWith("   ==") && // section headers
@@ -64,51 +64,49 @@ describe("consistency tests", () => {
         !/^ {40}/.test(line) // line continuation
     );
 
-    const usageOptionsLines = usageOptionsLinesWithLegend
+    const usageLines = usageLinesWithLegend
       .filter((line) => !line.startsWith("*  are") && !line.startsWith("~  are"))
       .map((line) => line.replace(/(.*--[a-z-]+)((?: [A-Z_[\]]+)*).*?$/, "$1$2")); // remove everything after last "word with dashes"
 
-    const legendDangerous = usageOptionsLinesWithLegend.filter((line) => line.startsWith("*  are"));
-    const legendReadonly = usageOptionsLinesWithLegend.filter((line) => line.startsWith("~  are"));
+    const legendDangerous = usageLinesWithLegend.filter((line) => line.startsWith("*  are"));
+    const legendReadonly = usageLinesWithLegend.filter((line) => line.startsWith("~  are"));
 
     expect(
-      (cliOptionsDangerous.length === 0 && legendDangerous.length === 0) ||
-        (cliOptionsDangerous.length !== 0 && legendDangerous.length !== 0)
+      (dangerousCommandInfos.length === 0 && legendDangerous.length === 0) ||
+        (dangerousCommandInfos.length !== 0 && legendDangerous.length !== 0)
     ).toBe(true);
     expect(
-      (cliOptionsReadonly.length === 0 && legendReadonly.length === 0) ||
-        (cliOptionsReadonly.length !== 0 && legendReadonly.length !== 0)
+      (readOnlyCommandInfos.length === 0 && legendReadonly.length === 0) ||
+        (readOnlyCommandInfos.length !== 0 && legendReadonly.length !== 0)
     ).toBe(true);
 
-    const usageDangerousLines = usageOptionsLines
+    const usageDangerousLines = usageLines
       .filter((line) => line.startsWith("*  "))
       .map((line) => line.replace(/^.{3}\s*(.*)/, "$1").replace(/ +-/, "  -"));
-    const usageReadonlyLines = usageOptionsLines
+    const usageReadonlyLines = usageLines
       .filter((line) => line.startsWith("~  "))
       .map((line) => line.replace(/^.{3}\s*(.*)/, "$1").replace(/ +-/, "  -"));
-    const usageOtherLines = usageOptionsLines
+    const usageOtherLines = usageLines
       .filter((line) => line.startsWith("   "))
       .map((line) => line.replace(/^.{3}\s*(.*)/, "$1").replace(/ +-/, "  -"));
     // same count, content, and order
-    expect(usageOptionsLines.length).toEqual(
-      usageDangerousLines.length + usageReadonlyLines.length + usageOtherLines.length
-    );
+    expect(usageLines.length).toEqual(usageDangerousLines.length + usageReadonlyLines.length + usageOtherLines.length);
     const expectedLine = ({ commandVariants, requiredPassArgs, optionalPassArgs }) =>
       commandVariants.join("  ") +
       (requiredPassArgs ? " " + requiredPassArgs.join(" ") : "") +
       (optionalPassArgs ? " [" + optionalPassArgs.join("] [") + "]" : "");
-    expect(usageDangerousLines).toEqual(cliOptionsDangerous.map(expectedLine));
-    expect(usageReadonlyLines).toEqual(cliOptionsReadonly.map(expectedLine));
-    expect(usageOtherLines).toEqual(cliOptionsOther.map(expectedLine));
+    expect(usageDangerousLines).toEqual(dangerousCommandInfos.map(expectedLine));
+    expect(usageReadonlyLines).toEqual(readOnlyCommandInfos.map(expectedLine));
+    expect(usageOtherLines).toEqual(otherCommandInfos.map(expectedLine));
   };
 
-  test("programmatic options/ cli usage consistency check", async () => {
-    const cliOptions = [].concat(Object.values(GENERIC_CLI_OPTIONS), appCliOptions);
-    const usageOptionsArea = /[\s\S]*commands:\s*\n([\s\S]+\S)/.exec(USAGE)[1];
-    _validateOptions(cliOptions, usageOptionsArea, expect);
+  test("all commands/ usage consistency check", async () => {
+    const cliCommands = [].concat(Object.values(GENERIC_COMMAND_INFOS), appCommandInfos);
+    const usageCommandArea = /[\s\S]*commands:\s*\n([\s\S]+\S)/.exec(USAGE)[1];
+    _validateCommandInfos(cliCommands, usageCommandArea, expect);
   });
 
-  test("documentation areas / area cliOptions consistency check", async () => {
+  test("documentation areas / app commands consistency check", async () => {
     const areas = [
       {
         commandPrefix: "uaa",
@@ -133,13 +131,13 @@ describe("consistency tests", () => {
     ];
 
     for (const { commandPrefix, readmePath } of areas) {
-      const cliOptions = appCliOptions.filter(
+      const commandInfos = appCommandInfos.filter(
         ({ commandVariants }) =>
           commandVariants[0].startsWith(commandPrefix) || commandVariants[0].startsWith(`--${commandPrefix}`)
       );
       const readme = readFileSync(readmePath).toString();
       const readmeUsage = /Commands for this area are:\n\n```\n([\s\S]*?)```/g.exec(readme)[1];
-      _validateOptions(cliOptions, readmeUsage, expect);
+      _validateCommandInfos(commandInfos, readmeUsage, expect);
     }
   });
 });

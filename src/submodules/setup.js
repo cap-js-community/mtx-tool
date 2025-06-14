@@ -4,8 +4,8 @@ const pathlib = require("path");
 
 const { question, tryAccessSync, writeJsonSync, deleteFileSync } = require("../shared/static");
 const { fail } = require("../shared/error");
-const { SETTING } = require("../setting");
 const { Logger } = require("../shared/logger");
+const { CONFIG_INFOS } = require("../config");
 const { readRuntimeConfig } = require("../context");
 
 const PROCESS_CWD = process.cwd();
@@ -62,7 +62,7 @@ const _setup = async (location) => {
   const newRuntimeConfig = {};
   logger.info("hit enter to skip a question. re-using the same app for multiple questions is possible.");
   try {
-    const settings = Object.values(SETTING);
+    const settings = Object.values(CONFIG_INFOS);
     for (let i = 0; i < settings.length; i++) {
       const value = settings[i];
       const ask = `${i + 1}/${settings.length} | ${value.question}`;
@@ -93,7 +93,7 @@ const setupLocal = async () => {
 const setupList = () => {
   const { filepath } = _resolveDir(FILENAME.CONFIG) || {};
   const runtimeConfig = readRuntimeConfig(filepath, { logged: true });
-  return Object.values(SETTING)
+  return Object.values(CONFIG_INFOS)
     .map(
       (value, i, settings) =>
         `${i + 1}/${settings.length} | ${value.question} ${runtimeConfig[value.config] || "<empty>"}`

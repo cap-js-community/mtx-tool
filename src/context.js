@@ -17,8 +17,8 @@ const { assert, fail } = require("./shared/error");
 const { request } = require("./shared/request");
 const { getUaaTokenFromCredentials: sharedUaaTokenFromCredentials } = require("./shared/oauth");
 const { LazyCache, ExpiringLazyCache } = require("./shared/cache");
-const { SETTING_TYPE, SETTING } = require("./setting");
 const { Logger } = require("./shared/logger");
+const { CONFIG_TYPE, CONFIG_INFOS } = require("./config");
 
 const ENV = Object.freeze({
   APP_SUFFIX: "MTX_APP_SUFFIX",
@@ -154,7 +154,7 @@ const readRuntimeConfig = (filepath, { logged = false, checkConfig = true } = {}
   }
 
   return rawRuntimeConfig
-    ? Object.values(SETTING).reduce((result, value) => {
+    ? Object.values(CONFIG_INFOS).reduce((result, value) => {
         result[value.config] = rawRuntimeConfig[value.config];
         return result;
       }, Object.create(null))
@@ -343,7 +343,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
 
   const _getAppNameFromSettingType = (type) =>
     settingTypeToAppNameCache.getSetCb(type, () => {
-      const setting = SETTING[type];
+      const setting = CONFIG_INFOS[type];
 
       // determine configured appName
       const configAppName = runtimeConfig[setting.config];
@@ -419,7 +419,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
 
     const cfApp = _getCfAppFromAppName(appName);
     const rawAppInfo = await getRawAppInfoCached(cfApp);
-    const setting = SETTING[type];
+    const setting = CONFIG_INFOS[type];
     return processRawAppInfo(cfApp.name, rawAppInfo, setting);
   };
 
@@ -431,11 +431,11 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     return processRawAppInfo(cfApp.name, rawAppInfo, setting);
   };
 
-  const getUaaInfo = makeOneTime(getAppInfoCached(SETTING_TYPE.UAA_APP));
-  const getRegInfo = makeOneTime(getAppInfoCached(SETTING_TYPE.REGISTRY_APP));
-  const getCdsInfo = makeOneTime(getAppInfoCached(SETTING_TYPE.CDS_APP));
-  const getHdiInfo = makeOneTime(getAppInfoCached(SETTING_TYPE.HDI_APP));
-  const getSrvInfo = makeOneTime(getAppInfoCached(SETTING_TYPE.SERVER_APP));
+  const getUaaInfo = makeOneTime(getAppInfoCached(CONFIG_TYPE.UAA_APP));
+  const getRegInfo = makeOneTime(getAppInfoCached(CONFIG_TYPE.REGISTRY_APP));
+  const getCdsInfo = makeOneTime(getAppInfoCached(CONFIG_TYPE.CDS_APP));
+  const getHdiInfo = makeOneTime(getAppInfoCached(CONFIG_TYPE.HDI_APP));
+  const getSrvInfo = makeOneTime(getAppInfoCached(CONFIG_TYPE.SERVER_APP));
 
   const getCachedUaaTokenFromCredentials = async (credentials, options) =>
     await cfUaaTokenCache.getSetCb(

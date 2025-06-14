@@ -141,7 +141,7 @@ commands:
 *  are potentially _dangerous_ commands
 `;
 
-const GENERIC_CLI_OPTIONS = {
+const GENERIC_COMMAND_INFOS = {
   HELP: {
     commandVariants: ["h", "-h", "--help"],
     silent: true,
@@ -156,7 +156,7 @@ const GENERIC_CLI_OPTIONS = {
   },
 };
 
-const APP_CLI_OPTIONS = Object.freeze({
+const APP_COMMAND_INFOS = Object.freeze({
   SETUP_LIST: {
     commandVariants: ["setl", "--setup-list"],
     callback: set.setupList,
@@ -407,6 +407,6 @@ module.exports = {
   PASS_ARG_META,
   FLAG_ARG,
   USAGE,
-  GENERIC_CLI_OPTIONS,
-  APP_CLI_OPTIONS,
+  GENERIC_COMMAND_INFOS,
+  APP_COMMAND_INFOS,
 };
