@@ -30,6 +30,12 @@ const ENV = Object.freeze({
 const REGISTRY_PAGE_SIZE = 200;
 const REGISTRY_JOB_POLL_FREQUENCY_FALLBACK = 15000;
 const REGISTRY_REQUEST_CONCURRENCY_FALLBACK = 6;
+
+const PLAN = Object.freeze({
+  APPLICATION: "application",
+  SERVICE: "service",
+});
+
 const JOB_STATE = Object.freeze({
   STARTED: "STARTED",
   SUCCEEDED: "SUCCEEDED",
@@ -64,7 +70,7 @@ const _registrySubscriptionsPaged = async (context, { tenant, onlyFailed, onlySt
   const query = {
     appName,
     ...(filterTenantId && { tenantId: filterTenantId }),
-    ...(plan === "service" && { includeIndirectSubscriptions: true }),
+    ...(plan === PLAN.SERVICE && { includeIndirectSubscriptions: true }),
     size: REGISTRY_PAGE_SIZE,
   };
   while (true) {
@@ -190,7 +196,7 @@ const _registryCallForSubscription = async (
   } = await context.getRegInfo();
   const { saas_registry_url } = credentials;
   const query =
-    plan === "service"
+    plan === PLAN.SERVICE
       ? {}
       : {
           ...(noCallbacksAppNames && { noCallbacksAppNames }),
@@ -199,7 +205,7 @@ const _registryCallForSubscription = async (
           ...(skipUpdatingDependencies && { skipUpdatingDependencies }),
         };
   const pathname =
-    plan === "service"
+    plan === PLAN.SERVICE
       ? `/saas-manager/v1/${plan}/subscriptions/${subscriptionId}`
       : `/saas-manager/v1/${plan}/tenants/${tenantId}/subscriptions`;
   const token = await context.getCachedUaaTokenFromCredentials(credentials);
