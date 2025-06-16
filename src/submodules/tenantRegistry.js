@@ -172,11 +172,11 @@ const _registryJobPoll = async (context, location, { skipFirst = false } = {}) =
   }
 };
 
-const _registryCallForTenant = async (
+const _registryCallForSubscription = async (
   context,
   subscription,
-  method,
   {
+    method,
     noCallbacksAppNames,
     updateApplicationURL,
     skipUnchangedDependencies,
@@ -231,17 +231,19 @@ const _registryCallForTenant = async (
 };
 
 const _registryCall = async (context, options = {}) => {
-  const { method, filterTenantId: tenantId } = options;
+  const { method, filterTenantId, onlyStaleSubscriptions, onlyFailedSubscriptions } = options;
   let results;
-  if (tenantId) {
-    assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
+
+  // single tenant
+  if (filterTenantId) {
     const { subscriptions } = await _registrySubscriptionsPaged(context, {
-      tenant: tenantId,
+      tenant: filterTenantId,
     });
-    assert(subscriptions.length >= 1, "could not find tenant %s", tenantId);
-    results = [await _registryCallForTenant(context, subscriptions[0], method, options)];
+    assert(subscriptions.length >= 1, "could not find tenant %s", filterTenantId);
+    results = [await _registryCallForSubscription(context, subscriptions[0], options)];
+
+    // multi tenant
   } else {
-    const { onlyStaleSubscriptions, onlyFailedSubscriptions } = options;
     // TODO
     const doBatch = method === "PATCH" && !onlyStaleSubscriptions && !onlyFailedSubscriptions;
     if (doBatch) {
@@ -254,10 +256,11 @@ const _registryCall = async (context, options = {}) => {
       results = await limiter(
         regRequestConcurrency,
         subscriptions,
-        async (subscription) => await _registryCallForTenant(context, subscription, method, options)
+        async (subscription) => await _registryCallForSubscription(context, subscription, options)
       );
     }
   }
+
   assert(Array.isArray(results), "got invalid results from registry %s call with %j", method, options);
   logger.info(JSON.stringify(results.length === 1 ? results[0] : results, null, 2));
   assert(
