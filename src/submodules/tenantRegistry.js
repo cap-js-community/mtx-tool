@@ -234,20 +234,20 @@ const _registryCall = async (context, options = {}) => {
   const { method, filterTenantId, onlyStaleSubscriptions, onlyFailedSubscriptions } = options;
   let results;
 
-  // single tenant
   if (filterTenantId) {
+    // single tenant
     const { subscriptions } = await _registrySubscriptionsPaged(context, {
       tenant: filterTenantId,
     });
     assert(subscriptions.length >= 1, "could not find tenant %s", filterTenantId);
     results = [await _registryCallForSubscription(context, subscriptions[0], options)];
-
-    // multi tenant
   } else {
     // TODO
     const doBatch = method === "PATCH" && !onlyStaleSubscriptions && !onlyFailedSubscriptions;
     if (doBatch) {
+      // multi tenant -- can batch
     } else {
+      // multi tenant -- cannot batch
       const { subscriptions } = await _registrySubscriptionsPaged(context, {
         onlyFailed: onlyFailedSubscriptions,
         onlyStale: onlyStaleSubscriptions,
