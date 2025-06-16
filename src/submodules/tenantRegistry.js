@@ -17,7 +17,7 @@ const {
   resolveTenantArg,
   parseIntWithFallback,
 } = require("../shared/static");
-const { assert } = require("../shared/error");
+const { assert, fail } = require("../shared/error");
 const { request } = require("../shared/request");
 const { Logger } = require("../shared/logger");
 const { limiter } = require("../shared/funnel");
@@ -178,19 +178,33 @@ const _registryJobPoll = async (context, location, { skipFirst = false } = {}) =
   }
 };
 
-const _registryCallForSubscription = async (
-  context,
-  subscription,
-  {
+const _registryPathname = (plan, { doBatch, filterTenantId, filterSubscriptionId }) => {
+  switch (plan) {
+    case PLAN.SERVICE:
+      return doBatch
+        ? `/saas-manager/v1/service/subscriptions/batch`
+        : `/saas-manager/v1/service/subscriptions/${filterSubscriptionId}`;
+    case PLAN.APPLICATION:
+      return doBatch
+        ? `/saas-manager/v1/application/subscriptions/batch`
+        : `/saas-manager/v1/application/tenants/${filterTenantId}/subscriptions`;
+    default:
+      return fail("unknown plan %s", plan);
+  }
+};
+
+const _registryCallInternal = async (context, options = {}) => {
+  const {
     method,
+    filterTenantId,
+    filterSubscriptionId,
     noCallbacksAppNames,
     updateApplicationURL,
     skipUnchangedDependencies,
     skipUpdatingDependencies,
     doJobPoll = true,
-  } = {}
-) => {
-  const { consumerTenantId: tenantId, subscriptionGUID: subscriptionId } = subscription;
+  } = options;
+  // const { consumerTenantId: tenantId, subscriptionGUID: subscriptionId } = subscription;
   const {
     cfService: { plan, credentials },
   } = await context.getRegInfo();
@@ -204,10 +218,11 @@ const _registryCallForSubscription = async (
           ...(skipUnchangedDependencies && { skipUnchangedDependencies }),
           ...(skipUpdatingDependencies && { skipUpdatingDependencies }),
         };
-  const pathname =
-    plan === PLAN.SERVICE
-      ? `/saas-manager/v1/${plan}/subscriptions/${subscriptionId}`
-      : `/saas-manager/v1/${plan}/tenants/${tenantId}/subscriptions`;
+  const pathname = _registryPathname(plan, options);
+  const resultInfos = {
+    ...(filterTenantId && { tenantId: filterTenantId }),
+    ...(filterSubscriptionId && { subscriptionId: filterSubscriptionId }),
+  };
   const token = await context.getCachedUaaTokenFromCredentials(credentials);
   let response;
   try {
@@ -219,12 +234,19 @@ const _registryCallForSubscription = async (
       auth: { token },
     });
   } catch (err) {
-    return { tenantId, state: JOB_STATE.FAILED, message: err.message };
+    return {
+      ...resultInfos,
+      state: JOB_STATE.FAILED,
+      message: err.message,
+    };
   }
 
   if (!doJobPoll) {
     // NOTE: with checkStatus being true by default, the above request only returns for successful changes
-    return { tenantId, state: JOB_STATE.SUCCEEDED };
+    return {
+      ...resultInfos,
+      state: JOB_STATE.SUCCEEDED,
+    };
   }
   const [location] = response.headers.raw().location;
   const responseText = await response.text();
@@ -233,7 +255,11 @@ const _registryCallForSubscription = async (
 
   const jobResult = await _registryJobPoll(context, location);
 
-  return { tenantId, jobId: jobResult.id, state: jobResult.state };
+  return {
+    ...resultInfos,
+    jobId: jobResult.id,
+    state: jobResult.state,
+  };
 };
 
 const _registryCall = async (context, options = {}) => {
@@ -246,7 +272,7 @@ const _registryCall = async (context, options = {}) => {
       tenant: filterTenantId,
     });
     assert(subscriptions.length >= 1, "could not find tenant %s", filterTenantId);
-    results = [await _registryCallForSubscription(context, subscriptions[0], options)];
+    results = [await _registryCallInternal(context, subscriptions[0], options)];
   } else {
     // TODO
     const doBatch = method === "PATCH" && !onlyStaleSubscriptions && !onlyFailedSubscriptions;
@@ -262,7 +288,7 @@ const _registryCall = async (context, options = {}) => {
       results = await limiter(
         regRequestConcurrency,
         subscriptions,
-        async (subscription) => await _registryCallForSubscription(context, subscription, options)
+        async (subscription) => await _registryCallInternal(context, subscription, options)
       );
     }
   }
