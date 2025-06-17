@@ -207,7 +207,6 @@ const _registryUpdateInternal = async (
     }
   };
 
-  // const { consumerTenantId: tenantId, subscriptionGUID: subscriptionId } = subscription;
   const {
     cfService: { plan, credentials },
   } = await context.getRegInfo();
@@ -275,6 +274,7 @@ const _registryUpdateSingleTenant = async (context, options) => {
     const { subscriptions } = await _registrySubscriptionsPaged(context, {
       tenant: filterTenantId,
     });
+    // TODO we cannot really test plan service, should be removed
     // TODO this looks off, for the service plan we should know our service instance id and use the tenantId+serviceInstanceId API.
     assert(subscriptions.length >= 1, "could not find subscriptions for tenant %s", filterTenantId);
     return await limiter(
@@ -288,6 +288,7 @@ const _registryUpdateSingleTenant = async (context, options) => {
 };
 
 const _registryUpdateMultiTenant = async (context, options) => {
+  // TODO batch doesn't work like I thought, it needs a list of tenantIds or subscriptionsIds--so we need a dedicated function for that
   const { method, onlyStaleSubscriptions, onlyFailedSubscriptions } = options;
   const doBatch = method === "PATCH" && !onlyStaleSubscriptions && !onlyFailedSubscriptions;
   if (doBatch) {
