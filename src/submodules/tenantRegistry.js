@@ -288,13 +288,11 @@ const _registryUpdateSingleTenant = async (context, options) => {
 };
 
 const _registryUpdateMultiTenant = async (context, options) => {
-  const { method, filterTenantId, onlyStaleSubscriptions, onlyFailedSubscriptions } = options;
-  // TODO
+  const { method, onlyStaleSubscriptions, onlyFailedSubscriptions } = options;
   const doBatch = method === "PATCH" && !onlyStaleSubscriptions && !onlyFailedSubscriptions;
   if (doBatch) {
-    // multi tenant -- can batch
+    return await _registryUpdateInternal(context, { ...options, doBatch });
   } else {
-    // multi tenant -- cannot batch
     const { subscriptions } = await _registrySubscriptionsPaged(context, {
       onlyFailed: onlyFailedSubscriptions,
       onlyStale: onlyStaleSubscriptions,
@@ -303,7 +301,8 @@ const _registryUpdateMultiTenant = async (context, options) => {
     return await limiter(
       regRequestConcurrency,
       subscriptions,
-      async (subscription) => await _registryUpdateInternal(context, subscription, options)
+      async (subscription) =>
+        await _registryUpdateInternal(context, { ...options, filterSubscriptionId: subscription.subscriptionGUID })
     );
   }
 };
