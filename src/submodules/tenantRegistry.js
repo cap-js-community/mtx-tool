@@ -178,23 +178,9 @@ const _registryJobPoll = async (context, location, { skipFirst = false } = {}) =
   }
 };
 
-const _registryPathname = (plan, { doBatch, filterTenantId, filterSubscriptionId }) => {
-  switch (plan) {
-    case PLAN.SERVICE:
-      return doBatch
-        ? `/saas-manager/v1/service/subscriptions/batch`
-        : `/saas-manager/v1/service/subscriptions/${filterSubscriptionId}`;
-    case PLAN.APPLICATION:
-      return doBatch
-        ? `/saas-manager/v1/application/subscriptions/batch`
-        : `/saas-manager/v1/application/tenants/${filterTenantId}/subscriptions`;
-    default:
-      return fail("unknown plan %s", plan);
-  }
-};
-
-const _registryUpdateInternal = async (context, options = {}) => {
-  const {
+const _registryUpdateInternal = async (
+  context,
+  {
     method,
     filterTenantId,
     filterSubscriptionId,
@@ -202,8 +188,25 @@ const _registryUpdateInternal = async (context, options = {}) => {
     updateApplicationURL,
     skipUnchangedDependencies,
     skipUpdatingDependencies,
+    doBatch,
     doJobPoll = true,
-  } = options;
+  }
+) => {
+  const _registryPathname = () => {
+    switch (plan) {
+      case PLAN.SERVICE:
+        return doBatch
+          ? `/saas-manager/v1/service/subscriptions/batch`
+          : `/saas-manager/v1/service/subscriptions/${filterSubscriptionId}`;
+      case PLAN.APPLICATION:
+        return doBatch
+          ? `/saas-manager/v1/application/subscriptions/batch`
+          : `/saas-manager/v1/application/tenants/${filterTenantId}/subscriptions`;
+      default:
+        return fail("unknown plan %s", plan);
+    }
+  };
+
   // const { consumerTenantId: tenantId, subscriptionGUID: subscriptionId } = subscription;
   const {
     cfService: { plan, credentials },
@@ -218,7 +221,7 @@ const _registryUpdateInternal = async (context, options = {}) => {
           ...(skipUnchangedDependencies && { skipUnchangedDependencies }),
           ...(skipUpdatingDependencies && { skipUpdatingDependencies }),
         };
-  const pathname = _registryPathname(plan, options);
+  const pathname = _registryPathname();
   const resultInfos = {
     ...(filterTenantId && { tenantId: filterTenantId }),
     ...(filterSubscriptionId && { subscriptionId: filterSubscriptionId }),
@@ -262,46 +265,65 @@ const _registryUpdateInternal = async (context, options = {}) => {
   };
 };
 
-const _registryUpdate = async (context, options = {}) => {
-  const { method, filterTenantId, onlyStaleSubscriptions, onlyFailedSubscriptions } = options;
-  let results;
+const _registryUpdateSingleTenant = async (context, options) => {
+  const { filterTenantId } = options;
   const {
     cfService: { plan },
   } = await context.getRegInfo();
-  assert(["PATCH", "DELETE"].includes(method), "invalid method for registry update %s", method);
-  assert(Object.values(PLAN).includes(plan), "invalid plan %s", plan);
 
-  if (filterTenantId) {
-    // single tenant
+  if (plan === PLAN.SERVICE) {
     const { subscriptions } = await _registrySubscriptionsPaged(context, {
       tenant: filterTenantId,
     });
-    assert(subscriptions.length >= 1, "could not find tenant %s", filterTenantId);
-    results = [await _registryUpdateInternal(context, subscriptions[0], options)];
-  } else {
-    // TODO
-    const doBatch = method === "PATCH" && !onlyStaleSubscriptions && !onlyFailedSubscriptions;
-    if (doBatch) {
-      // multi tenant -- can batch
-    } else {
-      // multi tenant -- cannot batch
-      const { subscriptions } = await _registrySubscriptionsPaged(context, {
-        onlyFailed: onlyFailedSubscriptions,
-        onlyStale: onlyStaleSubscriptions,
-        onlyUpdatable: true,
-      });
-      results = await limiter(
-        regRequestConcurrency,
-        subscriptions,
-        async (subscription) => await _registryUpdateInternal(context, subscription, options)
-      );
-    }
+    // TODO this looks off, for the service plan we should know our service instance id and use the tenantId+serviceInstanceId API.
+    assert(subscriptions.length >= 1, "could not find subscriptions for tenant %s", filterTenantId);
+    return await limiter(
+      regRequestConcurrency,
+      subscriptions,
+      async (subscription) =>
+        await _registryUpdateInternal(context, { ...options, filterSubscriptionId: subscription.subscriptionGUID })
+    );
   }
+  return [await _registryUpdateInternal(context, options)];
+};
+
+const _registryUpdateMultiTenant = async (context, options) => {
+  const { method, filterTenantId, onlyStaleSubscriptions, onlyFailedSubscriptions } = options;
+  // TODO
+  const doBatch = method === "PATCH" && !onlyStaleSubscriptions && !onlyFailedSubscriptions;
+  if (doBatch) {
+    // multi tenant -- can batch
+  } else {
+    // multi tenant -- cannot batch
+    const { subscriptions } = await _registrySubscriptionsPaged(context, {
+      onlyFailed: onlyFailedSubscriptions,
+      onlyStale: onlyStaleSubscriptions,
+      onlyUpdatable: true,
+    });
+    return await limiter(
+      regRequestConcurrency,
+      subscriptions,
+      async (subscription) => await _registryUpdateInternal(context, subscription, options)
+    );
+  }
+};
+
+const _registryUpdate = async (context, options) => {
+  const { method, filterTenantId } = options;
+  const {
+    cfService: { plan },
+  } = await context.getRegInfo();
+  assert(["PATCH", "DELETE"].includes(method), "invalid method %s", method);
+  assert(Object.values(PLAN).includes(plan), "invalid plan %s", plan);
+
+  const results = filterTenantId
+    ? await _registryUpdateSingleTenant(context, options)
+    : await _registryUpdateMultiTenant(context, options);
 
   assert(Array.isArray(results), "got invalid results from registry %s call with %j", method, options);
   logger.info(JSON.stringify(results.length === 1 ? results[0] : results, null, 2));
   assert(
-    results.every(({ state }) => state === JOB_STATE.SUCCEEDED),
+    results.every((result) => result.state === JOB_STATE.SUCCEEDED),
     "registry %s failed for some tenant",
     method
   );
