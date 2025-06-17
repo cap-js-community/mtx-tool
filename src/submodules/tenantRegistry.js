@@ -193,7 +193,7 @@ const _registryPathname = (plan, { doBatch, filterTenantId, filterSubscriptionId
   }
 };
 
-const _registryCallInternal = async (context, options = {}) => {
+const _registryUpdateInternal = async (context, options = {}) => {
   const {
     method,
     filterTenantId,
@@ -262,9 +262,14 @@ const _registryCallInternal = async (context, options = {}) => {
   };
 };
 
-const _registryCall = async (context, options = {}) => {
+const _registryUpdate = async (context, options = {}) => {
   const { method, filterTenantId, onlyStaleSubscriptions, onlyFailedSubscriptions } = options;
   let results;
+  const {
+    cfService: { plan },
+  } = await context.getRegInfo();
+  assert(["PATCH", "DELETE"].includes(method), "invalid method for registry update %s", method);
+  assert(Object.values(PLAN).includes(plan), "invalid plan %s", plan);
 
   if (filterTenantId) {
     // single tenant
@@ -272,7 +277,7 @@ const _registryCall = async (context, options = {}) => {
       tenant: filterTenantId,
     });
     assert(subscriptions.length >= 1, "could not find tenant %s", filterTenantId);
-    results = [await _registryCallInternal(context, subscriptions[0], options)];
+    results = [await _registryUpdateInternal(context, subscriptions[0], options)];
   } else {
     // TODO
     const doBatch = method === "PATCH" && !onlyStaleSubscriptions && !onlyFailedSubscriptions;
@@ -288,7 +293,7 @@ const _registryCall = async (context, options = {}) => {
       results = await limiter(
         regRequestConcurrency,
         subscriptions,
-        async (subscription) => await _registryCallInternal(context, subscription, options)
+        async (subscription) => await _registryUpdateInternal(context, subscription, options)
       );
     }
   }
@@ -304,7 +309,7 @@ const _registryCall = async (context, options = {}) => {
 
 const registryUpdateDependencies = async (context, [tenantId], [doSkipUnchanged]) => {
   assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
-  return await _registryCall(context, {
+  return await _registryUpdate(context, {
     method: "PATCH",
     filterTenantId: tenantId,
     skipUnchangedDependencies: doSkipUnchanged,
@@ -312,7 +317,7 @@ const registryUpdateDependencies = async (context, [tenantId], [doSkipUnchanged]
 };
 
 const registryUpdateAllDependencies = async (context, _, [doSkipUnchanged, doOnlyStale, doOnlyFailed]) =>
-  await _registryCall(context, {
+  await _registryUpdate(context, {
     method: "PATCH",
     skipUnchangedDependencies: doSkipUnchanged,
     onlyStaleSubscriptions: doOnlyStale,
@@ -321,7 +326,7 @@ const registryUpdateAllDependencies = async (context, _, [doSkipUnchanged, doOnl
 
 const registryUpdateApplicationURL = async (context, [tenantId], [doOnlyStale, doOnlyFailed]) => {
   assert(tenantId === undefined || isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
-  return await _registryCall(context, {
+  return await _registryUpdate(context, {
     method: "PATCH",
     filterTenantId: tenantId,
     updateApplicationURL: true,
@@ -334,7 +339,7 @@ const registryUpdateApplicationURL = async (context, [tenantId], [doOnlyStale, d
 
 const registryOffboardSubscription = async (context, [tenantId]) => {
   assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
-  return await _registryCall(context, {
+  return await _registryUpdate(context, {
     method: "DELETE",
     filterTenantId: tenantId,
   });
@@ -342,7 +347,7 @@ const registryOffboardSubscription = async (context, [tenantId]) => {
 
 const registryOffboardSubscriptionSkip = async (context, [tenantId, skipApps]) => {
   assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
-  return await _registryCall(context, {
+  return await _registryUpdate(context, {
     method: "DELETE",
     filterTenantId: tenantId,
     noCallbacksAppNames: skipApps,
