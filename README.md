@@ -28,8 +28,8 @@ mtx hdil
 
 ## Pipelines
 
-For pipelines, we recommend committing the setup configuration to your project and running MTX Tool on the server in the
-corresponding directory through npx with a stable version:
+For pipelines, we recommend committing the setup configuration to your project and running MTX Tool on the pipeline
+runner in the corresponding directory through npx with a stable version:
 
 **In project**
 

@@ -32,20 +32,21 @@ describe("consistency tests", () => {
 
   test("readme sections / home docs consistency check", async () => {
     const readme = readFileSync(join(__dirname, "..", "README.md")).toString();
+    const readmeOpener = /(# MTX Tool\n\n[\s\S]*?)(?:\n##|$)/.exec(readme)[1];
     const readmeGettingStarted = /(## Getting Started\n\n[\s\S]*?)(?:\n##|$)/.exec(readme)[1];
     const readmePipelines = /(## Pipelines\n\n[\s\S]*?)(?:\n##|$)/.exec(readme)[1];
-    const readmeFeatures = /(## Features\n\n[\s\S]*?)(?:\n##|$)/.exec(readme)[1];
     const docs = readFileSync(join(__dirname, "..", "docs", "index.md")).toString();
+    const docsOpener = /(# MTX Tool\n\n[\s\S]*?)(?:\n##|$)/.exec(docs)[1];
     const docsGettingStarted = /(## Getting Started\n\n[\s\S]*?)(?:\n##|$)/.exec(docs)[1];
     const docsPipelines = /(## Pipelines\n\n[\s\S]*?)(?:\n##|$)/.exec(docs)[1];
-    const docsFeatures = /(## Features\n\n[\s\S]*?)(?:\n##|$)/.exec(docs)[1];
+    const readmeOpenerWithoutBadges = readmeOpener.replace(/\[!\[[\s\S]*?\n\n/g, "");
+    expect(readmeOpenerWithoutBadges).toEqual(docsOpener);
     expect(readmeGettingStarted).toEqual(docsGettingStarted);
     expect(readmePipelines).toEqual(docsPipelines);
-    expect(readmeFeatures).toEqual(docsFeatures);
   });
 
-  test("documentation features / usage consistency check", async () => {
-    const readme = readFileSync(join(__dirname, "..", "docs", "index.md")).toString();
+  test("readme features / usage consistency check", async () => {
+    const readme = readFileSync(join(__dirname, "..", "README.md")).toString();
     const readmeFeatures = /## Features\n\n[\s\S]*```\n([\s\S]*?)```/.exec(readme)[1];
     const cliFeatures = / {3}=== user authentication \(uaa\) ===[\s\S]*/.exec(USAGE)[0];
     expect(cliFeatures).toEqual(readmeFeatures);
