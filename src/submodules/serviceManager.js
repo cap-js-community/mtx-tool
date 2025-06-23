@@ -109,7 +109,7 @@ const _requestPlans = makeOneTime(
 
 const _requestInstances = async (
   context,
-  { filterTenantId, filterServicePlanId, doEnsureTenantLabel = true, doEnsureReady = true } = {}
+  { filterTenantId, filterServicePlanId, doEnsureTenantLabel = false, doEnsureReady = false } = {}
 ) => {
   const hasFieldQuery = filterServicePlanId || doEnsureReady;
   const hasLabelQuery = filterTenantId;
@@ -140,7 +140,13 @@ const _requestInstances = async (
 
 const _requestBindings = async (
   context,
-  { filterTenantId, doReveal = false, doEnsureTenantLabel = true, doEnsureReady = true, doAssertFoundSome = false } = {}
+  {
+    filterTenantId,
+    doReveal = false,
+    doEnsureTenantLabel = false,
+    doEnsureReady = false,
+    doAssertFoundSome = false,
+  } = {}
 ) => {
   const hasFieldQuery = doEnsureReady;
   const hasLabelQuery = filterTenantId;
@@ -212,8 +218,8 @@ const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJs
   const [offerings, plans, instances, bindings] = await Promise.all([
     _requestOfferings(context),
     _requestPlans(context),
-    _requestInstances(context, { filterTenantId, doEnsureReady: false }),
-    _requestBindings(context, { filterTenantId, doEnsureReady: false }),
+    _requestInstances(context, { filterTenantId, doEnsureTenantLabel: true }),
+    _requestBindings(context, { filterTenantId }),
   ]);
   const servicePlanNameById = _indexServicePlanNameById(offerings, plans);
   instances.sort(compareForTenantId);
@@ -282,8 +288,8 @@ const serviceManagerList = async (context, [tenantId], [doTimestamps, doJsonOutp
 
 const _serviceManagerLongList = async (context, { filterTenantId, doJsonOutput, doReveal } = {}) => {
   const [instances, bindings] = await Promise.all([
-    _requestInstances(context, { filterTenantId, doEnsureTenantLabel: false }),
-    _requestBindings(context, { filterTenantId, doReveal, doEnsureTenantLabel: false }),
+    _requestInstances(context, { filterTenantId }),
+    _requestBindings(context, { filterTenantId, doReveal }),
   ]);
 
   if (doJsonOutput) {
@@ -340,7 +346,7 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
   const [offerings, plans, instances, bindings] = await Promise.all([
     _requestOfferings(context),
     _requestPlans(context, { filterServicePlanId }),
-    _requestInstances(context, { filterServicePlanId }),
+    _requestInstances(context, { filterServicePlanId, doEnsureTenantLabel: true, doEnsureReady: true }),
     _requestBindings(context),
   ]);
 
@@ -449,7 +455,7 @@ const serviceManagerRepairBindings = async (context, [servicePlanName], [rawPara
 
 const _serviceManagerRefreshBindings = async (context, { filterServicePlanId, filterTenantId, parameters } = {}) => {
   const [instances, bindings] = await Promise.all([
-    _requestInstances(context, { filterTenantId, filterServicePlanId }),
+    _requestInstances(context, { filterTenantId, filterServicePlanId, doEnsureTenantLabel: true, doEnsureReady: true }),
     _requestBindings(context, { filterTenantId }),
   ]);
 
