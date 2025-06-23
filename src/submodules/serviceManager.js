@@ -111,19 +111,24 @@ const _requestInstances = async (
   context,
   { filterTenantId, filterServicePlanId, doEnsureTenantLabel = true, doEnsureReady = true } = {}
 ) => {
-  const hasQuery = filterServicePlanId || filterTenantId;
   const hasFieldQuery = filterServicePlanId || doEnsureReady;
+  const hasLabelQuery = filterTenantId;
+  const hasQuery = hasFieldQuery || hasLabelQuery;
   let instances = await _serviceManagerRequest(context, {
     pathname: "/v1/service_instances",
     ...(hasQuery && {
       query: {
         ...(hasFieldQuery && {
           fieldQuery: _getQuery({
-            ...(filterServicePlanId && { service_plan_id: filterServicePlanId }),
             ...(doEnsureReady && { ready: true }),
+            ...(filterServicePlanId && { service_plan_id: filterServicePlanId }),
           }),
         }),
-        ...(filterTenantId && { labelQuery: _getQuery({ tenant_id: filterTenantId }) }),
+        ...(hasLabelQuery && {
+          labelQuery: _getQuery({
+            ...(filterTenantId && { tenant_id: filterTenantId }),
+          }),
+        }),
       },
     }),
   });
@@ -137,12 +142,23 @@ const _requestBindings = async (
   context,
   { filterTenantId, doReveal = false, doEnsureTenantLabel = true, doEnsureReady = true, doAssertFoundSome = false } = {}
 ) => {
+  const hasFieldQuery = doEnsureReady;
+  const hasLabelQuery = filterTenantId;
+  const hasQuery = hasFieldQuery || hasLabelQuery;
   let bindings = await _serviceManagerRequest(context, {
     pathname: "/v1/service_bindings",
-    ...(filterTenantId && {
+    ...(hasQuery && {
       query: {
-        ...(doEnsureReady && { fieldQuery: _getQuery({ ready: true }) }),
-        labelQuery: _getQuery({ tenant_id: filterTenantId }),
+        ...(hasFieldQuery && {
+          fieldQuery: _getQuery({
+            ...(doEnsureReady && { ready: true }),
+          }),
+        }),
+        ...(hasLabelQuery && {
+          labelQuery: _getQuery({
+            ...(filterTenantId && { tenant_id: filterTenantId }),
+          }),
+        }),
       },
     }),
   });
