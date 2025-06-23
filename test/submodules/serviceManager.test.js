@@ -118,17 +118,17 @@ describe("svm tests", () => {
 
       expect(await svm.serviceManagerRepairBindings(mockContext, ["all-services"], [])).toBeUndefined();
       expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
-      [
-        "GET service-manager-url /v1/service_offerings",
-        "GET service-manager-url /v1/service_plans",
-        "GET service-manager-url /v1/service_instances",
-        "GET service-manager-url /v1/service_bindings",
-        "POST service-manager-url /v1/service_bindings {"async":false}",
-        "POST service-manager-url /v1/service_bindings {"async":false}",
-        "POST service-manager-url /v1/service_bindings {"async":false}",
-        "POST service-manager-url /v1/service_bindings {"async":false}",
-      ]
-    `);
+        [
+          "GET service-manager-url /v1/service_offerings",
+          "GET service-manager-url /v1/service_plans",
+          "GET service-manager-url /v1/service_instances {"fieldQuery":"ready eq 'true'"}",
+          "GET service-manager-url /v1/service_bindings",
+          "POST service-manager-url /v1/service_bindings {"async":false}",
+          "POST service-manager-url /v1/service_bindings {"async":false}",
+          "POST service-manager-url /v1/service_bindings {"async":false}",
+          "POST service-manager-url /v1/service_bindings {"async":false}",
+        ]
+      `);
       expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "triggering 4 changes
       created 1 missing binding for tenant tenant-id-0 plan myOffering:myPlan
@@ -151,15 +151,15 @@ describe("svm tests", () => {
 
       expect(await svm.serviceManagerRepairBindings(mockContext, [testServicePlanName], [])).toBeUndefined();
       expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
-      [
-        "GET service-manager-url /v1/service_offerings {"fieldQuery":"name eq 'myOffering'"}",
-        "GET service-manager-url /v1/service_plans {"fieldQuery":"service_offering_id eq 'offering-id-0' and name eq 'myPlan'"}",
-        "GET service-manager-url /v1/service_instances {"fieldQuery":"service_plan_id eq 'plan-id-0'"}",
-        "GET service-manager-url /v1/service_bindings",
-        "POST service-manager-url /v1/service_bindings {"async":false}",
-        "POST service-manager-url /v1/service_bindings {"async":false}",
-      ]
-    `);
+        [
+          "GET service-manager-url /v1/service_offerings {"fieldQuery":"name eq 'myOffering'"}",
+          "GET service-manager-url /v1/service_plans {"fieldQuery":"service_offering_id eq 'offering-id-0' and name eq 'myPlan'"}",
+          "GET service-manager-url /v1/service_instances {"fieldQuery":"ready eq 'true' and service_plan_id eq 'plan-id-0'"}",
+          "GET service-manager-url /v1/service_bindings",
+          "POST service-manager-url /v1/service_bindings {"async":false}",
+          "POST service-manager-url /v1/service_bindings {"async":false}",
+        ]
+      `);
       expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "triggering 2 changes
       created 1 missing binding for tenant tenant-id-0 plan myOffering:myPlan
@@ -181,7 +181,7 @@ describe("svm tests", () => {
       expect(await svm.serviceManagerRefreshBindings(mockContext, ["all-services", "all-tenants"], [])).toBeUndefined();
       expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
         [
-          "GET service-manager-url /v1/service_instances",
+          "GET service-manager-url /v1/service_instances {"fieldQuery":"ready eq 'true'"}",
           "GET service-manager-url /v1/service_bindings",
           "POST service-manager-url /v1/service_bindings {"async":false}",
           "POST service-manager-url /v1/service_bindings {"async":false}",
@@ -218,7 +218,7 @@ describe("svm tests", () => {
         [
           "GET service-manager-url /v1/service_offerings {"fieldQuery":"name eq 'myOffering'"}",
           "GET service-manager-url /v1/service_plans {"fieldQuery":"service_offering_id eq 'offering-id-0' and name eq 'myPlan'"}",
-          "GET service-manager-url /v1/service_instances {"fieldQuery":"service_plan_id eq 'plan-id-0'"}",
+          "GET service-manager-url /v1/service_instances {"fieldQuery":"ready eq 'true' and service_plan_id eq 'plan-id-0'"}",
           "GET service-manager-url /v1/service_bindings",
           "POST service-manager-url /v1/service_bindings {"async":false}",
           "POST service-manager-url /v1/service_bindings {"async":false}",
@@ -243,7 +243,7 @@ describe("svm tests", () => {
       expect(await svm.serviceManagerRefreshBindings(mockContext, ["all-services", testTenantId], [])).toBeUndefined();
       expect(collectRequestMockCalls(mockRequest.request)).toMatchInlineSnapshot(`
         [
-          "GET service-manager-url /v1/service_instances {"labelQuery":"tenant_id eq 'tenant-id-1'"}",
+          "GET service-manager-url /v1/service_instances {"fieldQuery":"ready eq 'true'","labelQuery":"tenant_id eq 'tenant-id-1'"}",
           "GET service-manager-url /v1/service_bindings {"labelQuery":"tenant_id eq 'tenant-id-1'"}",
           "POST service-manager-url /v1/service_bindings {"async":false}",
           "POST service-manager-url /v1/service_bindings {"async":false}",
@@ -274,7 +274,7 @@ describe("svm tests", () => {
         [
           "GET service-manager-url /v1/service_offerings {"fieldQuery":"name eq 'myOffering'"}",
           "GET service-manager-url /v1/service_plans {"fieldQuery":"service_offering_id eq 'offering-id-0' and name eq 'myPlan'"}",
-          "GET service-manager-url /v1/service_instances {"fieldQuery":"service_plan_id eq 'plan-id-0'","labelQuery":"tenant_id eq 'tenant-id-1'"}",
+          "GET service-manager-url /v1/service_instances {"fieldQuery":"ready eq 'true' and service_plan_id eq 'plan-id-0'","labelQuery":"tenant_id eq 'tenant-id-1'"}",
           "GET service-manager-url /v1/service_bindings {"labelQuery":"tenant_id eq 'tenant-id-1'"}",
           "POST service-manager-url /v1/service_bindings {"async":false}",
           "DELETE service-manager-url /v1/service_bindings/binding-id-2 {"async":false}",
