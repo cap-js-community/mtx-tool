@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- order is REMOVED, CHANGED, ADDED, FIXED -->
 
+## v0.10.1 - 2025-06-23
+
+### FIXED
+
+- svm: `--svm-repair-bindings` and `--svm-refresh-bindings` will ignore instances with `ready: false`.
+
 ## v0.10.0 - 2025-06-11
 
 ⚠️ This release is potentially disruptive. We carved out the service-manager interactions from `hdi` into a new section
@@ -449,7 +455,6 @@ just for HANA containers.
 ### Changed
 
 - uaa: combined logically similar commands:
-
   - `uaap` and `uaas` become `uaac`,
   - `uaac` and `uaasc` become `uaap`
 
