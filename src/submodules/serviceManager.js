@@ -109,7 +109,7 @@ const _requestPlans = makeOneTime(
 
 const _requestInstances = async (
   context,
-  { filterTenantId, filterServicePlanId, doEnsureTenantLabel = false, doEnsureReady = false } = {}
+  { filterTenantId, filterServicePlanId, doEnsureReady = false, doEnsureTenantLabel = false } = {}
 ) => {
   const hasFieldQuery = doEnsureReady || filterServicePlanId;
   const hasLabelQuery = filterTenantId;
@@ -142,10 +142,10 @@ const _requestBindings = async (
   context,
   {
     filterTenantId,
-    doReveal = false,
-    doEnsureTenantLabel = false,
     doEnsureReady = false,
+    doEnsureTenantLabel = false,
     doAssertFoundSome = false,
+    doReveal = false,
   } = {}
 ) => {
   const hasFieldQuery = doEnsureReady;
