@@ -111,7 +111,7 @@ const _requestInstances = async (
   context,
   { filterTenantId, filterServicePlanId, doEnsureTenantLabel = false, doEnsureReady = false } = {}
 ) => {
-  const hasFieldQuery = filterServicePlanId || doEnsureReady;
+  const hasFieldQuery = doEnsureReady || filterServicePlanId;
   const hasLabelQuery = filterTenantId;
   const hasQuery = hasFieldQuery || hasLabelQuery;
   let instances = await _serviceManagerRequest(context, {
