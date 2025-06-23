@@ -107,13 +107,22 @@ const _requestPlans = makeOneTime(
   }
 );
 
-const _requestInstances = async (context, { filterTenantId, filterServicePlanId, doEnsureTenantLabel = true } = {}) => {
+const _requestInstances = async (
+  context,
+  { filterTenantId, filterServicePlanId, doEnsureTenantLabel = true, doEnsureReady = true } = {}
+) => {
   const hasQuery = filterServicePlanId || filterTenantId;
+  const hasFieldQuery = filterServicePlanId || doEnsureReady;
   let instances = await _serviceManagerRequest(context, {
     pathname: "/v1/service_instances",
     ...(hasQuery && {
       query: {
-        ...(filterServicePlanId && { fieldQuery: _getQuery({ service_plan_id: filterServicePlanId }) }),
+        ...(hasFieldQuery && {
+          fieldQuery: _getQuery({
+            ...(filterServicePlanId && { service_plan_id: filterServicePlanId }),
+            ...(doEnsureReady && { ready: true }),
+          }),
+        }),
         ...(filterTenantId && { labelQuery: _getQuery({ tenant_id: filterTenantId }) }),
       },
     }),
@@ -126,12 +135,13 @@ const _requestInstances = async (context, { filterTenantId, filterServicePlanId,
 
 const _requestBindings = async (
   context,
-  { filterTenantId, doReveal = false, doAssertFoundSome = false, doEnsureTenantLabel = true } = {}
+  { filterTenantId, doReveal = false, doEnsureTenantLabel = true, doEnsureReady = true, doAssertFoundSome = false } = {}
 ) => {
   let bindings = await _serviceManagerRequest(context, {
     pathname: "/v1/service_bindings",
     ...(filterTenantId && {
       query: {
+        ...(doEnsureReady && { fieldQuery: _getQuery({ ready: true }) }),
         labelQuery: _getQuery({ tenant_id: filterTenantId }),
       },
     }),
