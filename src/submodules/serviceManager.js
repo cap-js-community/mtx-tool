@@ -1,3 +1,8 @@
+/**
+ * This is a wrapper for APIs of the service-manager
+ * - https://api.sap.com/api/APIServiceManager/resource/Service_Instances
+ * - https://api.sap.com/api/APIServiceManager/resource/Service_Bindings
+ */
 "use strict";
 
 const {
@@ -29,6 +34,11 @@ const SENSITIVE_FIELD_NAMES = ["uri"];
 const SENSITIVE_FIELD_MARKERS = ["password", "key"];
 const SENSITIVE_FIELD_HIDDEN_TEXT = "*** show with --reveal ***";
 
+const QUERY_TYPE = {
+  FIELD: "fieldQuery",
+  LABEL: "labelQuery",
+};
+
 const logger = Logger.getInstance();
 
 const svmRequestConcurrency = parseIntWithFallback(
@@ -42,14 +52,6 @@ const isValidTenantId = (input) => input && /^[0-9a-z-_/]+$/i.test(input);
 const compareForTenantId = compareFor((a) => a.labels.tenant_id[0].toUpperCase());
 const compareForUpdatedAtDesc = compareFor((a) => a.updated_at, true);
 
-const _getQuery = (filters) =>
-  Object.entries(filters)
-    .reduce((acc, [key, value]) => {
-      acc.push(`${key} eq '${value}'`);
-      return acc;
-    }, [])
-    .join(" and ");
-
 const _formatOutput = (output) =>
   JSON.stringify(Array.isArray(output) && output.length === 1 ? output[0] : output, null, 2);
 
@@ -60,6 +62,37 @@ const _hideSensitiveDataInBindingOrInstance = (entry) => {
       entry.credentials[field] = SENSITIVE_FIELD_HIDDEN_TEXT;
     }
   }
+};
+
+const _getQueryPart = (filters) =>
+  Object.entries(filters)
+    .reduce((acc, [key, value]) => {
+      acc.push(`${key} eq '${value}'`);
+      return acc;
+    }, [])
+    .join(" and ");
+
+const _getQuery = (components) => {
+  const partMap = components.reduce((acc, { predicate, type, key, value }) => {
+    if (predicate) {
+      if (!Object.prototype.hasOwnProperty.call(acc, type)) {
+        acc[type] = { [key]: value };
+      } else {
+        acc[type][key] = value;
+      }
+    }
+    return acc;
+  }, {});
+  const parts = Object.entries(partMap);
+  return parts.length === 0
+    ? undefined
+    : parts.reduce(
+        (acc, [type, filters]) => {
+          acc["query"][type] = _getQueryPart(filters);
+          return acc;
+        },
+        { query: {} }
+      );
 };
 
 const _serviceManagerRequest = async (context, reqOptions = {}) => {
@@ -81,28 +114,26 @@ const _requestOfferings = makeOneTime(
   async (context, { filterServiceOfferingName } = {}) =>
     await _serviceManagerRequest(context, {
       pathname: "/v1/service_offerings",
-      ...(filterServiceOfferingName && {
-        query: {
-          fieldQuery: _getQuery({ name: filterServiceOfferingName }),
-        },
-      }),
+      ..._getQuery([
+        { predicate: filterServiceOfferingName, type: QUERY_TYPE.FIELD, key: "name", value: filterServiceOfferingName },
+      ]),
     })
 );
 
 const _requestPlans = makeOneTime(
   async (context, { filterServicePlanId, filterServiceOfferingId, filterServicePlanName } = {}) => {
-    const hasQuery = filterServicePlanId || filterServiceOfferingId || filterServicePlanName;
     return await _serviceManagerRequest(context, {
       pathname: "/v1/service_plans",
-      ...(hasQuery && {
-        query: {
-          fieldQuery: _getQuery({
-            ...(filterServicePlanId && { id: filterServicePlanId }),
-            ...(filterServiceOfferingId && { service_offering_id: filterServiceOfferingId }),
-            ...(filterServicePlanName && { name: filterServicePlanName }),
-          }),
+      ..._getQuery([
+        { predicate: filterServicePlanId, type: QUERY_TYPE.FIELD, key: "id", value: filterServicePlanId },
+        {
+          predicate: filterServiceOfferingId,
+          type: QUERY_TYPE.FIELD,
+          key: "service_offering_id",
+          value: filterServiceOfferingId,
         },
-      }),
+        { predicate: filterServicePlanName, type: QUERY_TYPE.FIELD, key: "name", value: filterServicePlanName },
+      ]),
     });
   }
 );
@@ -111,26 +142,13 @@ const _requestInstances = async (
   context,
   { filterTenantId, filterServicePlanId, doEnsureReady = false, doEnsureTenantLabel = false } = {}
 ) => {
-  const hasFieldQuery = doEnsureReady || filterServicePlanId;
-  const hasLabelQuery = filterTenantId;
-  const hasQuery = hasFieldQuery || hasLabelQuery;
   let instances = await _serviceManagerRequest(context, {
     pathname: "/v1/service_instances",
-    ...(hasQuery && {
-      query: {
-        ...(hasFieldQuery && {
-          fieldQuery: _getQuery({
-            ...(doEnsureReady && { ready: true }),
-            ...(filterServicePlanId && { service_plan_id: filterServicePlanId }),
-          }),
-        }),
-        ...(hasLabelQuery && {
-          labelQuery: _getQuery({
-            ...(filterTenantId && { tenant_id: filterTenantId }),
-          }),
-        }),
-      },
-    }),
+    ..._getQuery([
+      { predicate: doEnsureReady, type: QUERY_TYPE.FIELD, key: "ready", value: true },
+      { predicate: filterServicePlanId, type: QUERY_TYPE.FIELD, key: "service_plan_id", value: filterServicePlanId },
+      { predicate: filterTenantId, type: QUERY_TYPE.LABEL, key: "tenant_id", value: filterTenantId },
+    ]),
   });
   if (doEnsureTenantLabel) {
     instances = instances.filter((instance) => instance.labels.tenant_id !== undefined);
@@ -148,25 +166,12 @@ const _requestBindings = async (
     doReveal = false,
   } = {}
 ) => {
-  const hasFieldQuery = doEnsureReady;
-  const hasLabelQuery = filterTenantId;
-  const hasQuery = hasFieldQuery || hasLabelQuery;
   let bindings = await _serviceManagerRequest(context, {
     pathname: "/v1/service_bindings",
-    ...(hasQuery && {
-      query: {
-        ...(hasFieldQuery && {
-          fieldQuery: _getQuery({
-            ...(doEnsureReady && { ready: true }),
-          }),
-        }),
-        ...(hasLabelQuery && {
-          labelQuery: _getQuery({
-            ...(filterTenantId && { tenant_id: filterTenantId }),
-          }),
-        }),
-      },
-    }),
+    ..._getQuery([
+      { predicate: doEnsureReady, type: QUERY_TYPE.FIELD, key: "ready", value: true },
+      { predicate: filterTenantId, type: QUERY_TYPE.LABEL, key: "tenant_id", value: filterTenantId },
+    ]),
   });
   if (doEnsureTenantLabel) {
     bindings = bindings.filter((instance) => instance.labels.tenant_id !== undefined);
