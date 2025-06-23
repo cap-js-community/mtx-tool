@@ -212,25 +212,12 @@ const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJs
   const [offerings, plans, instances, bindings] = await Promise.all([
     _requestOfferings(context),
     _requestPlans(context),
-    _requestInstances(context, { filterTenantId }),
-    _requestBindings(context, { filterTenantId }),
+    _requestInstances(context, { filterTenantId, doEnsureReady: false }),
+    _requestBindings(context, { filterTenantId, doEnsureReady: false }),
   ]);
   const servicePlanNameById = _indexServicePlanNameById(offerings, plans);
   instances.sort(compareForTenantId);
   const bindingsByInstance = _clusterByKey(bindings, "service_instance_id");
-
-  const nowDate = new Date();
-  const headerRow = [
-    "tenant_id",
-    "service_plan",
-    "instance_id",
-    ...(doTimestamps ? ["created_on", "updated_on"] : []),
-    "",
-    "binding_id",
-    "ready",
-    ...(doTimestamps ? ["created_on", "updated_on"] : []),
-  ];
-  const table = [headerRow];
 
   if (doJsonOutput) {
     return {
@@ -239,6 +226,20 @@ const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJs
       }),
     };
   }
+
+  const nowDate = new Date();
+  const headerRow = [
+    "tenant_id",
+    "service_plan",
+    "instance_id",
+    "ready",
+    ...(doTimestamps ? ["created_on", "updated_on"] : []),
+    "",
+    "binding_id",
+    "ready",
+    ...(doTimestamps ? ["created_on", "updated_on"] : []),
+  ];
+  const table = [headerRow];
 
   const connectorPiece = (length, index) =>
     length === 0 ? "-x " : length === 1 ? "---" : index === 0 ? "-+-" : index === length - 1 ? " \\-" : " |-";
@@ -251,6 +252,7 @@ const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJs
           instance.labels.tenant_id[0],
           servicePlanNameById[instance.service_plan_id],
           instance.id,
+          instance.ready,
           ...(doTimestamps
             ? formatTimestampsWithRelativeDays([instance.created_at, instance.updated_at], nowDate)
             : []),
@@ -265,6 +267,7 @@ const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJs
         instance.labels.tenant_id[0],
         servicePlanNameById[instance.service_plan_id],
         instance.id,
+        instance.ready,
         ...(doTimestamps ? formatTimestampsWithRelativeDays([instance.created_at, instance.updated_at], nowDate) : []),
         connectorPiece(0, 0),
       ]);
