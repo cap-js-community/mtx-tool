@@ -351,7 +351,7 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
   const [offerings, plans, instances, bindings] = await Promise.all([
     _requestOfferings(context),
     _requestPlans(context, { filterServicePlanId }),
-    _requestInstances(context, { filterServicePlanId, doEnsureTenantLabel: true, doEnsureReady: true }),
+    _requestInstances(context, { filterServicePlanId, doEnsureReady: true, doEnsureTenantLabel: true }),
     _requestBindings(context),
   ]);
 
@@ -460,7 +460,7 @@ const serviceManagerRepairBindings = async (context, [servicePlanName], [rawPara
 
 const _serviceManagerRefreshBindings = async (context, { filterServicePlanId, filterTenantId, parameters } = {}) => {
   const [instances, bindings] = await Promise.all([
-    _requestInstances(context, { filterTenantId, filterServicePlanId, doEnsureTenantLabel: true, doEnsureReady: true }),
+    _requestInstances(context, { filterTenantId, filterServicePlanId, doEnsureReady: true, doEnsureTenantLabel: true }),
     _requestBindings(context, { filterTenantId }),
   ]);
 
