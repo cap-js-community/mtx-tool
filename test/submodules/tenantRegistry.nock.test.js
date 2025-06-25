@@ -114,7 +114,7 @@ describe("reg nock tests", () => {
       `);
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-
+        
         GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?appName=afc-dev&size=200&page=1 200 OK (88ms)"
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
@@ -160,7 +160,7 @@ describe("reg nock tests", () => {
       `);
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-
+        
         GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?appName=afc-dev&tenantId=5ecc7413-2b7e-414a-9496-ad4a61f6cccf&size=200&page=1 200 OK (88ms)"
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
@@ -199,7 +199,7 @@ describe("reg nock tests", () => {
       expect(output).toMatchSnapshot();
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-
+        
         GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?appName=afc-dev&size=200&page=1 200 OK (88ms)"
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
@@ -211,7 +211,7 @@ describe("reg nock tests", () => {
       expect(output).toMatchSnapshot();
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-
+        
         GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?appName=afc-dev&size=200&page=1 200 OK (88ms)"
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
@@ -253,7 +253,7 @@ describe("reg nock tests", () => {
         "jobId": "25251d4d-4bf2-4574-b286-06c829f0641c",
         "state": "SUCCEEDED"
       }
-
+      
       GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/api/v2.0/jobs/25251d4d-4bf2-4574-b286-06c829f0641c 200 OK (88ms)
       GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/api/v2.0/jobs/25251d4d-4bf2-4574-b286-06c829f0641c 200 OK (88ms)
       GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/api/v2.0/jobs/25251d4d-4bf2-4574-b286-06c829f0641c 200 OK (88ms)
@@ -341,7 +341,7 @@ describe("reg nock tests", () => {
           "state": "SUCCEEDED"
         }
       ]
-
+      
       GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/api/v2.0/jobs/11213aa0-ee46-4edb-ad04-2c476dbf281d 200 OK (88ms)
       GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/api/v2.0/jobs/11213aa0-ee46-4edb-ad04-2c476dbf281d 200 OK (88ms)
       GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/api/v2.0/jobs/11213aa0-ee46-4edb-ad04-2c476dbf281d 200 OK (88ms)
@@ -448,7 +448,7 @@ describe("reg nock tests", () => {
           "state": "SUCCEEDED"
         }
       ]
-
+      
       GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?appName=afc-dev&size=200&page=1 200 OK (88ms)
       PATCH https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/tenants/288393a7-972c-4fa8-acfd-12299c4db374/subscriptions?updateApplicationURL=true&skipUpdatingDependencies=true 200 OK (88ms)
       PATCH https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/tenants/4c0909b1-a84e-4763-a26e-532fdb9e40fa/subscriptions?updateApplicationURL=true&skipUpdatingDependencies=true 200 OK (88ms)
@@ -473,7 +473,7 @@ describe("reg nock tests", () => {
         "tenantId": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
         "state": "SUCCEEDED"
       }
-
+      
       GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?appName=afc-dev&tenantId=5ecc7413-2b7e-414a-9496-ad4a61f6cccf&size=200&page=1 200 OK (88ms)
       PATCH https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/tenants/5ecc7413-2b7e-414a-9496-ad4a61f6cccf/subscriptions?updateApplicationURL=true&skipUpdatingDependencies=true 200 OK (88ms)"
     `);

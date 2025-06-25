@@ -209,7 +209,7 @@ describe("cds tests", () => {
         "splitting tenants across 2 app instances of 'app-mtx-name' as follows:
         instance 1: processing tenants 00000000-0000-4000-8000-000000000101, 00000000-0000-4000-8000-000000000102, 00000000-0000-4000-8000-000000000103
         instance 2: processing tenants 5ecc7413-2b7e-414a-9496-ad4a61f6cccf, 6917dfd6-7590-4033-af2a-140b75263b0d, dde70ec5-983d-4848-b50c-fb2cdac7d359
-
+        
         started upgrade on server with jobId jobId-instance-0 polling interval 15sec
         started upgrade on server with jobId jobId-instance-1 polling interval 15sec
         job jobId-instance-0 is FINISHED with tasks queued/running: 0/0 | failed/finished: 0/3
