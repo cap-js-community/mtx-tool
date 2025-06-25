@@ -314,7 +314,12 @@ ${_formatOutput(bindings)}
 const serviceManagerLongList = async (context, [filterTenantId], [doJsonOutput, doReveal]) =>
   await _serviceManagerLongList(context, { filterTenantId, doJsonOutput, doReveal });
 
-const _requestCreateBinding = async (context, instanceId, labels, { name = randomString(32), parameters } = {}) => {
+const _requestCreateBinding = async (
+  context,
+  serviceInstanceId,
+  labels,
+  { name = randomString(32), parameters } = {}
+) => {
   // NOTE: service-manager sets the container_id and subaccount_id labels itself, it will block requests that set these.
   const filteredLabels = Object.entries(labels)
     .filter(([key]) => !["container_id", "subaccount_id"].includes(key))
@@ -327,7 +332,7 @@ const _requestCreateBinding = async (context, instanceId, labels, { name = rando
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       name,
-      service_instance_id: instanceId,
+      service_instance_id: serviceInstanceId,
       labels: filteredLabels,
       ...(parameters && { parameters }),
     }),
