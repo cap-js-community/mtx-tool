@@ -80,6 +80,8 @@ const mockInstanceFactory = (i) => ({
   service_plan_id: `plan-id-${i % 2}`,
   usable: true,
   labels: {
+    container_id: [`container-id-${i}`],
+    subaccount_id: [`subaccount-id-${i}`],
     instance_id: [`instance-id-${i}`],
     tenant_id: [`tenant-id-${Math.floor(i / 2)}`],
   },
@@ -100,6 +102,8 @@ const mockBindingFactory = (i) => ({
   name: `binding-name-${i}`,
   usable: true,
   labels: {
+    container_id: [`container-id-${i}`],
+    subaccount_id: [`subaccount-id-${i}`],
     tenant_id: [`tenant-id-${i}`],
   },
 });
