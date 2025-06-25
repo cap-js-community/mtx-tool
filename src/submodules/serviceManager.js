@@ -314,13 +314,10 @@ ${_formatOutput(bindings)}
 const serviceManagerLongList = async (context, [filterTenantId], [doJsonOutput, doReveal]) =>
   await _serviceManagerLongList(context, { filterTenantId, doJsonOutput, doReveal });
 
-const _requestCreateBinding = async (
-  context,
-  serviceInstanceId,
-  servicePlanId,
-  tenantId,
-  { name = randomString(32), parameters } = {}
-) => {
+const _requestCreateBinding = async (context, instance, { name = randomString(32), parameters } = {}) => {
+  const labels = Object.entries(instance.labels)
+    .filter(([key]) => !["container_id", "subaccount_id"].includes(key))
+    .reduce((acc, [key, value]) => ((acc[key] = value), acc), {});
   await _serviceManagerRequest(context, {
     retryMode: RETRY_MODE.ALL_FAILED,
     method: "POST",
@@ -329,11 +326,8 @@ const _requestCreateBinding = async (
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       name,
-      service_instance_id: serviceInstanceId,
-      labels: {
-        service_plan_id: [servicePlanId],
-        tenant_id: [tenantId],
-      },
+      service_instance_id: instance.id,
+      labels,
       ...(parameters && { parameters }),
     }),
   });
@@ -370,12 +364,7 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
     if (readyBindings.length < SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
       const missingBindingCount = SERVICE_MANAGER_IDEAL_BINDING_COUNT - instanceBindings.length;
       for (let i = 0; i < missingBindingCount; i++) {
-        changeQueue.enqueue(
-          async () =>
-            await _requestCreateBinding(context, instance.id, instance.service_plan_id, instance.labels.tenant_id[0], {
-              parameters,
-            })
-        );
+        changeQueue.enqueue(async () => await _requestCreateBinding(context, instance, { parameters }));
       }
       changeQueue.milestone().then(() => {
         logger.info(
@@ -468,9 +457,7 @@ const _serviceManagerRefreshBindings = async (context, { filterServicePlanId, fi
   const filteredBindings = bindings.filter((binding) => instanceById[binding.service_instance_id]);
   await limiter(svmRequestConcurrency, filteredBindings, async (binding) => {
     const instance = instanceById[binding.service_instance_id];
-    await _requestCreateBinding(context, instance.id, instance.service_plan_id, instance.labels.tenant_id[0], {
-      parameters,
-    });
+    await _requestCreateBinding(context, instance, { parameters });
     await _requestDeleteBinding(context, binding.id);
   });
   logger.info("refreshed %i binding%s", filteredBindings.length, filteredBindings.length === 1 ? "" : "s");
