@@ -47,5 +47,5 @@ jobs:
           node-version: 18
           cache: npm
       - run: npm ci
-      - run: npm test:resnap
+      - run: npm run test:resnap
       - run: git diff --exit-code .
