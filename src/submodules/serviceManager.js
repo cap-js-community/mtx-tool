@@ -320,7 +320,7 @@ const _requestCreateBinding = async (
   labels,
   { name = randomString(32), parameters } = {}
 ) => {
-  // NOTE: service-manager sets the container_id and subaccount_id labels itself, it will block requests that set these.
+  // NOTE: service-manager sets the container_id and subaccount_id itself and will block requests that set these.
   const filteredLabels = Object.entries(labels)
     .filter(([key]) => !["container_id", "subaccount_id"].includes(key))
     .reduce((acc, [key, value]) => ((acc[key] = value), acc), {});
