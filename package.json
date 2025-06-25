@@ -12,9 +12,9 @@
   ],
   "scripts": {
     "prepublishOnly": "npm ci --omit=dev && npx shx rm package-lock.json && npm shrinkwrap",
+    "patch": "npx patch-package",
     "test": "jest",
     "test:coverage": "jest --runInBand --coverageReporters=html --coverageReporters=text-summary",
-    "patch": "npx patch-package",
     "test:remove-file-snapshots": "npx shx rm -f '**/__snapshots__/*.snap'",
     "test:remove-inline-snapshots": "npx replace '\\.toMatchInlineSnapshot\\(\\s*`[\\s\\S]*?`\\s*\\);' '.toMatchInlineSnapshot();' test -r --include='*.test.js'",
     "test:resnap": "npm run patch && npm run test:remove-inline-snapshots && npm run test:remove-file-snapshots && npm t && npm run lint:fix",
