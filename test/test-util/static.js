@@ -1,8 +1,8 @@
 "use strict";
-const { format } = require("util");
+const util = require("util");
 const { partition } = require("../../src/shared/static");
 
-const outputFromLogger = (calls) => calls.map((args) => format(...args)).join("\n");
+const outputFromLogger = (calls) => calls.map((args) => util.format(...args)).join("\n");
 
 const outputFromLoggerPartitionFetch = (calls) => {
   const inputLogLines = outputFromLogger(calls).split("\n");
@@ -30,8 +30,16 @@ const collectRequestCount = (requests) =>
   }, {});
 
 const collectRequestMockCalls = (mockFn) =>
-  mockFn.mock.calls.map(([{ method, url, pathname, query }]) =>
-    [method ?? "GET", url, pathname, ...(query ? [JSON.stringify(query)] : [])].join(" ")
+  mockFn.mock.calls.map(([{ method, url, pathname, query, body }]) =>
+    [
+      [
+        method ?? "GET",
+        url,
+        pathname,
+        ...(query ? [util.formatWithOptions({ breakLength: Infinity }, "%O", query)] : []),
+      ].join(" "),
+      ...(body ? [util.formatWithOptions({ breakLength: Infinity }, "%O", body)] : []),
+    ].join("\n")
   );
 
 module.exports = {
