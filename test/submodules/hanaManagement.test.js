@@ -101,7 +101,7 @@ describe("hdi tests", () => {
       remoteUrl  jdbc:sap://host:port      
       user       user                      
       password   *** show with --reveal ***
-
+      
       designtime
       localUrl   jdbc:sap://localhost:30015
       remoteUrl  jdbc:sap://host:port      
