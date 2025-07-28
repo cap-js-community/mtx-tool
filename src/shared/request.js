@@ -102,6 +102,8 @@ const _request = async ({
     response = await fetchlib(_url, _options);
     const doStopRetry = sleepTime === RETRY_STOP_MARKER || _doStopRetry(retryMode, response);
     if (logged) {
+      // TODO better logging pipeline and add correlation id x-correlationid || x-correlation-id || x-vcap-request-id
+      const logParts = [];
       logger.info(
         doStopRetry
           ? `${_method} ${_url} ${response.status} ${response.statusText} (${Date.now() - startTime}ms)`
