@@ -13,6 +13,10 @@ const RETRY_POLL_FREQUENCIES = [6000, 12000, 24000, 48000];
 const RETRY_STOP_MARKER = -1;
 const RETRY_SLEEP_TIMES = [].concat(RETRY_POLL_FREQUENCIES, [RETRY_STOP_MARKER]);
 
+const ENV = Object.freeze({
+  CORRELATION: "MTX_CORRELATION",
+});
+
 const RETRY_MODE = Object.freeze({
   OFF: "OFF",
   TOO_MANY_REQUESTS: "TOO_MANY_REQUESTS",
@@ -56,7 +60,7 @@ const _request = async ({
   logged = true,
   checkStatus = true,
   retryMode = RETRY_MODE.TOO_MANY_REQUESTS,
-  showCorrelation = false,
+  showCorrelation = process.env[ENV.CORRELATION],
 }) => {
   if (path && !pathname && !search) {
     const searchIndex = path.indexOf("?");
