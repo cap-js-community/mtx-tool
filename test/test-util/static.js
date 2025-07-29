@@ -42,10 +42,17 @@ const collectRequestMockCalls = (mockFn) =>
     ].join("\n")
   );
 
+class MockHeaders {
+  constructor() {}
+  get() {}
+  has() {}
+}
+
 module.exports = {
   outputFromLogger,
   outputFromLoggerPartitionFetch,
   anonymizeListTimestamps,
   collectRequestCount,
   collectRequestMockCalls,
+  MockHeaders,
 };
