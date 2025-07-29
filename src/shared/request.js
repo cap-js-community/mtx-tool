@@ -56,6 +56,7 @@ const _request = async ({
   logged = true,
   checkStatus = true,
   retryMode = RETRY_MODE.TOO_MANY_REQUESTS,
+  showCorrelation = false,
 }) => {
   if (path && !pathname && !search) {
     const searchIndex = path.indexOf("?");
@@ -100,15 +101,20 @@ const _request = async ({
   for (const sleepTime of RETRY_SLEEP_TIMES) {
     const startTime = Date.now();
     response = await fetchlib(_url, _options);
+    const responseTime = Date.now() - startTime;
     const doStopRetry = sleepTime === RETRY_STOP_MARKER || _doStopRetry(retryMode, response);
     if (logged) {
-      // TODO better logging pipeline and add correlation id x-correlationid || x-correlation-id || x-vcap-request-id
-      const logParts = [];
-      logger.info(
-        doStopRetry
-          ? `${_method} ${_url} ${response.status} ${response.statusText} (${Date.now() - startTime}ms)`
-          : `${_method} ${_url} ${response.status} ${response.statusText} (${Date.now() - startTime}ms) retrying in ${sleepTime / 1000}sec`
+      const correlationHeader = ["X-CorrelationId", "X-Correlation-Id", "X-Vcap-Request-Id"].find((header) =>
+        response.headers.has(header)
       );
+      const logParts = [
+        `${_method} ${_url} ${response.status} ${response.statusText}`,
+        ...(showCorrelation
+          ? [`(${responseTime}ms, ${correlationHeader}: ${response.headers.get(correlationHeader)})`]
+          : [`(${responseTime}ms)`]),
+        ...(doStopRetry ? [] : [`retrying in ${sleepTime / 1000}sec`]),
+      ];
+      logger.info(logParts.join(" "));
     }
     if (doStopRetry) {
       break;
