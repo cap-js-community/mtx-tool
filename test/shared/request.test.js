@@ -16,12 +16,14 @@ const { request, RETRY_MODE } = require("../../src/shared/request");
 const { outputFromLogger } = require("../test-util/static");
 
 const baseOkResponse = {
+  headers: new Headers(),
   ok: true,
   status: 200,
   statusText: "OK",
 };
 
 const baseBadRequestResponse = {
+  headers: new Headers(),
   ok: false,
   status: 400,
   statusText: "Bad Request",
@@ -31,6 +33,7 @@ const baseBadRequestResponse = {
 };
 
 const baseTooManyRequestsResponse = {
+  headers: new Headers(),
   ok: false,
   status: 429,
   statusText: "Too Many Requests",
@@ -115,6 +118,7 @@ describe("request tests", () => {
     const busyResponseFactory = (index) =>
       Promise.resolve({
         index,
+        headers: new Headers(),
         status: 429,
         statusText: "Too Many Requests",
         text: () => Promise.resolve("too many requests, try again later"),
@@ -176,6 +180,7 @@ describe("request tests", () => {
     await expect(request({ url: "https://fake-server.com", pathname: "/path", retryMode: RETRY_MODE.OFF })).resolves
       .toMatchInlineSnapshot(`
             {
+              "headers": Headers {},
               "ok": true,
               "status": 200,
               "statusText": "OK",
@@ -197,6 +202,7 @@ describe("request tests", () => {
       request({ url: "https://fake-server.com", pathname: "/path", retryMode: RETRY_MODE.TOO_MANY_REQUESTS })
     ).resolves.toMatchInlineSnapshot(`
             {
+              "headers": Headers {},
               "ok": true,
               "status": 200,
               "statusText": "OK",
@@ -214,6 +220,7 @@ describe("request tests", () => {
       request({ url: "https://fake-server.com", pathname: "/path", retryMode: RETRY_MODE.TOO_MANY_REQUESTS })
     ).resolves.toMatchInlineSnapshot(`
             {
+              "headers": Headers {},
               "ok": true,
               "status": 200,
               "statusText": "OK",
@@ -236,6 +243,7 @@ describe("request tests", () => {
     await expect(request({ url: "https://fake-server.com", pathname: "/path", retryMode: RETRY_MODE.ALL_FAILED }))
       .resolves.toMatchInlineSnapshot(`
             {
+              "headers": Headers {},
               "ok": true,
               "status": 200,
               "statusText": "OK",
@@ -247,6 +255,7 @@ describe("request tests", () => {
     await expect(request({ url: "https://fake-server.com", pathname: "/path", retryMode: RETRY_MODE.ALL_FAILED }))
       .resolves.toMatchInlineSnapshot(`
             {
+              "headers": Headers {},
               "ok": true,
               "status": 200,
               "statusText": "OK",
@@ -256,6 +265,7 @@ describe("request tests", () => {
     await expect(request({ url: "https://fake-server.com", pathname: "/path", retryMode: RETRY_MODE.ALL_FAILED }))
       .resolves.toMatchInlineSnapshot(`
             {
+              "headers": Headers {},
               "ok": true,
               "status": 200,
               "statusText": "OK",

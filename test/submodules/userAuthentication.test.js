@@ -65,6 +65,12 @@ const contextMock = {
   }),
 };
 
+const responseFactory = (result) => ({
+  headers: new Headers(),
+  ok: true,
+  json: async () => result,
+});
+
 describe("uaa tests", () => {
   describe("without context", () => {
     test.each([
@@ -89,10 +95,7 @@ describe("uaa tests", () => {
       ["saas client --json", SAAS_CLIENT_TOKEN, [SUBDOMAIN], [false, true]],
       ["saas client --decode --json", SAAS_CLIENT_TOKEN, [SUBDOMAIN], [true, true]],
     ])("%s", async (_, token, passArgs, passFlags) => {
-      fetchMock.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ access_token: token, expires_in: Infinity }),
-      });
+      fetchMock.mockResolvedValueOnce(responseFactory({ access_token: token, expires_in: Infinity }));
       const result = await uaa.uaaClient(contextMock, passArgs, passFlags);
       expect(fetchMock).toHaveBeenCalledTimes(1);
       expect(fetchMock.mock.calls[0]).toMatchSnapshot();
@@ -106,15 +109,9 @@ describe("uaa tests", () => {
       ["saas passcode --userinfo", SAAS_PASSCODE_TOKEN, [PASSCODE, SUBDOMAIN], [false, false, true], 2],
       ["saas passcode --decode --userinfo", SAAS_PASSCODE_TOKEN, [PASSCODE, SUBDOMAIN], [true, false, true], 2],
     ])("%s", async (_, token, passArgs, passFlags, fetchCalls) => {
-      fetchMock.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ access_token: token, expires_in: Infinity }),
-      });
+      fetchMock.mockResolvedValueOnce(responseFactory({ access_token: token, expires_in: Infinity }));
       if (fetchCalls > 1) {
-        fetchMock.mockResolvedValueOnce({
-          ok: true,
-          json: async () => uaaUserInfoMock,
-        });
+        fetchMock.mockResolvedValueOnce(responseFactory(uaaUserInfoMock));
       }
       const result = await uaa.uaaPasscode(contextMock, passArgs, passFlags);
       expect(fetchMock).toHaveBeenCalledTimes(fetchCalls);
@@ -129,15 +126,9 @@ describe("uaa tests", () => {
       ["saas user --userinfo", SAAS_USER_TOKEN, [USERNAME, PASSWORD, SUBDOMAIN], [false, false, true], 2],
       ["saas user --decode --userinfo", SAAS_USER_TOKEN, [USERNAME, PASSWORD, SUBDOMAIN], [true, false, true], 2],
     ])("%s", async (_, token, passArgs, passFlags, fetchCalls) => {
-      fetchMock.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ access_token: token, expires_in: Infinity }),
-      });
+      fetchMock.mockResolvedValueOnce(responseFactory({ access_token: token, expires_in: Infinity }));
       if (fetchCalls > 1) {
-        fetchMock.mockResolvedValueOnce({
-          ok: true,
-          json: async () => uaaUserInfoMock,
-        });
+        fetchMock.mockResolvedValueOnce(responseFactory(uaaUserInfoMock));
       }
       const result = await uaa.uaaUser(contextMock, passArgs, passFlags);
       expect(fetchMock).toHaveBeenCalledTimes(fetchCalls);
@@ -210,10 +201,7 @@ describe("uaa tests", () => {
       });
       contextMock.getCachedUaaTokenFromCredentials.mockReturnValueOnce(token);
       if (fetchCalls > 0) {
-        fetchMock.mockResolvedValueOnce({
-          ok: true,
-          json: async () => uaaUserInfoMock,
-        });
+        fetchMock.mockResolvedValueOnce(responseFactory(uaaUserInfoMock));
       }
       const result = await uaa.uaaServicePasscode(contextMock, passArgs, passFlags);
       expect(fetchMock).toHaveBeenCalledTimes(fetchCalls);
@@ -266,10 +254,7 @@ describe("uaa tests", () => {
       });
       contextMock.getCachedUaaTokenFromCredentials.mockReturnValueOnce(token);
       if (fetchCalls > 0) {
-        fetchMock.mockResolvedValueOnce({
-          ok: true,
-          json: async () => uaaUserInfoMock,
-        });
+        fetchMock.mockResolvedValueOnce(responseFactory(uaaUserInfoMock));
       }
       const result = await uaa.uaaServiceUser(contextMock, passArgs, passFlags);
       expect(fetchMock).toHaveBeenCalledTimes(fetchCalls);
