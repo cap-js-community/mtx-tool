@@ -9,6 +9,7 @@ const sharedOAuthMock = require("../../src/shared/oauth");
 jest.mock("../../src/shared/oauth", () => require("../__mocks/shared/oauth"));
 
 const uaa = require("../../src/submodules/userAuthentication");
+const { MockHeaders } = require("../test-util/static");
 
 const SUBDOMAIN = "subdomain";
 const PASSCODE = "passcode90";
@@ -66,7 +67,7 @@ const contextMock = {
 };
 
 const responseFactory = (result) => ({
-  headers: new Headers(),
+  headers: new MockHeaders(),
   ok: true,
   json: async () => result,
 });
