@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- order is REMOVED, CHANGED, ADDED, FIXED -->
 
+## v0.10.2 - tbd
+
+### CHANGED
+
+- svm: new bindings inherit all labels from the underlying service instance.
+
+- svm: new bindings always get a `service_plan_id` label, which is expected by `@sap/cds-mtxs`.
+
+### ADDED
+
+- [experimental] set env variable `MTX_CORRELATION=1` to log correlation information for service responses.
+  we will show the first matching header of: `X-CorrelationId`, `X-Correlation-Id`, `X-Vcap-Request-Id`.
+
 ## v0.10.1 - 2025-06-23
 
 ### FIXED
