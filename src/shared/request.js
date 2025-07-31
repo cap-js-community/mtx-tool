@@ -108,8 +108,8 @@ const _request = async ({
     const responseTime = Date.now() - startTime;
     const doStopRetry = sleepTime === RETRY_STOP_MARKER || _doStopRetry(retryMode, response);
     if (logged) {
-      const correlationHeader = ["X-CorrelationId", "X-Correlation-Id", "X-Vcap-Request-Id"].find((header) =>
-        response.headers.has(header)
+      const correlationHeader = ["X-CorrelationId", "X-Correlation-Id", "X-Request-Id", "X-Vcap-Request-Id"].find(
+        (header) => response.headers.has(header)
       );
       const logParts = [
         `${_method} ${_url} ${response.status} ${response.statusText}`,
