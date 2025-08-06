@@ -1,4 +1,6 @@
 "use strict";
+
+jest.mock("crypto", () => require("../__mocks/shared/crypto"));
 const mockFetchLib = require("node-fetch");
 jest.mock("node-fetch", () => jest.fn());
 
