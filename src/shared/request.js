@@ -118,8 +118,8 @@ const _request = async ({
   const _bearerAuthHeader = auth && Object.prototype.hasOwnProperty.call(auth, "token") ? "Bearer " + auth.token : null;
   const _authHeader = _basicAuthHeader || _bearerAuthHeader;
   const _method = method || "GET";
-  const _correlationId = method !== "GET" && crypto.randomUUID();
-  const _correlationHeaders = method !== "GET" && {
+  const _correlationId = _method !== "GET" && crypto.randomUUID();
+  const _correlationHeaders = _method !== "GET" && {
     [HEADER.CORRELATION_ID_CAMEL_CASE]: _correlationId,
     [HEADER.CORRELATION_ID]: _correlationId,
   };
