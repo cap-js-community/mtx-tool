@@ -486,6 +486,8 @@ exports[`uaa tests xsuaa app tokens paas client --decode --json 1`] = `
     "headers": {
       "Accept": "application/json",
       "Content-Type": "application/x-www-form-urlencoded",
+      "X-Correlation-Id": "88888888-8888-8888-8888-888888888888",
+      "X-CorrelationId": "88888888-8888-8888-8888-888888888888",
     },
     "method": "POST",
   },
@@ -544,6 +546,8 @@ exports[`uaa tests xsuaa app tokens paas client --decode 1`] = `
     "headers": {
       "Accept": "application/json",
       "Content-Type": "application/x-www-form-urlencoded",
+      "X-Correlation-Id": "88888888-8888-8888-8888-888888888888",
+      "X-CorrelationId": "88888888-8888-8888-8888-888888888888",
     },
     "method": "POST",
   },
@@ -598,6 +602,8 @@ exports[`uaa tests xsuaa app tokens paas client --json 1`] = `
     "headers": {
       "Accept": "application/json",
       "Content-Type": "application/x-www-form-urlencoded",
+      "X-Correlation-Id": "88888888-8888-8888-8888-888888888888",
+      "X-CorrelationId": "88888888-8888-8888-8888-888888888888",
     },
     "method": "POST",
   },
@@ -618,6 +624,8 @@ exports[`uaa tests xsuaa app tokens paas client default 1`] = `
     "headers": {
       "Accept": "application/json",
       "Content-Type": "application/x-www-form-urlencoded",
+      "X-Correlation-Id": "88888888-8888-8888-8888-888888888888",
+      "X-CorrelationId": "88888888-8888-8888-8888-888888888888",
     },
     "method": "POST",
   },
@@ -637,6 +645,8 @@ exports[`uaa tests xsuaa app tokens saas client --decode --json 1`] = `
     "headers": {
       "Accept": "application/json",
       "Content-Type": "application/x-www-form-urlencoded",
+      "X-Correlation-Id": "88888888-8888-8888-8888-888888888888",
+      "X-CorrelationId": "88888888-8888-8888-8888-888888888888",
     },
     "method": "POST",
   },
@@ -695,6 +705,8 @@ exports[`uaa tests xsuaa app tokens saas client --decode 1`] = `
     "headers": {
       "Accept": "application/json",
       "Content-Type": "application/x-www-form-urlencoded",
+      "X-Correlation-Id": "88888888-8888-8888-8888-888888888888",
+      "X-CorrelationId": "88888888-8888-8888-8888-888888888888",
     },
     "method": "POST",
   },
@@ -749,6 +761,8 @@ exports[`uaa tests xsuaa app tokens saas client --json 1`] = `
     "headers": {
       "Accept": "application/json",
       "Content-Type": "application/x-www-form-urlencoded",
+      "X-Correlation-Id": "88888888-8888-8888-8888-888888888888",
+      "X-CorrelationId": "88888888-8888-8888-8888-888888888888",
     },
     "method": "POST",
   },
@@ -769,6 +783,8 @@ exports[`uaa tests xsuaa app tokens saas client default 1`] = `
     "headers": {
       "Accept": "application/json",
       "Content-Type": "application/x-www-form-urlencoded",
+      "X-Correlation-Id": "88888888-8888-8888-8888-888888888888",
+      "X-CorrelationId": "88888888-8888-8888-8888-888888888888",
     },
     "method": "POST",
   },
@@ -789,6 +805,8 @@ exports[`uaa tests xsuaa app tokens saas passcode --decode --userinfo 1`] = `
       "headers": {
         "Accept": "application/json",
         "Content-Type": "application/x-www-form-urlencoded",
+        "X-Correlation-Id": "88888888-8888-8888-8888-888888888888",
+        "X-CorrelationId": "88888888-8888-8888-8888-888888888888",
       },
       "method": "POST",
     },
@@ -882,6 +900,8 @@ exports[`uaa tests xsuaa app tokens saas passcode --decode 1`] = `
       "headers": {
         "Accept": "application/json",
         "Content-Type": "application/x-www-form-urlencoded",
+        "X-Correlation-Id": "88888888-8888-8888-8888-888888888888",
+        "X-CorrelationId": "88888888-8888-8888-8888-888888888888",
       },
       "method": "POST",
     },
@@ -959,6 +979,8 @@ exports[`uaa tests xsuaa app tokens saas passcode --json 1`] = `
       "headers": {
         "Accept": "application/json",
         "Content-Type": "application/x-www-form-urlencoded",
+        "X-Correlation-Id": "88888888-8888-8888-8888-888888888888",
+        "X-CorrelationId": "88888888-8888-8888-8888-888888888888",
       },
       "method": "POST",
     },
@@ -981,6 +1003,8 @@ exports[`uaa tests xsuaa app tokens saas passcode --userinfo 1`] = `
       "headers": {
         "Accept": "application/json",
         "Content-Type": "application/x-www-form-urlencoded",
+        "X-Correlation-Id": "88888888-8888-8888-8888-888888888888",
+        "X-CorrelationId": "88888888-8888-8888-8888-888888888888",
       },
       "method": "POST",
     },
@@ -1018,6 +1042,8 @@ exports[`uaa tests xsuaa app tokens saas passcode default 1`] = `
       "headers": {
         "Accept": "application/json",
         "Content-Type": "application/x-www-form-urlencoded",
+        "X-Correlation-Id": "88888888-8888-8888-8888-888888888888",
+        "X-CorrelationId": "88888888-8888-8888-8888-888888888888",
       },
       "method": "POST",
     },
@@ -1039,6 +1065,8 @@ exports[`uaa tests xsuaa app tokens saas user --decode --userinfo 1`] = `
       "headers": {
         "Accept": "application/json",
         "Content-Type": "application/x-www-form-urlencoded",
+        "X-Correlation-Id": "88888888-8888-8888-8888-888888888888",
+        "X-CorrelationId": "88888888-8888-8888-8888-888888888888",
       },
       "method": "POST",
     },
@@ -1145,6 +1173,8 @@ exports[`uaa tests xsuaa app tokens saas user --decode 1`] = `
       "headers": {
         "Accept": "application/json",
         "Content-Type": "application/x-www-form-urlencoded",
+        "X-Correlation-Id": "88888888-8888-8888-8888-888888888888",
+        "X-CorrelationId": "88888888-8888-8888-8888-888888888888",
       },
       "method": "POST",
     },
@@ -1235,6 +1265,8 @@ exports[`uaa tests xsuaa app tokens saas user --json 1`] = `
       "headers": {
         "Accept": "application/json",
         "Content-Type": "application/x-www-form-urlencoded",
+        "X-Correlation-Id": "88888888-8888-8888-8888-888888888888",
+        "X-CorrelationId": "88888888-8888-8888-8888-888888888888",
       },
       "method": "POST",
     },
@@ -1257,6 +1289,8 @@ exports[`uaa tests xsuaa app tokens saas user --userinfo 1`] = `
       "headers": {
         "Accept": "application/json",
         "Content-Type": "application/x-www-form-urlencoded",
+        "X-Correlation-Id": "88888888-8888-8888-8888-888888888888",
+        "X-CorrelationId": "88888888-8888-8888-8888-888888888888",
       },
       "method": "POST",
     },
@@ -1294,6 +1328,8 @@ exports[`uaa tests xsuaa app tokens saas user default 1`] = `
       "headers": {
         "Accept": "application/json",
         "Content-Type": "application/x-www-form-urlencoded",
+        "X-Correlation-Id": "88888888-8888-8888-8888-888888888888",
+        "X-CorrelationId": "88888888-8888-8888-8888-888888888888",
       },
       "method": "POST",
     },

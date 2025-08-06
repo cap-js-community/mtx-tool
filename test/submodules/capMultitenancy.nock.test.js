@@ -16,12 +16,17 @@ const { Logger: MockLogger } = require("../../src/shared/logger");
 const mockLogger = MockLogger.getInstance();
 jest.mock("../../src/shared/logger", () => require("../__mocks/shared/logger"));
 
+const {
+  _: { LogRequestId },
+} = require("../../src/shared/request");
+
 const testTenantId = "5ecc7413-2b7e-414a-9496-ad4a61f6cccf";
 
 const freshContext = async () => await newContext({ usePersistedCache: false, isReadonlyCommand: false });
 
 describe("cds nock tests", () => {
   afterEach(() => {
+    LogRequestId.reset();
     nock.restore();
   });
 
@@ -98,7 +103,7 @@ describe("cds nock tests", () => {
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
         
-        GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/saas-provisioning/tenant 200 OK (88ms)"
+        req-01 GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/saas-provisioning/tenant 200 OK (88ms)"
       `);
       expect(mockLogger.error.mock.calls).toHaveLength(0);
     });
@@ -139,7 +144,7 @@ describe("cds nock tests", () => {
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
         
-        GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/saas-provisioning/tenant/5ecc7413-2b7e-414a-9496-ad4a61f6cccf 200 OK (88ms)"
+        req-01 GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/saas-provisioning/tenant/5ecc7413-2b7e-414a-9496-ad4a61f6cccf 200 OK (88ms)"
       `);
       expect(mockLogger.error.mock.calls).toHaveLength(0);
     });
@@ -170,7 +175,7 @@ describe("cds nock tests", () => {
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
         
-        GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/saas-provisioning/tenant 200 OK (88ms)"
+        req-01 GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/saas-provisioning/tenant 200 OK (88ms)"
       `);
       expect(mockLogger.error.mock.calls).toHaveLength(0);
     });
@@ -182,7 +187,7 @@ describe("cds nock tests", () => {
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
         
-        GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/saas-provisioning/tenant/5ecc7413-2b7e-414a-9496-ad4a61f6cccf 200 OK (88ms)"
+        req-01 GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/saas-provisioning/tenant/5ecc7413-2b7e-414a-9496-ad4a61f6cccf 200 OK (88ms)"
       `);
       expect(mockLogger.error.mock.calls).toHaveLength(0);
     });
@@ -200,10 +205,10 @@ describe("cds nock tests", () => {
       #  tenantId                              status    message  log                                                 
       1  5ecc7413-2b7e-414a-9496-ad4a61f6cccf  FINISHED           cds-upgrade-5ecc7413-2b7e-414a-9496-ad4a61f6cccf.txt
       
-      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='8de6330c-6b52-40b0-86eb-10e0447f0c97') 200 OK (88ms)
-      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='8de6330c-6b52-40b0-86eb-10e0447f0c97') 200 OK (88ms)
-      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='8de6330c-6b52-40b0-86eb-10e0447f0c97') 200 OK (88ms)
-      POST https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/saas-provisioning/upgrade 202 Accepted (88ms)"
+      req-01 POST https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/saas-provisioning/upgrade 202 Accepted (88ms)
+      req-02 GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='8de6330c-6b52-40b0-86eb-10e0447f0c97') 200 OK (88ms)
+      req-03 GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='8de6330c-6b52-40b0-86eb-10e0447f0c97') 200 OK (88ms)
+      req-04 GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='8de6330c-6b52-40b0-86eb-10e0447f0c97') 200 OK (88ms)"
     `);
     expect(mockLogger.error.mock.calls).toHaveLength(0);
   });
@@ -235,16 +240,16 @@ describe("cds nock tests", () => {
       9   cf528063-6a43-4bf2-8ccc-ca4e6d75d88e  FINISHED           cds-upgrade-cf528063-6a43-4bf2-8ccc-ca4e6d75d88e.txt
       10  dde70ec5-983d-4848-b50c-fb2cdac7d359  FINISHED           cds-upgrade-dde70ec5-983d-4848-b50c-fb2cdac7d359.txt
       
-      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='d8c2f77d-5e86-48d7-a877-caebc8aba8ff') 200 OK (88ms)
-      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='d8c2f77d-5e86-48d7-a877-caebc8aba8ff') 200 OK (88ms)
-      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='d8c2f77d-5e86-48d7-a877-caebc8aba8ff') 200 OK (88ms)
-      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='d8c2f77d-5e86-48d7-a877-caebc8aba8ff') 200 OK (88ms)
-      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='d8c2f77d-5e86-48d7-a877-caebc8aba8ff') 200 OK (88ms)
-      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='d8c2f77d-5e86-48d7-a877-caebc8aba8ff') 200 OK (88ms)
-      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='d8c2f77d-5e86-48d7-a877-caebc8aba8ff') 200 OK (88ms)
-      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='d8c2f77d-5e86-48d7-a877-caebc8aba8ff') 200 OK (88ms)
-      GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='d8c2f77d-5e86-48d7-a877-caebc8aba8ff') 200 OK (88ms)
-      POST https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/saas-provisioning/upgrade 202 Accepted (88ms)"
+      req-01 POST https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/saas-provisioning/upgrade 202 Accepted (88ms)
+      req-02 GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='d8c2f77d-5e86-48d7-a877-caebc8aba8ff') 200 OK (88ms)
+      req-03 GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='d8c2f77d-5e86-48d7-a877-caebc8aba8ff') 200 OK (88ms)
+      req-04 GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='d8c2f77d-5e86-48d7-a877-caebc8aba8ff') 200 OK (88ms)
+      req-05 GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='d8c2f77d-5e86-48d7-a877-caebc8aba8ff') 200 OK (88ms)
+      req-06 GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='d8c2f77d-5e86-48d7-a877-caebc8aba8ff') 200 OK (88ms)
+      req-07 GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='d8c2f77d-5e86-48d7-a877-caebc8aba8ff') 200 OK (88ms)
+      req-08 GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='d8c2f77d-5e86-48d7-a877-caebc8aba8ff') 200 OK (88ms)
+      req-09 GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='d8c2f77d-5e86-48d7-a877-caebc8aba8ff') 200 OK (88ms)
+      req-10 GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/jobs/pollJob(ID='d8c2f77d-5e86-48d7-a877-caebc8aba8ff') 200 OK (88ms)"
     `);
     expect(mockLogger.error.mock.calls).toHaveLength(0);
   });

@@ -2,6 +2,7 @@
 
 const urllib = require("url");
 const fetchlib = require("node-fetch");
+const crypto = require("crypto");
 
 const { sleep } = require("./static");
 const { fail } = require("./error");
@@ -17,10 +18,25 @@ const ENV = Object.freeze({
   CORRELATION: "MTX_CORRELATION",
 });
 
+const HEADER = Object.freeze({
+  CORRELATION_ID_CAMEL_CASE: "X-CorrelationId",
+  CORRELATION_ID: "X-Correlation-Id",
+  REQUEST_ID: "X-Request-Id",
+  VCAP_REQUEST_ID: "X-Vcap-Request-Id",
+});
+
+const CORRELATION_HEADERS_RECEIVER_PRECEDENCE = [
+  HEADER.CORRELATION_ID_CAMEL_CASE,
+  HEADER.CORRELATION_ID,
+  HEADER.REQUEST_ID,
+  HEADER.VCAP_REQUEST_ID,
+];
+
+// TODO: most 4xx responses should not trigger retries
 const RETRY_MODE = Object.freeze({
   OFF: "OFF",
-  TOO_MANY_REQUESTS: "TOO_MANY_REQUESTS",
-  ALL_FAILED: "ALL_FAILED",
+  TOO_MANY_REQUESTS: "TOO_MANY_REQUESTS", // 429
+  ALL_FAILED: "ALL_FAILED", // >= 400
 });
 
 const logger = Logger.getInstance();
@@ -37,6 +53,18 @@ const _doStopRetry = (mode, response) => {
       throw new Error("unknown retry mode");
   }
 };
+
+class LogRequestId {
+  static #id = 0;
+
+  static next() {
+    return ++this.#id < 100 ? ("0" + this.#id).slice(-2) : String(this.#id);
+  }
+
+  static reset() {
+    this.#id = 0;
+  }
+}
 
 const _request = async ({
   // https://nodejs.org/docs/latest-v10.x/api/url.html
@@ -90,10 +118,16 @@ const _request = async ({
   const _bearerAuthHeader = auth && Object.prototype.hasOwnProperty.call(auth, "token") ? "Bearer " + auth.token : null;
   const _authHeader = _basicAuthHeader || _bearerAuthHeader;
   const _method = method || "GET";
+  const _correlationId = _method !== "GET" && crypto.randomUUID();
+  const _correlationHeaders = _method !== "GET" && {
+    [HEADER.CORRELATION_ID_CAMEL_CASE]: _correlationId,
+    [HEADER.CORRELATION_ID]: _correlationId,
+  };
   const _options = {
     method: _method,
     headers: {
       ...headers,
+      ..._correlationHeaders,
       ...(_authHeader && { Authorization: _authHeader }),
     },
     ...(agent && { agent }),
@@ -102,16 +136,16 @@ const _request = async ({
   };
 
   let response;
-  for (const sleepTime of RETRY_SLEEP_TIMES) {
+  const logRequestId = logged && LogRequestId.next();
+  for (const [attempt, sleepTime] of RETRY_SLEEP_TIMES.entries()) {
     const startTime = Date.now();
     response = await fetchlib(_url, _options);
     const responseTime = Date.now() - startTime;
     const doStopRetry = sleepTime === RETRY_STOP_MARKER || _doStopRetry(retryMode, response);
     if (logged) {
-      const correlationHeader = ["X-CorrelationId", "X-Correlation-Id", "X-Vcap-Request-Id"].find((header) =>
-        response.headers.has(header)
-      );
+      const correlationHeader = CORRELATION_HEADERS_RECEIVER_PRECEDENCE.find((header) => response.headers.has(header));
       const logParts = [
+        attempt > 0 || !doStopRetry ? `req-${logRequestId}-${attempt + 1}` : `req-${logRequestId}`,
         `${_method} ${_url} ${response.status} ${response.statusText}`,
         ...(showCorrelation
           ? [`(${responseTime}ms, ${correlationHeader}: ${response.headers.get(correlationHeader)})`]
@@ -143,4 +177,7 @@ const request = async (options) => {
 module.exports = {
   RETRY_MODE,
   request,
+  _: {
+    LogRequestId,
+  },
 };

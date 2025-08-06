@@ -7,7 +7,7 @@ const outputFromLogger = (calls) => calls.map((args) => util.format(...args)).jo
 const outputFromLoggerPartitionFetch = (calls) => {
   const inputLogLines = outputFromLogger(calls).split("\n");
   const [fetchLogLines, logLines] = partition(inputLogLines, (line) =>
-    /^(?:GET|POST|PATCH|DELETE) https:\/\//i.test(line)
+    /^req-\d+ (?:GET|POST|PATCH|DELETE) https:\/\//i.test(line)
   );
   const fetchLogLinesWithMockTimestamp = fetchLogLines.map((line) => line.replace(/\(\d+ms\)/g, "(88ms)"));
   fetchLogLinesWithMockTimestamp.sort(); // NOTE: this is inherently unstable otherwise

@@ -16,12 +16,17 @@ const { Logger: MockLogger } = require("../../src/shared/logger");
 const mockLogger = MockLogger.getInstance();
 jest.mock("../../src/shared/logger", () => require("../__mocks/shared/logger"));
 
+const {
+  _: { LogRequestId },
+} = require("../../src/shared/request");
+
 const testTenantId = "5ecc7413-2b7e-414a-9496-ad4a61f6cccf";
 
 const freshContext = async () => await newContext({ usePersistedCache: false, isReadonlyCommand: false });
 
 describe("svm nock tests", () => {
   afterEach(() => {
+    LogRequestId.reset();
     svm._._reset();
     nock.restore();
   });
@@ -98,10 +103,10 @@ describe("svm nock tests", () => {
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
         
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings 200 OK (88ms)
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances 200 OK (88ms)
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_offerings 200 OK (88ms)
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_plans 200 OK (88ms)"
+        req-01 GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_offerings 200 OK (88ms)
+        req-02 GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_plans 200 OK (88ms)
+        req-03 GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances 200 OK (88ms)
+        req-04 GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings 200 OK (88ms)"
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
@@ -164,10 +169,10 @@ describe("svm nock tests", () => {
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
         
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings?labelQuery=tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances?labelQuery=tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_offerings 200 OK (88ms)
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_plans 200 OK (88ms)"
+        req-01 GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_offerings 200 OK (88ms)
+        req-02 GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_plans 200 OK (88ms)
+        req-03 GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances?labelQuery=tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)
+        req-04 GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings?labelQuery=tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)"
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
@@ -199,8 +204,8 @@ describe("svm nock tests", () => {
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
         
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings 200 OK (88ms)
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances 200 OK (88ms)"
+        req-01 GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances 200 OK (88ms)
+        req-02 GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings 200 OK (88ms)"
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
@@ -226,8 +231,8 @@ describe("svm nock tests", () => {
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
         
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings?labelQuery=tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances?labelQuery=tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)"
+        req-01 GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances?labelQuery=tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)
+        req-02 GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings?labelQuery=tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)"
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
