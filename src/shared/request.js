@@ -55,14 +55,14 @@ const _doStopRetry = (mode, response) => {
 };
 
 class LogRequestId {
-  static __id = 0;
+  static #id = 0;
 
   static next() {
-    return ++LogRequestId.__id < 100 ? ("0" + LogRequestId.__id).slice(-2) : String(LogRequestId.__id);
+    return ++this.#id < 100 ? ("0" + this.#id).slice(-2) : String(this.#id);
   }
 
   static reset() {
-    LogRequestId.__id = 0;
+    this.#id = 0;
   }
 }
 
