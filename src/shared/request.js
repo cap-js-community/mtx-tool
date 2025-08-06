@@ -62,7 +62,7 @@ class LogRequestId {
   }
 
   static reset() {
-    this.__id = 0;
+    LogRequestId.__id = 0;
   }
 }
 
