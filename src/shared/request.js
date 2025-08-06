@@ -137,7 +137,7 @@ const _request = async ({
 
   let response;
   const logRequestId = logged && LogRequestId.next();
-  for (const sleepTime of RETRY_SLEEP_TIMES) {
+  for (const [attempt, sleepTime] of RETRY_SLEEP_TIMES.entries()) {
     const startTime = Date.now();
     response = await fetchlib(_url, _options);
     const responseTime = Date.now() - startTime;
@@ -145,7 +145,7 @@ const _request = async ({
     if (logged) {
       const correlationHeader = CORRELATION_HEADERS_RECEIVER_PRECEDENCE.find((header) => response.headers.has(header));
       const logParts = [
-        `req-${logRequestId}`,
+        attempt > 0 || !doStopRetry ? `req-${logRequestId}-${attempt + 1}` : `req-${logRequestId}`,
         `${_method} ${_url} ${response.status} ${response.statusText}`,
         ...(showCorrelation
           ? [`(${responseTime}ms, ${correlationHeader}: ${response.headers.get(correlationHeader)})`]
