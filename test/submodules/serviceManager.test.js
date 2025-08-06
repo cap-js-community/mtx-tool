@@ -207,13 +207,13 @@ describe("svm tests", () => {
         '{"name":"xxx","service_instance_id":"instance-id-3","labels":{"instance_id":["instance-id-3"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-1"]}}'",
           "POST service-manager-url /v1/service_bindings { async: false }
         '{"name":"xxx","service_instance_id":"instance-id-4","labels":{"instance_id":["instance-id-4"],"tenant_id":["tenant-id-2"],"service_plan_id":["plan-id-0"]}}'",
-          "POST service-manager-url /v1/service_bindings { async: false }
-        '{"name":"xxx","service_instance_id":"instance-id-5","labels":{"instance_id":["instance-id-5"],"tenant_id":["tenant-id-2"],"service_plan_id":["plan-id-1"]}}'",
           "DELETE service-manager-url /v1/service_bindings/binding-id-0 { async: false }",
           "DELETE service-manager-url /v1/service_bindings/binding-id-1 { async: false }",
           "DELETE service-manager-url /v1/service_bindings/binding-id-2 { async: false }",
           "DELETE service-manager-url /v1/service_bindings/binding-id-3 { async: false }",
           "DELETE service-manager-url /v1/service_bindings/binding-id-4 { async: false }",
+          "POST service-manager-url /v1/service_bindings { async: false }
+        '{"name":"xxx","service_instance_id":"instance-id-5","labels":{"instance_id":["instance-id-5"],"tenant_id":["tenant-id-2"],"service_plan_id":["plan-id-1"]}}'",
           "DELETE service-manager-url /v1/service_bindings/binding-id-5 { async: false }",
         ]
       `);
