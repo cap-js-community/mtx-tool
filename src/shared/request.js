@@ -54,6 +54,13 @@ const _doStopRetry = (mode, response) => {
   }
 };
 
+const _logRequestId = () => {
+  if (!_logRequestId.__id) {
+    _logRequestId.__id = 0;
+  }
+  return ("0" + (++_logRequestId.__id % 100)).slice(-2);
+};
+
 const _request = async ({
   // https://nodejs.org/docs/latest-v10.x/api/url.html
   url,
@@ -76,7 +83,7 @@ const _request = async ({
   logged = true,
   checkStatus = true,
   retryMode = RETRY_MODE.TOO_MANY_REQUESTS,
-  showCorrelation = process.env[ENV.CORRELATION],
+  showCorrelation = false,
   correlationId = crypto.randomUUID(),
 }) => {
   if (path && !pathname && !search) {
@@ -107,13 +114,18 @@ const _request = async ({
   const _bearerAuthHeader = auth && Object.prototype.hasOwnProperty.call(auth, "token") ? "Bearer " + auth.token : null;
   const _authHeader = _basicAuthHeader || _bearerAuthHeader;
   const _method = method || "GET";
+  const _correlationHeaders = method !== "GET" && {
+    [HEADER.CORRELATION_ID_CAMEL_CASE]: correlationId,
+    [HEADER.CORRELATION_ID]: correlationId,
+    [HEADER.REQUEST_ID]: correlationId,
+    [HEADER.VCAP_REQUEST_ID]: correlationId,
+  };
   const _options = {
     method: _method,
     headers: {
       ...headers,
       ...(_authHeader && { Authorization: _authHeader }),
-      [HEADER.CORRELATION_ID_CAMEL_CASE]: correlationId,
-      [HEADER.CORRELATION_ID]: correlationId,
+      ..._correlationHeaders,
     },
     ...(agent && { agent }),
     ...(body && { body }),
@@ -121,6 +133,7 @@ const _request = async ({
   };
 
   let response;
+  const logRequestId = logged && _logRequestId();
   for (const sleepTime of RETRY_SLEEP_TIMES) {
     const startTime = Date.now();
     response = await fetchlib(_url, _options);
@@ -129,6 +142,7 @@ const _request = async ({
     if (logged) {
       const correlationHeader = CORRELATION_HEADERS_RECEIVER_PRECEDENCE.find((header) => response.headers.has(header));
       const logParts = [
+        `req-${logRequestId}`,
         `${_method} ${_url} ${response.status} ${response.statusText}`,
         ...(showCorrelation
           ? [`(${responseTime}ms, ${correlationHeader}: ${response.headers.get(correlationHeader)})`]
