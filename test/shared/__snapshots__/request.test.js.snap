@@ -5,10 +5,7 @@ exports[`request tests bad request unchecked 1`] = `
   [
     "https://fake-server.com/path",
     {
-      "headers": {
-        "X-Correlation-Id": "88888888-8888-8888-8888-888888888888",
-        "X-CorrelationId": "88888888-8888-8888-8888-888888888888",
-      },
+      "headers": {},
       "method": "GET",
     },
   ],
@@ -20,10 +17,7 @@ exports[`request tests basic bad request 2`] = `
   [
     "https://fake-server.com/path",
     {
-      "headers": {
-        "X-Correlation-Id": "88888888-8888-8888-8888-888888888888",
-        "X-CorrelationId": "88888888-8888-8888-8888-888888888888",
-      },
+      "headers": {},
       "method": "GET",
     },
   ],
@@ -35,10 +29,7 @@ exports[`request tests basic ok 1`] = `
   [
     "https://fake-server.com/path",
     {
-      "headers": {
-        "X-Correlation-Id": "88888888-8888-8888-8888-888888888888",
-        "X-CorrelationId": "88888888-8888-8888-8888-888888888888",
-      },
+      "headers": {},
       "method": "GET",
     },
   ],
@@ -175,8 +166,6 @@ exports[`request tests ok with basic auth 1`] = `
     {
       "headers": {
         "Authorization": "Basic dXNlcm5hbWU6dGVzdC1wYXNzd29yZA==",
-        "X-Correlation-Id": "88888888-8888-8888-8888-888888888888",
-        "X-CorrelationId": "88888888-8888-8888-8888-888888888888",
       },
       "method": "GET",
     },
@@ -191,8 +180,6 @@ exports[`request tests ok with bearer auth 1`] = `
     {
       "headers": {
         "Authorization": "Bearer test-token",
-        "X-Correlation-Id": "88888888-8888-8888-8888-888888888888",
-        "X-CorrelationId": "88888888-8888-8888-8888-888888888888",
       },
       "method": "GET",
     },
@@ -205,10 +192,7 @@ exports[`request tests ok with lots of options 1`] = `
   [
     "https://server/path?hello=world&foo=bar#hashed",
     {
-      "headers": {
-        "X-Correlation-Id": "88888888-8888-8888-8888-888888888888",
-        "X-CorrelationId": "88888888-8888-8888-8888-888888888888",
-      },
+      "headers": {},
       "method": "GET",
       "redirect": true,
     },
@@ -221,10 +205,7 @@ exports[`request tests ok with no logging 1`] = `
   [
     "https://fake-server.com/path",
     {
-      "headers": {
-        "X-Correlation-Id": "88888888-8888-8888-8888-888888888888",
-        "X-CorrelationId": "88888888-8888-8888-8888-888888888888",
-      },
+      "headers": {},
       "method": "GET",
     },
   ],
