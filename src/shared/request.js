@@ -117,15 +117,13 @@ const _request = async ({
   const _correlationHeaders = method !== "GET" && {
     [HEADER.CORRELATION_ID_CAMEL_CASE]: correlationId,
     [HEADER.CORRELATION_ID]: correlationId,
-    [HEADER.REQUEST_ID]: correlationId,
-    [HEADER.VCAP_REQUEST_ID]: correlationId,
   };
   const _options = {
     method: _method,
     headers: {
       ...headers,
-      ...(_authHeader && { Authorization: _authHeader }),
       ..._correlationHeaders,
+      ...(_authHeader && { Authorization: _authHeader }),
     },
     ...(agent && { agent }),
     ...(body && { body }),
