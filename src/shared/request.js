@@ -58,7 +58,7 @@ class LogRequestId {
   static __id = 0;
 
   static next() {
-    return ("0" + (++LogRequestId.__id % 100)).slice(-2);
+    return ++LogRequestId.__id < 100 ? ("0" + LogRequestId.__id).slice(-2) : String(LogRequestId.__id);
   }
 
   static reset() {
