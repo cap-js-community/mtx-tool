@@ -16,12 +16,17 @@ const { Logger: MockLogger } = require("../../src/shared/logger");
 const mockLogger = MockLogger.getInstance();
 jest.mock("../../src/shared/logger", () => require("../__mocks/shared/logger"));
 
+const {
+  _: { LogRequestId },
+} = require("../../src/shared/request");
+
 const testTenantId = "5ecc7413-2b7e-414a-9496-ad4a61f6cccf";
 
 const freshContext = async () => await newContext({ usePersistedCache: false, isReadonlyCommand: false });
 
 describe("reg nock tests", () => {
   afterEach(() => {
+    LogRequestId.reset();
     nock.restore();
   });
 
