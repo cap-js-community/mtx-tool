@@ -54,12 +54,17 @@ const _doStopRetry = (mode, response) => {
   }
 };
 
-const _logRequestId = () => {
-  if (!_logRequestId.__id) {
-    _logRequestId.__id = 0;
+class LogRequestId {
+  static __id = 0;
+
+  static next() {
+    return ("0" + (++LogRequestId.__id % 100)).slice(-2);
   }
-  return ("0" + (++_logRequestId.__id % 100)).slice(-2);
-};
+
+  static reset() {
+    this.__id = 0;
+  }
+}
 
 const _request = async ({
   // https://nodejs.org/docs/latest-v10.x/api/url.html
@@ -131,7 +136,7 @@ const _request = async ({
   };
 
   let response;
-  const logRequestId = logged && _logRequestId();
+  const logRequestId = logged && LogRequestId.next();
   for (const sleepTime of RETRY_SLEEP_TIMES) {
     const startTime = Date.now();
     response = await fetchlib(_url, _options);
@@ -172,4 +177,7 @@ const request = async (options) => {
 module.exports = {
   RETRY_MODE,
   request,
+  _: {
+    LogRequestId,
+  },
 };
