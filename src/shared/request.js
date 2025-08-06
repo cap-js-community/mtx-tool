@@ -32,10 +32,10 @@ const CORRELATION_HEADERS_RECEIVER_PRECEDENCE = [
   HEADER.VCAP_REQUEST_ID,
 ];
 
+// TODO: most 4xx responses should not trigger retries
 const RETRY_MODE = Object.freeze({
   OFF: "OFF",
   TOO_MANY_REQUESTS: "TOO_MANY_REQUESTS", // 429
-  ALL_SERVER_ERROR: "ALL_SERVER_ERROR", // 5xx
   ALL_FAILED: "ALL_FAILED", // >= 400
 });
 
@@ -83,8 +83,7 @@ const _request = async ({
   logged = true,
   checkStatus = true,
   retryMode = RETRY_MODE.TOO_MANY_REQUESTS,
-  showCorrelation = false,
-  correlationId = crypto.randomUUID(),
+  showCorrelation = process.env[ENV.CORRELATION],
 }) => {
   if (path && !pathname && !search) {
     const searchIndex = path.indexOf("?");
@@ -114,9 +113,10 @@ const _request = async ({
   const _bearerAuthHeader = auth && Object.prototype.hasOwnProperty.call(auth, "token") ? "Bearer " + auth.token : null;
   const _authHeader = _basicAuthHeader || _bearerAuthHeader;
   const _method = method || "GET";
+  const _correlationId = method !== "GET" && crypto.randomUUID();
   const _correlationHeaders = method !== "GET" && {
-    [HEADER.CORRELATION_ID_CAMEL_CASE]: correlationId,
-    [HEADER.CORRELATION_ID]: correlationId,
+    [HEADER.CORRELATION_ID_CAMEL_CASE]: _correlationId,
+    [HEADER.CORRELATION_ID]: _correlationId,
   };
   const _options = {
     method: _method,
