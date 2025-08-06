@@ -2,6 +2,7 @@
 
 const urllib = require("url");
 const fetchlib = require("node-fetch");
+const crypto = require("crypto");
 
 const { sleep } = require("./static");
 const { fail } = require("./error");
@@ -17,10 +18,25 @@ const ENV = Object.freeze({
   CORRELATION: "MTX_CORRELATION",
 });
 
+const HEADER = Object.freeze({
+  CORRELATION_ID_CAMEL_CASE: "X-CorrelationId",
+  CORRELATION_ID: "X-Correlation-Id",
+  REQUEST_ID: "X-Request-Id",
+  VCAP_REQUEST_ID: "X-Vcap-Request-Id",
+});
+
+const CORRELATION_HEADERS_RECEIVER_PRECEDENCE = [
+  HEADER.CORRELATION_ID_CAMEL_CASE,
+  HEADER.CORRELATION_ID,
+  HEADER.REQUEST_ID,
+  HEADER.VCAP_REQUEST_ID,
+];
+
 const RETRY_MODE = Object.freeze({
   OFF: "OFF",
-  TOO_MANY_REQUESTS: "TOO_MANY_REQUESTS",
-  ALL_FAILED: "ALL_FAILED",
+  TOO_MANY_REQUESTS: "TOO_MANY_REQUESTS", // 429
+  ALL_SERVER_ERROR: "ALL_SERVER_ERROR", // 5xx
+  ALL_FAILED: "ALL_FAILED", // >= 400
 });
 
 const logger = Logger.getInstance();
@@ -61,6 +77,7 @@ const _request = async ({
   checkStatus = true,
   retryMode = RETRY_MODE.TOO_MANY_REQUESTS,
   showCorrelation = process.env[ENV.CORRELATION],
+  correlationId = crypto.randomUUID(),
 }) => {
   if (path && !pathname && !search) {
     const searchIndex = path.indexOf("?");
@@ -95,6 +112,8 @@ const _request = async ({
     headers: {
       ...headers,
       ...(_authHeader && { Authorization: _authHeader }),
+      [HEADER.CORRELATION_ID_CAMEL_CASE]: correlationId,
+      [HEADER.CORRELATION_ID]: correlationId,
     },
     ...(agent && { agent }),
     ...(body && { body }),
@@ -108,9 +127,7 @@ const _request = async ({
     const responseTime = Date.now() - startTime;
     const doStopRetry = sleepTime === RETRY_STOP_MARKER || _doStopRetry(retryMode, response);
     if (logged) {
-      const correlationHeader = ["X-CorrelationId", "X-Correlation-Id", "X-Request-Id", "X-Vcap-Request-Id"].find(
-        (header) => response.headers.has(header)
-      );
+      const correlationHeader = CORRELATION_HEADERS_RECEIVER_PRECEDENCE.find((header) => response.headers.has(header));
       const logParts = [
         `${_method} ${_url} ${response.status} ${response.statusText}`,
         ...(showCorrelation
