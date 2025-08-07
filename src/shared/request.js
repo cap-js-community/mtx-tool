@@ -147,7 +147,7 @@ const _request = async ({
       const correlationHeader = CORRELATION_HEADERS_RECEIVER_PRECEDENCE.find((header) => response.headers.has(header));
       logRequestId ??= doLogAttempt && LogRequestId.next();
       const logParts = [
-        ...(doLogAttempt ? [`[req-${logRequestId} ${attempt + 1}]`] : []),
+        ...(doLogAttempt ? [`[req-${logRequestId} ${attempt + 1}/${RETRY_SLEEP_TIMES.length}]`] : []),
         `${_method} ${_url} ${response.status} ${response.statusText}`,
         ...(showCorrelation
           ? [`(${responseTime}ms, ${correlationHeader}: ${response.headers.get(correlationHeader)})`]
