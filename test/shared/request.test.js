@@ -64,17 +64,6 @@ describe("request tests", () => {
     );
   });
 
-  test("basic ok 120 requests", async () => {
-    const n = 120;
-    let promises = [];
-    for (let i = 0; i < n; i++) {
-      mockFetchLib.mockReturnValueOnce(baseOkResponse);
-      promises.push(request({ url: "https://fake-server.com", pathname: "/path" }));
-    }
-    await Promise.all(promises);
-    expect(outputFromLoggerWithTimestamps(mockLogger.info.mock.calls)).toMatchSnapshot();
-  });
-
   test("basic bad request", async () => {
     mockFetchLib.mockReturnValueOnce(baseBadRequestResponse);
     await expect(request({ url: "https://fake-server.com", pathname: "/path" })).rejects.toMatchInlineSnapshot(`

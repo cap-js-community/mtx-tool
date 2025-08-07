@@ -136,20 +136,22 @@ const _request = async ({
   };
 
   let response;
-  const logRequestId = logged && LogRequestId.next();
+  let logRequestId;
   for (const [attempt, sleepTime] of RETRY_SLEEP_TIMES.entries()) {
     const startTime = Date.now();
     response = await fetchlib(_url, _options);
     const responseTime = Date.now() - startTime;
     const doStopRetry = sleepTime === RETRY_STOP_MARKER || _doStopRetry(retryMode, response);
     if (logged) {
+      const doLogAttempt = attempt > 0 || !doStopRetry;
       const correlationHeader = CORRELATION_HEADERS_RECEIVER_PRECEDENCE.find((header) => response.headers.has(header));
+      logRequestId ??= doLogAttempt && LogRequestId.next();
       const logParts = [
-        attempt > 0 || !doStopRetry ? `req-${logRequestId}-${attempt + 1}` : `req-${logRequestId}`,
         `${_method} ${_url} ${response.status} ${response.statusText}`,
         ...(showCorrelation
           ? [`(${responseTime}ms, ${correlationHeader}: ${response.headers.get(correlationHeader)})`]
           : [`(${responseTime}ms)`]),
+        ...(doLogAttempt ? [`req ${logRequestId} attempt ${attempt + 1}/${RETRY_POLL_FREQUENCIES.length}`] : []),
         ...(doStopRetry ? [] : [`retrying in ${sleepTime / 1000}sec`]),
       ];
       logger.info(logParts.join(" "));
