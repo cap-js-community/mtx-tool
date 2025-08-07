@@ -36,127 +36,247 @@ exports[`request tests basic ok 1`] = `
 ]
 `;
 
-exports[`request tests basic ok 120 requests 1`] = `
-"req-01 GET https://fake-server.com/path 200 OK (88ms)
-req-02 GET https://fake-server.com/path 200 OK (88ms)
-req-03 GET https://fake-server.com/path 200 OK (88ms)
-req-04 GET https://fake-server.com/path 200 OK (88ms)
-req-05 GET https://fake-server.com/path 200 OK (88ms)
-req-06 GET https://fake-server.com/path 200 OK (88ms)
-req-07 GET https://fake-server.com/path 200 OK (88ms)
-req-08 GET https://fake-server.com/path 200 OK (88ms)
-req-09 GET https://fake-server.com/path 200 OK (88ms)
-req-10 GET https://fake-server.com/path 200 OK (88ms)
-req-11 GET https://fake-server.com/path 200 OK (88ms)
-req-12 GET https://fake-server.com/path 200 OK (88ms)
-req-13 GET https://fake-server.com/path 200 OK (88ms)
-req-14 GET https://fake-server.com/path 200 OK (88ms)
-req-15 GET https://fake-server.com/path 200 OK (88ms)
-req-16 GET https://fake-server.com/path 200 OK (88ms)
-req-17 GET https://fake-server.com/path 200 OK (88ms)
-req-18 GET https://fake-server.com/path 200 OK (88ms)
-req-19 GET https://fake-server.com/path 200 OK (88ms)
-req-20 GET https://fake-server.com/path 200 OK (88ms)
-req-21 GET https://fake-server.com/path 200 OK (88ms)
-req-22 GET https://fake-server.com/path 200 OK (88ms)
-req-23 GET https://fake-server.com/path 200 OK (88ms)
-req-24 GET https://fake-server.com/path 200 OK (88ms)
-req-25 GET https://fake-server.com/path 200 OK (88ms)
-req-26 GET https://fake-server.com/path 200 OK (88ms)
-req-27 GET https://fake-server.com/path 200 OK (88ms)
-req-28 GET https://fake-server.com/path 200 OK (88ms)
-req-29 GET https://fake-server.com/path 200 OK (88ms)
-req-30 GET https://fake-server.com/path 200 OK (88ms)
-req-31 GET https://fake-server.com/path 200 OK (88ms)
-req-32 GET https://fake-server.com/path 200 OK (88ms)
-req-33 GET https://fake-server.com/path 200 OK (88ms)
-req-34 GET https://fake-server.com/path 200 OK (88ms)
-req-35 GET https://fake-server.com/path 200 OK (88ms)
-req-36 GET https://fake-server.com/path 200 OK (88ms)
-req-37 GET https://fake-server.com/path 200 OK (88ms)
-req-38 GET https://fake-server.com/path 200 OK (88ms)
-req-39 GET https://fake-server.com/path 200 OK (88ms)
-req-40 GET https://fake-server.com/path 200 OK (88ms)
-req-41 GET https://fake-server.com/path 200 OK (88ms)
-req-42 GET https://fake-server.com/path 200 OK (88ms)
-req-43 GET https://fake-server.com/path 200 OK (88ms)
-req-44 GET https://fake-server.com/path 200 OK (88ms)
-req-45 GET https://fake-server.com/path 200 OK (88ms)
-req-46 GET https://fake-server.com/path 200 OK (88ms)
-req-47 GET https://fake-server.com/path 200 OK (88ms)
-req-48 GET https://fake-server.com/path 200 OK (88ms)
-req-49 GET https://fake-server.com/path 200 OK (88ms)
-req-50 GET https://fake-server.com/path 200 OK (88ms)
-req-51 GET https://fake-server.com/path 200 OK (88ms)
-req-52 GET https://fake-server.com/path 200 OK (88ms)
-req-53 GET https://fake-server.com/path 200 OK (88ms)
-req-54 GET https://fake-server.com/path 200 OK (88ms)
-req-55 GET https://fake-server.com/path 200 OK (88ms)
-req-56 GET https://fake-server.com/path 200 OK (88ms)
-req-57 GET https://fake-server.com/path 200 OK (88ms)
-req-58 GET https://fake-server.com/path 200 OK (88ms)
-req-59 GET https://fake-server.com/path 200 OK (88ms)
-req-60 GET https://fake-server.com/path 200 OK (88ms)
-req-61 GET https://fake-server.com/path 200 OK (88ms)
-req-62 GET https://fake-server.com/path 200 OK (88ms)
-req-63 GET https://fake-server.com/path 200 OK (88ms)
-req-64 GET https://fake-server.com/path 200 OK (88ms)
-req-65 GET https://fake-server.com/path 200 OK (88ms)
-req-66 GET https://fake-server.com/path 200 OK (88ms)
-req-67 GET https://fake-server.com/path 200 OK (88ms)
-req-68 GET https://fake-server.com/path 200 OK (88ms)
-req-69 GET https://fake-server.com/path 200 OK (88ms)
-req-70 GET https://fake-server.com/path 200 OK (88ms)
-req-71 GET https://fake-server.com/path 200 OK (88ms)
-req-72 GET https://fake-server.com/path 200 OK (88ms)
-req-73 GET https://fake-server.com/path 200 OK (88ms)
-req-74 GET https://fake-server.com/path 200 OK (88ms)
-req-75 GET https://fake-server.com/path 200 OK (88ms)
-req-76 GET https://fake-server.com/path 200 OK (88ms)
-req-77 GET https://fake-server.com/path 200 OK (88ms)
-req-78 GET https://fake-server.com/path 200 OK (88ms)
-req-79 GET https://fake-server.com/path 200 OK (88ms)
-req-80 GET https://fake-server.com/path 200 OK (88ms)
-req-81 GET https://fake-server.com/path 200 OK (88ms)
-req-82 GET https://fake-server.com/path 200 OK (88ms)
-req-83 GET https://fake-server.com/path 200 OK (88ms)
-req-84 GET https://fake-server.com/path 200 OK (88ms)
-req-85 GET https://fake-server.com/path 200 OK (88ms)
-req-86 GET https://fake-server.com/path 200 OK (88ms)
-req-87 GET https://fake-server.com/path 200 OK (88ms)
-req-88 GET https://fake-server.com/path 200 OK (88ms)
-req-89 GET https://fake-server.com/path 200 OK (88ms)
-req-90 GET https://fake-server.com/path 200 OK (88ms)
-req-91 GET https://fake-server.com/path 200 OK (88ms)
-req-92 GET https://fake-server.com/path 200 OK (88ms)
-req-93 GET https://fake-server.com/path 200 OK (88ms)
-req-94 GET https://fake-server.com/path 200 OK (88ms)
-req-95 GET https://fake-server.com/path 200 OK (88ms)
-req-96 GET https://fake-server.com/path 200 OK (88ms)
-req-97 GET https://fake-server.com/path 200 OK (88ms)
-req-98 GET https://fake-server.com/path 200 OK (88ms)
-req-99 GET https://fake-server.com/path 200 OK (88ms)
-req-100 GET https://fake-server.com/path 200 OK (88ms)
-req-101 GET https://fake-server.com/path 200 OK (88ms)
-req-102 GET https://fake-server.com/path 200 OK (88ms)
-req-103 GET https://fake-server.com/path 200 OK (88ms)
-req-104 GET https://fake-server.com/path 200 OK (88ms)
-req-105 GET https://fake-server.com/path 200 OK (88ms)
-req-106 GET https://fake-server.com/path 200 OK (88ms)
-req-107 GET https://fake-server.com/path 200 OK (88ms)
-req-108 GET https://fake-server.com/path 200 OK (88ms)
-req-109 GET https://fake-server.com/path 200 OK (88ms)
-req-110 GET https://fake-server.com/path 200 OK (88ms)
-req-111 GET https://fake-server.com/path 200 OK (88ms)
-req-112 GET https://fake-server.com/path 200 OK (88ms)
-req-113 GET https://fake-server.com/path 200 OK (88ms)
-req-114 GET https://fake-server.com/path 200 OK (88ms)
-req-115 GET https://fake-server.com/path 200 OK (88ms)
-req-116 GET https://fake-server.com/path 200 OK (88ms)
-req-117 GET https://fake-server.com/path 200 OK (88ms)
-req-118 GET https://fake-server.com/path 200 OK (88ms)
-req-119 GET https://fake-server.com/path 200 OK (88ms)
-req-120 GET https://fake-server.com/path 200 OK (88ms)"
+exports[`request tests basic retry 120 requests 1`] = `
+"[req-01 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-02 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-03 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-04 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-05 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-06 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-07 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-08 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-09 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-10 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-11 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-12 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-13 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-14 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-15 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-16 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-17 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-18 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-19 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-20 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-21 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-22 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-23 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-24 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-25 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-26 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-27 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-28 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-29 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-30 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-31 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-32 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-33 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-34 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-35 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-36 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-37 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-38 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-39 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-40 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-41 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-42 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-43 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-44 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-45 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-46 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-47 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-48 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-49 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-50 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-51 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-52 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-53 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-54 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-55 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-56 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-57 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-58 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-59 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-60 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-61 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-62 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-63 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-64 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-65 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-66 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-67 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-68 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-69 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-70 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-71 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-72 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-73 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-74 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-75 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-76 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-77 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-78 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-79 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-80 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-81 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-82 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-83 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-84 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-85 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-86 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-87 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-88 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-89 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-90 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-91 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-92 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-93 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-94 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-95 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-96 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-97 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-98 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-99 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-100 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-101 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-102 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-103 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-104 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-105 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-106 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-107 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-108 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-109 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-110 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-111 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-112 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-113 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-114 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-115 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-116 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-117 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-118 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-119 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-120 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+[req-01 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-02 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-03 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-04 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-05 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-06 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-07 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-08 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-09 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-10 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-11 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-12 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-13 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-14 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-15 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-16 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-17 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-18 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-19 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-20 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-21 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-22 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-23 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-24 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-25 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-26 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-27 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-28 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-29 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-30 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-31 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-32 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-33 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-34 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-35 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-36 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-37 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-38 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-39 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-40 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-41 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-42 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-43 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-44 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-45 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-46 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-47 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-48 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-49 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-50 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-51 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-52 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-53 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-54 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-55 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-56 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-57 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-58 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-59 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-60 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-61 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-62 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-63 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-64 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-65 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-66 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-67 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-68 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-69 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-70 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-71 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-72 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-73 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-74 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-75 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-76 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-77 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-78 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-79 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-80 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-81 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-82 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-83 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-84 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-85 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-86 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-87 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-88 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-89 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-90 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-91 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-92 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-93 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-94 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-95 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-96 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-97 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-98 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-99 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-100 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-101 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-102 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-103 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-104 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-105 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-106 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-107 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-108 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-109 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-110 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-111 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-112 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-113 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-114 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-115 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-116 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-117 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-118 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-119 2/5] GET https://fake-server.com/path 200 OK (88ms)
+[req-120 2/5] GET https://fake-server.com/path 200 OK (88ms)"
 `;
 
 exports[`request tests ok with basic auth 1`] = `

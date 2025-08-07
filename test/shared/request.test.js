@@ -60,19 +60,8 @@ describe("request tests", () => {
     await request({ url: "https://fake-server.com", pathname: "/path" });
     expect(mockFetchLib.mock.calls).toMatchSnapshot();
     expect(outputFromLoggerWithTimestamps(mockLogger.info.mock.calls)).toMatchInlineSnapshot(
-      `"req-01 GET https://fake-server.com/path 200 OK (88ms)"`
+      `"GET https://fake-server.com/path 200 OK (88ms)"`
     );
-  });
-
-  test("basic ok 120 requests", async () => {
-    const n = 120;
-    let promises = [];
-    for (let i = 0; i < n; i++) {
-      mockFetchLib.mockReturnValueOnce(baseOkResponse);
-      promises.push(request({ url: "https://fake-server.com", pathname: "/path" }));
-    }
-    await Promise.all(promises);
-    expect(outputFromLoggerWithTimestamps(mockLogger.info.mock.calls)).toMatchSnapshot();
   });
 
   test("basic bad request", async () => {
@@ -83,8 +72,24 @@ describe("request tests", () => {
           `);
     expect(mockFetchLib.mock.calls).toMatchSnapshot();
     expect(outputFromLoggerWithTimestamps(mockLogger.info.mock.calls)).toMatchInlineSnapshot(
-      `"req-01 GET https://fake-server.com/path 400 Bad Request (88ms)"`
+      `"GET https://fake-server.com/path 400 Bad Request (88ms)"`
     );
+  });
+
+  test("basic retry 120 requests", async () => {
+    const n = 120;
+    let promises = [];
+    for (let i = 0; i < n; i++) {
+      mockFetchLib.mockReturnValueOnce(baseTooManyRequestsResponse);
+    }
+    for (let i = 0; i < n; i++) {
+      mockFetchLib.mockReturnValueOnce(baseOkResponse);
+    }
+    for (let i = 0; i < n; i++) {
+      promises.push(request({ checkStatus: false, url: "https://fake-server.com", pathname: "/path" }));
+    }
+    await Promise.all(promises);
+    expect(outputFromLoggerWithTimestamps(mockLogger.info.mock.calls)).toMatchSnapshot();
   });
 
   test("bad request unchecked", async () => {
@@ -131,7 +136,7 @@ describe("request tests", () => {
     });
     expect(mockFetchLib.mock.calls).toMatchSnapshot();
     expect(outputFromLoggerWithTimestamps(mockLogger.info.mock.calls)).toMatchInlineSnapshot(
-      `"req-01 GET https://server/path?hello=world&foo=bar#hashed 200 OK (88ms)"`
+      `"GET https://server/path?hello=world&foo=bar#hashed 200 OK (88ms)"`
     );
   });
 
@@ -175,11 +180,11 @@ describe("request tests", () => {
 
     expect(mockFetchLib).toHaveBeenCalledTimes(responseCount);
     expect(outputFromLoggerWithTimestamps(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
-      "req-01-1 GET https://fake-server.com/ 429 Too Many Requests (88ms) retrying in 6sec
-      req-01-2 GET https://fake-server.com/ 429 Too Many Requests (88ms) retrying in 12sec
-      req-01-3 GET https://fake-server.com/ 429 Too Many Requests (88ms) retrying in 24sec
-      req-01-4 GET https://fake-server.com/ 429 Too Many Requests (88ms) retrying in 48sec
-      req-01-5 GET https://fake-server.com/ 429 Too Many Requests (88ms)"
+      "[req-01 1/5] GET https://fake-server.com/ 429 Too Many Requests (88ms) retrying in 6sec
+      [req-01 2/5] GET https://fake-server.com/ 429 Too Many Requests (88ms) retrying in 12sec
+      [req-01 3/5] GET https://fake-server.com/ 429 Too Many Requests (88ms) retrying in 24sec
+      [req-01 4/5] GET https://fake-server.com/ 429 Too Many Requests (88ms) retrying in 48sec
+      [req-01 5/5] GET https://fake-server.com/ 429 Too Many Requests (88ms)"
     `);
     expect(mockLogger.error).toHaveBeenCalledTimes(0);
   });
@@ -209,9 +214,9 @@ describe("request tests", () => {
           `);
     expect(mockFetchLib).toHaveBeenCalledTimes(3);
     expect(outputFromLoggerWithTimestamps(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
-      "req-01 GET https://fake-server.com/path 429 Too Many Requests (88ms)
-      req-02 GET https://fake-server.com/path 400 Bad Request (88ms)
-      req-03 GET https://fake-server.com/path 200 OK (88ms)"
+      "GET https://fake-server.com/path 429 Too Many Requests (88ms)
+      GET https://fake-server.com/path 400 Bad Request (88ms)
+      GET https://fake-server.com/path 200 OK (88ms)"
     `);
   });
 
@@ -249,11 +254,11 @@ describe("request tests", () => {
           `);
     expect(mockFetchLib).toHaveBeenCalledTimes(5);
     expect(outputFromLoggerWithTimestamps(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
-      "req-01-1 GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
-      req-01-2 GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 12sec
-      req-01-3 GET https://fake-server.com/path 200 OK (88ms)
-      req-02 GET https://fake-server.com/path 400 Bad Request (88ms)
-      req-03 GET https://fake-server.com/path 200 OK (88ms)"
+      "[req-01 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+      [req-01 2/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 12sec
+      [req-01 3/5] GET https://fake-server.com/path 200 OK (88ms)
+      GET https://fake-server.com/path 400 Bad Request (88ms)
+      GET https://fake-server.com/path 200 OK (88ms)"
     `);
   });
 
@@ -294,13 +299,13 @@ describe("request tests", () => {
           `);
     expect(mockFetchLib).toHaveBeenCalledTimes(7);
     expect(outputFromLoggerWithTimestamps(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
-      "req-01-1 GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
-      req-01-2 GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 12sec
-      req-01-3 GET https://fake-server.com/path 200 OK (88ms)
-      req-02-1 GET https://fake-server.com/path 400 Bad Request (88ms) retrying in 6sec
-      req-02-2 GET https://fake-server.com/path 400 Bad Request (88ms) retrying in 12sec
-      req-02-3 GET https://fake-server.com/path 200 OK (88ms)
-      req-03 GET https://fake-server.com/path 200 OK (88ms)"
+      "[req-01 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 6sec
+      [req-01 2/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 12sec
+      [req-01 3/5] GET https://fake-server.com/path 200 OK (88ms)
+      [req-02 1/5] GET https://fake-server.com/path 400 Bad Request (88ms) retrying in 6sec
+      [req-02 2/5] GET https://fake-server.com/path 400 Bad Request (88ms) retrying in 12sec
+      [req-02 3/5] GET https://fake-server.com/path 200 OK (88ms)
+      GET https://fake-server.com/path 200 OK (88ms)"
     `);
   });
 
@@ -331,7 +336,7 @@ describe("request tests", () => {
     expect(mockFetchLib).toHaveBeenCalledTimes(1);
     expect(mockLogger.info).toHaveBeenCalledTimes(1);
     expect(outputFromLoggerWithTimestamps(mockLogger.info.mock.calls)).toMatchInlineSnapshot(
-      `"req-01 GET https://fake-server.com/path 200 OK (88ms)"`
+      `"GET https://fake-server.com/path 200 OK (88ms)"`
     );
   });
 });
