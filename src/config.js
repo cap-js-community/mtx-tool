@@ -5,6 +5,8 @@ const ENV = Object.freeze({
   UAA_KEY: "MTX_UAA_KEY",
   REGISTRY_APP: "MTX_REG_APP",
   REGISTRY_KEY: "MTX_REG_KEY",
+  SMS_APP: "MTX_SMS_APP",
+  SMS_KEY: "MTX_SMS_KEY",
   CDS_APP: "MTX_CDS_APP",
   HDI_APP: "MTX_HDI_APP",
   HDI_KEY: "MTX_HDI_KEY",
@@ -18,6 +20,8 @@ const CONFIG_TYPE = {
   UAA_KEY: "UAA_KEY",
   REGISTRY_APP: "REGISTRY_APP",
   REGISTRY_KEY: "REGISTRY_KEY",
+  SMS_APP: "SMS_APP",
+  SMS_KEY: "SMS_KEY",
   CDS_APP: "CDS_APP",
   HDI_APP: "HDI_APP",
   HDI_KEY: "HDI_KEY",
@@ -59,6 +63,20 @@ const CONFIG_INFOS = {
       {
         label: "saas-registry",
         plan: "service",
+      },
+    ],
+  },
+
+  [CONFIG_TYPE.SMS_APP]: {
+    config: "smsAppName",
+    name: "subscription manager app",
+    envVariable: ENV.SMS_APP,
+    question: "cf app bound to subscription manager service (optional)?",
+    failMessage: "option requires configured app bound to service label:subscription-manager plan:provider",
+    requireServices: [
+      {
+        label: "subscription-manager",
+        plan: "provider",
       },
     ],
   },
