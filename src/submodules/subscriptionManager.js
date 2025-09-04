@@ -12,7 +12,7 @@ const _subscriptionManagerRequest = async (context, reqOptions = {}) => {
   } = await context.getSmsInfo();
   const { subscription_manager_url: url, ias_service_instance_id: iasServiceInstanceId } = credentials;
   const auth = { token: await context.getCachedUaaTokenFromCredentials(credentials) };
-  const response = await request({ url, auth, ...reqOptions });
+  const response = await request({ url, auth, ...reqOptions, query: {} });
 
   if (reqOptions.method) {
     return response;
