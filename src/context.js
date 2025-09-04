@@ -433,6 +433,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
 
   const getUaaInfo = makeOneTime(getAppInfoCached(CONFIG_TYPE.UAA_APP));
   const getRegInfo = makeOneTime(getAppInfoCached(CONFIG_TYPE.REGISTRY_APP));
+  const getSmsInfo = makeOneTime(getAppInfoCached(CONFIG_TYPE.SMS_APP));
   const getCdsInfo = makeOneTime(getAppInfoCached(CONFIG_TYPE.CDS_APP));
   const getHdiInfo = makeOneTime(getAppInfoCached(CONFIG_TYPE.HDI_APP));
   const getSrvInfo = makeOneTime(getAppInfoCached(CONFIG_TYPE.SERVER_APP));
@@ -458,6 +459,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     runtimeConfig,
     getUaaInfo,
     getRegInfo,
+    getSmsInfo,
     getCdsInfo,
     getHdiInfo,
     getSrvInfo,
