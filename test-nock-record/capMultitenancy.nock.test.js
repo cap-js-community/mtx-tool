@@ -21,7 +21,6 @@ const freshContext = async () => await newContext({ usePersistedCache: false, is
 
 describe("cds tests", () => {
   afterEach(() => {
-    cds._._reset();
     nock.restore();
   });
 
