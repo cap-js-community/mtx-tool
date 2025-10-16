@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- order is REMOVED, CHANGED, ADDED, FIXED -->
 
+## v0.10.3 - tbd
+
+### CHANGED
+
+- cds: cdsl table now has a new columns `commercialAppName` in addition to `appName`. the two name are different for all
+  tenants held in subscription manager. they are the same for all tenants held in saas registry.
+
+### FIXED
+
+- cds: cdsl will correctly display values for tenants held in subscription manager.
+
 ## v0.10.2 - 2025-07-29
 
 ### CHANGED
