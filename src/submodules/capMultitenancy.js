@@ -71,14 +71,15 @@ const cdsList = async (context, [tenant], [doTimestamps, doJsonOutput]) => {
   }
 
   const nowDate = new Date();
-  const headerRow = ["subscribedTenantId", "subscribedSubdomain", "subscriptionAppName", "eventType"];
+  const headerRow = ["tenantId", "subdomain", "appName", "commercialAppName", "eventType"];
   doTimestamps && headerRow.push("created_on", "updated_on");
 
   const tenantRow = (tenant) => {
     const row = [
       tenant.subscribedTenantId,
-      tenant.subscribedSubdomain,
-      tenant.subscriptionAppName || "",
+      tenant.subscriber?.subaccountSubdomain ?? tenant.subscribedSubdomain,
+      tenant.rootApplication?.appName ?? tenant.subscriptionAppName ?? "",
+      tenant.rootApplication?.commercialAppName ?? tenant.subscriptionCommercialAppName ?? "",
       tenant.eventType,
     ];
     doTimestamps && row.push(...formatTimestampsWithRelativeDays([tenant.createdAt, tenant.modifiedAt], nowDate));
