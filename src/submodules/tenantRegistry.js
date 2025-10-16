@@ -183,7 +183,7 @@ const _registryCallForTenant = async (
     doJobPoll = true,
   } = {}
 ) => {
-  const { consumerTenantId: tenantId, subscriptionGUID: subscriptionId } = subscription;
+  const { consumerTenantId: tenantId } = subscription;
   const {
     cfService: { credentials },
   } = await context.getRegInfo();
