@@ -54,7 +54,7 @@ const _registrySubscriptionsPaged = async (context, { tenant, onlyFailed, onlySt
   filterSubdomain && assert(isDashedWord(filterSubdomain), `argument "${filterSubdomain}" is not a valid subdomain`);
 
   const {
-    cfService: { plan, credentials },
+    cfService: { credentials },
   } = await context.getRegInfo();
   const { saas_registry_url, appName } = credentials;
 
@@ -69,7 +69,7 @@ const _registrySubscriptionsPaged = async (context, { tenant, onlyFailed, onlySt
   while (true) {
     const response = await request({
       url: saas_registry_url,
-      pathname: `/saas-manager/v1/${plan}/subscriptions`,
+      pathname: `/saas-manager/v1/application/subscriptions`,
       query: {
         ...query,
         page: page++,
@@ -185,7 +185,7 @@ const _registryCallForTenant = async (
 ) => {
   const { consumerTenantId: tenantId, subscriptionGUID: subscriptionId } = subscription;
   const {
-    cfService: { plan, credentials },
+    cfService: { credentials },
   } = await context.getRegInfo();
   const { saas_registry_url } = credentials;
   const query = {
@@ -194,7 +194,7 @@ const _registryCallForTenant = async (
     ...(skipUnchangedDependencies && { skipUnchangedDependencies }),
     ...(skipUpdatingDependencies && { skipUpdatingDependencies }),
   };
-  const pathname = `/saas-manager/v1/${plan}/tenants/${tenantId}/subscriptions`;
+  const pathname = `/saas-manager/v1/application/tenants/${tenantId}/subscriptions`;
   const token = await context.getCachedUaaTokenFromCredentials(credentials);
   let response;
   try {
