@@ -1,6 +1,6 @@
 # https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
-# NOTE: all ecosystems are set to 0, because we do our own dependencies upgrades. This configuration is just to make
-#   GitHub aware of the relevant ecosystems we use.
+# NOTE: some ecosystems are set to 0, when we do our own dependencies upgrades. These configurations are just to make
+#   GitHub aware of the relevant ecosystems.
 
 version: 2
 updates:
@@ -25,9 +25,6 @@ updates:
       interval: daily
       time: "11:00"
       timezone: Europe/Berlin
-    # disable dependabot alerts for gem vulnerabilities that are only part of static documentation
-    ignore:
-      - dependency-name: "*"
     open-pull-requests-limit: 0
 
   - package-ecosystem: github-actions
@@ -36,4 +33,3 @@ updates:
       interval: daily
       time: "11:00"
       timezone: Europe/Berlin
-    open-pull-requests-limit: 0
