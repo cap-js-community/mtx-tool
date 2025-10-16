@@ -54,24 +54,28 @@ const _registrySubscriptionsPaged = async (context, { tenant, onlyFailed, onlySt
   filterSubdomain && assert(isDashedWord(filterSubdomain), `argument "${filterSubdomain}" is not a valid subdomain`);
 
   const {
-    cfService: { credentials },
+    cfService: { credentials: regCredentials },
   } = await context.getRegInfo();
-  const { saas_registry_url, appName } = credentials;
+
+  const {
+    cfService: { credentials: smsCredentials },
+  } = await context.getSmsInfo();
+
+  const { saas_registry_url: regUrl, appName: regAppName } = regCredentials;
+
+  const { subscription_manager_url: smsUrl, app_name: smsAppName } = smsCredentials;
 
   let subscriptions = [];
   let page = 1;
-  const token = await context.getCachedUaaTokenFromCredentials(credentials);
-  const query = {
-    appName,
-    ...(filterTenantId && { tenantId: filterTenantId }),
-    size: REGISTRY_PAGE_SIZE,
-  };
+  const token = await context.getCachedUaaTokenFromCredentials(smsCredentials);
   while (true) {
     const response = await request({
-      url: saas_registry_url,
-      pathname: `/saas-manager/v1/application/subscriptions`,
+      url: smsUrl,
+      pathname: `/subscription-manager/v1/subscriptions`,
       query: {
-        ...query,
+        appName: smsAppName,
+        ...(filterTenantId && { tenantId: filterTenantId }),
+        size: REGISTRY_PAGE_SIZE,
         page: page++,
       },
       headers: { Accept: "application/json" },
