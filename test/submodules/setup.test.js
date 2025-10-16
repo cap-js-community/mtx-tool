@@ -17,6 +17,8 @@ jest.mock("../../src/context", () => ({
   readRuntimeConfig: jest.fn(),
 }));
 
+const { CONFIG_INFOS } = require("../../src/config");
+
 const processCwdSpy = jest.spyOn(process, "cwd");
 
 const { outputFromLogger } = require("../test-util/static");
@@ -24,6 +26,7 @@ const { outputFromLogger } = require("../test-util/static");
 const mockRuntimeConfig = {
   uaaAppName: "mock-uaa-app",
   regAppName: "mock-reg-app",
+  smsAppName: "mock-sms-app",
   cdsAppName: "mock-cds-app",
   hdiAppName: "mock-hdi-app",
   srvAppName: "mock-srv-app",
@@ -45,11 +48,12 @@ describe("set tests", () => {
     mockContextModule.readRuntimeConfig.mockReturnValueOnce(mockRuntimeConfig);
 
     expect(set.setupList()).toMatchInlineSnapshot(`
-      "1/5 | cf app bound to xsuaa service (optional)? mock-uaa-app
-      2/5 | cf app bound to saas-registry service (optional)? mock-reg-app
-      3/5 | cf app running @sap/cds-mtx or @sap/cds-mtxs library (optional)? mock-cds-app
-      4/5 | cf app bound to service-manager (optional)? mock-hdi-app
-      5/5 | cf app with server (optional)? mock-srv-app"
+      "1/6 | cf app bound to xsuaa service (optional)? mock-uaa-app
+      2/6 | cf app bound to saas-registry service (optional)? mock-reg-app
+      3/6 | cf app bound to subscription manager service (optional)? mock-sms-app
+      4/6 | cf app running @sap/cds-mtx or @sap/cds-mtxs library (optional)? mock-cds-app
+      5/6 | cf app bound to service-manager (optional)? mock-hdi-app
+      6/6 | cf app with server (optional)? mock-srv-app"
     `);
     expect(mockStatic.tryAccessSync).toHaveBeenCalledTimes(1);
     expect(mockContextModule.readRuntimeConfig).toHaveBeenCalledTimes(1);
@@ -59,11 +63,11 @@ describe("set tests", () => {
 
   test("setup global", async () => {
     mockContextModule.readRuntimeConfig.mockReturnValueOnce(mockRuntimeConfig);
-    for (let i = 0; i < Object.keys(mockRuntimeConfig).length; i++) {
-      mockStatic.question.mockReturnValueOnce(`answer ${i + 1}`);
+    for (const configInfo of Object.values(CONFIG_INFOS)) {
+      mockStatic.question.mockReturnValueOnce(`answer for ${configInfo.config}`);
     }
 
-    expect(await set.setup()).toMatchInlineSnapshot(`undefined`);
+    await expect(set.setup()).resolves.toBeUndefined();
     expect(mockStatic.tryAccessSync).toHaveBeenCalledTimes(0);
     expect(mockContextModule.readRuntimeConfig).toHaveBeenCalledTimes(1);
     expect(mockStatic.writeJsonSync).toHaveBeenCalledTimes(1);
@@ -71,11 +75,12 @@ describe("set tests", () => {
       [
         "/root/home-dir/.mtxrc.json",
         {
-          "cdsAppName": "answer 3",
-          "hdiAppName": "answer 4",
-          "regAppName": "answer 2",
-          "srvAppName": "answer 5",
-          "uaaAppName": "answer 1",
+          "cdsAppName": "answer for cdsAppName",
+          "hdiAppName": "answer for hdiAppName",
+          "regAppName": "answer for regAppName",
+          "smsAppName": "answer for smsAppName",
+          "srvAppName": "answer for srvAppName",
+          "uaaAppName": "answer for uaaAppName",
         },
       ]
     `);
@@ -106,8 +111,8 @@ describe("set tests", () => {
 
   test("setup global with failing write", async () => {
     mockContextModule.readRuntimeConfig.mockReturnValueOnce(mockRuntimeConfig);
-    for (let i = 0; i < Object.keys(mockRuntimeConfig).length; i++) {
-      mockStatic.question.mockReturnValueOnce(`answer ${i + 1}`);
+    for (const configInfo of Object.values(CONFIG_INFOS)) {
+      mockStatic.question.mockReturnValueOnce(`answer for ${configInfo.config}`);
     }
     mockStatic.writeJsonSync.mockImplementationOnce(() => {
       throw new Error("cannot write");
@@ -120,11 +125,11 @@ describe("set tests", () => {
 
   test("setup local", async () => {
     mockContextModule.readRuntimeConfig.mockReturnValueOnce(mockRuntimeConfig);
-    for (let i = 0; i < Object.keys(mockRuntimeConfig).length; i++) {
-      mockStatic.question.mockReturnValueOnce(`answer ${i + 1}`);
+    for (const configInfo of Object.values(CONFIG_INFOS)) {
+      mockStatic.question.mockReturnValueOnce(`answer for ${configInfo.config}`);
     }
 
-    expect(await set.setupLocal()).toMatchInlineSnapshot(`undefined`);
+    await expect(set.setupLocal()).resolves.toBeUndefined();
     expect(mockStatic.tryAccessSync).toHaveBeenCalledTimes(0);
     expect(mockContextModule.readRuntimeConfig).toHaveBeenCalledTimes(1);
     expect(mockStatic.writeJsonSync).toHaveBeenCalledTimes(1);
@@ -132,11 +137,12 @@ describe("set tests", () => {
       [
         "/root/local-dir/.mtxrc.json",
         {
-          "cdsAppName": "answer 3",
-          "hdiAppName": "answer 4",
-          "regAppName": "answer 2",
-          "srvAppName": "answer 5",
-          "uaaAppName": "answer 1",
+          "cdsAppName": "answer for cdsAppName",
+          "hdiAppName": "answer for hdiAppName",
+          "regAppName": "answer for regAppName",
+          "smsAppName": "answer for smsAppName",
+          "srvAppName": "answer for srvAppName",
+          "uaaAppName": "answer for uaaAppName",
         },
       ]
     `);
