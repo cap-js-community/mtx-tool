@@ -64,7 +64,6 @@ const _registrySubscriptionsPaged = async (context, { tenant, onlyFailed, onlySt
   const query = {
     appName,
     ...(filterTenantId && { tenantId: filterTenantId }),
-    ...(plan === "service" && { includeIndirectSubscriptions: true }),
     size: REGISTRY_PAGE_SIZE,
   };
   while (true) {
@@ -189,19 +188,13 @@ const _registryCallForTenant = async (
     cfService: { plan, credentials },
   } = await context.getRegInfo();
   const { saas_registry_url } = credentials;
-  const query =
-    plan === "service"
-      ? {}
-      : {
-          ...(noCallbacksAppNames && { noCallbacksAppNames }),
-          ...(updateApplicationURL && { updateApplicationURL }),
-          ...(skipUnchangedDependencies && { skipUnchangedDependencies }),
-          ...(skipUpdatingDependencies && { skipUpdatingDependencies }),
-        };
-  const pathname =
-    plan === "service"
-      ? `/saas-manager/v1/${plan}/subscriptions/${subscriptionId}`
-      : `/saas-manager/v1/${plan}/tenants/${tenantId}/subscriptions`;
+  const query = {
+    ...(noCallbacksAppNames && { noCallbacksAppNames }),
+    ...(updateApplicationURL && { updateApplicationURL }),
+    ...(skipUnchangedDependencies && { skipUnchangedDependencies }),
+    ...(skipUpdatingDependencies && { skipUpdatingDependencies }),
+  };
+  const pathname = `/saas-manager/v1/${plan}/tenants/${tenantId}/subscriptions`;
   const token = await context.getCachedUaaTokenFromCredentials(credentials);
   let response;
   try {
