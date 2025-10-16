@@ -3,6 +3,10 @@
 
 name: Publish Release
 
+permissions:
+  id-token: write
+  contents: read
+
 # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#release
 on:
   workflow_dispatch:
@@ -16,13 +20,13 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
           cache: npm
           # NOTE: the explicit registry-url is currently needed for the auth token to work
           registry-url: https://registry.npmjs.org/
+      # NOTE: the npm update is needed for trusted publisher id-token integration to work
+      - run: npm install -g npm@latest
       - run: npm ci
       - run: npm test
       - run: npm run lint
       - run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
