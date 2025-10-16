@@ -88,17 +88,17 @@ describe("cds nock tests", () => {
       await nock.back("cds-list.json");
       const output = await cds.cdsList(await freshContext(), [], [false, false]);
       expect(output).toMatchInlineSnapshot(`
-        "#   subscribedTenantId                    subscribedSubdomain    subscriptionAppName  eventType
-        1   288393a7-972c-4fa8-acfd-12299c4db374  nga-dev-eu10-uofvpsx0  afc-dev              UPDATE   
-        2   4c0909b1-a84e-4763-a26e-532fdb9e40fa  hw6-apps-eu10          afc-dev              UPDATE   
-        3   5ecc7413-2b7e-414a-9496-ad4a61f6cccf  skyfin-company         afc-dev              UPDATE   
-        4   663d2938-be50-44ab-92ca-538855eb594f  skyfin-workzone        afc-dev              CREATE   
-        5   6917dfd6-7590-4033-af2a-140b75263b0d  skyfin-debug-company   afc-dev              UPDATE   
-        6   9c418100-6318-4e8a-b4b2-1114f4f44aef  skyfin-booster         afc-dev              CREATE   
-        7   ae2dc112-9745-4f5e-8feb-79ebdc0094bd  skyfin-sap-start       afc-dev              UPDATE   
-        8   cb9158ce-f8fd-441b-b443-17219e8f79fa  skysand                afc-dev              UPDATE   
-        9   cf528063-6a43-4bf2-8ccc-ca4e6d75d88e  jyd-dev-apps-eu10      afc-dev              UPDATE   
-        10  dde70ec5-983d-4848-b50c-fb2cdac7d359  skyfin-test-3          afc-dev              UPDATE   "
+        "#   tenantId                              subdomain              appName  commercialAppName  eventType
+        1   288393a7-972c-4fa8-acfd-12299c4db374  nga-dev-eu10-uofvpsx0  afc-dev  afc-dev            UPDATE   
+        2   4c0909b1-a84e-4763-a26e-532fdb9e40fa  hw6-apps-eu10          afc-dev  afc-dev            UPDATE   
+        3   5ecc7413-2b7e-414a-9496-ad4a61f6cccf  skyfin-company         afc-dev  afc-dev            UPDATE   
+        4   663d2938-be50-44ab-92ca-538855eb594f  skyfin-workzone        afc-dev  afc-dev            CREATE   
+        5   6917dfd6-7590-4033-af2a-140b75263b0d  skyfin-debug-company   afc-dev  afc-dev            UPDATE   
+        6   9c418100-6318-4e8a-b4b2-1114f4f44aef  skyfin-booster         afc-dev  afc-dev            CREATE   
+        7   ae2dc112-9745-4f5e-8feb-79ebdc0094bd  skyfin-sap-start       afc-dev  afc-dev            UPDATE   
+        8   cb9158ce-f8fd-441b-b443-17219e8f79fa  skysand                afc-dev  afc-dev            UPDATE   
+        9   cf528063-6a43-4bf2-8ccc-ca4e6d75d88e  jyd-dev-apps-eu10      afc-dev  afc-dev            UPDATE   
+        10  dde70ec5-983d-4848-b50c-fb2cdac7d359  skyfin-test-3          afc-dev  afc-dev            UPDATE   "
       `);
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
@@ -112,17 +112,17 @@ describe("cds nock tests", () => {
       await nock.back("cds-list.json");
       const output = await cds.cdsList(await freshContext(), [], [true, false]);
       expect(anonymizeListTimestamps(output)).toMatchInlineSnapshot(`
-        "#   subscribedTenantId                    subscribedSubdomain    subscriptionAppName  eventType  created_on  updated_on
-        1   288393a7-972c-4fa8-acfd-12299c4db374  nga-dev-eu10-uofvpsx0  afc-dev              UPDATE     2024-01-05T07:56:20Z (x days ago)  2024-08-09T10:14:57Z (x days ago)  
-        2   4c0909b1-a84e-4763-a26e-532fdb9e40fa  hw6-apps-eu10          afc-dev              UPDATE                                          2024-08-09T22:18:18Z (x days ago)  
-        3   5ecc7413-2b7e-414a-9496-ad4a61f6cccf  skyfin-company         afc-dev              UPDATE                                          2024-08-09T22:11:20Z (x days ago)  
-        4   663d2938-be50-44ab-92ca-538855eb594f  skyfin-workzone        afc-dev              CREATE     2024-09-11T07:37:19Z (x days ago)  2024-09-11T07:37:19Z (x days ago)  
-        5   6917dfd6-7590-4033-af2a-140b75263b0d  skyfin-debug-company   afc-dev              UPDATE     2024-06-26T10:31:05Z (x days ago)  2024-08-09T04:17:02Z (x days ago)  
-        6   9c418100-6318-4e8a-b4b2-1114f4f44aef  skyfin-booster         afc-dev              CREATE     2024-11-27T06:54:40Z (x days ago)  2024-11-27T06:54:40Z (x days ago)  
-        7   ae2dc112-9745-4f5e-8feb-79ebdc0094bd  skyfin-sap-start       afc-dev              UPDATE     2024-07-05T11:24:00Z (x days ago)  2024-08-08T04:10:14Z (x days ago)  
-        8   cb9158ce-f8fd-441b-b443-17219e8f79fa  skysand                afc-dev              UPDATE                                          2024-08-09T12:27:04Z (x days ago)  
-        9   cf528063-6a43-4bf2-8ccc-ca4e6d75d88e  jyd-dev-apps-eu10      afc-dev              UPDATE     2024-03-19T16:57:50Z (x days ago)  2024-08-09T06:53:28Z (x days ago)  
-        10  dde70ec5-983d-4848-b50c-fb2cdac7d359  skyfin-test-3          afc-dev              UPDATE     2024-07-09T08:43:19Z (x days ago)  2024-08-10T01:56:42Z (x days ago)  "
+        "#   tenantId                              subdomain              appName  commercialAppName  eventType  created_on  updated_on
+        1   288393a7-972c-4fa8-acfd-12299c4db374  nga-dev-eu10-uofvpsx0  afc-dev  afc-dev            UPDATE     2024-01-05T07:56:20Z (x days ago)  2024-08-09T10:14:57Z (x days ago)  
+        2   4c0909b1-a84e-4763-a26e-532fdb9e40fa  hw6-apps-eu10          afc-dev  afc-dev            UPDATE                                          2024-08-09T22:18:18Z (x days ago)  
+        3   5ecc7413-2b7e-414a-9496-ad4a61f6cccf  skyfin-company         afc-dev  afc-dev            UPDATE                                          2024-08-09T22:11:20Z (x days ago)  
+        4   663d2938-be50-44ab-92ca-538855eb594f  skyfin-workzone        afc-dev  afc-dev            CREATE     2024-09-11T07:37:19Z (x days ago)  2024-09-11T07:37:19Z (x days ago)  
+        5   6917dfd6-7590-4033-af2a-140b75263b0d  skyfin-debug-company   afc-dev  afc-dev            UPDATE     2024-06-26T10:31:05Z (x days ago)  2024-08-09T04:17:02Z (x days ago)  
+        6   9c418100-6318-4e8a-b4b2-1114f4f44aef  skyfin-booster         afc-dev  afc-dev            CREATE     2024-11-27T06:54:40Z (x days ago)  2024-11-27T06:54:40Z (x days ago)  
+        7   ae2dc112-9745-4f5e-8feb-79ebdc0094bd  skyfin-sap-start       afc-dev  afc-dev            UPDATE     2024-07-05T11:24:00Z (x days ago)  2024-08-08T04:10:14Z (x days ago)  
+        8   cb9158ce-f8fd-441b-b443-17219e8f79fa  skysand                afc-dev  afc-dev            UPDATE                                          2024-08-09T12:27:04Z (x days ago)  
+        9   cf528063-6a43-4bf2-8ccc-ca4e6d75d88e  jyd-dev-apps-eu10      afc-dev  afc-dev            UPDATE     2024-03-19T16:57:50Z (x days ago)  2024-08-09T06:53:28Z (x days ago)  
+        10  dde70ec5-983d-4848-b50c-fb2cdac7d359  skyfin-test-3          afc-dev  afc-dev            UPDATE     2024-07-09T08:43:19Z (x days ago)  2024-08-10T01:56:42Z (x days ago)  "
       `);
       expect(mockLogger.error.mock.calls).toHaveLength(0);
     });
@@ -138,8 +138,8 @@ describe("cds nock tests", () => {
       await nock.back("cds-list-filtered.json");
       const output = await cds.cdsList(await freshContext(), [testTenantId], [false, false]);
       expect(output).toMatchInlineSnapshot(`
-        "subscribedTenantId                    subscribedSubdomain  subscriptionAppName  eventType
-        5ecc7413-2b7e-414a-9496-ad4a61f6cccf  skyfin-company       afc-dev              UPDATE   "
+        "tenantId                              subdomain       appName  commercialAppName  eventType
+        5ecc7413-2b7e-414a-9496-ad4a61f6cccf  skyfin-company  afc-dev  afc-dev            UPDATE   "
       `);
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
@@ -153,8 +153,8 @@ describe("cds nock tests", () => {
       await nock.back("cds-list-filtered.json");
       const output = await cds.cdsList(await freshContext(), [testTenantId], [true, false]);
       expect(anonymizeListTimestamps(output)).toMatchInlineSnapshot(`
-        "subscribedTenantId                    subscribedSubdomain  subscriptionAppName  eventType  created_on  updated_on
-        5ecc7413-2b7e-414a-9496-ad4a61f6cccf  skyfin-company       afc-dev              UPDATE                 2024-08-09T22:11:20Z (x days ago)  "
+        "tenantId                              subdomain       appName  commercialAppName  eventType  created_on  updated_on
+        5ecc7413-2b7e-414a-9496-ad4a61f6cccf  skyfin-company  afc-dev  afc-dev            UPDATE                 2024-08-09T22:11:20Z (x days ago)  "
       `);
       expect(mockLogger.error.mock.calls).toHaveLength(0);
     });
