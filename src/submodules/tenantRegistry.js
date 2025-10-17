@@ -276,7 +276,8 @@ const _registryCallForTenant = async (
     doJobPoll = true,
   } = {}
 ) => {
-  const { consumerTenantId: tenantId } = subscription;
+  // TODO: this will need two codepaths to handle sms and reg case separately
+  const { source, tenantId } = subscription;
   const {
     cfService: { credentials },
   } = await context.getRegInfo();
@@ -317,7 +318,6 @@ const _registryCallForTenant = async (
 };
 
 const _registryCall = async (context, method, tenantId, options) => {
-  // TODO: this will need two codepaths to handle sms and reg case separately
   let results;
   if (tenantId) {
     assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
