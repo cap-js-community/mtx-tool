@@ -145,7 +145,7 @@ const _requestSubscriptions = async (context, { tenant, onlyFailed, onlyStale, o
       _filterNormalizedSubscription(normalizedSubscription, { filterSubdomain, onlyFailed, onlyStale, onlyUpdatable })
     ) {
       smsSubscriptions.push(subscription);
-      normalizedSubscription.push(normalizedSubscription);
+      normalizedSubscriptions.push(normalizedSubscription);
     }
   }
   for (const subscription of regSubscriptionsUnfiltered) {
@@ -154,7 +154,7 @@ const _requestSubscriptions = async (context, { tenant, onlyFailed, onlyStale, o
       _filterNormalizedSubscription(normalizedSubscription, { filterSubdomain, onlyFailed, onlyStale, onlyUpdatable })
     ) {
       regSubscriptions.push(subscription);
-      normalizedSubscription.push(normalizedSubscription);
+      normalizedSubscriptions.push(normalizedSubscription);
     }
   }
 
@@ -185,7 +185,7 @@ const registryListSubscriptions = async (
       normalizedSubscription.tenantId,
       normalizedSubscription.globalAccountId,
       normalizedSubscription.subdomain,
-      normalizedSubscription.plan,
+      normalizedSubscription.plan ?? "",
       normalizedSubscription.state,
       normalizedSubscription.url,
     ];
