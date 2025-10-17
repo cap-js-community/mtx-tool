@@ -18,7 +18,7 @@ const {
   resolveTenantArg,
   parseIntWithFallback,
 } = require("../shared/static");
-const { assert } = require("../shared/error");
+const { assert, fail } = require("../shared/error");
 const { request } = require("../shared/request");
 const { Logger } = require("../shared/logger");
 const { limiter } = require("../shared/funnel");
@@ -264,37 +264,47 @@ const _registryJobPoll = async (context, location, { skipFirst = false } = {}) =
   }
 };
 
-const _registryCallForTenant = async (
+const _registryCallParts = async (
   context,
   subscription,
-  method,
-  {
-    noCallbacksAppNames,
-    updateApplicationURL,
-    skipUnchangedDependencies,
-    skipUpdatingDependencies,
-    doJobPoll = true,
-  } = {}
+  { noCallbacksAppNames, updateApplicationURL, skipUnchangedDependencies, skipUpdatingDependencies }
 ) => {
+  switch (subscription.source) {
+    case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
+      return {};
+    }
+    case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
+      const {
+        cfService: { credentials },
+      } = await context.getRegInfo();
+      const { saas_registry_url } = credentials;
+      const query = {
+        ...(noCallbacksAppNames && { noCallbacksAppNames }),
+        ...(updateApplicationURL && { updateApplicationURL }),
+        ...(skipUnchangedDependencies && { skipUnchangedDependencies }),
+        ...(skipUpdatingDependencies && { skipUpdatingDependencies }),
+      };
+      const pathname = `/saas-manager/v1/application/tenants/${tenantId}/subscriptions`;
+      const token = await context.getCachedUaaTokenFromCredentials(credentials);
+      return {};
+    }
+    default: {
+      return fail("unknown subscription source %s", subscription.source);
+    }
+  }
+};
+
+const _registryCallForTenant = async (context, subscription, method, options = {}) => {
   // TODO: this will need two codepaths to handle sms and reg case separately
-  const { source, tenantId } = subscription;
-  const {
-    cfService: { credentials },
-  } = await context.getRegInfo();
-  const { saas_registry_url } = credentials;
-  const query = {
-    ...(noCallbacksAppNames && { noCallbacksAppNames }),
-    ...(updateApplicationURL && { updateApplicationURL }),
-    ...(skipUnchangedDependencies && { skipUnchangedDependencies }),
-    ...(skipUpdatingDependencies && { skipUpdatingDependencies }),
-  };
-  const pathname = `/saas-manager/v1/application/tenants/${tenantId}/subscriptions`;
-  const token = await context.getCachedUaaTokenFromCredentials(credentials);
+  const { tenantId } = subscription;
+  const { doJobPoll = true } = options;
+  const { url, pathname, query, token } = await _registryCallParts(context, subscription, options);
+
   let response;
   try {
     response = await request({
       method,
-      url: saas_registry_url,
+      url,
       pathname,
       ...(Object.keys(query).length !== 0 && { query }),
       auth: { token },
