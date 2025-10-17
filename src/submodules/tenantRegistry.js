@@ -99,6 +99,7 @@ const _normalizedSubscriptionFromSms = (subscription) => ({
   tenantId: subscription.subscriber.app_tid,
   globalAccountId: subscription.subscriber.globalAccountId,
   subdomain: subscription.subscriber.subaccountSubdomain,
+  appName: subscription.provider.appName,
   plan: subscription.subscriptionPlanName,
   state: subscription.subscriptionState,
   url: subscription.subscriptionUrl,
@@ -110,6 +111,7 @@ const _normalizedSubscriptionFromReg = (subscription) => ({
   tenantId: subscription.consumerTenantId,
   globalAccountId: subscription.globalAccountId,
   subdomain: subscription.subdomain,
+  appName: subscription.appName,
   plan: subscription.code,
   state: subscription.state,
   url: subscription.url,
@@ -177,7 +179,7 @@ const registryListSubscriptions = async (
     return { smsSubscriptions, regSubscriptions };
   }
 
-  const headerRow = ["consumerTenantId", "globalAccountId", "subdomain", "plan", "state", "url"];
+  const headerRow = ["consumerTenantId", "globalAccountId", "subdomain", "appName", "plan", "state", "url"];
   doTimestamps && headerRow.push("created_on", "updated_on");
   const nowDate = new Date();
   const subscriptionMap = (normalizedSubscription) => {
@@ -185,6 +187,7 @@ const registryListSubscriptions = async (
       normalizedSubscription.tenantId,
       normalizedSubscription.globalAccountId,
       normalizedSubscription.subdomain,
+      normalizedSubscription.appName,
       normalizedSubscription.plan ?? "",
       normalizedSubscription.state,
       normalizedSubscription.url,
