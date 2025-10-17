@@ -154,8 +154,11 @@ const readRuntimeConfig = (filepath, { logged = false, checkConfig = true } = {}
   }
 
   return rawRuntimeConfig
-    ? Object.values(CONFIG_INFOS).reduce((result, value) => {
-        result[value.config] = rawRuntimeConfig[value.config];
+    ? Object.values(CONFIG_INFOS).reduce((result, info) => {
+        const value = rawRuntimeConfig[info.config];
+        if (value) {
+          result[info.config] = value;
+        }
         return result;
       }, Object.create(null))
     : {};
@@ -433,7 +436,9 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
 
   const getUaaInfo = makeOneTime(getAppInfoCached(CONFIG_TYPE.UAA_APP));
   const getRegInfo = makeOneTime(getAppInfoCached(CONFIG_TYPE.REGISTRY_APP));
+  const hasRegInfo = Object.prototype.hasOwnProperty.call(runtimeConfig, CONFIG_INFOS[CONFIG_TYPE.REGISTRY_APP].config);
   const getSmsInfo = makeOneTime(getAppInfoCached(CONFIG_TYPE.SMS_APP));
+  const hasSmsInfo = Object.prototype.hasOwnProperty.call(runtimeConfig, CONFIG_INFOS[CONFIG_TYPE.SMS_APP].config);
   const getCdsInfo = makeOneTime(getAppInfoCached(CONFIG_TYPE.CDS_APP));
   const getHdiInfo = makeOneTime(getAppInfoCached(CONFIG_TYPE.HDI_APP));
   const getSrvInfo = makeOneTime(getAppInfoCached(CONFIG_TYPE.SERVER_APP));
@@ -459,7 +464,9 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     runtimeConfig,
     getUaaInfo,
     getRegInfo,
+    hasRegInfo,
     getSmsInfo,
+    hasSmsInfo,
     getCdsInfo,
     getHdiInfo,
     getSrvInfo,
