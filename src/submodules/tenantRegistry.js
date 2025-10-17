@@ -40,6 +40,10 @@ const SUBSCRIPTION_STATE = Object.freeze({
   SUBSCRIBED: "SUBSCRIBED",
   UPDATE_FAILED: "UPDATE_FAILED",
 });
+const SUBSCRIPTION_SOURCE = Object.freeze({
+  SUBSCRIPTION_MANAGER: "SUBSCRIPTION_MANAGER",
+  SAAS_REGISTRY: "SAAS_REGISTRY",
+});
 const UPDATABLE_STATES = [SUBSCRIPTION_STATE.SUBSCRIBED, SUBSCRIPTION_STATE.UPDATE_FAILED];
 
 const logger = Logger.getInstance();
@@ -100,6 +104,7 @@ const _requestSubscriptionsReg = async (context, { filterTenantId }) => {
 };
 
 const _normalizedSubscriptionFromSms = (subscription) => ({
+  source: SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER,
   tenantId: subscription.subscriber.app_tid,
   globalAccountId: subscription.subscriber.globalAccountId,
   subdomain: subscription.subscriber.subaccountSubdomain,
@@ -112,6 +117,7 @@ const _normalizedSubscriptionFromSms = (subscription) => ({
 });
 
 const _normalizedSubscriptionFromReg = (subscription) => ({
+  source: SUBSCRIPTION_SOURCE.SAAS_REGISTRY,
   tenantId: subscription.consumerTenantId,
   globalAccountId: subscription.globalAccountId,
   subdomain: subscription.subdomain,
@@ -309,17 +315,18 @@ const _registryCallForTenant = async (
 };
 
 const _registryCall = async (context, method, tenantId, options) => {
+  // TODO: this will need two codepaths to handle sms and reg case separately
   let results;
   if (tenantId) {
     assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
-    const { subscriptions } = await _registrySubscriptionsPaged(context, {
+    const { normalizedSubscriptions: subscriptions } = await _requestSubscriptions(context, {
       tenant: tenantId,
     });
     assert(subscriptions.length >= 1, "could not find tenant %s", tenantId);
     results = [await _registryCallForTenant(context, subscriptions[0], method, options)];
   } else {
     const { onlyStaleSubscriptions, onlyFailedSubscriptions } = options ?? {};
-    const { subscriptions } = await _registrySubscriptionsPaged(context, {
+    const { normalizedSubscriptions: subscriptions } = await _requestSubscriptions(context, {
       onlyFailed: onlyFailedSubscriptions,
       onlyStale: onlyStaleSubscriptions,
       onlyUpdatable: true,
