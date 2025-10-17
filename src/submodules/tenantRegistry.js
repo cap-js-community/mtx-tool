@@ -100,12 +100,13 @@ const _requestSubscriptions = async (context, { tenant, onlyFailed, onlyStale, o
   const { subdomain: filterSubdomain, tenantId: filterTenantId } = resolveTenantArg(tenant);
   filterSubdomain && assert(isDashedWord(filterSubdomain), `argument "${filterSubdomain}" is not a valid subdomain`);
 
-  const subscriptions = [].concat(
-    context.hasSmsInfo ? await _requestSubscriptionsSms(context, { filterTenantId }) : [],
-    context.hasRegInfo ? await _requestSubscriptionsReg(context, { filterTenantId }) : []
-  );
+  const [smsSubscriptions, regSubscriptions] = await Promise.all([
+    context.hasSmsInfo ? _requestSubscriptionsSms(context, { filterTenantId }) : [],
+    context.hasRegInfo ? _requestSubscriptionsReg(context, { filterTenantId }) : [],
+  ]);
+  debugger;
 
-  return subscriptions;
+  return [].concat(smsSubscriptions, regSubscriptions);
 };
 
 const _registrySubscriptionsPaged = async (context, { tenant, onlyFailed, onlyStale, onlyUpdatable } = {}) => {
