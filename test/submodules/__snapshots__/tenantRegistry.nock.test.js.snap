@@ -2,7 +2,7 @@
 
 exports[`reg nock tests reg list reg list filtered json 1`] = `
 {
-  "subscriptions": [
+  "regSubscriptions": [
     {
       "amount": 1,
       "appId": "afc-dev!t5874",
@@ -877,12 +877,13 @@ exports[`reg nock tests reg list reg list filtered json 1`] = `
       "url": "https://skyfin-company.dev.eu10-canary.afc.cloud.sap",
     },
   ],
+  "smsSubscriptions": [],
 }
 `;
 
 exports[`reg nock tests reg list reg list json 1`] = `
 {
-  "subscriptions": [
+  "regSubscriptions": [
     {
       "amount": 1,
       "appId": "afc-dev!t5874",
@@ -10462,12 +10463,13 @@ exports[`reg nock tests reg list reg list json 1`] = `
       "url": "https://skyfin-booster.dev.eu10-canary.afc.cloud.sap",
     },
   ],
+  "smsSubscriptions": [],
 }
 `;
 
 exports[`reg nock tests reg long list reg long list basic/json 1`] = `
 {
-  "subscriptions": [
+  "regSubscriptions": [
     {
       "amount": 1,
       "appId": "afc-dev!t5874",
@@ -20047,12 +20049,13 @@ exports[`reg nock tests reg long list reg long list basic/json 1`] = `
       "url": "https://skyfin-booster.dev.eu10-canary.afc.cloud.sap",
     },
   ],
+  "smsSubscriptions": [],
 }
 `;
 
 exports[`reg nock tests reg long list reg long list filtered basic/json 1`] = `
 {
-  "subscriptions": [
+  "regSubscriptions": [
     {
       "amount": 1,
       "appId": "afc-dev!t5874",
@@ -29632,5 +29635,6 @@ exports[`reg nock tests reg long list reg long list filtered basic/json 1`] = `
       "url": "https://skyfin-booster.dev.eu10-canary.afc.cloud.sap",
     },
   ],
+  "smsSubscriptions": [],
 }
 `;
