@@ -271,22 +271,33 @@ const _registryCallParts = async (
 ) => {
   switch (subscription.source) {
     case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
-      return {};
+      // TODO: untested...
+      const credentials = (await context.getSmsInfo()).cfService.credentials;
+      return {
+        token: await context.getCachedUaaTokenFromCredentials(credentials),
+        url: credentials.subscription_manager_url,
+        pathname: `/subscription-manager/v1/subscriptions/tenants/${subscription.tenantId}/subscriptions`,
+        query: {
+          ...(noCallbacksAppNames && { noCallbacksAppNames }),
+          ...(updateApplicationURL && { updateApplicationURL }),
+          ...(skipUnchangedDependencies && { skipUnchangedDependencies }),
+          ...(skipUpdatingDependencies && { skipUpdatingDependencies }),
+        },
+      };
     }
     case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
-      const {
-        cfService: { credentials },
-      } = await context.getRegInfo();
-      const { saas_registry_url } = credentials;
-      const query = {
-        ...(noCallbacksAppNames && { noCallbacksAppNames }),
-        ...(updateApplicationURL && { updateApplicationURL }),
-        ...(skipUnchangedDependencies && { skipUnchangedDependencies }),
-        ...(skipUpdatingDependencies && { skipUpdatingDependencies }),
+      const credentials = (await context.getRegInfo()).cfService.credentials;
+      return {
+        token: await context.getCachedUaaTokenFromCredentials(credentials),
+        url: credentials.saas_registry_url,
+        pathname: `/saas-manager/v1/application/tenants/${subscription.tenantId}/subscriptions`,
+        query: {
+          ...(noCallbacksAppNames && { noCallbacksAppNames }),
+          ...(updateApplicationURL && { updateApplicationURL }),
+          ...(skipUnchangedDependencies && { skipUnchangedDependencies }),
+          ...(skipUpdatingDependencies && { skipUpdatingDependencies }),
+        },
       };
-      const pathname = `/saas-manager/v1/application/tenants/${tenantId}/subscriptions`;
-      const token = await context.getCachedUaaTokenFromCredentials(credentials);
-      return {};
     }
     default: {
       return fail("unknown subscription source %s", subscription.source);
@@ -295,7 +306,6 @@ const _registryCallParts = async (
 };
 
 const _registryCallForTenant = async (context, subscription, method, options = {}) => {
-  // TODO: this will need two codepaths to handle sms and reg case separately
   const { tenantId } = subscription;
   const { doJobPoll = true } = options;
   const { url, pathname, query, token } = await _registryCallParts(context, subscription, options);
