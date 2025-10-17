@@ -76,7 +76,7 @@ const _requestSubscriptionsPaged = async ({ token, url, pathname, appName, filte
 const _requestSubscriptionsSms = async (context, { filterTenantId }) => {
   const credentials = (await context.getSmsInfo()).cfService.credentials;
   return await _requestSubscriptionsPaged({
-    token: context.getCachedUaaTokenFromCredentials(credentials),
+    token: await context.getCachedUaaTokenFromCredentials(credentials),
     url: credentials.subscription_manager_url,
     pathname: "/subscription-manager/v1/subscriptions",
     appName: credentials.app_name,
@@ -87,7 +87,7 @@ const _requestSubscriptionsSms = async (context, { filterTenantId }) => {
 const _requestSubscriptionsReg = async (context, { filterTenantId }) => {
   const credentials = (await context.getRegInfo()).cfService.credentials;
   return await _requestSubscriptionsPaged({
-    token: context.getCachedUaaTokenFromCredentials(credentials),
+    token: await context.getCachedUaaTokenFromCredentials(credentials),
     url: credentials.saas_registry_url,
     pathname: "/saas-manager/v1/application/subscriptions",
     appName: credentials.appName,
