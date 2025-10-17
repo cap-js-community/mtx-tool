@@ -49,22 +49,66 @@ const regRequestConcurrency = parseIntWithFallback(
 );
 const regPollFrequency = parseIntWithFallback(process.env[ENV.REG_FREQUENCY], REGISTRY_JOB_POLL_FREQUENCY_FALLBACK);
 
-const _registrySubscriptionsPaged = async (context, { tenant, onlyFailed, onlyStale, onlyUpdatable } = {}) => {
+const _requestSubscriptionsPaged = async ({ token, url, pathname, appName, filterTenantId }) => {
+  let subscriptions = [];
+  let page = 1;
+  while (true) {
+    const response = await request({
+      url,
+      pathname,
+      query: {
+        appName,
+        ...(filterTenantId && { tenantId: filterTenantId }),
+        size: REGISTRY_PAGE_SIZE,
+        page: page++,
+      },
+      headers: { Accept: "application/json" },
+      auth: { token },
+    });
+    const { subscriptions: pageSubscriptions, morePages } = await response.json();
+    subscriptions = subscriptions.concat(pageSubscriptions);
+    if (!morePages) {
+      return subscriptions;
+    }
+  }
+};
+
+const _requestSubscriptionsSms = async (context, { filterTenantId }) => {
+  const credentials = (await context.getSmsInfo()).cfService.credentials;
+  return await _requestSubscriptionsPaged({
+    token: context.getCachedUaaTokenFromCredentials(credentials),
+    url: credentials.subscription_manager_url,
+    pathname: "/subscription-manager/v1/subscriptions",
+    appName: credentials.app_name,
+    filterTenantId,
+  });
+};
+
+const _requestSubscriptionsReg = async (context, { filterTenantId }) => {
+  const credentials = (await context.getRegInfo()).cfService.credentials;
+  return await _requestSubscriptionsPaged({
+    token: context.getCachedUaaTokenFromCredentials(credentials),
+    url: credentials.saas_registry_url,
+    pathname: "/saas-manager/v1/application/subscriptions",
+    appName: credentials.appName,
+    filterTenantId,
+  });
+};
+
+const _requestSubscriptions = async (context, { tenant, onlyFailed, onlyStale, onlyUpdatable } = {}) => {
+  assert(context.hasSmsInfo || context.hasRegInfo, "found no subscription-manager or saas-registry configuration");
   const { subdomain: filterSubdomain, tenantId: filterTenantId } = resolveTenantArg(tenant);
   filterSubdomain && assert(isDashedWord(filterSubdomain), `argument "${filterSubdomain}" is not a valid subdomain`);
 
-  const {
-    cfService: { credentials: regCredentials },
-  } = await context.getRegInfo();
+  const subscriptions = [].concat(
+    context.hasSmsInfo ? await _requestSubscriptionsSms(context, { filterTenantId }) : [],
+    context.hasRegInfo ? await _requestSubscriptionsReg(context, { filterTenantId }) : []
+  );
 
-  const {
-    cfService: { credentials: smsCredentials },
-  } = await context.getSmsInfo();
+  return subscriptions;
+};
 
-  const { saas_registry_url: regUrl, appName: regAppName } = regCredentials;
-
-  const { subscription_manager_url: smsUrl, app_name: smsAppName } = smsCredentials;
-
+const _registrySubscriptionsPaged = async (context, { tenant, onlyFailed, onlyStale, onlyUpdatable } = {}) => {
   let subscriptions = [];
   let page = 1;
   const token = await context.getCachedUaaTokenFromCredentials(smsCredentials);
@@ -104,7 +148,7 @@ const registryListSubscriptions = async (
   [tenant],
   [doTimestamps, doJsonOutput, doOnlyStale, doOnlyFailed]
 ) => {
-  const subscriptionInfos = await _registrySubscriptionsPaged(context, {
+  const subscriptionInfos = await _requestSubscriptions(context, {
     tenant,
     onlyStale: doOnlyStale,
     onlyFailed: doOnlyFailed,
