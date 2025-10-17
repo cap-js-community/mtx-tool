@@ -96,14 +96,14 @@ const _requestSubscriptionsReg = async (context, { filterTenantId }) => {
 };
 
 const _normalizedSubscriptionFromSms = (subscription) => ({
-  tenantId: subscription,
-  globalAccountId: subscription,
-  subdomain: subscription,
-  plan: subscription,
-  state: subscription,
-  url: subscription,
-  createdOn: subscription,
-  updatedOn: subscription,
+  tenantId: subscription.subscriber.app_tid,
+  globalAccountId: subscription.subscriber.globalAccountId,
+  subdomain: subscription.subscriber.subaccountSubdomain,
+  plan: subscription.subscriptionPlanName,
+  state: subscription.subscriptionState,
+  url: subscription.subscriptionUrl,
+  createdOn: subscription.createdDate,
+  updatedOn: subscription.modifiedDate,
 });
 
 const _normalizedSubscriptionFromReg = (subscription) => ({
