@@ -4,6 +4,7 @@
  * - https://int.controlcenter.ondemand.com/index.html#/knowledge_center/articles/f239e5501a534b64ab5f8dde9bd83c53
  * - https://saas-manager.cfapps.sap.hana.ondemand.com/api (Application Operations)
  * - https://saas-manager.cfapps.sap.hana.ondemand.com/api?scope=saas-registry-service (Service Operations)
+ * - https://int.api.hana.ondemand.com/api/APISubscriptionManagerService/resource/IAS_Subscription_Operations_for_Providers_or_Systems
  */
 "use strict";
 
@@ -49,7 +50,7 @@ const regRequestConcurrency = parseIntWithFallback(
 );
 const regPollFrequency = parseIntWithFallback(process.env[ENV.REG_FREQUENCY], REGISTRY_JOB_POLL_FREQUENCY_FALLBACK);
 
-const _requestSubscriptionsPaged = async ({ token, url, pathname, appName, filterTenantId }) => {
+const _requestSubscriptionsPaged = async ({ token, url, pathname, query }) => {
   let subscriptions = [];
   let page = 1;
   while (true) {
@@ -57,8 +58,7 @@ const _requestSubscriptionsPaged = async ({ token, url, pathname, appName, filte
       url,
       pathname,
       query: {
-        appName,
-        ...(filterTenantId && { tenantId: filterTenantId }),
+        ...query,
         size: REGISTRY_PAGE_SIZE,
         page: page++,
       },
@@ -79,8 +79,10 @@ const _requestSubscriptionsSms = async (context, { filterTenantId }) => {
     token: await context.getCachedUaaTokenFromCredentials(credentials),
     url: credentials.subscription_manager_url,
     pathname: "/subscription-manager/v1/subscriptions",
-    appName: credentials.app_name,
-    filterTenantId,
+    query: {
+      appName: credentials.app_name,
+      ...(filterTenantId && { app_tid: filterTenantId }),
+    },
   });
 };
 
@@ -90,8 +92,10 @@ const _requestSubscriptionsReg = async (context, { filterTenantId }) => {
     token: await context.getCachedUaaTokenFromCredentials(credentials),
     url: credentials.saas_registry_url,
     pathname: "/saas-manager/v1/application/subscriptions",
-    appName: credentials.appName,
-    filterTenantId,
+    query: {
+      appName: credentials.appName,
+      ...(filterTenantId && { tenantId: filterTenantId }),
+    },
   });
 };
 
