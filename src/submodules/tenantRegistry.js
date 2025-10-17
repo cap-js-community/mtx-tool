@@ -228,12 +228,14 @@ const registryLongListSubscriptions = async (context, [tenant], [, doOnlyStale, 
 };
 
 const registryServiceConfig = async (context) => {
-  const {
-    cfService: {
-      credentials: { appUrls },
-    },
-  } = await context.getRegInfo();
-  return JSON.parse(appUrls);
+  return {
+    ...(context.hasSmsInfo && {
+      smsServiceConfig: JSON.parse((await context.getSmsInfo()).cfService.credentials.app_urls),
+    }),
+    ...(context.hasRegInfo && {
+      regServiceConfig: JSON.parse((await context.getRegInfo()).cfService.credentials.appUrls),
+    }),
+  };
 };
 
 const _registryJobPoll = async (context, location, { skipFirst = false } = {}) => {
