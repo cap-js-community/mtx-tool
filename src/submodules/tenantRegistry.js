@@ -39,7 +39,9 @@ const JOB_STATE = Object.freeze({
   FAILED: "FAILED",
 });
 const SUBSCRIPTION_STATE = Object.freeze({
+  IN_PROCESS: "IN_PROCESS",
   SUBSCRIBED: "SUBSCRIBED",
+  SUBSCRIBE_FAILED: "SUBSCRIBE_FAILED",
   UPDATE_FAILED: "UPDATE_FAILED",
 });
 const SUBSCRIPTION_SOURCE = Object.freeze({
@@ -240,8 +242,9 @@ const registryServiceConfig = async (context) => {
   };
 };
 
-const _registryJobPoll = async (context, { url, pathname, credentials }) => {
+const _registryJobPoll = async (context, { source, url, pathname, credentials }) => {
   while (true) {
+    await sleep(regPollFrequency);
     const token = await context.getCachedUaaTokenFromCredentials(credentials);
     const response = await request({
       url,
@@ -250,10 +253,27 @@ const _registryJobPoll = async (context, { url, pathname, credentials }) => {
       auth: { token },
     });
     const responseBody = await response.json();
-    const { state } = responseBody;
-    assert(state, "got job poll response without state\n%j", responseBody);
-    if (state !== JOB_STATE.STARTED) {
-      return responseBody;
+    switch (source) {
+      case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
+        const { subscriptionState, subscriptionStateDetails } = responseBody;
+        logger.info("subscriptionDetails %s", subscriptionStateDetails);
+        assert(subscriptionState, "got job poll response without state\n%j", responseBody);
+        if (subscriptionState !== SUBSCRIPTION_STATE.IN_PROCESS) {
+          return responseBody;
+        }
+        break;
+      }
+      case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
+        const { state } = responseBody;
+        assert(state, "got job poll response without state\n%j", responseBody);
+        if (state !== JOB_STATE.STARTED) {
+          return responseBody;
+        }
+        break;
+      }
+      default: {
+        return fail("unknown subscription source %s", source);
+      }
     }
   }
 };
@@ -327,7 +347,12 @@ const _registryCallForTenant = async (context, subscription, method, options = {
   logger.info("response: %s", responseText);
   logger.info("polling job %s with interval %isec", location, regPollFrequency / 1000);
 
-  const jobResult = await _registryJobPoll(context, { url, pathname: location, credentials });
+  const jobResult = await _registryJobPoll(context, {
+    source: subscription.source,
+    url,
+    pathname: location,
+    credentials,
+  });
 
   return { tenantId, jobId: jobResult.id, state: jobResult.state };
 };
