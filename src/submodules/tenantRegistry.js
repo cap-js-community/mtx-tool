@@ -16,6 +16,7 @@ const {
   sleep,
   tableList,
   dateDiffInDays,
+  dateDiffInMinutes,
   formatTimestampsWithRelativeDays,
   resolveTenantArg,
   parseIntWithFallback,
@@ -111,6 +112,7 @@ const _requestSubscriptionsReg = async (context, { filterTenantId }) => {
 
 const _normalizedSubscriptionFromSms = (subscription) => ({
   source: SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER,
+  id: subscription.subscriptionGUID,
   tenantId: subscription.subscriber.app_tid,
   globalAccountId: subscription.subscriber.globalAccountId,
   subdomain: subscription.subscriber.subaccountSubdomain,
@@ -124,6 +126,7 @@ const _normalizedSubscriptionFromSms = (subscription) => ({
 
 const _normalizedSubscriptionFromReg = (subscription) => ({
   source: SUBSCRIPTION_SOURCE.SAAS_REGISTRY,
+  id: subscription.subscriptionGUID,
   tenantId: subscription.consumerTenantId,
   globalAccountId: subscription.globalAccountId,
   subdomain: subscription.subdomain,
@@ -244,7 +247,7 @@ const registryServiceConfig = async (context) => {
   };
 };
 
-const _registryStatePoll = async (context, { tenantId, source, url, pathname, credentials }) => {
+const _registryStatePoll = async (context, { startTime, tenantId, source, url, pathname, credentials }) => {
   logger.info("polling subscription %s with interval %isec", pathname, regPollFrequency / 1000);
 
   while (true) {
@@ -267,6 +270,7 @@ const _registryStatePoll = async (context, { tenantId, source, url, pathname, cr
             subscriptionId,
             subscriptionState,
             ...(subscriptionStateDetails && { subscriptionStateDetails }),
+            duration: `${dateDiffInMinutes(startTime, new Date()).toFixed(0)} min`,
             [SUBSCRIPTION_POLL_IS_SUCCESS]: subscriptionState === SUBSCRIPTION_STATE.SUBSCRIBED,
           };
         }
@@ -280,6 +284,7 @@ const _registryStatePoll = async (context, { tenantId, source, url, pathname, cr
             tenantId,
             jobId,
             jobState,
+            duration: `${dateDiffInMinutes(startTime, new Date()).toFixed(0)} min`,
             [SUBSCRIPTION_POLL_IS_SUCCESS]: jobState === JOB_STATE.SUCCEEDED,
           };
         }
@@ -334,11 +339,12 @@ const _registryCallParts = async (
 };
 
 const _registryCallForTenant = async (context, subscription, method, options = {}) => {
-  const { tenantId } = subscription;
+  const { source, tenantId } = subscription;
   const { doJobPoll = true } = options;
   const { url, pathname, query, credentials } = await _registryCallParts(context, subscription, options);
 
   const token = await context.getCachedUaaTokenFromCredentials(credentials);
+  const startTime = new Date();
   let response;
   try {
     response = await request({
@@ -349,22 +355,38 @@ const _registryCallForTenant = async (context, subscription, method, options = {
       auth: { token },
     });
   } catch (err) {
-    return { tenantId, state: JOB_STATE.FAILED, message: err.message };
+    return { tenantId, error: err.message, [SUBSCRIPTION_POLL_IS_SUCCESS]: false };
   }
 
   if (!doJobPoll) {
     // NOTE: with checkStatus being true by default, the above request only returns for successful changes
-    return { tenantId, state: JOB_STATE.SUCCEEDED };
+    return { tenantId, [SUBSCRIPTION_POLL_IS_SUCCESS]: true };
   }
   const [location] = response.headers.raw().location;
-  const responseText = await response.text();
-  if (responseText) {
-    logger.info("response: %s", responseText);
+  switch (source) {
+    case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
+      logger.info(
+        "poll info: update for subscription %s of application %s and tenant %s was triggered",
+        subscription.id,
+        subscription.appName,
+        subscription.tenantId
+      );
+      break;
+    }
+    case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
+      const responseText = await response.text();
+      logger.info("poll info: %s", responseText);
+      break;
+    }
+    default: {
+      return fail("unknown subscription source %s", source);
+    }
   }
 
   return await _registryStatePoll(context, {
+    startTime,
     tenantId,
-    source: subscription.source,
+    source,
     url,
     pathname: location,
     credentials,

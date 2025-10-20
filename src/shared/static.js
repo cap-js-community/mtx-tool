@@ -227,6 +227,12 @@ const dateDiffInDays = (from, to) => {
   return Math.floor((toDate - fromDate) / 1000 / 60 / 60 / 24);
 };
 
+const dateDiffInMinutes = (from, to) => {
+  const fromDate = Date.UTC(from.getFullYear(), from.getMonth(), from.getDate());
+  const toDate = Date.UTC(to.getFullYear(), to.getMonth(), to.getDate());
+  return Math.floor((toDate - fromDate) / 1000 / 60);
+};
+
 const formatTimestampWithRelativeDays = (input, nowDate = new Date()) => {
   if (!input) {
     return "";
@@ -377,6 +383,7 @@ module.exports = {
   partition,
   spawnAsync,
   dateDiffInDays,
+  dateDiffInMinutes,
   formatTimestampWithRelativeDays,
   formatTimestampsWithRelativeDays,
   resolveTenantArg,
