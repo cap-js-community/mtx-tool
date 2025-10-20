@@ -33,6 +33,8 @@ const ENV = Object.freeze({
 const REGISTRY_PAGE_SIZE = 200;
 const REGISTRY_JOB_POLL_FREQUENCY_FALLBACK = 15000;
 const REGISTRY_REQUEST_CONCURRENCY_FALLBACK = 6;
+
+const SUBSCRIPTION_POLL_IS_SUCCESS = Symbol("IS_SUCCESS");
 const JOB_STATE = Object.freeze({
   STARTED: "STARTED",
   SUCCEEDED: "SUCCEEDED",
@@ -242,7 +244,9 @@ const registryServiceConfig = async (context) => {
   };
 };
 
-const _registryJobPoll = async (context, { tenantId, source, url, pathname, credentials }) => {
+const _registryStatePoll = async (context, { tenantId, source, url, pathname, credentials }) => {
+  logger.info("polling subscription %s with interval %isec", pathname, regPollFrequency / 1000);
+
   while (true) {
     await sleep(regPollFrequency);
     const token = await context.getCachedUaaTokenFromCredentials(credentials);
@@ -256,23 +260,28 @@ const _registryJobPoll = async (context, { tenantId, source, url, pathname, cred
     switch (source) {
       case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
         const { subscriptionId, subscriptionState: state, subscriptionStateDetails } = responseBody;
-        assert(state, "got job poll response without state\n%j", responseBody);
+        assert(state, "got subscription poll response without state\n%j", responseBody);
         if (state !== SUBSCRIPTION_STATE.IN_PROCESS) {
           return {
             tenantId,
             subscriptionId,
             state,
             ...(subscriptionStateDetails && { stateDetails: subscriptionStateDetails }),
-            isSuccess: state === SUBSCRIPTION_STATE.SUBSCRIBED,
+            [SUBSCRIPTION_POLL_IS_SUCCESS]: state === SUBSCRIPTION_STATE.SUBSCRIBED,
           };
         }
         break;
       }
       case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
         const { id: jobId, state } = responseBody;
-        assert(state, "got job poll response without state\n%j", responseBody);
+        assert(state, "got subscription poll response without state\n%j", responseBody);
         if (state !== JOB_STATE.STARTED) {
-          return { tenantId, jobId, state, isSuccess: state === JOB_STATE.SUCCEEDED };
+          return {
+            tenantId,
+            jobId,
+            state,
+            [SUBSCRIPTION_POLL_IS_SUCCESS]: state === JOB_STATE.SUCCEEDED,
+          };
         }
         break;
       }
@@ -349,10 +358,11 @@ const _registryCallForTenant = async (context, subscription, method, options = {
   }
   const [location] = response.headers.raw().location;
   const responseText = await response.text();
-  logger.info("response: %s", responseText);
-  logger.info("polling job %s with interval %isec", location, regPollFrequency / 1000);
+  if (responseText) {
+    logger.info("response: %s", responseText);
+  }
 
-  return await _registryJobPoll(context, {
+  return await _registryStatePoll(context, {
     tenantId,
     source: subscription.source,
     url,
@@ -386,7 +396,7 @@ const _registryCall = async (context, method, tenantId, options) => {
   assert(Array.isArray(results), "got invalid results from registry %s call with %j", method, options);
   logger.info(JSON.stringify(results.length === 1 ? results[0] : results, null, 2));
   assert(
-    results.every(({ isSuccess }) => isSuccess),
+    results.every((pollResult) => pollResult[SUBSCRIPTION_POLL_IS_SUCCESS]),
     "registry %s failed for some tenant",
     method
   );
