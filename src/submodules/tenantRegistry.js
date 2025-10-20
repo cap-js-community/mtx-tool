@@ -16,7 +16,7 @@ const {
   sleep,
   tableList,
   dateDiffInDays,
-  dateDiffInMinutes,
+  dateDiffInSeconds,
   formatTimestampsWithRelativeDays,
   resolveTenantArg,
   parseIntWithFallback,
@@ -270,7 +270,7 @@ const _registryStatePoll = async (context, { startTime, tenantId, source, url, p
             subscriptionId,
             subscriptionState,
             ...(subscriptionStateDetails && { subscriptionStateDetails }),
-            duration: `${dateDiffInMinutes(startTime, new Date()).toFixed(0)} min`,
+            duration: `${dateDiffInSeconds(startTime, new Date()).toFixed(0)} sec`,
             [SUBSCRIPTION_POLL_IS_SUCCESS]: subscriptionState === SUBSCRIPTION_STATE.SUBSCRIBED,
           };
         }
@@ -284,7 +284,7 @@ const _registryStatePoll = async (context, { startTime, tenantId, source, url, p
             tenantId,
             jobId,
             jobState,
-            duration: `${dateDiffInMinutes(startTime, new Date()).toFixed(0)} min`,
+            duration: `${dateDiffInSeconds(startTime, new Date()).toFixed(0)} sec`,
             [SUBSCRIPTION_POLL_IS_SUCCESS]: jobState === JOB_STATE.SUCCEEDED,
           };
         }

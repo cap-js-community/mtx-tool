@@ -227,10 +227,24 @@ const dateDiffInDays = (from, to) => {
   return Math.floor((toDate - fromDate) / 1000 / 60 / 60 / 24);
 };
 
-const dateDiffInMinutes = (from, to) => {
-  const fromDate = Date.UTC(from.getFullYear(), from.getMonth(), from.getDate());
-  const toDate = Date.UTC(to.getFullYear(), to.getMonth(), to.getDate());
-  return Math.floor((toDate - fromDate) / 1000 / 60);
+const dateDiffInSeconds = (from, to) => {
+  const fromDate = Date.UTC(
+    from.getFullYear(),
+    from.getMonth(),
+    from.getDate(),
+    from.getHours(),
+    from.getMinutes(),
+    from.getSeconds()
+  );
+  const toDate = Date.UTC(
+    to.getFullYear(),
+    to.getMonth(),
+    to.getDate(),
+    to.getHours(),
+    to.getMinutes(),
+    to.getSeconds()
+  );
+  return Math.floor((toDate - fromDate) / 1000);
 };
 
 const formatTimestampWithRelativeDays = (input, nowDate = new Date()) => {
@@ -383,7 +397,7 @@ module.exports = {
   partition,
   spawnAsync,
   dateDiffInDays,
-  dateDiffInMinutes,
+  dateDiffInSeconds,
   formatTimestampWithRelativeDays,
   formatTimestampsWithRelativeDays,
   resolveTenantArg,
