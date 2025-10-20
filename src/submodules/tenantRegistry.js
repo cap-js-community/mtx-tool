@@ -1,9 +1,11 @@
 /**
- * This is a wrapper for APIs of the saas-registry
+ * APIs of the saas-registry
  * - https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/ed08c7dcb35d4082936c045e7d7b3ecd.html
  * - https://int.controlcenter.ondemand.com/index.html#/knowledge_center/articles/f239e5501a534b64ab5f8dde9bd83c53
- * - https://saas-manager.cfapps.sap.hana.ondemand.com/api (Application Operations)
- * - https://saas-manager.cfapps.sap.hana.ondemand.com/api?scope=saas-registry-service (Service Operations)
+ * - https://saas-manager.cfapps.sap.hana.ondemand.com/api (Application Operations) [our case]
+ * - https://saas-manager.cfapps.sap.hana.ondemand.com/api?scope=saas-registry-service (Service Operations) [not supported anymore]
+ *
+ * APIs of the subscription-manager
  * - https://int.api.hana.ondemand.com/api/APISubscriptionManagerService/resource/IAS_Subscription_Operations_for_Providers_or_Systems
  */
 "use strict";
@@ -238,20 +240,12 @@ const registryServiceConfig = async (context) => {
   };
 };
 
-const _registryJobPoll = async (context, location, { skipFirst = false } = {}) => {
-  const {
-    cfService: { credentials },
-  } = await context.getRegInfo();
-  const { saas_registry_url } = credentials;
+const _registryJobPoll = async (context, { url, pathname, credentials }) => {
   while (true) {
-    if (!skipFirst) {
-      await sleep(regPollFrequency);
-      skipFirst = false;
-    }
     const token = await context.getCachedUaaTokenFromCredentials(credentials);
     const response = await request({
-      url: saas_registry_url,
-      pathname: location,
+      url,
+      pathname,
       headers: { Accept: "application/json" },
       auth: { token },
     });
@@ -274,9 +268,9 @@ const _registryCallParts = async (
       // TODO: untested...
       const credentials = (await context.getSmsInfo()).cfService.credentials;
       return {
-        token: await context.getCachedUaaTokenFromCredentials(credentials),
+        credentials,
         url: credentials.subscription_manager_url,
-        pathname: `/subscription-manager/v1/subscriptions/tenants/${subscription.tenantId}/subscriptions`,
+        pathname: `/subscription-manager/v1/subscriptions/${subscription.tenantId}`,
         query: {
           ...(noCallbacksAppNames && { noCallbacksAppNames }),
           ...(updateApplicationURL && { updateApplicationURL }),
@@ -288,7 +282,7 @@ const _registryCallParts = async (
     case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
       const credentials = (await context.getRegInfo()).cfService.credentials;
       return {
-        token: await context.getCachedUaaTokenFromCredentials(credentials),
+        credentials,
         url: credentials.saas_registry_url,
         pathname: `/saas-manager/v1/application/tenants/${subscription.tenantId}/subscriptions`,
         query: {
@@ -308,8 +302,9 @@ const _registryCallParts = async (
 const _registryCallForTenant = async (context, subscription, method, options = {}) => {
   const { tenantId } = subscription;
   const { doJobPoll = true } = options;
-  const { url, pathname, query, token } = await _registryCallParts(context, subscription, options);
+  const { url, pathname, query, credentials } = await _registryCallParts(context, subscription, options);
 
+  const token = await context.getCachedUaaTokenFromCredentials(credentials);
   let response;
   try {
     response = await request({
@@ -332,7 +327,7 @@ const _registryCallForTenant = async (context, subscription, method, options = {
   logger.info("response: %s", responseText);
   logger.info("polling job %s with interval %isec", location, regPollFrequency / 1000);
 
-  const jobResult = await _registryJobPoll(context, location);
+  const jobResult = await _registryJobPoll(context, { url, pathname: location, credentials });
 
   return { tenantId, jobId: jobResult.id, state: jobResult.state };
 };
