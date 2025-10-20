@@ -259,28 +259,28 @@ const _registryStatePoll = async (context, { tenantId, source, url, pathname, cr
     const responseBody = await response.json();
     switch (source) {
       case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
-        const { subscriptionId, subscriptionState: state, subscriptionStateDetails } = responseBody;
-        assert(state, "got subscription poll response without state\n%j", responseBody);
-        if (state !== SUBSCRIPTION_STATE.IN_PROCESS) {
+        const { subscriptionId, subscriptionState, subscriptionStateDetails } = responseBody;
+        assert(subscriptionState, "got subscription poll response without state\n%j", responseBody);
+        if (subscriptionState !== SUBSCRIPTION_STATE.IN_PROCESS) {
           return {
             tenantId,
             subscriptionId,
-            state,
-            ...(subscriptionStateDetails && { stateDetails: subscriptionStateDetails }),
-            [SUBSCRIPTION_POLL_IS_SUCCESS]: state === SUBSCRIPTION_STATE.SUBSCRIBED,
+            subscriptionState,
+            ...(subscriptionStateDetails && { subscriptionStateDetails }),
+            [SUBSCRIPTION_POLL_IS_SUCCESS]: subscriptionState === SUBSCRIPTION_STATE.SUBSCRIBED,
           };
         }
         break;
       }
       case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
-        const { id: jobId, state } = responseBody;
-        assert(state, "got subscription poll response without state\n%j", responseBody);
-        if (state !== JOB_STATE.STARTED) {
+        const { id: jobId, state: jobState } = responseBody;
+        assert(jobState, "got subscription poll response without state\n%j", responseBody);
+        if (jobState !== JOB_STATE.STARTED) {
           return {
             tenantId,
             jobId,
-            state,
-            [SUBSCRIPTION_POLL_IS_SUCCESS]: state === JOB_STATE.SUCCEEDED,
+            jobState,
+            [SUBSCRIPTION_POLL_IS_SUCCESS]: jobState === JOB_STATE.SUCCEEDED,
           };
         }
         break;
