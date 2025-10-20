@@ -242,7 +242,7 @@ const registryServiceConfig = async (context) => {
   };
 };
 
-const _registryJobPoll = async (context, { source, url, pathname, credentials }) => {
+const _registryJobPoll = async (context, { tenantId, source, url, pathname, credentials }) => {
   while (true) {
     await sleep(regPollFrequency);
     const token = await context.getCachedUaaTokenFromCredentials(credentials);
@@ -255,19 +255,24 @@ const _registryJobPoll = async (context, { source, url, pathname, credentials })
     const responseBody = await response.json();
     switch (source) {
       case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
-        const { subscriptionState, subscriptionStateDetails } = responseBody;
-        logger.info("subscriptionDetails %s", subscriptionStateDetails);
-        assert(subscriptionState, "got job poll response without state\n%j", responseBody);
-        if (subscriptionState !== SUBSCRIPTION_STATE.IN_PROCESS) {
-          return responseBody;
+        const { subscriptionId, subscriptionState: state, subscriptionStateDetails } = responseBody;
+        assert(state, "got job poll response without state\n%j", responseBody);
+        if (state !== SUBSCRIPTION_STATE.IN_PROCESS) {
+          return {
+            tenantId,
+            subscriptionId,
+            state,
+            ...(subscriptionStateDetails && { stateDetails: subscriptionStateDetails }),
+            isSuccess: state === SUBSCRIPTION_STATE.SUBSCRIBED,
+          };
         }
         break;
       }
       case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
-        const { state } = responseBody;
+        const { id: jobId, state } = responseBody;
         assert(state, "got job poll response without state\n%j", responseBody);
         if (state !== JOB_STATE.STARTED) {
-          return responseBody;
+          return { tenantId, jobId, state, isSuccess: state === JOB_STATE.SUCCEEDED };
         }
         break;
       }
@@ -347,14 +352,13 @@ const _registryCallForTenant = async (context, subscription, method, options = {
   logger.info("response: %s", responseText);
   logger.info("polling job %s with interval %isec", location, regPollFrequency / 1000);
 
-  const jobResult = await _registryJobPoll(context, {
+  return await _registryJobPoll(context, {
+    tenantId,
     source: subscription.source,
     url,
     pathname: location,
     credentials,
   });
-
-  return { tenantId, jobId: jobResult.id, state: jobResult.state };
 };
 
 const _registryCall = async (context, method, tenantId, options) => {
@@ -382,7 +386,7 @@ const _registryCall = async (context, method, tenantId, options) => {
   assert(Array.isArray(results), "got invalid results from registry %s call with %j", method, options);
   logger.info(JSON.stringify(results.length === 1 ? results[0] : results, null, 2));
   assert(
-    results.every(({ state }) => state === JOB_STATE.SUCCEEDED),
+    results.every(({ isSuccess }) => isSuccess),
     "registry %s failed for some tenant",
     method
   );
