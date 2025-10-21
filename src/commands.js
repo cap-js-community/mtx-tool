@@ -259,6 +259,11 @@ const APP_COMMAND_INFOS = Object.freeze({
     optionalFlagArgs: [FLAG_ARG.ONLY_STALE, FLAG_ARG.ONLY_FAILED],
     callback: reg.registryUpdateApplicationURL,
   },
+  REGISTRY_MIGRATE: {
+    commandVariants: ["--registry-migrate"],
+    requiredPassArgs: [PASS_ARG.TENANT_ID],
+    callback: reg.registryMigrate,
+  },
   REGISTRY_OFFBOARD_SUBSCRIPTION: {
     commandVariants: ["--registry-offboard"],
     requiredPassArgs: [PASS_ARG.TENANT_ID],

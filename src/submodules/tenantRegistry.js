@@ -422,6 +422,25 @@ const registryUpdateApplicationURL = async (context, [tenantId], [doOnlyStale, d
     onlyStaleSubscriptions: doOnlyStale,
     onlyFailedSubscriptions: doOnlyFailed,
   });
+
+const _registryMigrate = async (context, tenantId) => {
+  const credentials = (await context.getSmsInfo()).cfService.credentials;
+  const token = await context.getCachedUaaTokenFromCredentials(credentials);
+  const response = await request({
+    url: credentials.subscription_manager_url,
+    pathname: `/subscription-manager/v1/subscriptions/${tenantId}/moveFromSaasProvisioning`,
+    auth: { token },
+  });
+};
+
+const registryMigrate = async (context, [tenantId]) => {
+  assert(
+    context.hasRegInfo && context.hasSmsInfo,
+    "migration needs both subscription-manager ans saas-registry configuration"
+  );
+  return await _registryMigrate(context, tenantId);
+};
+
 const registryOffboardSubscription = async (context, [tenantId]) => await _registryCall(context, "DELETE", tenantId);
 
 const registryOffboardSubscriptionSkip = async (context, [tenantId, skipApps]) =>
@@ -434,6 +453,7 @@ module.exports = {
   registryUpdateDependencies,
   registryUpdateAllDependencies,
   registryUpdateApplicationURL,
+  registryMigrate,
   registryOffboardSubscription,
   registryOffboardSubscriptionSkip,
 };
