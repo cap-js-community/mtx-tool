@@ -268,19 +268,20 @@ const _registryStatePoll = async (context, { source, url, pathname, credentials 
           return {
             subscriptionId,
             subscriptionState,
-            ...(subscriptionStateDetails && { subscriptionStateDetails }),
+            ...(subscriptionStateDetails && { error: subscriptionStateDetails }),
             [SUBSCRIPTION_POLL_IS_SUCCESS]: subscriptionState === SUBSCRIPTION_STATE.SUBSCRIBED,
           };
         }
         break;
       }
       case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
-        const { id: jobId, state: jobState } = responseBody;
+        const { id: jobId, state: jobState, error: err } = responseBody;
         assert(jobState, "got subscription poll response without state\n%j", responseBody);
         if (jobState !== JOB_STATE.STARTED) {
           return {
             jobId,
             jobState,
+            ...(err && { error: err.message }),
             [SUBSCRIPTION_POLL_IS_SUCCESS]: jobState === JOB_STATE.SUCCEEDED,
           };
         }
@@ -300,7 +301,6 @@ const _registryCallParts = async (
 ) => {
   switch (subscription.source) {
     case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
-      // TODO: untested...
       const credentials = (await context.getSmsInfo()).cfService.credentials;
       return {
         credentials,
