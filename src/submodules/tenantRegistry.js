@@ -363,25 +363,6 @@ const _registryCallForTenant = async (context, subscription, method, options = {
     return { tenantId, [SUBSCRIPTION_POLL_IS_SUCCESS]: true };
   }
   const [location] = response.headers.raw().location;
-  switch (source) {
-    case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
-      logger.info(
-        "poll info: update for subscription %s of application %s and tenant %s was triggered",
-        subscription.id,
-        subscription.appName,
-        subscription.tenantId
-      );
-      break;
-    }
-    case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
-      const responseText = await response.text();
-      logger.info("poll info: %s", responseText);
-      break;
-    }
-    default: {
-      return fail("unknown subscription source %s", source);
-    }
-  }
 
   return await _registryStatePoll(context, {
     startTime,
