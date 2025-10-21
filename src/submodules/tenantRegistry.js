@@ -399,7 +399,7 @@ const _registryCall = async (context, method, tenantId, options) => {
   logger.info(JSON.stringify(results.length === 1 ? results[0] : results, null, 2));
   assert(
     results.every((pollResult) => pollResult[SUBSCRIPTION_POLL_IS_SUCCESS]),
-    "registry %s failed for some tenant",
+    "registry %s failed for some tenants",
     method
   );
 };
