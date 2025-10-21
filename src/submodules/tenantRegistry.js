@@ -247,7 +247,7 @@ const registryServiceConfig = async (context) => {
   };
 };
 
-const _registryStatePoll = async (context, { startTime, tenantId, source, url, pathname, credentials }) => {
+const _registryStatePoll = async (context, { source, url, pathname, credentials }) => {
   logger.info("polling subscription %s with interval %isec", pathname, regPollFrequency / 1000);
 
   while (true) {
@@ -266,11 +266,9 @@ const _registryStatePoll = async (context, { startTime, tenantId, source, url, p
         assert(subscriptionState, "got subscription poll response without state\n%j", responseBody);
         if (subscriptionState !== SUBSCRIPTION_STATE.IN_PROCESS) {
           return {
-            tenantId,
             subscriptionId,
             subscriptionState,
             ...(subscriptionStateDetails && { subscriptionStateDetails }),
-            duration: `${dateDiffInSeconds(startTime, new Date()).toFixed(0)} sec`,
             [SUBSCRIPTION_POLL_IS_SUCCESS]: subscriptionState === SUBSCRIPTION_STATE.SUBSCRIBED,
           };
         }
@@ -281,10 +279,8 @@ const _registryStatePoll = async (context, { startTime, tenantId, source, url, p
         assert(jobState, "got subscription poll response without state\n%j", responseBody);
         if (jobState !== JOB_STATE.STARTED) {
           return {
-            tenantId,
             jobId,
             jobState,
-            duration: `${dateDiffInSeconds(startTime, new Date()).toFixed(0)} sec`,
             [SUBSCRIPTION_POLL_IS_SUCCESS]: jobState === JOB_STATE.SUCCEEDED,
           };
         }
@@ -364,14 +360,17 @@ const _registryCallForTenant = async (context, subscription, method, options = {
   }
   const [location] = response.headers.raw().location;
 
-  return await _registryStatePoll(context, {
-    startTime,
-    tenantId,
+  const result = await _registryStatePoll(context, {
     source,
     url,
     pathname: location,
     credentials,
   });
+  return {
+    tenantId,
+    duration: `${dateDiffInSeconds(startTime, new Date()).toFixed(0)} sec`,
+    ...result,
+  };
 };
 
 const _registryCall = async (context, method, tenantId, options) => {
