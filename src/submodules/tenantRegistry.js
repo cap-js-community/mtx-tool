@@ -437,10 +437,15 @@ const _registryMigrate = async (context, tenantId) => {
   const credentials = (await context.getSmsInfo()).cfService.credentials;
   const token = await context.getCachedUaaTokenFromCredentials(credentials);
   const response = await request({
+    method: "PATCH",
     url: credentials.subscription_manager_url,
     pathname: `/subscription-manager/v1/subscriptions/${tenantId}/moveFromSaasProvisioning`,
     auth: { token },
   });
+  const [location] = response.headers.raw().location;
+  const data = await response.text();
+  // TODO use call and poll reuse function
+  debugger;
 };
 
 const registryMigrate = async (context, [tenantId]) => {
