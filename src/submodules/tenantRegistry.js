@@ -20,6 +20,7 @@ const {
   formatTimestampsWithRelativeDays,
   resolveTenantArg,
   parseIntWithFallback,
+  compareFor,
 } = require("../shared/static");
 const { assert, fail } = require("../shared/error");
 const { request } = require("../shared/request");
@@ -56,6 +57,7 @@ const SUBSCRIPTION_SOURCE = Object.freeze({
 const UPDATABLE_STATES = [SUBSCRIPTION_STATE.SUBSCRIBED, SUBSCRIPTION_STATE.UPDATE_FAILED];
 
 const logger = Logger.getInstance();
+const compareForTenantId = compareFor((subscription) => subscription.tenantId.toUpperCase());
 
 const regRequestConcurrency = parseIntWithFallback(
   process.env[ENV.REG_CONCURRENCY],
@@ -214,6 +216,7 @@ const _getSubscriptionInfos = async (context, { tenant, onlyFailed, onlyStale, o
     }
   }
 
+  normalizedSubscriptions.sort(compareForTenantId);
   return { smsSubscriptions, regSubscriptions, normalizedSubscriptions };
 };
 
