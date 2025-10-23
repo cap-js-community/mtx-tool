@@ -412,18 +412,22 @@ const registryUpdateApplicationURL = async (context, [tenantId], [doOnlyStale, d
     isPoll: false,
   });
 
-const registryMigrate = async (context, [tenantId]) => {
-  assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
+const _resolveUniqueSubscription = async (context, tenantId) => {
   const { normalizedSubscriptions: subscriptions } = await _getSubscriptionInfos(context, { tenant: tenantId });
   assert(
     Array.isArray(subscriptions) && subscriptions.length === 1,
     "could not find unique subscription for tenantId %s",
     tenantId
   );
-  const [subscription] = subscriptions;
+  return subscriptions[0];
+};
+
+const registryMigrate = async (context, [tenantId]) => {
+  assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
+  const subscription = await _resolveUniqueSubscription(context, tenantId);
   assert(
     subscription.source === SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER,
-    "subscription migrate is only supported for subscription manager"
+    "registry migrate is only supported for subscription manager"
   );
 
   return await _callAndPoll(context, SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER, tenantId, {
@@ -434,14 +438,7 @@ const registryMigrate = async (context, [tenantId]) => {
 
 const registryOffboardSubscription = async (context, [tenantId]) => {
   assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
-  const { normalizedSubscriptions: subscriptions } = await _getSubscriptionInfos(context, { tenant: tenantId });
-
-  assert(
-    Array.isArray(subscriptions) && subscriptions.length === 1,
-    "could not find unique subscription for tenantId %s",
-    tenantId
-  );
-  const [subscription] = subscriptions;
+  const subscription = await _resolveUniqueSubscription(context, tenantId);
   let pathname;
   switch (subscription.source) {
     case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
@@ -461,17 +458,10 @@ const registryOffboardSubscription = async (context, [tenantId]) => {
 
 const registryOffboardSubscriptionSkip = async (context, [tenantId, skipApps]) => {
   assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
-  const { normalizedSubscriptions: subscriptions } = await _getSubscriptionInfos(context, { tenant: tenantId });
-
-  assert(
-    Array.isArray(subscriptions) && subscriptions.length === 1,
-    "could not find unique subscription for tenantId %s",
-    tenantId
-  );
-  const [subscription] = subscriptions;
+  const subscription = await _resolveUniqueSubscription(context, tenantId);
   assert(
     subscription.source === SUBSCRIPTION_SOURCE.SAAS_REGISTRY,
-    "subscription offboard with skipping apps is only supported for saas registry"
+    "registry offboard with skipping apps is only supported for saas registry"
   );
   return await _callAndPoll(context, SUBSCRIPTION_SOURCE.SAAS_REGISTRY, subscription.tenantId, {
     method: "DELETE",
