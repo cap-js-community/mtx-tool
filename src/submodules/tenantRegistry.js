@@ -412,11 +412,25 @@ const registryUpdateApplicationURL = async (context, [tenantId], [doOnlyStale, d
     isPoll: false,
   });
 
-const registryMigrate = async (context, [tenantId]) =>
-  await _callAndPoll(context, SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER, tenantId, {
+const registryMigrate = async (context, [tenantId]) => {
+  assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
+  const { normalizedSubscriptions: subscriptions } = await _getSubscriptionInfos(context, { tenant: tenantId });
+  assert(
+    Array.isArray(subscriptions) && subscriptions.length === 1,
+    "could not find unique subscription for tenantId %s",
+    tenantId
+  );
+  const [subscription] = subscriptions;
+  assert(
+    subscription.source === SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER,
+    "subscription migrate is only supported for subscription manager"
+  );
+
+  return await _callAndPoll(context, SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER, tenantId, {
     method: "PATCH",
     pathname: `/subscription-manager/v1/subscriptions/${tenantId}/moveFromSaasProvisioning`,
   });
+};
 
 const registryOffboardSubscription = async (context, [tenantId]) => {
   assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
