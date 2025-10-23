@@ -455,18 +455,15 @@ const registryOffboardSubscriptionSkip = async (context, [tenantId, skipApps]) =
     tenantId
   );
   const [subscription] = subscriptions;
-  switch (subscription.source) {
-    case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
-      return fail("subscription offboard with skipping apps is not supported for subscription manager");
-    }
-    case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
-      return await _callAndPoll(context, SUBSCRIPTION_SOURCE.SAAS_REGISTRY, subscription.tenantId, {
-        method: "DELETE",
-        pathname: `/saas-manager/v1/application/tenants/${subscription.tenantId}/subscriptions`,
-        query: { noCallbacksAppNames: skipApps },
-      });
-    }
-  }
+  assert(
+    subscription.source === SUBSCRIPTION_SOURCE.SAAS_REGISTRY,
+    "subscription offboard with skipping apps is only supported for saas registry"
+  );
+  return await _callAndPoll(context, SUBSCRIPTION_SOURCE.SAAS_REGISTRY, subscription.tenantId, {
+    method: "DELETE",
+    pathname: `/saas-manager/v1/application/tenants/${subscription.tenantId}/subscriptions`,
+    query: { noCallbacksAppNames: skipApps },
+  });
 };
 
 module.exports = {
