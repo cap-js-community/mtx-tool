@@ -358,6 +358,13 @@ const _callAndPoll = async (context, source, tenantId, reqOptions) => {
   };
 };
 
+// TODO isPolls may be too much
+// TODO callers need to take care that SUBSCRIPTION_POLL_IS_SUCCESS false leads to failure
+// assert(
+//   results.every((pollResult) => pollResult[SUBSCRIPTION_POLL_IS_SUCCESS]),
+//   "registry %s failed for some tenants",
+//   method
+// );
 const _patchUpdateDependencies = async (context, { query, filterOptions, isPoll = true }) => {
   const { normalizedSubscriptions: subscriptions } = await _getSubscriptionInfos(context, filterOptions);
   return limiter(regRequestConcurrency, subscriptions, async (subscription) => {
@@ -378,7 +385,7 @@ const _patchUpdateDependencies = async (context, { query, filterOptions, isPoll 
       query,
     };
     return isPoll
-      ? await _callAndPoll(context, SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER, subscription.tenantId, reqOptions)
+      ? await _callAndPoll(context, subscription.source, subscription.tenantId, reqOptions)
       : await _call(context, reqOptions);
   });
 };
@@ -412,6 +419,7 @@ const registryMigrate = async (context, [tenantId]) =>
   });
 
 const registryOffboardSubscription = async (context, [tenantId]) => {
+  assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
   const { normalizedSubscriptions: subscriptions } = await _getSubscriptionInfos(context, { tenant: tenantId });
 
   assert(
@@ -420,23 +428,25 @@ const registryOffboardSubscription = async (context, [tenantId]) => {
     tenantId
   );
   const [subscription] = subscriptions;
+  let pathname;
   switch (subscription.source) {
     case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
-      return await _callAndPoll(context, SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER, subscription.tenantId, {
-        method: "DELETE",
-        pathname: `/subscription-manager/v1/subscriptions/${subscription.id}`,
-      });
+      pathname = `/subscription-manager/v1/subscriptions/${subscription.id}`;
+      break;
     }
     case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
-      return await _callAndPoll(context, SUBSCRIPTION_SOURCE.SAAS_REGISTRY, subscription.tenantId, {
-        method: "DELETE",
-        pathname: `/saas-manager/v1/application/tenants/${subscription.tenantId}/subscriptions`,
-      });
+      pathname = `/saas-manager/v1/application/tenants/${subscription.tenantId}/subscriptions`;
+      break;
     }
   }
+  return await _callAndPoll(context, subscription.source, subscription.tenantId, {
+    method: "DELETE",
+    pathname,
+  });
 };
 
 const registryOffboardSubscriptionSkip = async (context, [tenantId, skipApps]) => {
+  assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
   const { normalizedSubscriptions: subscriptions } = await _getSubscriptionInfos(context, { tenant: tenantId });
 
   assert(
@@ -457,163 +467,6 @@ const registryOffboardSubscriptionSkip = async (context, [tenantId, skipApps]) =
       });
     }
   }
-};
-
-const _registryStatePollOld = async (context, { source, url, pathname, credentials }) => {
-  logger.info("polling subscription %s with interval %isec", pathname, regPollFrequency / 1000);
-
-  while (true) {
-    await sleep(regPollFrequency);
-    const token = await context.getCachedUaaTokenFromCredentials(credentials);
-    const response = await request({
-      url,
-      pathname,
-      headers: { Accept: "application/json" },
-      auth: { token },
-    });
-    const responseBody = await response.json();
-    switch (source) {
-      case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
-        const { subscriptionId, subscriptionState, subscriptionStateDetails } = responseBody;
-        assert(subscriptionState, "got subscription poll response without state\n%j", responseBody);
-        if (subscriptionState !== SUBSCRIPTION_STATE.IN_PROCESS) {
-          return {
-            subscriptionId,
-            subscriptionState,
-            ...(subscriptionStateDetails && { error: subscriptionStateDetails }),
-            [SUBSCRIPTION_POLL_IS_SUCCESS]: subscriptionState === SUBSCRIPTION_STATE.SUBSCRIBED,
-          };
-        }
-        break;
-      }
-      case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
-        const { id: jobId, state: jobState, error: err } = responseBody;
-        assert(jobState, "got subscription poll response without state\n%j", responseBody);
-        if (jobState !== JOB_STATE.STARTED) {
-          return {
-            jobId,
-            jobState,
-            ...(err && { error: err.message }),
-            [SUBSCRIPTION_POLL_IS_SUCCESS]: jobState === JOB_STATE.SUCCEEDED,
-          };
-        }
-        break;
-      }
-      default: {
-        return fail("unknown subscription source %s", source);
-      }
-    }
-  }
-};
-
-const _registryCallParts = async (
-  context,
-  subscription,
-  { noCallbacksAppNames, updateApplicationURL, skipUnchangedDependencies, skipUpdatingDependencies }
-) => {
-  switch (subscription.source) {
-    case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
-      const credentials = (await context.getSmsInfo()).cfService.credentials;
-      return {
-        credentials,
-        url: credentials.subscription_manager_url,
-        pathname: `/subscription-manager/v1/subscriptions/${subscription.tenantId}`,
-        query: {
-          ...(noCallbacksAppNames && { noCallbacksAppNames }),
-          ...(updateApplicationURL && { updateApplicationURL }),
-          ...(skipUnchangedDependencies && { skipUnchangedDependencies }),
-          ...(skipUpdatingDependencies && { skipUpdatingDependencies }),
-        },
-      };
-    }
-    case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
-      const credentials = (await context.getRegInfo()).cfService.credentials;
-      return {
-        credentials,
-        url: credentials.saas_registry_url,
-        pathname: `/saas-manager/v1/application/tenants/${subscription.tenantId}/subscriptions`,
-        query: {
-          ...(noCallbacksAppNames && { noCallbacksAppNames }),
-          ...(updateApplicationURL && { updateApplicationURL }),
-          ...(skipUnchangedDependencies && { skipUnchangedDependencies }),
-          ...(skipUpdatingDependencies && { skipUpdatingDependencies }),
-        },
-      };
-    }
-    default: {
-      return fail("unknown subscription source %s", subscription.source);
-    }
-  }
-};
-
-const _registryCallOldForTenant = async (context, subscription, method, options = {}) => {
-  const { source, tenantId } = subscription;
-  const { doJobPoll = true } = options;
-  const { url, pathname, query, credentials } = await _registryCallParts(context, subscription, options);
-
-  const token = await context.getCachedUaaTokenFromCredentials(credentials);
-  const startTime = new Date();
-  let response;
-  try {
-    response = await request({
-      method,
-      url,
-      pathname,
-      ...(Object.keys(query).length !== 0 && { query }),
-      auth: { token },
-    });
-  } catch (err) {
-    return { tenantId, error: err.message, [SUBSCRIPTION_POLL_IS_SUCCESS]: false };
-  }
-
-  if (!doJobPoll) {
-    // NOTE: with checkStatus being true by default, the above request only returns for successful changes
-    return { tenantId, [SUBSCRIPTION_POLL_IS_SUCCESS]: true };
-  }
-  const [location] = response.headers.raw().location;
-
-  const result = await _registryStatePollOld(context, {
-    source,
-    url,
-    pathname: location,
-    credentials,
-  });
-  return {
-    tenantId,
-    duration: `${dateDiffInSeconds(startTime, new Date()).toFixed(0)} sec`,
-    ...result,
-  };
-};
-
-const _registryCallOld = async (context, method, tenantId, options) => {
-  let results;
-  if (tenantId) {
-    assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
-    const { normalizedSubscriptions: subscriptions } = await _getSubscriptionInfos(context, {
-      tenant: tenantId,
-    });
-    assert(subscriptions.length >= 1, "could not find tenant %s", tenantId);
-    results = [await _registryCallOldForTenant(context, subscriptions[0], method, options)];
-  } else {
-    const { onlyStaleSubscriptions, onlyFailedSubscriptions } = options ?? {};
-    const { normalizedSubscriptions: subscriptions } = await _getSubscriptionInfos(context, {
-      onlyFailed: onlyFailedSubscriptions,
-      onlyStale: onlyStaleSubscriptions,
-      onlyUpdatable: true,
-    });
-    results = await limiter(
-      regRequestConcurrency,
-      subscriptions,
-      async (subscription) => await _registryCallOldForTenant(context, subscription, method, options)
-    );
-  }
-  assert(Array.isArray(results), "got invalid results from registry %s call with %j", method, options);
-  logger.info(JSON.stringify(results.length === 1 ? results[0] : results, null, 2));
-  assert(
-    results.every((pollResult) => pollResult[SUBSCRIPTION_POLL_IS_SUCCESS]),
-    "registry %s failed for some tenants",
-    method
-  );
 };
 
 module.exports = {
