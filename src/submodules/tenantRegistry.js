@@ -358,23 +358,51 @@ const _callAndPoll = async (context, source, tenantId, reqOptions) => {
   };
 };
 
+const _patchUpdateDependencies = async (context, { query, filterOptions, isPoll = true }) => {
+  const { normalizedSubscriptions: subscriptions } = await _getSubscriptionInfos(context, filterOptions);
+  return limiter(regRequestConcurrency, subscriptions, async (subscription) => {
+    let pathname;
+    switch (subscription.source) {
+      case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
+        pathname = `/subscription-manager/v1/subscriptions/${subscription.id}`;
+        break;
+      }
+      case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
+        pathname = `/saas-manager/v1/application/tenants/${subscription.tenantId}/subscriptions`;
+        break;
+      }
+    }
+    const reqOptions = {
+      method: "PATCH",
+      pathname,
+      query,
+    };
+    return isPoll
+      ? await _callAndPoll(context, SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER, subscription.tenantId, reqOptions)
+      : await _call(context, reqOptions);
+  });
+};
+
 const registryUpdateDependencies = async (context, [tenantId], [doSkipUnchanged]) =>
-  await _registryCallOld(context, "PATCH", tenantId, { skipUnchangedDependencies: doSkipUnchanged });
+  await _patchUpdateDependencies(context, {
+    filterOptions: { tenant: tenantId },
+    query: { skipUnchangedDependencies: doSkipUnchanged },
+  });
 
 const registryUpdateAllDependencies = async (context, _, [doSkipUnchanged, doOnlyStale, doOnlyFailed]) =>
-  await _registryCallOld(context, "PATCH", undefined, {
-    skipUnchangedDependencies: doSkipUnchanged,
-    onlyStaleSubscriptions: doOnlyStale,
-    onlyFailedSubscriptions: doOnlyFailed,
+  await _patchUpdateDependencies(context, {
+    query: {
+      skipUnchangedDependencies: doSkipUnchanged,
+      onlyStaleSubscriptions: doOnlyStale,
+      onlyFailedSubscriptions: doOnlyFailed,
+    },
   });
 
 const registryUpdateApplicationURL = async (context, [tenantId], [doOnlyStale, doOnlyFailed]) =>
-  await _registryCallOld(context, "PATCH", tenantId, {
-    updateApplicationURL: true,
-    skipUpdatingDependencies: true,
-    doJobPoll: false,
-    onlyStaleSubscriptions: doOnlyStale,
-    onlyFailedSubscriptions: doOnlyFailed,
+  await _patchUpdateDependencies(context, {
+    filterOptions: { tenant: tenantId, onlyStale: doOnlyStale, onlyFailed: doOnlyFailed },
+    query: { updateApplicationURL: true, skipUpdatingDependencies: true },
+    isPoll: false,
   });
 
 const registryMigrate = async (context, [tenantId]) =>
