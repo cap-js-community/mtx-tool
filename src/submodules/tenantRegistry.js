@@ -367,6 +367,17 @@ const _callAndPollAndAssert = async (context, source, tenantId, reqOptions) => {
   return result;
 };
 
+const _patchUpdateDependenciesPathname = (subscription) => {
+  switch (subscription.source) {
+    case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
+      return `/subscription-manager/v1/subscriptions/${subscription.id}`;
+    }
+    case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
+      return `/saas-manager/v1/application/tenants/${subscription.tenantId}/subscriptions`;
+    }
+  }
+};
+
 // TODO isPolls may be too much
 // TODO callers need to take care that SUBSCRIPTION_POLL_IS_SUCCESS false leads to failure
 // assert(
@@ -374,29 +385,23 @@ const _callAndPollAndAssert = async (context, source, tenantId, reqOptions) => {
 //   "registry %s failed for some tenants",
 //   method
 // );
-const _patchUpdateDependencies = async (context, { query, filterOptions, isPoll = true }) => {
+
+const _patchUpdateDependencies = async (context, { query, filterOptions }) => {
   const { normalizedSubscriptions: subscriptions } = await _getSubscriptionInfos(context, filterOptions);
-  return limiter(regRequestConcurrency, subscriptions, async (subscription) => {
-    let pathname;
-    switch (subscription.source) {
-      case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
-        pathname = `/subscription-manager/v1/subscriptions/${subscription.id}`;
-        break;
-      }
-      case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
-        pathname = `/saas-manager/v1/application/tenants/${subscription.tenantId}/subscriptions`;
-        break;
-      }
-    }
-    const reqOptions = {
+  const results = limiter(regRequestConcurrency, subscriptions, async (subscription) => {
+    return await _callAndPoll(context, subscription.source, subscription.tenantId, {
       method: "PATCH",
-      pathname,
+      pathname: _patchUpdateDependenciesPathname(subscription),
       query,
-    };
-    return isPoll
-      ? await _callAndPoll(context, subscription.source, subscription.tenantId, reqOptions)
-      : await _call(context, reqOptions);
+    });
   });
+
+  const failedResults = results.filter((result) => !result[SUBSCRIPTION_POLL_IS_SUCCESS]);
+  if (failedResults.length) {
+    logger.error(JSON.stringify(results, null, 2));
+    return fail("call failed for tenants %s", failedResults.map((result) => result.tenantId).join(","));
+  }
+  return results;
 };
 
 const registryUpdateDependencies = async (context, [tenantId], [doSkipUnchanged]) =>
@@ -416,16 +421,18 @@ const registryUpdateAllDependencies = async (context, _, [doSkipUnchanged, doOnl
     },
   });
 
-const registryUpdateApplicationURL = async (context, [tenantId], [doOnlyStale, doOnlyFailed]) =>
-  await _patchUpdateDependencies(context, {
-    filterOptions: {
-      tenant: tenantId,
-      onlyStale: doOnlyStale,
-      onlyFailed: doOnlyFailed,
-    },
-    query: { updateApplicationURL: true, skipUpdatingDependencies: true },
-    isPoll: false,
-  });
+const registryUpdateApplicationURL = async (context, [tenantId], [doOnlyStale, doOnlyFailed]) => {
+  // TODO needs different coding with asserts
+};
+// await _patchUpdateDependencies(context, {
+//   filterOptions: {
+//     tenant: tenantId,
+//     onlyStale: doOnlyStale,
+//     onlyFailed: doOnlyFailed,
+//   },
+//   query: { updateApplicationURL: true, skipUpdatingDependencies: true },
+//   isPoll: false,
+// });
 
 const _resolveUniqueSubscription = async (context, tenantId) => {
   const { normalizedSubscriptions: subscriptions } = await _getSubscriptionInfos(context, { tenant: tenantId });
