@@ -535,10 +535,6 @@ const registryUpdateApplicationURL = async (context, [tenantId], [doOnlyStale, d
   });
 
 const registryMigrate = async (context, [tenantId]) => {
-  assert(
-    context.hasRegInfo && context.hasSmsInfo,
-    "migration needs both subscription-manager and saas-registry configuration"
-  );
   return await _callAndPoll(context, SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER, tenantId, {
     method: "PATCH",
     pathname: `/subscription-manager/v1/subscriptions/${tenantId}/moveFromSaasProvisioning`,
