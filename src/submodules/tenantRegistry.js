@@ -358,6 +358,15 @@ const _callAndPoll = async (context, source, tenantId, reqOptions) => {
   };
 };
 
+const _callAndPollAndAssert = async (context, source, tenantId, reqOptions) => {
+  const result = await _callAndPoll(context, source, tenantId, reqOptions);
+  if (!result[SUBSCRIPTION_POLL_IS_SUCCESS]) {
+    logger.error(JSON.stringify(result, null, 2));
+    return fail("call failed for tenant %s", tenantId);
+  }
+  return result;
+};
+
 // TODO isPolls may be too much
 // TODO callers need to take care that SUBSCRIPTION_POLL_IS_SUCCESS false leads to failure
 // assert(
@@ -423,14 +432,17 @@ const _resolveUniqueSubscription = async (context, tenantId) => {
 };
 
 const registryMigrate = async (context, [tenantId]) => {
+  assert(
+    context.hasRegInfo && context.hasSmsInfo,
+    "registry migrate needs both subscription-manager and saas-registry configuration"
+  );
   assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
   const subscription = await _resolveUniqueSubscription(context, tenantId);
   assert(
-    subscription.source === SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER,
-    "registry migrate is only supported for subscription manager"
+    subscription.source === SUBSCRIPTION_SOURCE.SAAS_REGISTRY,
+    "registry migrate is only supported for tenants in saas registry"
   );
-
-  return await _callAndPoll(context, SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER, tenantId, {
+  return await _callAndPollAndAssert(context, SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER, tenantId, {
     method: "PATCH",
     pathname: `/subscription-manager/v1/subscriptions/${tenantId}/moveFromSaasProvisioning`,
   });
@@ -450,7 +462,7 @@ const registryOffboardSubscription = async (context, [tenantId]) => {
       break;
     }
   }
-  return await _callAndPoll(context, subscription.source, subscription.tenantId, {
+  return await _callAndPollAndAssert(context, subscription.source, subscription.tenantId, {
     method: "DELETE",
     pathname,
   });
@@ -463,7 +475,7 @@ const registryOffboardSubscriptionSkip = async (context, [tenantId, skipApps]) =
     subscription.source === SUBSCRIPTION_SOURCE.SAAS_REGISTRY,
     "registry offboard with skipping apps is only supported for saas registry"
   );
-  return await _callAndPoll(context, SUBSCRIPTION_SOURCE.SAAS_REGISTRY, subscription.tenantId, {
+  return await _callAndPollAndAssert(context, SUBSCRIPTION_SOURCE.SAAS_REGISTRY, subscription.tenantId, {
     method: "DELETE",
     pathname: `/saas-manager/v1/application/tenants/${subscription.tenantId}/subscriptions`,
     query: { noCallbacksAppNames: skipApps },
