@@ -461,23 +461,23 @@ const registryMigrate = async (context, [tenantId]) => {
   });
 };
 
+const _deleteOffboardPathname = (subscription) => {
+  switch (subscription.source) {
+    case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
+      return `/subscription-manager/v1/subscriptions/${subscription.id}`;
+    }
+    case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
+      return `/saas-manager/v1/application/tenants/${subscription.tenantId}/subscriptions`;
+    }
+  }
+};
+
 const registryOffboardSubscription = async (context, [tenantId]) => {
   assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
   const subscription = await _resolveUniqueSubscription(context, tenantId);
-  let pathname;
-  switch (subscription.source) {
-    case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
-      pathname = `/subscription-manager/v1/subscriptions/${subscription.id}`;
-      break;
-    }
-    case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
-      pathname = `/saas-manager/v1/application/tenants/${subscription.tenantId}/subscriptions`;
-      break;
-    }
-  }
   return await _callAndPollAndAssert(context, subscription.source, subscription.tenantId, {
     method: "DELETE",
-    pathname,
+    pathname: _deleteOffboardPathname(subscription),
   });
 };
 
@@ -490,7 +490,7 @@ const registryOffboardSubscriptionSkip = async (context, [tenantId, skipApps]) =
   );
   return await _callAndPollAndAssert(context, SUBSCRIPTION_SOURCE.SAAS_REGISTRY, subscription.tenantId, {
     method: "DELETE",
-    pathname: `/saas-manager/v1/application/tenants/${subscription.tenantId}/subscriptions`,
+    pathname: _deleteOffboardPathname(subscription),
     query: { noCallbacksAppNames: skipApps },
   });
 };
