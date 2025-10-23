@@ -378,7 +378,6 @@ const _patchUpdateDependenciesPathname = (subscription) => {
   }
 };
 
-// TODO isPolls may be too much
 // TODO callers need to take care that SUBSCRIPTION_POLL_IS_SUCCESS false leads to failure
 // assert(
 //   results.every((pollResult) => pollResult[SUBSCRIPTION_POLL_IS_SUCCESS]),
@@ -386,15 +385,36 @@ const _patchUpdateDependenciesPathname = (subscription) => {
 //   method
 // );
 
-const _patchUpdateDependencies = async (context, { query, filterOptions }) => {
+const _callMarked = async (context, source, tenantId, reqOptions) => {
+  try {
+    const result = await _call(context, source, reqOptions);
+    return {
+      tenantId,
+      ...result,
+      [SUBSCRIPTION_POLL_IS_SUCCESS]: true,
+    };
+  } catch (err) {
+    return {
+      tenantId,
+      error: err.message,
+      [SUBSCRIPTION_POLL_IS_SUCCESS]: false,
+    };
+  }
+};
+
+const _patchUpdateDependencies = async (context, { filterOptions, query, isPoll = true }) => {
   const { normalizedSubscriptions: subscriptions } = await _getSubscriptionInfos(context, filterOptions);
-  const results = limiter(regRequestConcurrency, subscriptions, async (subscription) => {
-    return await _callAndPoll(context, subscription.source, subscription.tenantId, {
-      method: "PATCH",
-      pathname: _patchUpdateDependenciesPathname(subscription),
-      query,
-    });
-  });
+  const _callExecutor = isPoll ? _callAndPoll : _callMarked;
+  const results = await limiter(
+    regRequestConcurrency,
+    subscriptions,
+    async (subscription) =>
+      await _callExecutor(context, subscription.source, subscription.tenantId, {
+        method: "PATCH",
+        pathname: _patchUpdateDependenciesPathname(subscription),
+        query,
+      })
+  );
 
   const failedResults = results.filter((result) => !result[SUBSCRIPTION_POLL_IS_SUCCESS]);
   if (failedResults.length) {
@@ -421,18 +441,12 @@ const registryUpdateAllDependencies = async (context, _, [doSkipUnchanged, doOnl
     },
   });
 
-const registryUpdateApplicationURL = async (context, [tenantId], [doOnlyStale, doOnlyFailed]) => {
-  // TODO needs different coding with asserts
-};
-// await _patchUpdateDependencies(context, {
-//   filterOptions: {
-//     tenant: tenantId,
-//     onlyStale: doOnlyStale,
-//     onlyFailed: doOnlyFailed,
-//   },
-//   query: { updateApplicationURL: true, skipUpdatingDependencies: true },
-//   isPoll: false,
-// });
+const registryUpdateApplicationURL = async (context, [tenantId], [doOnlyStale, doOnlyFailed]) =>
+  await _patchUpdateDependencies(context, {
+    filterOptions: { tenant: tenantId, onlyStale: doOnlyStale, onlyFailed: doOnlyFailed },
+    query: { updateApplicationURL: true, skipUpdatingDependencies: true },
+    isPoll: false,
+  });
 
 const _resolveUniqueSubscription = async (context, tenantId) => {
   const { normalizedSubscriptions: subscriptions } = await _getSubscriptionInfos(context, { tenant: tenantId });
