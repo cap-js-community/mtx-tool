@@ -83,10 +83,80 @@ const _callReg = async (context, reqOptions) => {
   });
 };
 
-const _callAndPollTODO = async (context, source, reqOptions) => {
-  const initialResponse = await _callSms(context, source, reqOptions);
-  assert(initialResponse.statusCode === HTTP_ACCEPTED, "got unexpected response code for polling from %j", reqOptions);
-  const [location] = response.headers.raw().location;
+// TODO needed???
+const _call = async (context, source, reqOptions) => {
+  switch (source) {
+    case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
+      return await _callSms(context, reqOptions);
+    }
+    case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
+      return await _callReg(context, reqOptions);
+    }
+  }
+};
+
+const _callAndPoll = async (context, subscription, reqOptions) => {
+  const { source, tenantId } = subscription;
+  const startTime = new Date();
+  let initialResponse;
+  try {
+    initialResponse = await _call(context, source, reqOptions);
+  } catch (err) {
+    return {
+      tenantId,
+      duration: `${dateDiffInSeconds(startTime, new Date()).toFixed(0)} sec`,
+      error: err.message,
+      [SUBSCRIPTION_POLL_IS_SUCCESS]: false,
+    };
+  }
+
+  assert(
+    initialResponse.statusCode === HTTP_ACCEPTED,
+    "got unexpected response code for polling from %s",
+    reqOptions.pathname
+  );
+  const [location] = initialResponse.headers.raw().location;
+  assert(location, "missing location header for polling from %s", reqOptions.pathname);
+
+  logger.info("polling subscription %s with interval %isec", location, regPollFrequency / 1000);
+
+  while (true) {
+    await sleep(regPollFrequency);
+    const pollResponse = await _call(context, source, { pathname: location });
+    const pollResponseBody = await pollResponse.json();
+    switch (source) {
+      case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
+        const { subscriptionId, subscriptionState, subscriptionStateDetails } = pollResponseBody;
+        assert(subscriptionState, "got subscription poll response without state\n%j", pollResponseBody);
+        if (subscriptionState !== SUBSCRIPTION_STATE.IN_PROCESS) {
+          return {
+            tenantId,
+            duration: `${dateDiffInSeconds(startTime, new Date()).toFixed(0)} sec`,
+            subscriptionId,
+            subscriptionState,
+            ...(subscriptionStateDetails && { error: subscriptionStateDetails }),
+            [SUBSCRIPTION_POLL_IS_SUCCESS]: subscriptionState === SUBSCRIPTION_STATE.SUBSCRIBED,
+          };
+        }
+        break;
+      }
+      case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
+        const { id: jobId, state: jobState, error: err } = pollResponseBody;
+        assert(jobState, "got subscription poll response without state\n%j", pollResponseBody);
+        if (jobState !== JOB_STATE.STARTED) {
+          return {
+            tenantId,
+            duration: `${dateDiffInSeconds(startTime, new Date()).toFixed(0)} sec`,
+            jobId,
+            jobState,
+            ...(err && { error: err.message }),
+            [SUBSCRIPTION_POLL_IS_SUCCESS]: jobState === JOB_STATE.SUCCEEDED,
+          };
+        }
+        break;
+      }
+    }
+  }
 };
 
 const _getSubscriptionsPage = async (context, source, { filterTenantId, reqOptions }) => {
@@ -464,13 +534,9 @@ const registryUpdateApplicationURL = async (context, [tenantId], [doOnlyStale, d
   });
 
 const _registryMigrate = async (context, tenantId) => {
-  const credentials = (await context.getSmsInfo()).cfService.credentials;
-  const token = await context.getCachedUaaTokenFromCredentials(credentials);
-  const response = await request({
+  const response = await _callAndPoll(context, SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER, {
     method: "PATCH",
-    url: credentials.subscription_manager_url,
     pathname: `/subscription-manager/v1/subscriptions/${tenantId}/moveFromSaasProvisioning`,
-    auth: { token },
   });
   const [location] = response.headers.raw().location;
   const data = await response.text();
@@ -481,7 +547,7 @@ const _registryMigrate = async (context, tenantId) => {
 const registryMigrate = async (context, [tenantId]) => {
   assert(
     context.hasRegInfo && context.hasSmsInfo,
-    "migration needs both subscription-manager ans saas-registry configuration"
+    "migration needs both subscription-manager and saas-registry configuration"
   );
   return await _registryMigrate(context, tenantId);
 };
