@@ -198,12 +198,22 @@ const registryListSubscriptions = async (
     return { smsSubscriptions, regSubscriptions };
   }
 
-  const headerRow = ["consumerTenantId", "globalAccountId", "subdomain", "appName", "plan", "state", "url"];
+  const headerRow = [
+    "consumerTenantId",
+    "subscriptionId",
+    "globalAccountId",
+    "subdomain",
+    "appName",
+    "plan",
+    "state",
+    "url",
+  ];
   doTimestamps && headerRow.push("created_on", "updated_on");
   const nowDate = new Date();
   const subscriptionMap = (normalizedSubscription) => {
     const row = [
       normalizedSubscription.tenantId,
+      normalizedSubscription.id,
       normalizedSubscription.globalAccountId,
       normalizedSubscription.subdomain,
       normalizedSubscription.appName,
