@@ -295,7 +295,7 @@ const registryServiceConfig = async (context) => {
 const _callAndPollInner = async (context, source, reqOptions) => {
   const initialResponse = await _call(context, source, reqOptions);
   assert(
-    initialResponse.statusCode === HTTP_ACCEPTED,
+    initialResponse.status === HTTP_ACCEPTED,
     "got unexpected response code for polling from %s",
     reqOptions.pathname
   );
