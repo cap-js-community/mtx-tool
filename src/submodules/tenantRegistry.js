@@ -358,7 +358,80 @@ const _callAndPoll = async (context, source, tenantId, reqOptions) => {
   };
 };
 
-const _registryStatePoll = async (context, { source, url, pathname, credentials }) => {
+const registryUpdateDependencies = async (context, [tenantId], [doSkipUnchanged]) =>
+  await _registryCallOld(context, "PATCH", tenantId, { skipUnchangedDependencies: doSkipUnchanged });
+
+const registryUpdateAllDependencies = async (context, _, [doSkipUnchanged, doOnlyStale, doOnlyFailed]) =>
+  await _registryCallOld(context, "PATCH", undefined, {
+    skipUnchangedDependencies: doSkipUnchanged,
+    onlyStaleSubscriptions: doOnlyStale,
+    onlyFailedSubscriptions: doOnlyFailed,
+  });
+
+const registryUpdateApplicationURL = async (context, [tenantId], [doOnlyStale, doOnlyFailed]) =>
+  await _registryCallOld(context, "PATCH", tenantId, {
+    updateApplicationURL: true,
+    skipUpdatingDependencies: true,
+    doJobPoll: false,
+    onlyStaleSubscriptions: doOnlyStale,
+    onlyFailedSubscriptions: doOnlyFailed,
+  });
+
+const registryMigrate = async (context, [tenantId]) =>
+  await _callAndPoll(context, SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER, tenantId, {
+    method: "PATCH",
+    pathname: `/subscription-manager/v1/subscriptions/${tenantId}/moveFromSaasProvisioning`,
+  });
+
+const registryOffboardSubscription = async (context, [tenantId]) => {
+  const { normalizedSubscriptions: subscriptions } = await _getSubscriptionInfos(context, { tenant: tenantId });
+
+  assert(
+    Array.isArray(subscriptions) && subscriptions.length === 1,
+    "could not find unique subscription for tenantId %s",
+    tenantId
+  );
+  const [subscription] = subscriptions;
+  switch (subscription.source) {
+    case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
+      return await _callAndPoll(context, SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER, subscription.tenantId, {
+        method: "DELETE",
+        pathname: `/subscription-manager/v1/subscriptions/${subscription.id}`,
+      });
+    }
+    case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
+      return await _callAndPoll(context, SUBSCRIPTION_SOURCE.SAAS_REGISTRY, subscription.tenantId, {
+        method: "DELETE",
+        pathname: `/saas-manager/v1/application/tenants/${subscription.tenantId}/subscriptions`,
+      });
+    }
+  }
+};
+
+const registryOffboardSubscriptionSkip = async (context, [tenantId, skipApps]) => {
+  const { normalizedSubscriptions: subscriptions } = await _getSubscriptionInfos(context, { tenant: tenantId });
+
+  assert(
+    Array.isArray(subscriptions) && subscriptions.length === 1,
+    "could not find unique subscription for tenantId %s",
+    tenantId
+  );
+  const [subscription] = subscriptions;
+  switch (subscription.source) {
+    case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
+      return fail("subscription offboard with skipping apps is not supported for subscription manager");
+    }
+    case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
+      return await _callAndPoll(context, SUBSCRIPTION_SOURCE.SAAS_REGISTRY, subscription.tenantId, {
+        method: "DELETE",
+        pathname: `/saas-manager/v1/application/tenants/${subscription.tenantId}/subscriptions`,
+        query: { noCallbacksAppNames: skipApps },
+      });
+    }
+  }
+};
+
+const _registryStatePollOld = async (context, { source, url, pathname, credentials }) => {
   logger.info("polling subscription %s with interval %isec", pathname, regPollFrequency / 1000);
 
   while (true) {
@@ -471,7 +544,7 @@ const _registryCallOldForTenant = async (context, subscription, method, options 
   }
   const [location] = response.headers.raw().location;
 
-  const result = await _registryStatePoll(context, {
+  const result = await _registryStatePollOld(context, {
     source,
     url,
     pathname: location,
@@ -514,37 +587,6 @@ const _registryCallOld = async (context, method, tenantId, options) => {
     method
   );
 };
-
-const registryUpdateDependencies = async (context, [tenantId], [doSkipUnchanged]) =>
-  await _registryCallOld(context, "PATCH", tenantId, { skipUnchangedDependencies: doSkipUnchanged });
-
-const registryUpdateAllDependencies = async (context, _, [doSkipUnchanged, doOnlyStale, doOnlyFailed]) =>
-  await _registryCallOld(context, "PATCH", undefined, {
-    skipUnchangedDependencies: doSkipUnchanged,
-    onlyStaleSubscriptions: doOnlyStale,
-    onlyFailedSubscriptions: doOnlyFailed,
-  });
-
-const registryUpdateApplicationURL = async (context, [tenantId], [doOnlyStale, doOnlyFailed]) =>
-  await _registryCallOld(context, "PATCH", tenantId, {
-    updateApplicationURL: true,
-    skipUpdatingDependencies: true,
-    doJobPoll: false,
-    onlyStaleSubscriptions: doOnlyStale,
-    onlyFailedSubscriptions: doOnlyFailed,
-  });
-
-const registryMigrate = async (context, [tenantId]) => {
-  return await _callAndPoll(context, SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER, tenantId, {
-    method: "PATCH",
-    pathname: `/subscription-manager/v1/subscriptions/${tenantId}/moveFromSaasProvisioning`,
-  });
-};
-
-const registryOffboardSubscription = async (context, [tenantId]) => await _registryCallOld(context, "DELETE", tenantId);
-
-const registryOffboardSubscriptionSkip = async (context, [tenantId, skipApps]) =>
-  await _registryCallOld(context, "DELETE", tenantId, { noCallbacksAppNames: skipApps });
 
 module.exports = {
   registryListSubscriptions,
