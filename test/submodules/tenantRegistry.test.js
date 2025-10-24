@@ -20,12 +20,23 @@ const reg = require("../../src/submodules/tenantRegistry");
 const { outputFromLoggerPartitionFetch } = require("../test-util/static");
 
 const fakeContext = {
+  hasRegInfo: true,
+  hasSmsInfo: true,
   getRegInfo: () => ({
     cfService: {
-      plan: "plan",
+      plan: "planReg",
       credentials: {
         saas_registry_url: "saas_registry_url",
-        appName: "appName",
+        appName: "appNameReg",
+      },
+    },
+  }),
+  getSmsInfo: () => ({
+    cfService: {
+      plan: "planSms",
+      credentials: {
+        subscription_manager_url: "subscription_manager_url",
+        app_name: "appNameSms",
       },
     },
   }),
@@ -33,10 +44,11 @@ const fakeContext = {
 };
 
 const fakeSubscriptionFactory = (index, { doFail, doRecent } = {}) => {
-  const paddedCount = String(index).padStart(3, "0");
-  const paddedAltCount = String(1000 - index).padStart(3, "0");
-  const uuid = `00000000-0000-0000-0000-000000000${paddedCount}`;
-  const altUuid = `00000000-0000-0000-0000-000000000${paddedAltCount}`;
+  const paddedCount = String(index).padStart(4, "0");
+  const paddedAltCount = String(10000 - index).padStart(4, "0");
+  const tenantId = `00000000-0000-0000-0000-00000000${paddedCount}`;
+  const accountId = `00000000-0000-0000-0000-00000000${paddedAltCount}`;
+  const subscriptionId = `0000${paddedCount}-0000-0000-0000-000000000000`;
   const name = `skyfin-${paddedCount}`;
 
   return {
@@ -44,10 +56,10 @@ const fakeSubscriptionFactory = (index, { doFail, doRecent } = {}) => {
     subdomain: name,
     appName: "afc-dev",
     commercialAppName: "afc-dev",
-    consumerTenantId: uuid,
-    globalAccountId: altUuid,
-    subaccountId: uuid,
-    subscriptionGUID: "8999d1fa-3a3e-bbf5-c21d-2db950822b8a",
+    consumerTenantId: tenantId,
+    globalAccountId: accountId,
+    subaccountId: tenantId,
+    subscriptionGUID: subscriptionId,
     code: "standard",
     amount: 1,
     state: doFail ? "UPDATE_FAILED" : "SUBSCRIBED",
@@ -102,6 +114,9 @@ describe("reg tests", () => {
       fakeSubscriptionFactory(i + 1, { doFail: i + 1 <= 2 || i + 1 >= 19, doRecent: i + 1 >= 15 })
     );
     mockRequest.request.mockReturnValueOnce({
+      json: () => ({ subscriptions: [] }),
+    });
+    mockRequest.request.mockReturnValueOnce({
       json: () => ({ subscriptions: fakeSubscriptions.slice(0, 10), morePages: true }),
     });
     mockRequest.request.mockReturnValueOnce({
@@ -118,6 +133,9 @@ describe("reg tests", () => {
   test("reg update without failure", async () => {
     const n = 4;
     const fakeSubscriptions = Array.from({ length: n }).map((x, i) => fakeSubscriptionFactory(i + 1));
+    mockRequest.request.mockReturnValueOnce({
+      json: () => ({ subscriptions: [] }),
+    });
     mockRequest.request.mockReturnValueOnce({
       json: () => ({ subscriptions: fakeSubscriptions }),
     });
