@@ -429,7 +429,9 @@ const _patchUpdateDependencies = async (context, { filterOptions, query, isPoll 
 const registryUpdateDependencies = async (context, [tenantId], [doSkipUnchanged]) =>
   await _patchUpdateDependencies(context, {
     filterOptions: { tenant: tenantId },
-    query: { skipUnchangedDependencies: doSkipUnchanged },
+    query: {
+      ...(doSkipUnchanged !== undefined && { skipUnchangedDependencies: doSkipUnchanged }),
+    },
   });
 
 const registryUpdateAllDependencies = async (context, _, [doSkipUnchanged, doOnlyStale, doOnlyFailed]) =>
@@ -439,7 +441,7 @@ const registryUpdateAllDependencies = async (context, _, [doSkipUnchanged, doOnl
       onlyFailed: doOnlyFailed,
     },
     query: {
-      skipUnchangedDependencies: doSkipUnchanged,
+      ...(doSkipUnchanged !== undefined && { skipUnchangedDependencies: doSkipUnchanged }),
     },
   });
 
