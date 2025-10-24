@@ -10,23 +10,6 @@ exports[`reg tests reg list paging only failed 1`] = `
       "headers": {
         "Accept": "application/json",
       },
-      "pathname": "/subscription-manager/v1/subscriptions",
-      "query": {
-        "appName": "appNameSms",
-        "page": 1,
-        "size": 200,
-      },
-      "url": "subscription_manager_url",
-    },
-  ],
-  [
-    {
-      "auth": {
-        "token": "token",
-      },
-      "headers": {
-        "Accept": "application/json",
-      },
       "pathname": "/saas-manager/v1/application/subscriptions",
       "query": {
         "appName": "appNameReg",
@@ -66,23 +49,6 @@ exports[`reg tests reg list paging only failed 2`] = `
 
 exports[`reg tests reg list paging only stale 1`] = `
 [
-  [
-    {
-      "auth": {
-        "token": "token",
-      },
-      "headers": {
-        "Accept": "application/json",
-      },
-      "pathname": "/subscription-manager/v1/subscriptions",
-      "query": {
-        "appName": "appNameSms",
-        "page": 1,
-        "size": 200,
-      },
-      "url": "subscription_manager_url",
-    },
-  ],
   [
     {
       "auth": {
@@ -148,23 +114,6 @@ exports[`reg tests reg list paging only stale and failed 1`] = `
       "headers": {
         "Accept": "application/json",
       },
-      "pathname": "/subscription-manager/v1/subscriptions",
-      "query": {
-        "appName": "appNameSms",
-        "page": 1,
-        "size": 200,
-      },
-      "url": "subscription_manager_url",
-    },
-  ],
-  [
-    {
-      "auth": {
-        "token": "token",
-      },
-      "headers": {
-        "Accept": "application/json",
-      },
       "pathname": "/saas-manager/v1/application/subscriptions",
       "query": {
         "appName": "appNameReg",
@@ -202,23 +151,6 @@ exports[`reg tests reg list paging only stale and failed 2`] = `
 
 exports[`reg tests reg list paging unfiltered 1`] = `
 [
-  [
-    {
-      "auth": {
-        "token": "token",
-      },
-      "headers": {
-        "Accept": "application/json",
-      },
-      "pathname": "/subscription-manager/v1/subscriptions",
-      "query": {
-        "appName": "appNameSms",
-        "page": 1,
-        "size": 200,
-      },
-      "url": "subscription_manager_url",
-    },
-  ],
   [
     {
       "auth": {
@@ -314,7 +246,7 @@ exports[`reg tests reg update with state failed 2`] = `
 ]
 `;
 
-exports[`reg tests reg update without failure 1`] = `
+exports[`reg tests reg update without failure 2`] = `
 [
   [
     15000,
