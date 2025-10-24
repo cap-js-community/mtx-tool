@@ -20,7 +20,6 @@ const {
   resolveTenantArg,
   parseIntWithFallback,
   compareFor,
-  tryJsonParse,
 } = require("../shared/static");
 const { assert, fail } = require("../shared/error");
 const { request } = require("../shared/request");
@@ -382,7 +381,7 @@ const _callAndMarkInner = async (context, source, reqOptions) => {
     const response = await _call(context, source, reqOptions);
     const body = await response.text();
     return {
-      ...tryJsonParse(body),
+      ...(body && { response: body }),
       [SUBSCRIPTION_CALL_IS_SUCCESS]: true,
     };
   } catch (err) {
