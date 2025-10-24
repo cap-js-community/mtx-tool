@@ -1,8 +1,7 @@
 /**
  * APIs of the saas-registry
  * - https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/ed08c7dcb35d4082936c045e7d7b3ecd.html
- * - https://int.controlcenter.ondemand.com/index.html#/knowledge_center/articles/f239e5501a534b64ab5f8dde9bd83c53
- * - https://saas-manager.cfapps.sap.hana.ondemand.com/api (Application Operations) [our case]
+ * - https://saas-manager.cfapps.sap.hana.ondemand.com/api (Application Operations)
  * - https://saas-manager.cfapps.sap.hana.ondemand.com/api?scope=saas-registry-service (Service Operations) [not supported anymore]
  *
  * APIs of the subscription-manager
