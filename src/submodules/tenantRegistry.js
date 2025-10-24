@@ -21,6 +21,7 @@ const {
   resolveTenantArg,
   parseIntWithFallback,
   compareFor,
+  tryJsonParse,
 } = require("../shared/static");
 const { assert, fail } = require("../shared/error");
 const { request } = require("../shared/request");
@@ -96,30 +97,32 @@ const _call = async (context, source, reqOptions) => {
   }
 };
 
-const _getSubscriptionsPage = async (context, source, { filterTenantId, reqOptions }) => {
+const _getSubscriptionsPage = async (context, source, { filterTenantId, size, page }) => {
   switch (source) {
     case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
       const credentials = (await context.getSmsInfo()).cfService.credentials;
       return await _callSms(context, {
-        ...reqOptions,
         pathname: "/subscription-manager/v1/subscriptions",
         query: {
-          ...reqOptions.query,
           appName: credentials.app_name,
           ...(filterTenantId && { app_tid: filterTenantId }),
+          size,
+          page,
         },
+        headers: { Accept: "application/json" },
       });
     }
     case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
       const credentials = (await context.getRegInfo()).cfService.credentials;
       return await _callReg(context, {
-        ...reqOptions,
         pathname: "/saas-manager/v1/application/subscriptions",
         query: {
-          ...reqOptions.query,
           appName: credentials.appName,
           ...(filterTenantId && { tenantId: filterTenantId }),
+          size,
+          page,
         },
+        headers: { Accept: "application/json" },
       });
     }
   }
@@ -131,13 +134,8 @@ const _getSubscriptions = async (context, source, { filterTenantId }) => {
   while (true) {
     const response = await _getSubscriptionsPage(context, source, {
       filterTenantId,
-      reqOptions: {
-        query: {
-          size: REGISTRY_PAGE_SIZE,
-          page: page++,
-        },
-        headers: { Accept: "application/json" },
-      },
+      size: REGISTRY_PAGE_SIZE,
+      page: page++,
     });
     const { subscriptions: pageSubscriptions, morePages } = await response.json();
     subscriptions = subscriptions.concat(pageSubscriptions);
@@ -382,8 +380,10 @@ const _patchUpdateDependenciesPathname = (subscription) => {
 
 const _callAndMarkInner = async (context, source, reqOptions) => {
   try {
+    const response = await _call(context, source, reqOptions);
+    const body = await response.text();
     return {
-      ...(await _call(context, source, reqOptions)),
+      ...tryJsonParse(body),
       [SUBSCRIPTION_CALL_IS_SUCCESS]: true,
     };
   } catch (err) {
@@ -396,7 +396,7 @@ const _callAndMarkInner = async (context, source, reqOptions) => {
 
 const _callAndMark = async (context, source, tenantId, reqOptions) => {
   const startTime = new Date();
-  const result = _callAndMarkInner(context, source, reqOptions);
+  const result = await _callAndMarkInner(context, source, reqOptions);
   return {
     tenantId,
     duration: `${dateDiffInSeconds(startTime, new Date()).toFixed(0)} sec`,
