@@ -236,40 +236,13 @@ describe("reg tests", () => {
 
     expect(mockShared.sleep.mock.calls).toMatchSnapshot();
 
-    expect(outputFromLogger(mockLogger.error.mock.calls)).toMatchInlineSnapshot(`
-      "[
-        {
-          "tenantId": "00000000-0000-0000-0000-000000000001",
-          "duration": "0 sec",
-          "jobId": "11111111-0000-0000-0000-000000000001",
-          "jobState": "SUCCEEDED"
-        },
-        {
-          "tenantId": "00000000-0000-0000-0000-000000000002",
-          "duration": "0 sec",
-          "jobId": "11111111-0000-0000-0000-000000000002",
-          "jobState": "SUCCEEDED"
-        },
-        {
-          "tenantId": "00000000-0000-0000-0000-000000000003",
-          "duration": "0 sec",
-          "jobId": "11111111-0000-0000-0000-000000000003",
-          "jobState": "FAILED"
-        },
-        {
-          "tenantId": "00000000-0000-0000-0000-000000000004",
-          "duration": "0 sec",
-          "jobId": "11111111-0000-0000-0000-000000000004",
-          "jobState": "SUCCEEDED"
-        }
-      ]"
-    `);
     expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000001 with interval 15sec
       polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000002 with interval 15sec
       polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000003 with interval 15sec
       polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000004 with interval 15sec"
     `);
+    expect(mockLogger.error).toHaveBeenCalledTimes(0);
   });
 
   test("reg update with request failed", async () => {
