@@ -32,6 +32,7 @@ const ENV = Object.freeze({
 });
 
 const HTTP_ACCEPTED = 202;
+const HTTP_NO_CONTENT = 204;
 
 const REGISTRY_PAGE_SIZE = 200;
 const REGISTRY_JOB_POLL_FREQUENCY_FALLBACK = 15000;
@@ -307,10 +308,15 @@ const _callAndPollAndMarkInner = async (context, source, reqOptions) => {
     while (true) {
       await sleep(regPollFrequency);
       const pollResponse = await _call(context, source, { pathname: location });
-      let pollResponseBody = await pollResponse.json();
 
       switch (source) {
         case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
+          if (pollResponse.status === HTTP_NO_CONTENT && reqOptions.method === "DELETE") {
+            return {
+              [SUBSCRIPTION_CALL_IS_SUCCESS]: true,
+            };
+          }
+          const pollResponseBody = await pollResponse.json();
           const { subscriptionId, subscriptionState, subscriptionStateDetails } = pollResponseBody;
           assert(subscriptionState, "got subscription poll response without state\n%j", pollResponseBody);
           if (subscriptionState !== SUBSCRIPTION_STATE.IN_PROCESS) {
@@ -324,6 +330,7 @@ const _callAndPollAndMarkInner = async (context, source, reqOptions) => {
           break;
         }
         case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
+          const pollResponseBody = await pollResponse.json();
           const { id: jobId, state: jobState, error: err } = pollResponseBody;
           assert(jobState, "got subscription poll response without state\n%j", pollResponseBody);
           if (jobState !== JOB_STATE.STARTED) {
