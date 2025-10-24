@@ -104,23 +104,23 @@ describe("reg nock tests", () => {
       await nock.back("reg-list.json");
       const output = await reg.registryListSubscriptions(await freshContext(), [], [false, false, false, false]);
       expect(output).toMatchInlineSnapshot(`
-        "#   consumerTenantId                      globalAccountId                       subdomain              appName  plan      state               url                                                        
-        1   288393a7-972c-4fa8-acfd-12299c4db374  096cea2e-77ef-498f-a588-114b33817f5d  nga-dev-eu10-uofvpsx0  afc-dev  standard  SUBSCRIBED          https://nga-dev-eu10-uofvpsx0.dev.eu10-canary.afc.cloud.sap
-        2   4c0909b1-a84e-4763-a26e-532fdb9e40fa  1fb05c0d-22c0-43d8-9ca7-c9ef0c28f67f  hw6-apps-eu10          afc-dev  standard  SUBSCRIBED          https://hw6-apps-eu10.dev.eu10-canary.afc.cloud.sap        
-        3   5ecc7413-2b7e-414a-9496-ad4a61f6cccf  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-company         afc-dev  standard  SUBSCRIBED          https://skyfin-company.dev.eu10-canary.afc.cloud.sap       
-        4   663d2938-be50-44ab-92ca-538855eb594f  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-workzone        afc-dev  standard  SUBSCRIBED          https://skyfin-workzone.dev.eu10-canary.afc.cloud.sap      
-        5   6917dfd6-7590-4033-af2a-140b75263b0d  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-debug-company   afc-dev  standard  UPDATE_FAILED       https://skyfin-debug-company.dev.eu10-canary.afc.cloud.sap 
-        6   9c418100-6318-4e8a-b4b2-1114f4f44aef  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-booster         afc-dev  standard  SUBSCRIBED          https://skyfin-booster.dev.eu10-canary.afc.cloud.sap       
-        7   ae2dc112-9745-4f5e-8feb-79ebdc0094bd  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-sap-start       afc-dev  standard  SUBSCRIBED          https://skyfin-sap-start.dev.eu10-canary.afc.cloud.sap     
-        8   cb9158ce-f8fd-441b-b443-17219e8f79fa  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skysand                afc-dev            SUBSCRIBED          https://skysand.dev.eu10-canary.afc.cloud.sap              
-        9   cd414f5b-e4f8-4346-94b7-ca4cb2b55ecc  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-demo            afc-dev  standard  UNSUBSCRIBE_FAILED  https://skyfin-demo.dev.eu10-canary.afc.cloud.sap          
-        10  cf528063-6a43-4bf2-8ccc-ca4e6d75d88e  a6786cbf-f7e7-4103-9386-b91d1c07e3ea  jyd-dev-apps-eu10      afc-dev  standard  SUBSCRIBED          https://jyd-dev-apps-eu10.dev.eu10-canary.afc.cloud.sap    
-        11  dde70ec5-983d-4848-b50c-fb2cdac7d359  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-test-3          afc-dev  standard  SUBSCRIBED          https://skyfin-test-3.dev.eu10-canary.afc.cloud.sap        "
+        "#   consumerTenantId                      subscriptionId                        globalAccountId                       subdomain              appName  plan      state               url                                                        
+        1   288393a7-972c-4fa8-acfd-12299c4db374  efd308d6-db5a-41fd-8f35-6211d40746a1  096cea2e-77ef-498f-a588-114b33817f5d  nga-dev-eu10-uofvpsx0  afc-dev  standard  SUBSCRIBED          https://nga-dev-eu10-uofvpsx0.dev.eu10-canary.afc.cloud.sap
+        2   4c0909b1-a84e-4763-a26e-532fdb9e40fa  b6db4043-7b32-4bc5-89cc-b605ac033edd  1fb05c0d-22c0-43d8-9ca7-c9ef0c28f67f  hw6-apps-eu10          afc-dev  standard  SUBSCRIBED          https://hw6-apps-eu10.dev.eu10-canary.afc.cloud.sap        
+        3   5ecc7413-2b7e-414a-9496-ad4a61f6cccf  8999d1fa-3a3e-bbf5-c21d-2db950822b8a  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-company         afc-dev  standard  SUBSCRIBED          https://skyfin-company.dev.eu10-canary.afc.cloud.sap       
+        4   663d2938-be50-44ab-92ca-538855eb594f  1da4a3ef-da21-4087-a9ca-7283c67f4e21  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-workzone        afc-dev  standard  SUBSCRIBED          https://skyfin-workzone.dev.eu10-canary.afc.cloud.sap      
+        5   6917dfd6-7590-4033-af2a-140b75263b0d  84daed86-d52b-4649-8dd8-4378e673ee94  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-debug-company   afc-dev  standard  UPDATE_FAILED       https://skyfin-debug-company.dev.eu10-canary.afc.cloud.sap 
+        6   9c418100-6318-4e8a-b4b2-1114f4f44aef  97e5ac7a-f91a-4bbf-a29d-443138d65313  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-booster         afc-dev  standard  SUBSCRIBED          https://skyfin-booster.dev.eu10-canary.afc.cloud.sap       
+        7   ae2dc112-9745-4f5e-8feb-79ebdc0094bd  204919bb-585f-471e-97d7-5f249d182a94  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-sap-start       afc-dev  standard  SUBSCRIBED          https://skyfin-sap-start.dev.eu10-canary.afc.cloud.sap     
+        8   cb9158ce-f8fd-441b-b443-17219e8f79fa  76fcb047-85cc-baa4-9705-aa22aebf47f7  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skysand                afc-dev            SUBSCRIBED          https://skysand.dev.eu10-canary.afc.cloud.sap              
+        9   cd414f5b-e4f8-4346-94b7-ca4cb2b55ecc  d0791d31-8706-460e-8f78-36f2a429eb10  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-demo            afc-dev  standard  UNSUBSCRIBE_FAILED  https://skyfin-demo.dev.eu10-canary.afc.cloud.sap          
+        10  cf528063-6a43-4bf2-8ccc-ca4e6d75d88e  b9659eb7-cf54-4cb4-bab2-6262b48b1a60  a6786cbf-f7e7-4103-9386-b91d1c07e3ea  jyd-dev-apps-eu10      afc-dev  standard  SUBSCRIBED          https://jyd-dev-apps-eu10.dev.eu10-canary.afc.cloud.sap    
+        11  dde70ec5-983d-4848-b50c-fb2cdac7d359  f1413a16-e900-4fb0-a269-573e1dfed7b8  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-test-3          afc-dev  standard  SUBSCRIBED          https://skyfin-test-3.dev.eu10-canary.afc.cloud.sap        "
       `);
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
         
-        GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?appName=afc-dev&size=200&page=1 200 OK (88ms)"
+        GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?size=200&page=1&appName=afc-dev 200 OK (88ms)"
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
@@ -129,18 +129,18 @@ describe("reg nock tests", () => {
       await nock.back("reg-list.json");
       const output = await reg.registryListSubscriptions(await freshContext(), [], [true, false, false, false]);
       expect(anonymizeListTimestamps(output)).toMatchInlineSnapshot(`
-        "#   consumerTenantId                      globalAccountId                       subdomain              appName  plan      state               url                                                          created_on  updated_on
-        1   288393a7-972c-4fa8-acfd-12299c4db374  096cea2e-77ef-498f-a588-114b33817f5d  nga-dev-eu10-uofvpsx0  afc-dev  standard  SUBSCRIBED          https://nga-dev-eu10-uofvpsx0.dev.eu10-canary.afc.cloud.sap  2024-01-05T07:50:05Z (x days ago)  2024-12-02T14:15:12Z (x days ago)  
-        2   4c0909b1-a84e-4763-a26e-532fdb9e40fa  1fb05c0d-22c0-43d8-9ca7-c9ef0c28f67f  hw6-apps-eu10          afc-dev  standard  SUBSCRIBED          https://hw6-apps-eu10.dev.eu10-canary.afc.cloud.sap          2023-09-05T14:19:13Z (x days ago)  2024-12-02T14:15:12Z (x days ago)  
-        3   5ecc7413-2b7e-414a-9496-ad4a61f6cccf  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-company         afc-dev  standard  SUBSCRIBED          https://skyfin-company.dev.eu10-canary.afc.cloud.sap         2021-03-19T09:51:40Z (x days ago)  2024-12-02T14:23:57Z (x days ago)  
-        4   663d2938-be50-44ab-92ca-538855eb594f  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-workzone        afc-dev  standard  SUBSCRIBED          https://skyfin-workzone.dev.eu10-canary.afc.cloud.sap        2024-09-11T07:32:10Z (x days ago)  2024-12-02T14:16:03Z (x days ago)  
-        5   6917dfd6-7590-4033-af2a-140b75263b0d  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-debug-company   afc-dev  standard  UPDATE_FAILED       https://skyfin-debug-company.dev.eu10-canary.afc.cloud.sap   2024-06-26T10:26:07Z (x days ago)  2024-12-02T14:20:04Z (x days ago)  
-        6   9c418100-6318-4e8a-b4b2-1114f4f44aef  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-booster         afc-dev  standard  SUBSCRIBED          https://skyfin-booster.dev.eu10-canary.afc.cloud.sap         2024-11-27T06:48:43Z (x days ago)  2024-12-02T14:16:03Z (x days ago)  
-        7   ae2dc112-9745-4f5e-8feb-79ebdc0094bd  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-sap-start       afc-dev  standard  SUBSCRIBED          https://skyfin-sap-start.dev.eu10-canary.afc.cloud.sap       2024-07-05T11:18:15Z (x days ago)  2024-12-02T14:16:03Z (x days ago)  
-        8   cb9158ce-f8fd-441b-b443-17219e8f79fa  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skysand                afc-dev            SUBSCRIBED          https://skysand.dev.eu10-canary.afc.cloud.sap                2022-09-05T12:11:10Z (x days ago)  2024-12-02T14:15:13Z (x days ago)  
-        9   cd414f5b-e4f8-4346-94b7-ca4cb2b55ecc  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-demo            afc-dev  standard  UNSUBSCRIBE_FAILED  https://skyfin-demo.dev.eu10-canary.afc.cloud.sap            2024-09-11T09:31:15Z (x days ago)  2024-11-08T12:10:03Z (x days ago)  
-        10  cf528063-6a43-4bf2-8ccc-ca4e6d75d88e  a6786cbf-f7e7-4103-9386-b91d1c07e3ea  jyd-dev-apps-eu10      afc-dev  standard  SUBSCRIBED          https://jyd-dev-apps-eu10.dev.eu10-canary.afc.cloud.sap      2024-03-19T16:47:52Z (x days ago)  2024-12-02T14:15:11Z (x days ago)  
-        11  dde70ec5-983d-4848-b50c-fb2cdac7d359  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-test-3          afc-dev  standard  SUBSCRIBED          https://skyfin-test-3.dev.eu10-canary.afc.cloud.sap          2024-07-09T08:37:51Z (x days ago)  2024-12-02T14:16:03Z (x days ago)  "
+        "#   consumerTenantId                      subscriptionId                        globalAccountId                       subdomain              appName  plan      state               url                                                          created_on  updated_on
+        1   288393a7-972c-4fa8-acfd-12299c4db374  efd308d6-db5a-41fd-8f35-6211d40746a1  096cea2e-77ef-498f-a588-114b33817f5d  nga-dev-eu10-uofvpsx0  afc-dev  standard  SUBSCRIBED          https://nga-dev-eu10-uofvpsx0.dev.eu10-canary.afc.cloud.sap  2024-01-05T07:50:05Z (x days ago)  2024-12-02T14:15:12Z (x days ago)  
+        2   4c0909b1-a84e-4763-a26e-532fdb9e40fa  b6db4043-7b32-4bc5-89cc-b605ac033edd  1fb05c0d-22c0-43d8-9ca7-c9ef0c28f67f  hw6-apps-eu10          afc-dev  standard  SUBSCRIBED          https://hw6-apps-eu10.dev.eu10-canary.afc.cloud.sap          2023-09-05T14:19:13Z (x days ago)  2024-12-02T14:15:12Z (x days ago)  
+        3   5ecc7413-2b7e-414a-9496-ad4a61f6cccf  8999d1fa-3a3e-bbf5-c21d-2db950822b8a  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-company         afc-dev  standard  SUBSCRIBED          https://skyfin-company.dev.eu10-canary.afc.cloud.sap         2021-03-19T09:51:40Z (x days ago)  2024-12-02T14:23:57Z (x days ago)  
+        4   663d2938-be50-44ab-92ca-538855eb594f  1da4a3ef-da21-4087-a9ca-7283c67f4e21  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-workzone        afc-dev  standard  SUBSCRIBED          https://skyfin-workzone.dev.eu10-canary.afc.cloud.sap        2024-09-11T07:32:10Z (x days ago)  2024-12-02T14:16:03Z (x days ago)  
+        5   6917dfd6-7590-4033-af2a-140b75263b0d  84daed86-d52b-4649-8dd8-4378e673ee94  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-debug-company   afc-dev  standard  UPDATE_FAILED       https://skyfin-debug-company.dev.eu10-canary.afc.cloud.sap   2024-06-26T10:26:07Z (x days ago)  2024-12-02T14:20:04Z (x days ago)  
+        6   9c418100-6318-4e8a-b4b2-1114f4f44aef  97e5ac7a-f91a-4bbf-a29d-443138d65313  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-booster         afc-dev  standard  SUBSCRIBED          https://skyfin-booster.dev.eu10-canary.afc.cloud.sap         2024-11-27T06:48:43Z (x days ago)  2024-12-02T14:16:03Z (x days ago)  
+        7   ae2dc112-9745-4f5e-8feb-79ebdc0094bd  204919bb-585f-471e-97d7-5f249d182a94  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-sap-start       afc-dev  standard  SUBSCRIBED          https://skyfin-sap-start.dev.eu10-canary.afc.cloud.sap       2024-07-05T11:18:15Z (x days ago)  2024-12-02T14:16:03Z (x days ago)  
+        8   cb9158ce-f8fd-441b-b443-17219e8f79fa  76fcb047-85cc-baa4-9705-aa22aebf47f7  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skysand                afc-dev            SUBSCRIBED          https://skysand.dev.eu10-canary.afc.cloud.sap                2022-09-05T12:11:10Z (x days ago)  2024-12-02T14:15:13Z (x days ago)  
+        9   cd414f5b-e4f8-4346-94b7-ca4cb2b55ecc  d0791d31-8706-460e-8f78-36f2a429eb10  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-demo            afc-dev  standard  UNSUBSCRIBE_FAILED  https://skyfin-demo.dev.eu10-canary.afc.cloud.sap            2024-09-11T09:31:15Z (x days ago)  2024-11-08T12:10:03Z (x days ago)  
+        10  cf528063-6a43-4bf2-8ccc-ca4e6d75d88e  b9659eb7-cf54-4cb4-bab2-6262b48b1a60  a6786cbf-f7e7-4103-9386-b91d1c07e3ea  jyd-dev-apps-eu10      afc-dev  standard  SUBSCRIBED          https://jyd-dev-apps-eu10.dev.eu10-canary.afc.cloud.sap      2024-03-19T16:47:52Z (x days ago)  2024-12-02T14:15:11Z (x days ago)  
+        11  dde70ec5-983d-4848-b50c-fb2cdac7d359  f1413a16-e900-4fb0-a269-573e1dfed7b8  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-test-3          afc-dev  standard  SUBSCRIBED          https://skyfin-test-3.dev.eu10-canary.afc.cloud.sap          2024-07-09T08:37:51Z (x days ago)  2024-12-02T14:16:03Z (x days ago)  "
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
@@ -160,13 +160,13 @@ describe("reg nock tests", () => {
         [false, false, false, false]
       );
       expect(output).toMatchInlineSnapshot(`
-        "consumerTenantId                      globalAccountId                       subdomain       appName  plan      state       url                                                 
-        5ecc7413-2b7e-414a-9496-ad4a61f6cccf  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-company  afc-dev  standard  SUBSCRIBED  https://skyfin-company.dev.eu10-canary.afc.cloud.sap"
+        "consumerTenantId                      subscriptionId                        globalAccountId                       subdomain       appName  plan      state       url                                                 
+        5ecc7413-2b7e-414a-9496-ad4a61f6cccf  8999d1fa-3a3e-bbf5-c21d-2db950822b8a  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-company  afc-dev  standard  SUBSCRIBED  https://skyfin-company.dev.eu10-canary.afc.cloud.sap"
       `);
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
         
-        GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?appName=afc-dev&tenantId=5ecc7413-2b7e-414a-9496-ad4a61f6cccf&size=200&page=1 200 OK (88ms)"
+        GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?size=200&page=1&appName=afc-dev&tenantId=5ecc7413-2b7e-414a-9496-ad4a61f6cccf 200 OK (88ms)"
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
@@ -179,8 +179,8 @@ describe("reg nock tests", () => {
         [true, false, false, false]
       );
       expect(anonymizeListTimestamps(output)).toMatchInlineSnapshot(`
-        "consumerTenantId                      globalAccountId                       subdomain       appName  plan      state       url                                                   created_on  updated_on
-        5ecc7413-2b7e-414a-9496-ad4a61f6cccf  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-company  afc-dev  standard  SUBSCRIBED  https://skyfin-company.dev.eu10-canary.afc.cloud.sap  2021-03-19T09:51:40Z (x days ago)  2024-12-02T14:23:57Z (x days ago)  "
+        "consumerTenantId                      subscriptionId                        globalAccountId                       subdomain       appName  plan      state       url                                                   created_on  updated_on
+        5ecc7413-2b7e-414a-9496-ad4a61f6cccf  8999d1fa-3a3e-bbf5-c21d-2db950822b8a  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-company  afc-dev  standard  SUBSCRIBED  https://skyfin-company.dev.eu10-canary.afc.cloud.sap  2021-03-19T09:51:40Z (x days ago)  2024-12-02T14:23:57Z (x days ago)  "
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
@@ -205,7 +205,7 @@ describe("reg nock tests", () => {
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
         
-        GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?appName=afc-dev&size=200&page=1 200 OK (88ms)"
+        GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?size=200&page=1&appName=afc-dev 200 OK (88ms)"
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
@@ -217,7 +217,7 @@ describe("reg nock tests", () => {
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
         
-        GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?appName=afc-dev&size=200&page=1 200 OK (88ms)"
+        GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/saas-manager/v1/application/subscriptions?size=200&page=1&appName=afc-dev 200 OK (88ms)"
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
@@ -228,15 +228,17 @@ describe("reg nock tests", () => {
     const output = await reg.registryServiceConfig(await freshContext());
     expect(output).toMatchInlineSnapshot(`
       {
-        "callbackTimeoutMillis": 900000,
-        "getDependencies": "https://skyfin.dev.eu10-canary.afc.cloud.sap/callback/v1.0/dependencies",
-        "getSubscriptionParameters": "",
-        "onSubscription": "https://skyfin.dev.eu10-canary.afc.cloud.sap/callback/v1.0/tenants/{tenantId}",
-        "onSubscriptionAsync": true,
-        "onUnSubscriptionAsync": true,
-        "onUpdateDependenciesAsync": false,
-        "onUpdateSubscriptionParametersAsync": false,
-        "runGetDependenciesOnAsyncCallback": false,
+        "regServiceConfig": {
+          "callbackTimeoutMillis": 900000,
+          "getDependencies": "https://skyfin.dev.eu10-canary.afc.cloud.sap/callback/v1.0/dependencies",
+          "getSubscriptionParameters": "",
+          "onSubscription": "https://skyfin.dev.eu10-canary.afc.cloud.sap/callback/v1.0/tenants/{tenantId}",
+          "onSubscriptionAsync": true,
+          "onUnSubscriptionAsync": true,
+          "onUpdateDependenciesAsync": false,
+          "onUpdateSubscriptionParametersAsync": false,
+          "runGetDependenciesOnAsyncCallback": false,
+        },
       }
     `);
     expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
