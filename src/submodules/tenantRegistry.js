@@ -439,6 +439,7 @@ const registryUpdateAllDependencies = async (context, _, [doSkipUnchanged, doOnl
     filterOptions: {
       onlyStale: doOnlyStale,
       onlyFailed: doOnlyFailed,
+      onlyUpdatable: true,
     },
     query: {
       ...(doSkipUnchanged !== undefined && { skipUnchangedDependencies: doSkipUnchanged }),
@@ -447,7 +448,13 @@ const registryUpdateAllDependencies = async (context, _, [doSkipUnchanged, doOnl
 
 const registryUpdateApplicationURL = async (context, [tenantId], [doOnlyStale, doOnlyFailed]) =>
   await _patchUpdateDependencies(context, {
-    filterOptions: { tenant: tenantId, onlyStale: doOnlyStale, onlyFailed: doOnlyFailed },
+    filterOptions: tenantId
+      ? { tenant: tenantId }
+      : {
+          onlyStale: doOnlyStale,
+          onlyFailed: doOnlyFailed,
+          onlyUpdatable: true,
+        },
     query: { updateApplicationURL: true, skipUpdatingDependencies: true },
     isPoll: false,
   });
