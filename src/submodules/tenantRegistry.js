@@ -369,7 +369,7 @@ const _callAndPollAndAssert = async (context, source, tenantId, reqOptions) => {
 const _patchUpdateDependenciesPathname = (subscription) => {
   switch (subscription.source) {
     case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
-      return `/subscription-manager/v1/subscriptions/${subscription.id}`;
+      return `/subscription-manager/v1/subscriptions/${subscription.tenantId}`;
     }
     case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
       return `/saas-manager/v1/application/tenants/${subscription.tenantId}/subscriptions`;
