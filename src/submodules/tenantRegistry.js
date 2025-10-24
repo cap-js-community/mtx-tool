@@ -295,65 +295,64 @@ const registryServiceConfig = async (context) => {
   };
 };
 
-const _callAndPollInner = async (context, source, reqOptions) => {
-  const initialResponse = await _call(context, source, reqOptions);
-  assert(
-    initialResponse.status === HTTP_ACCEPTED,
-    "got unexpected response code for polling from %s",
-    reqOptions.pathname
-  );
-  const [location] = initialResponse.headers.raw().location;
-  assert(location, "missing location header for polling from %s", reqOptions.pathname);
+const _callAndPollAndMarkInner = async (context, source, reqOptions) => {
+  try {
+    const initialResponse = await _call(context, source, reqOptions);
+    assert(
+      initialResponse.status === HTTP_ACCEPTED,
+      "got unexpected response code for polling from %s",
+      reqOptions.pathname
+    );
+    const [location] = initialResponse.headers.raw().location;
+    assert(location, "missing location header for polling from %s", reqOptions.pathname);
 
-  logger.info("polling subscription %s with interval %isec", location, regPollFrequency / 1000);
+    logger.info("polling subscription %s with interval %isec", location, regPollFrequency / 1000);
 
-  while (true) {
-    await sleep(regPollFrequency);
-    const pollResponse = await _call(context, source, { pathname: location });
-    let pollResponseBody = await pollResponse.json();
+    while (true) {
+      await sleep(regPollFrequency);
+      const pollResponse = await _call(context, source, { pathname: location });
+      let pollResponseBody = await pollResponse.json();
 
-    switch (source) {
-      case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
-        const { subscriptionId, subscriptionState, subscriptionStateDetails } = pollResponseBody;
-        assert(subscriptionState, "got subscription poll response without state\n%j", pollResponseBody);
-        if (subscriptionState !== SUBSCRIPTION_STATE.IN_PROCESS) {
-          return {
-            subscriptionId,
-            subscriptionState,
-            ...(subscriptionStateDetails && { error: subscriptionStateDetails }),
-            [SUBSCRIPTION_CALL_IS_SUCCESS]: subscriptionState === SUBSCRIPTION_STATE.SUBSCRIBED,
-          };
+      switch (source) {
+        case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
+          const { subscriptionId, subscriptionState, subscriptionStateDetails } = pollResponseBody;
+          assert(subscriptionState, "got subscription poll response without state\n%j", pollResponseBody);
+          if (subscriptionState !== SUBSCRIPTION_STATE.IN_PROCESS) {
+            return {
+              subscriptionId,
+              subscriptionState,
+              ...(subscriptionStateDetails && { error: subscriptionStateDetails }),
+              [SUBSCRIPTION_CALL_IS_SUCCESS]: subscriptionState === SUBSCRIPTION_STATE.SUBSCRIBED,
+            };
+          }
+          break;
         }
-        break;
-      }
-      case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
-        const { id: jobId, state: jobState, error: err } = pollResponseBody;
-        assert(jobState, "got subscription poll response without state\n%j", pollResponseBody);
-        if (jobState !== JOB_STATE.STARTED) {
-          return {
-            jobId,
-            jobState,
-            ...(err && { error: err.message }),
-            [SUBSCRIPTION_CALL_IS_SUCCESS]: jobState === JOB_STATE.SUCCEEDED,
-          };
+        case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
+          const { id: jobId, state: jobState, error: err } = pollResponseBody;
+          assert(jobState, "got subscription poll response without state\n%j", pollResponseBody);
+          if (jobState !== JOB_STATE.STARTED) {
+            return {
+              jobId,
+              jobState,
+              ...(err && { error: err.message }),
+              [SUBSCRIPTION_CALL_IS_SUCCESS]: jobState === JOB_STATE.SUCCEEDED,
+            };
+          }
+          break;
         }
-        break;
       }
     }
-  }
-};
-
-const _callAndPoll = async (context, source, tenantId, reqOptions) => {
-  const startTime = new Date();
-  let result;
-  try {
-    result = await _callAndPollInner(context, source, reqOptions);
   } catch (err) {
-    result = {
+    return {
       error: err.message,
       [SUBSCRIPTION_CALL_IS_SUCCESS]: false,
     };
   }
+};
+
+const _callAndPollAndMark = async (context, source, tenantId, reqOptions) => {
+  const startTime = new Date();
+  const result = await _callAndPollAndMarkInner(context, source, reqOptions);
   return {
     tenantId,
     duration: `${dateDiffInSeconds(startTime, new Date()).toFixed(0)} sec`,
@@ -362,7 +361,7 @@ const _callAndPoll = async (context, source, tenantId, reqOptions) => {
 };
 
 const _callAndPollAndAssert = async (context, source, tenantId, reqOptions) => {
-  const result = await _callAndPoll(context, source, tenantId, reqOptions);
+  const result = await _callAndPollAndMark(context, source, tenantId, reqOptions);
   if (!result[SUBSCRIPTION_CALL_IS_SUCCESS]) {
     logger.error(JSON.stringify(result, null, 2));
     return fail("call failed for tenant %s", tenantId);
@@ -381,34 +380,33 @@ const _patchUpdateDependenciesPathname = (subscription) => {
   }
 };
 
-// assert(
-//   results.every((pollResult) => pollResult[SUBSCRIPTION_CALL_IS_SUCCESS]),
-//   "registry %s failed for some tenants",
-//   method
-// );
-// MARKED naming needs to be consistent
-// INNER poll function may not be needed
-
-const _callMarked = async (context, source, tenantId, reqOptions) => {
+const _callAndMarkInner = async (context, source, reqOptions) => {
   try {
-    const result = await _call(context, source, reqOptions);
     return {
-      tenantId,
-      ...result,
+      ...(await _call(context, source, reqOptions)),
       [SUBSCRIPTION_CALL_IS_SUCCESS]: true,
     };
   } catch (err) {
     return {
-      tenantId,
       error: err.message,
       [SUBSCRIPTION_CALL_IS_SUCCESS]: false,
     };
   }
 };
 
+const _callAndMark = async (context, source, tenantId, reqOptions) => {
+  const startTime = new Date();
+  const result = _callAndMarkInner(context, source, reqOptions);
+  return {
+    tenantId,
+    duration: `${dateDiffInSeconds(startTime, new Date()).toFixed(0)} sec`,
+    ...result,
+  };
+};
+
 const _patchUpdateDependencies = async (context, { filterOptions, query, isPoll = true }) => {
   const { normalizedSubscriptions: subscriptions } = await _getSubscriptionInfos(context, filterOptions);
-  const _callExecutor = isPoll ? _callAndPoll : _callMarked;
+  const _callExecutor = isPoll ? _callAndPollAndMark : _callAndMark;
   const results = await limiter(
     regRequestConcurrency,
     subscriptions,
