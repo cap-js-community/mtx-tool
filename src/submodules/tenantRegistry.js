@@ -38,7 +38,7 @@ const REGISTRY_PAGE_SIZE = 200;
 const REGISTRY_JOB_POLL_FREQUENCY_FALLBACK = 15000;
 const REGISTRY_REQUEST_CONCURRENCY_FALLBACK = 6;
 
-const SUBSCRIPTION_POLL_IS_SUCCESS = Symbol("IS_SUCCESS");
+const SUBSCRIPTION_CALL_IS_SUCCESS = Symbol("IS_SUCCESS");
 const JOB_STATE = Object.freeze({
   STARTED: "STARTED",
   SUCCEEDED: "SUCCEEDED",
@@ -321,7 +321,7 @@ const _callAndPollInner = async (context, source, reqOptions) => {
             subscriptionId,
             subscriptionState,
             ...(subscriptionStateDetails && { error: subscriptionStateDetails }),
-            [SUBSCRIPTION_POLL_IS_SUCCESS]: subscriptionState === SUBSCRIPTION_STATE.SUBSCRIBED,
+            [SUBSCRIPTION_CALL_IS_SUCCESS]: subscriptionState === SUBSCRIPTION_STATE.SUBSCRIBED,
           };
         }
         break;
@@ -334,7 +334,7 @@ const _callAndPollInner = async (context, source, reqOptions) => {
             jobId,
             jobState,
             ...(err && { error: err.message }),
-            [SUBSCRIPTION_POLL_IS_SUCCESS]: jobState === JOB_STATE.SUCCEEDED,
+            [SUBSCRIPTION_CALL_IS_SUCCESS]: jobState === JOB_STATE.SUCCEEDED,
           };
         }
         break;
@@ -351,7 +351,7 @@ const _callAndPoll = async (context, source, tenantId, reqOptions) => {
   } catch (err) {
     result = {
       error: err.message,
-      [SUBSCRIPTION_POLL_IS_SUCCESS]: false,
+      [SUBSCRIPTION_CALL_IS_SUCCESS]: false,
     };
   }
   return {
@@ -363,7 +363,7 @@ const _callAndPoll = async (context, source, tenantId, reqOptions) => {
 
 const _callAndPollAndAssert = async (context, source, tenantId, reqOptions) => {
   const result = await _callAndPoll(context, source, tenantId, reqOptions);
-  if (!result[SUBSCRIPTION_POLL_IS_SUCCESS]) {
+  if (!result[SUBSCRIPTION_CALL_IS_SUCCESS]) {
     logger.error(JSON.stringify(result, null, 2));
     return fail("call failed for tenant %s", tenantId);
   }
@@ -381,12 +381,13 @@ const _patchUpdateDependenciesPathname = (subscription) => {
   }
 };
 
-// TODO callers need to take care that SUBSCRIPTION_POLL_IS_SUCCESS false leads to failure
 // assert(
-//   results.every((pollResult) => pollResult[SUBSCRIPTION_POLL_IS_SUCCESS]),
+//   results.every((pollResult) => pollResult[SUBSCRIPTION_CALL_IS_SUCCESS]),
 //   "registry %s failed for some tenants",
 //   method
 // );
+// MARKED naming needs to be consistent
+// INNER poll function may not be needed
 
 const _callMarked = async (context, source, tenantId, reqOptions) => {
   try {
@@ -394,13 +395,13 @@ const _callMarked = async (context, source, tenantId, reqOptions) => {
     return {
       tenantId,
       ...result,
-      [SUBSCRIPTION_POLL_IS_SUCCESS]: true,
+      [SUBSCRIPTION_CALL_IS_SUCCESS]: true,
     };
   } catch (err) {
     return {
       tenantId,
       error: err.message,
-      [SUBSCRIPTION_POLL_IS_SUCCESS]: false,
+      [SUBSCRIPTION_CALL_IS_SUCCESS]: false,
     };
   }
 };
@@ -419,7 +420,7 @@ const _patchUpdateDependencies = async (context, { filterOptions, query, isPoll 
       })
   );
 
-  const failedResults = results.filter((result) => !result[SUBSCRIPTION_POLL_IS_SUCCESS]);
+  const failedResults = results.filter((result) => !result[SUBSCRIPTION_CALL_IS_SUCCESS]);
   if (failedResults.length) {
     logger.error(JSON.stringify(results, null, 2));
     return fail("call failed for tenants %s", failedResults.map((result) => result.tenantId).join(","));
