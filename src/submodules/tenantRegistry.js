@@ -421,7 +421,7 @@ const _patchUpdateDependencies = async (context, { filterOptions, query, isPoll 
   const failedResults = results.filter((result) => !result[SUBSCRIPTION_CALL_IS_SUCCESS]);
   if (failedResults.length) {
     logger.error(JSON.stringify(results, null, 2));
-    return fail("call failed for tenants %s", failedResults.map((result) => result.tenantId).join(","));
+    return fail("call failed for tenants %s", failedResults.map((result) => result.tenantId).join(", "));
   }
   return results;
 };
