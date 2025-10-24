@@ -313,6 +313,7 @@ const _callAndPollAndMarkInner = async (context, source, reqOptions) => {
         case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
           if (pollResponse.status === HTTP_NO_CONTENT && reqOptions.method === "DELETE") {
             return {
+              info: "delete succeeded",
               [SUBSCRIPTION_CALL_IS_SUCCESS]: true,
             };
           }
@@ -385,10 +386,9 @@ const _patchUpdateDependenciesPathname = (subscription) => {
 
 const _callAndMarkInner = async (context, source, reqOptions) => {
   try {
-    const response = await _call(context, source, reqOptions);
-    const body = await response.text();
+    await _call(context, source, reqOptions);
     return {
-      ...(body && { response: body }),
+      info: `${reqOptions.method.toLowerCase()} succeeded`,
       [SUBSCRIPTION_CALL_IS_SUCCESS]: true,
     };
   } catch (err) {
