@@ -387,8 +387,9 @@ const _patchUpdateDependenciesPathname = (subscription) => {
 const _callAndMarkInner = async (context, source, reqOptions) => {
   try {
     await _call(context, source, reqOptions);
+    const operation = reqOptions.method.toLowerCase().replace("patch", "update");
     return {
-      info: `${reqOptions.method.toLowerCase()} succeeded`,
+      info: `${operation} succeeded`,
       [SUBSCRIPTION_CALL_IS_SUCCESS]: true,
     };
   } catch (err) {

@@ -432,51 +432,61 @@ describe("reg nock tests", () => {
             [
               {
                 "duration": "0 sec",
+                "info": "update succeeded",
                 "tenantId": "288393a7-972c-4fa8-acfd-12299c4db374",
                 Symbol(IS_SUCCESS): true,
               },
               {
                 "duration": "0 sec",
+                "info": "update succeeded",
                 "tenantId": "4c0909b1-a84e-4763-a26e-532fdb9e40fa",
                 Symbol(IS_SUCCESS): true,
               },
               {
                 "duration": "0 sec",
+                "info": "update succeeded",
                 "tenantId": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
                 Symbol(IS_SUCCESS): true,
               },
               {
                 "duration": "0 sec",
+                "info": "update succeeded",
                 "tenantId": "663d2938-be50-44ab-92ca-538855eb594f",
                 Symbol(IS_SUCCESS): true,
               },
               {
                 "duration": "0 sec",
+                "info": "update succeeded",
                 "tenantId": "6917dfd6-7590-4033-af2a-140b75263b0d",
                 Symbol(IS_SUCCESS): true,
               },
               {
                 "duration": "0 sec",
+                "info": "update succeeded",
                 "tenantId": "9c418100-6318-4e8a-b4b2-1114f4f44aef",
                 Symbol(IS_SUCCESS): true,
               },
               {
                 "duration": "0 sec",
+                "info": "update succeeded",
                 "tenantId": "ae2dc112-9745-4f5e-8feb-79ebdc0094bd",
                 Symbol(IS_SUCCESS): true,
               },
               {
                 "duration": "0 sec",
+                "info": "update succeeded",
                 "tenantId": "cb9158ce-f8fd-441b-b443-17219e8f79fa",
                 Symbol(IS_SUCCESS): true,
               },
               {
                 "duration": "0 sec",
+                "info": "update succeeded",
                 "tenantId": "cf528063-6a43-4bf2-8ccc-ca4e6d75d88e",
                 Symbol(IS_SUCCESS): true,
               },
               {
                 "duration": "0 sec",
+                "info": "update succeeded",
                 "tenantId": "dde70ec5-983d-4848-b50c-fb2cdac7d359",
                 Symbol(IS_SUCCESS): true,
               },
@@ -508,6 +518,7 @@ describe("reg nock tests", () => {
             [
               {
                 "duration": "0 sec",
+                "info": "update succeeded",
                 "tenantId": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
                 Symbol(IS_SUCCESS): true,
               },

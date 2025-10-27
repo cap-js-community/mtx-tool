@@ -53,6 +53,8 @@ module.exports = {
         return [format("%s %O", command, args)];
     }
   }),
+  dateDiffInDays: jest.fn().mockReturnValue(0),
+  dateDiffInSeconds: jest.fn().mockReturnValue(0),
   // speed up sleep
   sleep: jest.fn(),
 };
