@@ -350,6 +350,57 @@ exports[`reg tests mixed reg and sms reg list paging unfiltered 2`] = `
 20  00000000-0000-0000-0000-000000000020  00000000-0000-0000-0000-002000000000  00000000-0000-0000-0000-000000009980  skyfin-0020  afc-dev      standard  UPDATE_FAILED  https://skyfin-0020.dev-afc-sap.cfapps.sap.hana.ondemand.com"
 `;
 
+exports[`reg tests mixed reg and sms reg update with request failed 2`] = `
+[
+  [
+    15000,
+  ],
+  [
+    15000,
+  ],
+  [
+    15000,
+  ],
+  [
+    15000,
+  ],
+]
+`;
+
+exports[`reg tests mixed reg and sms reg update with state failed 2`] = `
+[
+  [
+    15000,
+  ],
+  [
+    15000,
+  ],
+  [
+    15000,
+  ],
+  [
+    15000,
+  ],
+]
+`;
+
+exports[`reg tests mixed reg and sms reg update without failure 2`] = `
+[
+  [
+    15000,
+  ],
+  [
+    15000,
+  ],
+  [
+    15000,
+  ],
+  [
+    15000,
+  ],
+]
+`;
+
 exports[`reg tests only reg reg list paging only failed 1`] = `
 [
   [

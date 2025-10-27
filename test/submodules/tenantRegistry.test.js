@@ -10,6 +10,7 @@ jest.mock("../../src/shared/static", () => {
   return {
     ...staticLib,
     sleep: jest.fn(),
+    dateDiffInSeconds: jest.fn().mockReturnValue(0),
   };
 });
 const { Logger: MockLogger } = require("../../src/shared/logger");
@@ -173,7 +174,7 @@ const pollUpdateResponseFactorySms =
       statusText: "OK",
       json: async () => ({
         subscriptionId: jobId,
-        subscriptionState: doFail ? "FAILED" : "SUCCEEDED",
+        subscriptionState: doFail ? "FAILED" : "SUBSCRIBED",
         ...(doFail && { subscriptionStateDetails: "some error details" }),
       }),
     };
@@ -192,6 +193,7 @@ const pollUpdateResponseFactoryReg =
       json: async () => ({
         id: jobId,
         state: doFail ? "FAILED" : "SUCCEEDED",
+        ...(doFail && { error: { message: "some error details" } }),
       }),
     };
   };
@@ -319,33 +321,34 @@ describe("reg tests", () => {
       polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000004 with interval 15sec"
     `);
       expect(outputFromLogger(mockLogger.error.mock.calls)).toMatchInlineSnapshot(`
-      "[
-        {
-          "tenantId": "00000000-0000-0000-0000-000000000001",
-          "duration": "0 sec",
-          "jobId": "11111111-0000-0000-0000-000000000001",
-          "jobState": "SUCCEEDED"
-        },
-        {
-          "tenantId": "00000000-0000-0000-0000-000000000002",
-          "duration": "0 sec",
-          "jobId": "11111111-0000-0000-0000-000000000002",
-          "jobState": "SUCCEEDED"
-        },
-        {
-          "tenantId": "00000000-0000-0000-0000-000000000003",
-          "duration": "0 sec",
-          "jobId": "11111111-0000-0000-0000-000000000003",
-          "jobState": "FAILED"
-        },
-        {
-          "tenantId": "00000000-0000-0000-0000-000000000004",
-          "duration": "0 sec",
-          "jobId": "11111111-0000-0000-0000-000000000004",
-          "jobState": "SUCCEEDED"
-        }
-      ]"
-    `);
+        "[
+          {
+            "tenantId": "00000000-0000-0000-0000-000000000001",
+            "duration": "0 sec",
+            "jobId": "11111111-0000-0000-0000-000000000001",
+            "jobState": "SUCCEEDED"
+          },
+          {
+            "tenantId": "00000000-0000-0000-0000-000000000002",
+            "duration": "0 sec",
+            "jobId": "11111111-0000-0000-0000-000000000002",
+            "jobState": "SUCCEEDED"
+          },
+          {
+            "tenantId": "00000000-0000-0000-0000-000000000003",
+            "duration": "0 sec",
+            "jobId": "11111111-0000-0000-0000-000000000003",
+            "jobState": "FAILED",
+            "error": "some error details"
+          },
+          {
+            "tenantId": "00000000-0000-0000-0000-000000000004",
+            "duration": "0 sec",
+            "jobId": "11111111-0000-0000-0000-000000000004",
+            "jobState": "SUCCEEDED"
+          }
+        ]"
+      `);
     });
 
     test("reg update with request failed", async () => {
@@ -484,141 +487,206 @@ describe("reg tests", () => {
         mockRequest.request.mockImplementationOnce(pollUpdateResponse(index));
       }
 
-      await expect(reg.registryUpdateAllDependencies(fakeContextMixed, undefined, [])).resolves.toMatchInlineSnapshot();
+      await expect(reg.registryUpdateAllDependencies(fakeContextMixed, undefined, [])).resolves.toMatchInlineSnapshot(`
+              [
+                {
+                  "duration": "0 sec",
+                  "subscriptionId": "11111111-0000-0000-0000-000000000001",
+                  "subscriptionState": "SUBSCRIBED",
+                  "tenantId": "00000000-0000-0000-0000-000000000001",
+                  Symbol(IS_SUCCESS): true,
+                },
+                {
+                  "duration": "0 sec",
+                  "subscriptionId": "11111111-0000-0000-0000-000000000002",
+                  "subscriptionState": "SUBSCRIBED",
+                  "tenantId": "00000000-0000-0000-0000-000000000002",
+                  Symbol(IS_SUCCESS): true,
+                },
+                {
+                  "duration": "0 sec",
+                  "jobId": "11111111-0000-0000-0000-000000000003",
+                  "jobState": "SUCCEEDED",
+                  "tenantId": "00000000-0000-0000-0000-000000000003",
+                  Symbol(IS_SUCCESS): true,
+                },
+                {
+                  "duration": "0 sec",
+                  "jobId": "11111111-0000-0000-0000-000000000004",
+                  "jobState": "SUCCEEDED",
+                  "tenantId": "00000000-0000-0000-0000-000000000004",
+                  Symbol(IS_SUCCESS): true,
+                },
+              ]
+            `);
 
       expect(mockRequest.request).toHaveBeenCalledTimes(2 + n * 4);
 
       expect(mockShared.sleep.mock.calls).toMatchSnapshot();
 
-      expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot();
+      expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
+        "polling subscription /subscription-manager/v1/subscriptions/11111111-0000-0000-0000-000000000001 with interval 15sec
+        polling subscription /subscription-manager/v1/subscriptions/11111111-0000-0000-0000-000000000002 with interval 15sec
+        polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000003 with interval 15sec
+        polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000004 with interval 15sec"
+      `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
 
-    // test("reg update with state failed", async () => {
-    //   const n = 4;
-    //   const fakeSubscriptions = Array.from({ length: n }).map((x, i) => fakeRegSubscriptionFactory(i + 1));
-    //   mockRequest.request.mockReturnValueOnce({
-    //     json: () => ({ subscriptions: fakeSubscriptions }),
-    //   });
-    //   for (let index = 0; index < n; index++) {
-    //     mockRequest.request.mockImplementationOnce(fakeRegUpdateImplementationFactory(index));
-    //   }
-    //   for (let index = 0; index < n; index++) {
-    //     mockRequest.request.mockImplementationOnce(fakeRegJobImplementationFactory(index, { doFail: index === n / 2 }));
-    //   }
-    //
-    //   let caughtErr;
-    //   try {
-    //     await reg.registryUpdateAllDependencies(fakeContextOnlyReg, undefined, []);
-    //   } catch (err) {
-    //     caughtErr = err;
-    //   }
-    //
-    //   expect(mockRequest.request).toHaveBeenCalledTimes(1 + n * 2);
-    //
-    //   expect(caughtErr).toBeDefined();
-    //   expect(caughtErr.message).toMatchInlineSnapshot(`"call failed for tenants 00000000-0000-0000-0000-000000000003"`);
-    //
-    //   expect(mockShared.sleep.mock.calls).toMatchSnapshot();
-    //
-    //   expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
-    //   "polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000001 with interval 15sec
-    //   polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000002 with interval 15sec
-    //   polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000003 with interval 15sec
-    //   polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000004 with interval 15sec"
-    // `);
-    //   expect(outputFromLogger(mockLogger.error.mock.calls)).toMatchInlineSnapshot(`
-    //   "[
-    //     {
-    //       "tenantId": "00000000-0000-0000-0000-000000000001",
-    //       "duration": "0 sec",
-    //       "jobId": "11111111-0000-0000-0000-000000000001",
-    //       "jobState": "SUCCEEDED"
-    //     },
-    //     {
-    //       "tenantId": "00000000-0000-0000-0000-000000000002",
-    //       "duration": "0 sec",
-    //       "jobId": "11111111-0000-0000-0000-000000000002",
-    //       "jobState": "SUCCEEDED"
-    //     },
-    //     {
-    //       "tenantId": "00000000-0000-0000-0000-000000000003",
-    //       "duration": "0 sec",
-    //       "jobId": "11111111-0000-0000-0000-000000000003",
-    //       "jobState": "FAILED"
-    //     },
-    //     {
-    //       "tenantId": "00000000-0000-0000-0000-000000000004",
-    //       "duration": "0 sec",
-    //       "jobId": "11111111-0000-0000-0000-000000000004",
-    //       "jobState": "SUCCEEDED"
-    //     }
-    //   ]"
-    // `);
-    // });
-    //
-    // test("reg update with request failed", async () => {
-    //   const n = 4;
-    //   const fakeSubscriptions = Array.from({ length: n }).map((x, i) => fakeRegSubscriptionFactory(i + 1));
-    //   mockRequest.request.mockReturnValueOnce({
-    //     json: () => ({ subscriptions: fakeSubscriptions }),
-    //   });
-    //   for (let index = 0; index < n; index++) {
-    //     mockRequest.request.mockImplementationOnce(fakeRegUpdateImplementationFactory(index));
-    //   }
-    //   for (let index = 0; index < n; index++) {
-    //     mockRequest.request.mockImplementationOnce(
-    //       fakeRegJobImplementationFactory(index, { doFailRequest: index === n / 2 })
-    //     );
-    //   }
-    //
-    //   let caughtErr;
-    //   try {
-    //     await reg.registryUpdateAllDependencies(fakeContextOnlyReg, undefined, []);
-    //   } catch (err) {
-    //     caughtErr = err;
-    //   }
-    //
-    //   expect(mockRequest.request).toHaveBeenCalledTimes(1 + n * 2);
-    //
-    //   expect(caughtErr).toBeDefined();
-    //   expect(caughtErr.message).toMatchInlineSnapshot(`"call failed for tenants 00000000-0000-0000-0000-000000000003"`);
-    //
-    //   expect(mockShared.sleep.mock.calls).toMatchSnapshot();
-    //
-    //   expect(outputFromLogger(mockLogger.error.mock.calls)).toMatchInlineSnapshot(`
-    //   "[
-    //     {
-    //       "tenantId": "00000000-0000-0000-0000-000000000001",
-    //       "duration": "0 sec",
-    //       "jobId": "11111111-0000-0000-0000-000000000001",
-    //       "jobState": "SUCCEEDED"
-    //     },
-    //     {
-    //       "tenantId": "00000000-0000-0000-0000-000000000002",
-    //       "duration": "0 sec",
-    //       "jobId": "11111111-0000-0000-0000-000000000002",
-    //       "jobState": "SUCCEEDED"
-    //     },
-    //     {
-    //       "tenantId": "00000000-0000-0000-0000-000000000003",
-    //       "duration": "0 sec",
-    //       "error": "server feels ill"
-    //     },
-    //     {
-    //       "tenantId": "00000000-0000-0000-0000-000000000004",
-    //       "duration": "0 sec",
-    //       "jobId": "11111111-0000-0000-0000-000000000004",
-    //       "jobState": "SUCCEEDED"
-    //     }
-    //   ]"
-    // `);
-    //   expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
-    //   "polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000001 with interval 15sec
-    //   polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000002 with interval 15sec
-    //   polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000003 with interval 15sec
-    //   polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000004 with interval 15sec"
-    // `);
-    // });
+    test("reg update with state failed", async () => {
+      const n = 2;
+      const fakeSubscriptionsSms = Array.from({ length: n }).map((x, i) => fakeSubscriptionFactorySms(i + 1));
+      const fakeSubscriptionsReg = Array.from({ length: n }).map((x, i) => fakeSubscriptionFactoryReg(n + i + 1));
+      const subscriptionResponse = (reqOptions) => ({
+        json: () => ({
+          subscriptions: reqOptions.url === "subscription_manager_url" ? fakeSubscriptionsSms : fakeSubscriptionsReg,
+        }),
+      });
+      mockRequest.request.mockImplementationOnce(subscriptionResponse);
+      mockRequest.request.mockImplementationOnce(subscriptionResponse);
+      const initialUpdateResponse = (index) => (reqOptions) =>
+        reqOptions.url === "subscription_manager_url"
+          ? initialUpdateResponseFactorySms(index)(reqOptions)
+          : initialUpdateResponseFactoryReg(index)(reqOptions);
+      for (let index = 0; index < 2 * n; index++) {
+        mockRequest.request.mockImplementationOnce(initialUpdateResponse(index));
+      }
+      const pollUpdateResponse = (index, options) => (reqOptions) =>
+        reqOptions.url === "subscription_manager_url"
+          ? pollUpdateResponseFactorySms(index, options)(reqOptions)
+          : pollUpdateResponseFactoryReg(index, options)(reqOptions);
+      for (let index = 0; index < 2 * n; index++) {
+        mockRequest.request.mockImplementationOnce(pollUpdateResponse(index, { doFail: index % n === 1 }));
+      }
+
+      let caughtErr;
+      try {
+        await reg.registryUpdateAllDependencies(fakeContextMixed, undefined, []);
+      } catch (err) {
+        caughtErr = err;
+      }
+
+      expect(mockRequest.request).toHaveBeenCalledTimes(2 + n * 4);
+
+      expect(caughtErr).toBeDefined();
+      expect(caughtErr.message).toMatchInlineSnapshot(
+        `"call failed for tenants 00000000-0000-0000-0000-000000000002, 00000000-0000-0000-0000-000000000004"`
+      );
+
+      expect(mockShared.sleep.mock.calls).toMatchSnapshot();
+
+      expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
+        "polling subscription /subscription-manager/v1/subscriptions/11111111-0000-0000-0000-000000000001 with interval 15sec
+        polling subscription /subscription-manager/v1/subscriptions/11111111-0000-0000-0000-000000000002 with interval 15sec
+        polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000003 with interval 15sec
+        polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000004 with interval 15sec"
+      `);
+      expect(outputFromLogger(mockLogger.error.mock.calls)).toMatchInlineSnapshot(`
+        "[
+          {
+            "tenantId": "00000000-0000-0000-0000-000000000001",
+            "duration": "0 sec",
+            "subscriptionId": "11111111-0000-0000-0000-000000000001",
+            "subscriptionState": "SUBSCRIBED"
+          },
+          {
+            "tenantId": "00000000-0000-0000-0000-000000000002",
+            "duration": "0 sec",
+            "subscriptionId": "11111111-0000-0000-0000-000000000002",
+            "subscriptionState": "FAILED",
+            "error": "some error details"
+          },
+          {
+            "tenantId": "00000000-0000-0000-0000-000000000003",
+            "duration": "0 sec",
+            "jobId": "11111111-0000-0000-0000-000000000003",
+            "jobState": "SUCCEEDED"
+          },
+          {
+            "tenantId": "00000000-0000-0000-0000-000000000004",
+            "duration": "0 sec",
+            "jobId": "11111111-0000-0000-0000-000000000004",
+            "jobState": "FAILED",
+            "error": "some error details"
+          }
+        ]"
+      `);
+    });
+
+    test("reg update with request failed", async () => {
+      const n = 2;
+      const fakeSubscriptionsSms = Array.from({ length: n }).map((x, i) => fakeSubscriptionFactorySms(i + 1));
+      const fakeSubscriptionsReg = Array.from({ length: n }).map((x, i) => fakeSubscriptionFactoryReg(n + i + 1));
+      const subscriptionResponse = (reqOptions) => ({
+        json: () => ({
+          subscriptions: reqOptions.url === "subscription_manager_url" ? fakeSubscriptionsSms : fakeSubscriptionsReg,
+        }),
+      });
+      mockRequest.request.mockImplementationOnce(subscriptionResponse);
+      mockRequest.request.mockImplementationOnce(subscriptionResponse);
+      const initialUpdateResponse = (index) => (reqOptions) =>
+        reqOptions.url === "subscription_manager_url"
+          ? initialUpdateResponseFactorySms(index)(reqOptions)
+          : initialUpdateResponseFactoryReg(index)(reqOptions);
+      for (let index = 0; index < 2 * n; index++) {
+        mockRequest.request.mockImplementationOnce(initialUpdateResponse(index));
+      }
+      const pollUpdateResponse = (index, options) => (reqOptions) =>
+        reqOptions.url === "subscription_manager_url"
+          ? pollUpdateResponseFactorySms(index, options)(reqOptions)
+          : pollUpdateResponseFactoryReg(index, options)(reqOptions);
+      for (let index = 0; index < 2 * n; index++) {
+        mockRequest.request.mockImplementationOnce(pollUpdateResponse(index, { doFailRequest: index % n === 0 }));
+      }
+
+      let caughtErr;
+      try {
+        await reg.registryUpdateAllDependencies(fakeContextMixed, undefined, []);
+      } catch (err) {
+        caughtErr = err;
+      }
+
+      expect(mockRequest.request).toHaveBeenCalledTimes(2 + n * 4);
+
+      expect(caughtErr).toBeDefined();
+      expect(caughtErr.message).toMatchInlineSnapshot(
+        `"call failed for tenants 00000000-0000-0000-0000-000000000001, 00000000-0000-0000-0000-000000000003"`
+      );
+
+      expect(mockShared.sleep.mock.calls).toMatchSnapshot();
+
+      expect(outputFromLogger(mockLogger.error.mock.calls)).toMatchInlineSnapshot(`
+        "[
+          {
+            "tenantId": "00000000-0000-0000-0000-000000000001",
+            "duration": "0 sec",
+            "error": "server feels ill"
+          },
+          {
+            "tenantId": "00000000-0000-0000-0000-000000000002",
+            "duration": "0 sec",
+            "subscriptionId": "11111111-0000-0000-0000-000000000002",
+            "subscriptionState": "SUBSCRIBED"
+          },
+          {
+            "tenantId": "00000000-0000-0000-0000-000000000003",
+            "duration": "0 sec",
+            "error": "server feels ill"
+          },
+          {
+            "tenantId": "00000000-0000-0000-0000-000000000004",
+            "duration": "0 sec",
+            "jobId": "11111111-0000-0000-0000-000000000004",
+            "jobState": "SUCCEEDED"
+          }
+        ]"
+      `);
+      expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
+        "polling subscription /subscription-manager/v1/subscriptions/11111111-0000-0000-0000-000000000001 with interval 15sec
+        polling subscription /subscription-manager/v1/subscriptions/11111111-0000-0000-0000-000000000002 with interval 15sec
+        polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000003 with interval 15sec
+        polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000004 with interval 15sec"
+      `);
+    });
   });
 });
