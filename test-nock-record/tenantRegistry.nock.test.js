@@ -10,7 +10,7 @@ const { anonymizeNock } = require("./util/anonymizeNock");
 nock.back.fixtures = pathlib.resolve(`${__dirname}/__nock-fixtures__`);
 nock.back.setMode("update");
 
-jest.setTimeout(480000);
+jest.setTimeout(600000); // 10 min
 
 const { Logger } = require("../src/shared/logger");
 const errorLoggerSpy = jest.spyOn(Logger.getInstance(), "error");
