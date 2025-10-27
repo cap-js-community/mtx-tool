@@ -14,10 +14,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - set: added a new configuration option for an app to access subscription manager.
 
 - reg: all `reg` commands will work with either subscription manager or saas registry or both depending on what is
-  configured (fixes #100).
+  configured with `set` (fixes #100).
 
-- reg: new command `--registry-migrate` to migrate tenants from saas registry to subscription manager. this operation
-  is irreversible.
+- reg: new command `--registry-migrate` to migrate one tenant from saas registry to subscription manager. this
+  operation is irreversible and requires that the tenant's subaccount trusts an IAS with origin `sap.custom`.
 
 ### CHANGED
 
