@@ -1,6 +1,356 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`reg tests reg list paging only failed 1`] = `
+exports[`reg tests mixed reg and sms reg list paging only failed 1`] = `
+[
+  [
+    {
+      "auth": {
+        "token": "token",
+      },
+      "headers": {
+        "Accept": "application/json",
+      },
+      "pathname": "/subscription-manager/v1/subscriptions",
+      "query": {
+        "appName": "appNameSms",
+        "page": 1,
+        "size": 200,
+      },
+      "url": "subscription_manager_url",
+    },
+  ],
+  [
+    {
+      "auth": {
+        "token": "token",
+      },
+      "headers": {
+        "Accept": "application/json",
+      },
+      "pathname": "/saas-manager/v1/application/subscriptions",
+      "query": {
+        "appName": "appNameReg",
+        "page": 1,
+        "size": 200,
+      },
+      "url": "saas_registry_url",
+    },
+  ],
+  [
+    {
+      "auth": {
+        "token": "token",
+      },
+      "headers": {
+        "Accept": "application/json",
+      },
+      "pathname": "/subscription-manager/v1/subscriptions",
+      "query": {
+        "appName": "appNameSms",
+        "page": 2,
+        "size": 200,
+      },
+      "url": "subscription_manager_url",
+    },
+  ],
+  [
+    {
+      "auth": {
+        "token": "token",
+      },
+      "headers": {
+        "Accept": "application/json",
+      },
+      "pathname": "/saas-manager/v1/application/subscriptions",
+      "query": {
+        "appName": "appNameReg",
+        "page": 2,
+        "size": 200,
+      },
+      "url": "saas_registry_url",
+    },
+  ],
+]
+`;
+
+exports[`reg tests mixed reg and sms reg list paging only failed 2`] = `
+"#  consumerTenantId                      subscriptionId                        globalAccountId                       subdomain    appName      plan      state          url                                                         
+1  00000000-0000-0000-0000-000000000001  00000000-0000-0000-0000-000100000000  00000000-0000-0000-0000-000000009999  skyfin-0001  afc-dev-sms  standard  UPDATE_FAILED  https://skyfin-0001.dev-afc-sap.cfapps.sap.hana.ondemand.com
+2  00000000-0000-0000-0000-000000000002  00000000-0000-0000-0000-000200000000  00000000-0000-0000-0000-000000009998  skyfin-0002  afc-dev-sms  standard  UPDATE_FAILED  https://skyfin-0002.dev-afc-sap.cfapps.sap.hana.ondemand.com
+3  00000000-0000-0000-0000-000000000009  00000000-0000-0000-0000-000900000000  00000000-0000-0000-0000-000000009991  skyfin-0009  afc-dev-sms  standard  UPDATE_FAILED  https://skyfin-0009.dev-afc-sap.cfapps.sap.hana.ondemand.com
+4  00000000-0000-0000-0000-000000000010  00000000-0000-0000-0000-001000000000  00000000-0000-0000-0000-000000009990  skyfin-0010  afc-dev-sms  standard  UPDATE_FAILED  https://skyfin-0010.dev-afc-sap.cfapps.sap.hana.ondemand.com
+5  00000000-0000-0000-0000-000000000011  00000000-0000-0000-0000-001100000000  00000000-0000-0000-0000-000000009989  skyfin-0011  afc-dev      standard  UPDATE_FAILED  https://skyfin-0011.dev-afc-sap.cfapps.sap.hana.ondemand.com
+6  00000000-0000-0000-0000-000000000012  00000000-0000-0000-0000-001200000000  00000000-0000-0000-0000-000000009988  skyfin-0012  afc-dev      standard  UPDATE_FAILED  https://skyfin-0012.dev-afc-sap.cfapps.sap.hana.ondemand.com
+7  00000000-0000-0000-0000-000000000019  00000000-0000-0000-0000-001900000000  00000000-0000-0000-0000-000000009981  skyfin-0019  afc-dev      standard  UPDATE_FAILED  https://skyfin-0019.dev-afc-sap.cfapps.sap.hana.ondemand.com
+8  00000000-0000-0000-0000-000000000020  00000000-0000-0000-0000-002000000000  00000000-0000-0000-0000-000000009980  skyfin-0020  afc-dev      standard  UPDATE_FAILED  https://skyfin-0020.dev-afc-sap.cfapps.sap.hana.ondemand.com"
+`;
+
+exports[`reg tests mixed reg and sms reg list paging only stale 1`] = `
+[
+  [
+    {
+      "auth": {
+        "token": "token",
+      },
+      "headers": {
+        "Accept": "application/json",
+      },
+      "pathname": "/subscription-manager/v1/subscriptions",
+      "query": {
+        "appName": "appNameSms",
+        "page": 1,
+        "size": 200,
+      },
+      "url": "subscription_manager_url",
+    },
+  ],
+  [
+    {
+      "auth": {
+        "token": "token",
+      },
+      "headers": {
+        "Accept": "application/json",
+      },
+      "pathname": "/saas-manager/v1/application/subscriptions",
+      "query": {
+        "appName": "appNameReg",
+        "page": 1,
+        "size": 200,
+      },
+      "url": "saas_registry_url",
+    },
+  ],
+  [
+    {
+      "auth": {
+        "token": "token",
+      },
+      "headers": {
+        "Accept": "application/json",
+      },
+      "pathname": "/subscription-manager/v1/subscriptions",
+      "query": {
+        "appName": "appNameSms",
+        "page": 2,
+        "size": 200,
+      },
+      "url": "subscription_manager_url",
+    },
+  ],
+  [
+    {
+      "auth": {
+        "token": "token",
+      },
+      "headers": {
+        "Accept": "application/json",
+      },
+      "pathname": "/saas-manager/v1/application/subscriptions",
+      "query": {
+        "appName": "appNameReg",
+        "page": 2,
+        "size": 200,
+      },
+      "url": "saas_registry_url",
+    },
+  ],
+]
+`;
+
+exports[`reg tests mixed reg and sms reg list paging only stale 2`] = `
+"#   consumerTenantId                      subscriptionId                        globalAccountId                       subdomain    appName      plan      state          url                                                         
+1   00000000-0000-0000-0000-000000000001  00000000-0000-0000-0000-000100000000  00000000-0000-0000-0000-000000009999  skyfin-0001  afc-dev-sms  standard  UPDATE_FAILED  https://skyfin-0001.dev-afc-sap.cfapps.sap.hana.ondemand.com
+2   00000000-0000-0000-0000-000000000002  00000000-0000-0000-0000-000200000000  00000000-0000-0000-0000-000000009998  skyfin-0002  afc-dev-sms  standard  UPDATE_FAILED  https://skyfin-0002.dev-afc-sap.cfapps.sap.hana.ondemand.com
+3   00000000-0000-0000-0000-000000000003  00000000-0000-0000-0000-000300000000  00000000-0000-0000-0000-000000009997  skyfin-0003  afc-dev-sms  standard  SUBSCRIBED     https://skyfin-0003.dev-afc-sap.cfapps.sap.hana.ondemand.com
+4   00000000-0000-0000-0000-000000000004  00000000-0000-0000-0000-000400000000  00000000-0000-0000-0000-000000009996  skyfin-0004  afc-dev-sms  standard  SUBSCRIBED     https://skyfin-0004.dev-afc-sap.cfapps.sap.hana.ondemand.com
+5   00000000-0000-0000-0000-000000000005  00000000-0000-0000-0000-000500000000  00000000-0000-0000-0000-000000009995  skyfin-0005  afc-dev-sms  standard  SUBSCRIBED     https://skyfin-0005.dev-afc-sap.cfapps.sap.hana.ondemand.com
+6   00000000-0000-0000-0000-000000000011  00000000-0000-0000-0000-001100000000  00000000-0000-0000-0000-000000009989  skyfin-0011  afc-dev      standard  UPDATE_FAILED  https://skyfin-0011.dev-afc-sap.cfapps.sap.hana.ondemand.com
+7   00000000-0000-0000-0000-000000000012  00000000-0000-0000-0000-001200000000  00000000-0000-0000-0000-000000009988  skyfin-0012  afc-dev      standard  UPDATE_FAILED  https://skyfin-0012.dev-afc-sap.cfapps.sap.hana.ondemand.com
+8   00000000-0000-0000-0000-000000000013  00000000-0000-0000-0000-001300000000  00000000-0000-0000-0000-000000009987  skyfin-0013  afc-dev      standard  SUBSCRIBED     https://skyfin-0013.dev-afc-sap.cfapps.sap.hana.ondemand.com
+9   00000000-0000-0000-0000-000000000014  00000000-0000-0000-0000-001400000000  00000000-0000-0000-0000-000000009986  skyfin-0014  afc-dev      standard  SUBSCRIBED     https://skyfin-0014.dev-afc-sap.cfapps.sap.hana.ondemand.com
+10  00000000-0000-0000-0000-000000000015  00000000-0000-0000-0000-001500000000  00000000-0000-0000-0000-000000009985  skyfin-0015  afc-dev      standard  SUBSCRIBED     https://skyfin-0015.dev-afc-sap.cfapps.sap.hana.ondemand.com"
+`;
+
+exports[`reg tests mixed reg and sms reg list paging only stale and failed 1`] = `
+[
+  [
+    {
+      "auth": {
+        "token": "token",
+      },
+      "headers": {
+        "Accept": "application/json",
+      },
+      "pathname": "/subscription-manager/v1/subscriptions",
+      "query": {
+        "appName": "appNameSms",
+        "page": 1,
+        "size": 200,
+      },
+      "url": "subscription_manager_url",
+    },
+  ],
+  [
+    {
+      "auth": {
+        "token": "token",
+      },
+      "headers": {
+        "Accept": "application/json",
+      },
+      "pathname": "/saas-manager/v1/application/subscriptions",
+      "query": {
+        "appName": "appNameReg",
+        "page": 1,
+        "size": 200,
+      },
+      "url": "saas_registry_url",
+    },
+  ],
+  [
+    {
+      "auth": {
+        "token": "token",
+      },
+      "headers": {
+        "Accept": "application/json",
+      },
+      "pathname": "/subscription-manager/v1/subscriptions",
+      "query": {
+        "appName": "appNameSms",
+        "page": 2,
+        "size": 200,
+      },
+      "url": "subscription_manager_url",
+    },
+  ],
+  [
+    {
+      "auth": {
+        "token": "token",
+      },
+      "headers": {
+        "Accept": "application/json",
+      },
+      "pathname": "/saas-manager/v1/application/subscriptions",
+      "query": {
+        "appName": "appNameReg",
+        "page": 2,
+        "size": 200,
+      },
+      "url": "saas_registry_url",
+    },
+  ],
+]
+`;
+
+exports[`reg tests mixed reg and sms reg list paging only stale and failed 2`] = `
+"#  consumerTenantId                      subscriptionId                        globalAccountId                       subdomain    appName      plan      state          url                                                         
+1  00000000-0000-0000-0000-000000000001  00000000-0000-0000-0000-000100000000  00000000-0000-0000-0000-000000009999  skyfin-0001  afc-dev-sms  standard  UPDATE_FAILED  https://skyfin-0001.dev-afc-sap.cfapps.sap.hana.ondemand.com
+2  00000000-0000-0000-0000-000000000002  00000000-0000-0000-0000-000200000000  00000000-0000-0000-0000-000000009998  skyfin-0002  afc-dev-sms  standard  UPDATE_FAILED  https://skyfin-0002.dev-afc-sap.cfapps.sap.hana.ondemand.com
+3  00000000-0000-0000-0000-000000000011  00000000-0000-0000-0000-001100000000  00000000-0000-0000-0000-000000009989  skyfin-0011  afc-dev      standard  UPDATE_FAILED  https://skyfin-0011.dev-afc-sap.cfapps.sap.hana.ondemand.com
+4  00000000-0000-0000-0000-000000000012  00000000-0000-0000-0000-001200000000  00000000-0000-0000-0000-000000009988  skyfin-0012  afc-dev      standard  UPDATE_FAILED  https://skyfin-0012.dev-afc-sap.cfapps.sap.hana.ondemand.com"
+`;
+
+exports[`reg tests mixed reg and sms reg list paging unfiltered 1`] = `
+[
+  [
+    {
+      "auth": {
+        "token": "token",
+      },
+      "headers": {
+        "Accept": "application/json",
+      },
+      "pathname": "/subscription-manager/v1/subscriptions",
+      "query": {
+        "appName": "appNameSms",
+        "page": 1,
+        "size": 200,
+      },
+      "url": "subscription_manager_url",
+    },
+  ],
+  [
+    {
+      "auth": {
+        "token": "token",
+      },
+      "headers": {
+        "Accept": "application/json",
+      },
+      "pathname": "/saas-manager/v1/application/subscriptions",
+      "query": {
+        "appName": "appNameReg",
+        "page": 1,
+        "size": 200,
+      },
+      "url": "saas_registry_url",
+    },
+  ],
+  [
+    {
+      "auth": {
+        "token": "token",
+      },
+      "headers": {
+        "Accept": "application/json",
+      },
+      "pathname": "/subscription-manager/v1/subscriptions",
+      "query": {
+        "appName": "appNameSms",
+        "page": 2,
+        "size": 200,
+      },
+      "url": "subscription_manager_url",
+    },
+  ],
+  [
+    {
+      "auth": {
+        "token": "token",
+      },
+      "headers": {
+        "Accept": "application/json",
+      },
+      "pathname": "/saas-manager/v1/application/subscriptions",
+      "query": {
+        "appName": "appNameReg",
+        "page": 2,
+        "size": 200,
+      },
+      "url": "saas_registry_url",
+    },
+  ],
+]
+`;
+
+exports[`reg tests mixed reg and sms reg list paging unfiltered 2`] = `
+"#   consumerTenantId                      subscriptionId                        globalAccountId                       subdomain    appName      plan      state          url                                                         
+1   00000000-0000-0000-0000-000000000001  00000000-0000-0000-0000-000100000000  00000000-0000-0000-0000-000000009999  skyfin-0001  afc-dev-sms  standard  UPDATE_FAILED  https://skyfin-0001.dev-afc-sap.cfapps.sap.hana.ondemand.com
+2   00000000-0000-0000-0000-000000000002  00000000-0000-0000-0000-000200000000  00000000-0000-0000-0000-000000009998  skyfin-0002  afc-dev-sms  standard  UPDATE_FAILED  https://skyfin-0002.dev-afc-sap.cfapps.sap.hana.ondemand.com
+3   00000000-0000-0000-0000-000000000003  00000000-0000-0000-0000-000300000000  00000000-0000-0000-0000-000000009997  skyfin-0003  afc-dev-sms  standard  SUBSCRIBED     https://skyfin-0003.dev-afc-sap.cfapps.sap.hana.ondemand.com
+4   00000000-0000-0000-0000-000000000004  00000000-0000-0000-0000-000400000000  00000000-0000-0000-0000-000000009996  skyfin-0004  afc-dev-sms  standard  SUBSCRIBED     https://skyfin-0004.dev-afc-sap.cfapps.sap.hana.ondemand.com
+5   00000000-0000-0000-0000-000000000005  00000000-0000-0000-0000-000500000000  00000000-0000-0000-0000-000000009995  skyfin-0005  afc-dev-sms  standard  SUBSCRIBED     https://skyfin-0005.dev-afc-sap.cfapps.sap.hana.ondemand.com
+6   00000000-0000-0000-0000-000000000006  00000000-0000-0000-0000-000600000000  00000000-0000-0000-0000-000000009994  skyfin-0006  afc-dev-sms  standard  SUBSCRIBED     https://skyfin-0006.dev-afc-sap.cfapps.sap.hana.ondemand.com
+7   00000000-0000-0000-0000-000000000007  00000000-0000-0000-0000-000700000000  00000000-0000-0000-0000-000000009993  skyfin-0007  afc-dev-sms  standard  SUBSCRIBED     https://skyfin-0007.dev-afc-sap.cfapps.sap.hana.ondemand.com
+8   00000000-0000-0000-0000-000000000008  00000000-0000-0000-0000-000800000000  00000000-0000-0000-0000-000000009992  skyfin-0008  afc-dev-sms  standard  SUBSCRIBED     https://skyfin-0008.dev-afc-sap.cfapps.sap.hana.ondemand.com
+9   00000000-0000-0000-0000-000000000009  00000000-0000-0000-0000-000900000000  00000000-0000-0000-0000-000000009991  skyfin-0009  afc-dev-sms  standard  UPDATE_FAILED  https://skyfin-0009.dev-afc-sap.cfapps.sap.hana.ondemand.com
+10  00000000-0000-0000-0000-000000000010  00000000-0000-0000-0000-001000000000  00000000-0000-0000-0000-000000009990  skyfin-0010  afc-dev-sms  standard  UPDATE_FAILED  https://skyfin-0010.dev-afc-sap.cfapps.sap.hana.ondemand.com
+11  00000000-0000-0000-0000-000000000011  00000000-0000-0000-0000-001100000000  00000000-0000-0000-0000-000000009989  skyfin-0011  afc-dev      standard  UPDATE_FAILED  https://skyfin-0011.dev-afc-sap.cfapps.sap.hana.ondemand.com
+12  00000000-0000-0000-0000-000000000012  00000000-0000-0000-0000-001200000000  00000000-0000-0000-0000-000000009988  skyfin-0012  afc-dev      standard  UPDATE_FAILED  https://skyfin-0012.dev-afc-sap.cfapps.sap.hana.ondemand.com
+13  00000000-0000-0000-0000-000000000013  00000000-0000-0000-0000-001300000000  00000000-0000-0000-0000-000000009987  skyfin-0013  afc-dev      standard  SUBSCRIBED     https://skyfin-0013.dev-afc-sap.cfapps.sap.hana.ondemand.com
+14  00000000-0000-0000-0000-000000000014  00000000-0000-0000-0000-001400000000  00000000-0000-0000-0000-000000009986  skyfin-0014  afc-dev      standard  SUBSCRIBED     https://skyfin-0014.dev-afc-sap.cfapps.sap.hana.ondemand.com
+15  00000000-0000-0000-0000-000000000015  00000000-0000-0000-0000-001500000000  00000000-0000-0000-0000-000000009985  skyfin-0015  afc-dev      standard  SUBSCRIBED     https://skyfin-0015.dev-afc-sap.cfapps.sap.hana.ondemand.com
+16  00000000-0000-0000-0000-000000000016  00000000-0000-0000-0000-001600000000  00000000-0000-0000-0000-000000009984  skyfin-0016  afc-dev      standard  SUBSCRIBED     https://skyfin-0016.dev-afc-sap.cfapps.sap.hana.ondemand.com
+17  00000000-0000-0000-0000-000000000017  00000000-0000-0000-0000-001700000000  00000000-0000-0000-0000-000000009983  skyfin-0017  afc-dev      standard  SUBSCRIBED     https://skyfin-0017.dev-afc-sap.cfapps.sap.hana.ondemand.com
+18  00000000-0000-0000-0000-000000000018  00000000-0000-0000-0000-001800000000  00000000-0000-0000-0000-000000009982  skyfin-0018  afc-dev      standard  SUBSCRIBED     https://skyfin-0018.dev-afc-sap.cfapps.sap.hana.ondemand.com
+19  00000000-0000-0000-0000-000000000019  00000000-0000-0000-0000-001900000000  00000000-0000-0000-0000-000000009981  skyfin-0019  afc-dev      standard  UPDATE_FAILED  https://skyfin-0019.dev-afc-sap.cfapps.sap.hana.ondemand.com
+20  00000000-0000-0000-0000-000000000020  00000000-0000-0000-0000-002000000000  00000000-0000-0000-0000-000000009980  skyfin-0020  afc-dev      standard  UPDATE_FAILED  https://skyfin-0020.dev-afc-sap.cfapps.sap.hana.ondemand.com"
+`;
+
+exports[`reg tests only reg reg list paging only failed 1`] = `
 [
   [
     {
@@ -39,15 +389,15 @@ exports[`reg tests reg list paging only failed 1`] = `
 ]
 `;
 
-exports[`reg tests reg list paging only failed 2`] = `
+exports[`reg tests only reg reg list paging only failed 2`] = `
 "#  consumerTenantId                      subscriptionId                        globalAccountId                       subdomain    appName  plan      state          url                                                         
-1  00000000-0000-0000-0000-000000000001  00000001-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009999  skyfin-0001  afc-dev  standard  UPDATE_FAILED  https://skyfin-0001.dev-afc-sap.cfapps.sap.hana.ondemand.com
-2  00000000-0000-0000-0000-000000000002  00000002-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009998  skyfin-0002  afc-dev  standard  UPDATE_FAILED  https://skyfin-0002.dev-afc-sap.cfapps.sap.hana.ondemand.com
-3  00000000-0000-0000-0000-000000000019  00000019-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009981  skyfin-0019  afc-dev  standard  UPDATE_FAILED  https://skyfin-0019.dev-afc-sap.cfapps.sap.hana.ondemand.com
-4  00000000-0000-0000-0000-000000000020  00000020-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009980  skyfin-0020  afc-dev  standard  UPDATE_FAILED  https://skyfin-0020.dev-afc-sap.cfapps.sap.hana.ondemand.com"
+1  00000000-0000-0000-0000-000000000001  00000000-0000-0000-0000-000100000000  00000000-0000-0000-0000-000000009999  skyfin-0001  afc-dev  standard  UPDATE_FAILED  https://skyfin-0001.dev-afc-sap.cfapps.sap.hana.ondemand.com
+2  00000000-0000-0000-0000-000000000002  00000000-0000-0000-0000-000200000000  00000000-0000-0000-0000-000000009998  skyfin-0002  afc-dev  standard  UPDATE_FAILED  https://skyfin-0002.dev-afc-sap.cfapps.sap.hana.ondemand.com
+3  00000000-0000-0000-0000-000000000009  00000000-0000-0000-0000-000900000000  00000000-0000-0000-0000-000000009991  skyfin-0009  afc-dev  standard  UPDATE_FAILED  https://skyfin-0009.dev-afc-sap.cfapps.sap.hana.ondemand.com
+4  00000000-0000-0000-0000-000000000010  00000000-0000-0000-0000-001000000000  00000000-0000-0000-0000-000000009990  skyfin-0010  afc-dev  standard  UPDATE_FAILED  https://skyfin-0010.dev-afc-sap.cfapps.sap.hana.ondemand.com"
 `;
 
-exports[`reg tests reg list paging only stale 1`] = `
+exports[`reg tests only reg reg list paging only stale 1`] = `
 [
   [
     {
@@ -86,70 +436,16 @@ exports[`reg tests reg list paging only stale 1`] = `
 ]
 `;
 
-exports[`reg tests reg list paging only stale 2`] = `
-"#   consumerTenantId                      subscriptionId                        globalAccountId                       subdomain    appName  plan      state          url                                                         
-1   00000000-0000-0000-0000-000000000001  00000001-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009999  skyfin-0001  afc-dev  standard  UPDATE_FAILED  https://skyfin-0001.dev-afc-sap.cfapps.sap.hana.ondemand.com
-2   00000000-0000-0000-0000-000000000002  00000002-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009998  skyfin-0002  afc-dev  standard  UPDATE_FAILED  https://skyfin-0002.dev-afc-sap.cfapps.sap.hana.ondemand.com
-3   00000000-0000-0000-0000-000000000003  00000003-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009997  skyfin-0003  afc-dev  standard  SUBSCRIBED     https://skyfin-0003.dev-afc-sap.cfapps.sap.hana.ondemand.com
-4   00000000-0000-0000-0000-000000000004  00000004-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009996  skyfin-0004  afc-dev  standard  SUBSCRIBED     https://skyfin-0004.dev-afc-sap.cfapps.sap.hana.ondemand.com
-5   00000000-0000-0000-0000-000000000005  00000005-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009995  skyfin-0005  afc-dev  standard  SUBSCRIBED     https://skyfin-0005.dev-afc-sap.cfapps.sap.hana.ondemand.com
-6   00000000-0000-0000-0000-000000000006  00000006-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009994  skyfin-0006  afc-dev  standard  SUBSCRIBED     https://skyfin-0006.dev-afc-sap.cfapps.sap.hana.ondemand.com
-7   00000000-0000-0000-0000-000000000007  00000007-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009993  skyfin-0007  afc-dev  standard  SUBSCRIBED     https://skyfin-0007.dev-afc-sap.cfapps.sap.hana.ondemand.com
-8   00000000-0000-0000-0000-000000000008  00000008-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009992  skyfin-0008  afc-dev  standard  SUBSCRIBED     https://skyfin-0008.dev-afc-sap.cfapps.sap.hana.ondemand.com
-9   00000000-0000-0000-0000-000000000009  00000009-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009991  skyfin-0009  afc-dev  standard  SUBSCRIBED     https://skyfin-0009.dev-afc-sap.cfapps.sap.hana.ondemand.com
-10  00000000-0000-0000-0000-000000000010  00000010-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009990  skyfin-0010  afc-dev  standard  SUBSCRIBED     https://skyfin-0010.dev-afc-sap.cfapps.sap.hana.ondemand.com
-11  00000000-0000-0000-0000-000000000011  00000011-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009989  skyfin-0011  afc-dev  standard  SUBSCRIBED     https://skyfin-0011.dev-afc-sap.cfapps.sap.hana.ondemand.com
-12  00000000-0000-0000-0000-000000000012  00000012-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009988  skyfin-0012  afc-dev  standard  SUBSCRIBED     https://skyfin-0012.dev-afc-sap.cfapps.sap.hana.ondemand.com
-13  00000000-0000-0000-0000-000000000013  00000013-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009987  skyfin-0013  afc-dev  standard  SUBSCRIBED     https://skyfin-0013.dev-afc-sap.cfapps.sap.hana.ondemand.com
-14  00000000-0000-0000-0000-000000000014  00000014-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009986  skyfin-0014  afc-dev  standard  SUBSCRIBED     https://skyfin-0014.dev-afc-sap.cfapps.sap.hana.ondemand.com"
-`;
-
-exports[`reg tests reg list paging only stale and failed 1`] = `
-[
-  [
-    {
-      "auth": {
-        "token": "token",
-      },
-      "headers": {
-        "Accept": "application/json",
-      },
-      "pathname": "/saas-manager/v1/application/subscriptions",
-      "query": {
-        "appName": "appNameReg",
-        "page": 1,
-        "size": 200,
-      },
-      "url": "saas_registry_url",
-    },
-  ],
-  [
-    {
-      "auth": {
-        "token": "token",
-      },
-      "headers": {
-        "Accept": "application/json",
-      },
-      "pathname": "/saas-manager/v1/application/subscriptions",
-      "query": {
-        "appName": "appNameReg",
-        "page": 2,
-        "size": 200,
-      },
-      "url": "saas_registry_url",
-    },
-  ],
-]
-`;
-
-exports[`reg tests reg list paging only stale and failed 2`] = `
+exports[`reg tests only reg reg list paging only stale 2`] = `
 "#  consumerTenantId                      subscriptionId                        globalAccountId                       subdomain    appName  plan      state          url                                                         
-1  00000000-0000-0000-0000-000000000001  00000001-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009999  skyfin-0001  afc-dev  standard  UPDATE_FAILED  https://skyfin-0001.dev-afc-sap.cfapps.sap.hana.ondemand.com
-2  00000000-0000-0000-0000-000000000002  00000002-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009998  skyfin-0002  afc-dev  standard  UPDATE_FAILED  https://skyfin-0002.dev-afc-sap.cfapps.sap.hana.ondemand.com"
+1  00000000-0000-0000-0000-000000000001  00000000-0000-0000-0000-000100000000  00000000-0000-0000-0000-000000009999  skyfin-0001  afc-dev  standard  UPDATE_FAILED  https://skyfin-0001.dev-afc-sap.cfapps.sap.hana.ondemand.com
+2  00000000-0000-0000-0000-000000000002  00000000-0000-0000-0000-000200000000  00000000-0000-0000-0000-000000009998  skyfin-0002  afc-dev  standard  UPDATE_FAILED  https://skyfin-0002.dev-afc-sap.cfapps.sap.hana.ondemand.com
+3  00000000-0000-0000-0000-000000000003  00000000-0000-0000-0000-000300000000  00000000-0000-0000-0000-000000009997  skyfin-0003  afc-dev  standard  SUBSCRIBED     https://skyfin-0003.dev-afc-sap.cfapps.sap.hana.ondemand.com
+4  00000000-0000-0000-0000-000000000004  00000000-0000-0000-0000-000400000000  00000000-0000-0000-0000-000000009996  skyfin-0004  afc-dev  standard  SUBSCRIBED     https://skyfin-0004.dev-afc-sap.cfapps.sap.hana.ondemand.com
+5  00000000-0000-0000-0000-000000000005  00000000-0000-0000-0000-000500000000  00000000-0000-0000-0000-000000009995  skyfin-0005  afc-dev  standard  SUBSCRIBED     https://skyfin-0005.dev-afc-sap.cfapps.sap.hana.ondemand.com"
 `;
 
-exports[`reg tests reg list paging unfiltered 1`] = `
+exports[`reg tests only reg reg list paging only stale and failed 1`] = `
 [
   [
     {
@@ -188,31 +484,66 @@ exports[`reg tests reg list paging unfiltered 1`] = `
 ]
 `;
 
-exports[`reg tests reg list paging unfiltered 2`] = `
+exports[`reg tests only reg reg list paging only stale and failed 2`] = `
+"#  consumerTenantId                      subscriptionId                        globalAccountId                       subdomain    appName  plan      state          url                                                         
+1  00000000-0000-0000-0000-000000000001  00000000-0000-0000-0000-000100000000  00000000-0000-0000-0000-000000009999  skyfin-0001  afc-dev  standard  UPDATE_FAILED  https://skyfin-0001.dev-afc-sap.cfapps.sap.hana.ondemand.com
+2  00000000-0000-0000-0000-000000000002  00000000-0000-0000-0000-000200000000  00000000-0000-0000-0000-000000009998  skyfin-0002  afc-dev  standard  UPDATE_FAILED  https://skyfin-0002.dev-afc-sap.cfapps.sap.hana.ondemand.com"
+`;
+
+exports[`reg tests only reg reg list paging unfiltered 1`] = `
+[
+  [
+    {
+      "auth": {
+        "token": "token",
+      },
+      "headers": {
+        "Accept": "application/json",
+      },
+      "pathname": "/saas-manager/v1/application/subscriptions",
+      "query": {
+        "appName": "appNameReg",
+        "page": 1,
+        "size": 200,
+      },
+      "url": "saas_registry_url",
+    },
+  ],
+  [
+    {
+      "auth": {
+        "token": "token",
+      },
+      "headers": {
+        "Accept": "application/json",
+      },
+      "pathname": "/saas-manager/v1/application/subscriptions",
+      "query": {
+        "appName": "appNameReg",
+        "page": 2,
+        "size": 200,
+      },
+      "url": "saas_registry_url",
+    },
+  ],
+]
+`;
+
+exports[`reg tests only reg reg list paging unfiltered 2`] = `
 "#   consumerTenantId                      subscriptionId                        globalAccountId                       subdomain    appName  plan      state          url                                                         
-1   00000000-0000-0000-0000-000000000001  00000001-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009999  skyfin-0001  afc-dev  standard  UPDATE_FAILED  https://skyfin-0001.dev-afc-sap.cfapps.sap.hana.ondemand.com
-2   00000000-0000-0000-0000-000000000002  00000002-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009998  skyfin-0002  afc-dev  standard  UPDATE_FAILED  https://skyfin-0002.dev-afc-sap.cfapps.sap.hana.ondemand.com
-3   00000000-0000-0000-0000-000000000003  00000003-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009997  skyfin-0003  afc-dev  standard  SUBSCRIBED     https://skyfin-0003.dev-afc-sap.cfapps.sap.hana.ondemand.com
-4   00000000-0000-0000-0000-000000000004  00000004-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009996  skyfin-0004  afc-dev  standard  SUBSCRIBED     https://skyfin-0004.dev-afc-sap.cfapps.sap.hana.ondemand.com
-5   00000000-0000-0000-0000-000000000005  00000005-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009995  skyfin-0005  afc-dev  standard  SUBSCRIBED     https://skyfin-0005.dev-afc-sap.cfapps.sap.hana.ondemand.com
-6   00000000-0000-0000-0000-000000000006  00000006-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009994  skyfin-0006  afc-dev  standard  SUBSCRIBED     https://skyfin-0006.dev-afc-sap.cfapps.sap.hana.ondemand.com
-7   00000000-0000-0000-0000-000000000007  00000007-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009993  skyfin-0007  afc-dev  standard  SUBSCRIBED     https://skyfin-0007.dev-afc-sap.cfapps.sap.hana.ondemand.com
-8   00000000-0000-0000-0000-000000000008  00000008-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009992  skyfin-0008  afc-dev  standard  SUBSCRIBED     https://skyfin-0008.dev-afc-sap.cfapps.sap.hana.ondemand.com
-9   00000000-0000-0000-0000-000000000009  00000009-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009991  skyfin-0009  afc-dev  standard  SUBSCRIBED     https://skyfin-0009.dev-afc-sap.cfapps.sap.hana.ondemand.com
-10  00000000-0000-0000-0000-000000000010  00000010-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009990  skyfin-0010  afc-dev  standard  SUBSCRIBED     https://skyfin-0010.dev-afc-sap.cfapps.sap.hana.ondemand.com
-11  00000000-0000-0000-0000-000000000011  00000011-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009989  skyfin-0011  afc-dev  standard  SUBSCRIBED     https://skyfin-0011.dev-afc-sap.cfapps.sap.hana.ondemand.com
-12  00000000-0000-0000-0000-000000000012  00000012-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009988  skyfin-0012  afc-dev  standard  SUBSCRIBED     https://skyfin-0012.dev-afc-sap.cfapps.sap.hana.ondemand.com
-13  00000000-0000-0000-0000-000000000013  00000013-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009987  skyfin-0013  afc-dev  standard  SUBSCRIBED     https://skyfin-0013.dev-afc-sap.cfapps.sap.hana.ondemand.com
-14  00000000-0000-0000-0000-000000000014  00000014-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009986  skyfin-0014  afc-dev  standard  SUBSCRIBED     https://skyfin-0014.dev-afc-sap.cfapps.sap.hana.ondemand.com
-15  00000000-0000-0000-0000-000000000015  00000015-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009985  skyfin-0015  afc-dev  standard  SUBSCRIBED     https://skyfin-0015.dev-afc-sap.cfapps.sap.hana.ondemand.com
-16  00000000-0000-0000-0000-000000000016  00000016-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009984  skyfin-0016  afc-dev  standard  SUBSCRIBED     https://skyfin-0016.dev-afc-sap.cfapps.sap.hana.ondemand.com
-17  00000000-0000-0000-0000-000000000017  00000017-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009983  skyfin-0017  afc-dev  standard  SUBSCRIBED     https://skyfin-0017.dev-afc-sap.cfapps.sap.hana.ondemand.com
-18  00000000-0000-0000-0000-000000000018  00000018-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009982  skyfin-0018  afc-dev  standard  SUBSCRIBED     https://skyfin-0018.dev-afc-sap.cfapps.sap.hana.ondemand.com
-19  00000000-0000-0000-0000-000000000019  00000019-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009981  skyfin-0019  afc-dev  standard  UPDATE_FAILED  https://skyfin-0019.dev-afc-sap.cfapps.sap.hana.ondemand.com
-20  00000000-0000-0000-0000-000000000020  00000020-0000-0000-0000-000000000000  00000000-0000-0000-0000-000000009980  skyfin-0020  afc-dev  standard  UPDATE_FAILED  https://skyfin-0020.dev-afc-sap.cfapps.sap.hana.ondemand.com"
+1   00000000-0000-0000-0000-000000000001  00000000-0000-0000-0000-000100000000  00000000-0000-0000-0000-000000009999  skyfin-0001  afc-dev  standard  UPDATE_FAILED  https://skyfin-0001.dev-afc-sap.cfapps.sap.hana.ondemand.com
+2   00000000-0000-0000-0000-000000000002  00000000-0000-0000-0000-000200000000  00000000-0000-0000-0000-000000009998  skyfin-0002  afc-dev  standard  UPDATE_FAILED  https://skyfin-0002.dev-afc-sap.cfapps.sap.hana.ondemand.com
+3   00000000-0000-0000-0000-000000000003  00000000-0000-0000-0000-000300000000  00000000-0000-0000-0000-000000009997  skyfin-0003  afc-dev  standard  SUBSCRIBED     https://skyfin-0003.dev-afc-sap.cfapps.sap.hana.ondemand.com
+4   00000000-0000-0000-0000-000000000004  00000000-0000-0000-0000-000400000000  00000000-0000-0000-0000-000000009996  skyfin-0004  afc-dev  standard  SUBSCRIBED     https://skyfin-0004.dev-afc-sap.cfapps.sap.hana.ondemand.com
+5   00000000-0000-0000-0000-000000000005  00000000-0000-0000-0000-000500000000  00000000-0000-0000-0000-000000009995  skyfin-0005  afc-dev  standard  SUBSCRIBED     https://skyfin-0005.dev-afc-sap.cfapps.sap.hana.ondemand.com
+6   00000000-0000-0000-0000-000000000006  00000000-0000-0000-0000-000600000000  00000000-0000-0000-0000-000000009994  skyfin-0006  afc-dev  standard  SUBSCRIBED     https://skyfin-0006.dev-afc-sap.cfapps.sap.hana.ondemand.com
+7   00000000-0000-0000-0000-000000000007  00000000-0000-0000-0000-000700000000  00000000-0000-0000-0000-000000009993  skyfin-0007  afc-dev  standard  SUBSCRIBED     https://skyfin-0007.dev-afc-sap.cfapps.sap.hana.ondemand.com
+8   00000000-0000-0000-0000-000000000008  00000000-0000-0000-0000-000800000000  00000000-0000-0000-0000-000000009992  skyfin-0008  afc-dev  standard  SUBSCRIBED     https://skyfin-0008.dev-afc-sap.cfapps.sap.hana.ondemand.com
+9   00000000-0000-0000-0000-000000000009  00000000-0000-0000-0000-000900000000  00000000-0000-0000-0000-000000009991  skyfin-0009  afc-dev  standard  UPDATE_FAILED  https://skyfin-0009.dev-afc-sap.cfapps.sap.hana.ondemand.com
+10  00000000-0000-0000-0000-000000000010  00000000-0000-0000-0000-001000000000  00000000-0000-0000-0000-000000009990  skyfin-0010  afc-dev  standard  UPDATE_FAILED  https://skyfin-0010.dev-afc-sap.cfapps.sap.hana.ondemand.com"
 `;
 
-exports[`reg tests reg update with request failed 2`] = `
+exports[`reg tests only reg reg update with request failed 2`] = `
 [
   [
     15000,
@@ -229,7 +560,7 @@ exports[`reg tests reg update with request failed 2`] = `
 ]
 `;
 
-exports[`reg tests reg update with state failed 2`] = `
+exports[`reg tests only reg reg update with state failed 2`] = `
 [
   [
     15000,
@@ -246,7 +577,7 @@ exports[`reg tests reg update with state failed 2`] = `
 ]
 `;
 
-exports[`reg tests reg update without failure 2`] = `
+exports[`reg tests only reg reg update without failure 2`] = `
 [
   [
     15000,

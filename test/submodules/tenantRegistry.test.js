@@ -57,47 +57,21 @@ const fakeContextMixed = {
   getCachedUaaTokenFromCredentials: () => "token",
 };
 
-const fakeRegSubscriptionFactory = (index, { doFail, doRecent } = {}) => {
-  const paddedCount = String(index).padStart(4, "0");
-  const paddedAltCount = String(10000 - index).padStart(4, "0");
-  const tenantId = `00000000-0000-0000-0000-00000000${paddedCount}`;
-  const accountId = `00000000-0000-0000-0000-00000000${paddedAltCount}`;
-  const subscriptionId = `0000${paddedCount}-0000-0000-0000-000000000000`;
-  const name = `skyfin-${paddedCount}`;
-
-  return {
-    url: `https://${name}.dev-afc-sap.cfapps.sap.hana.ondemand.com`,
-    subdomain: name,
-    appName: "afc-dev",
-    commercialAppName: "afc-dev",
-    consumerTenantId: tenantId,
-    globalAccountId: accountId,
-    subaccountId: tenantId,
-    subscriptionGUID: subscriptionId,
-    code: "standard",
-    amount: 1,
-    state: doFail ? "UPDATE_FAILED" : "SUBSCRIBED",
-    createdOn: "Fri Mar 19 09:51:40 GMT 2021",
-    changedOn: doRecent ? new Date().toUTCString() : "Wed Apr 03 14:49:51 GMT 2024",
-    internalSubscriptionId: "afc-dev!t5874_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_afc-dev!t5874",
-    authProviderState: "SUBSCRIBED",
-    callbackState: "UPDATE_CALLBACK_SUCCEEDED",
-  };
-};
-
 const fakeSmsSubscriptionFactory = (index, { doFail, doRecent } = {}) => {
   const paddedCount = String(index).padStart(4, "0");
   const paddedAltCount = String(10000 - index).padStart(4, "0");
   const tenantId = `00000000-0000-0000-0000-00000000${paddedCount}`;
   const accountId = `00000000-0000-0000-0000-00000000${paddedAltCount}`;
-  const subscriptionId = `0000${paddedCount}-0000-0000-0000-000000000000`;
+  const subscriptionId = `00000000-0000-0000-0000-${paddedCount}00000000`;
   const name = `skyfin-${paddedCount}`;
+  const state = doFail ? "UPDATE_FAILED" : "SUBSCRIBED";
+  const changedOn = doRecent ? new Date().toUTCString() : "Wed Apr 03 14:49:51 GMT 2024";
 
   return {
     subscriptionId: "00000000-0000-0000-0000-000000000000",
     subscriptionGUID: subscriptionId,
     subscriptionUrl: `https://${name}.dev-afc-sap.cfapps.sap.hana.ondemand.com`,
-    subscriptionState: "SUBSCRIBED",
+    subscriptionState: state,
     subscriptionPlanName: "standard",
     subscriber: {
       zoneId: tenantId,
@@ -120,15 +94,40 @@ const fakeSmsSubscriptionFactory = (index, { doFail, doRecent } = {}) => {
     callbackState: "UPDATE_CALLBACK_SUCCEEDED",
     createdDate: "Fri Sep 19 09:15:52 UTC 2025",
     createdBy: "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-    modifiedDate: "Fri Oct 24 13:38:39 UTC 2025",
+    modifiedDate: changedOn,
     modifiedBy: "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
   };
 };
 
-const fakeMixedSubscriptionFactory = (index, { doFail, doRecent } = {}) =>
-  index % 2 === 0
-    ? fakeRegSubscriptionFactory(index, { doFail, doRecent })
-    : fakeSmsSubscriptionFactory(index, { doFail, doRecent });
+const fakeRegSubscriptionFactory = (index, { doFail, doRecent } = {}) => {
+  const paddedCount = String(index).padStart(4, "0");
+  const paddedAltCount = String(10000 - index).padStart(4, "0");
+  const tenantId = `00000000-0000-0000-0000-00000000${paddedCount}`;
+  const accountId = `00000000-0000-0000-0000-00000000${paddedAltCount}`;
+  const subscriptionId = `00000000-0000-0000-0000-${paddedCount}00000000`;
+  const name = `skyfin-${paddedCount}`;
+  const state = doFail ? "UPDATE_FAILED" : "SUBSCRIBED";
+  const changedOn = doRecent ? new Date().toUTCString() : "Wed Apr 03 14:49:51 GMT 2024";
+
+  return {
+    url: `https://${name}.dev-afc-sap.cfapps.sap.hana.ondemand.com`,
+    subdomain: name,
+    appName: "afc-dev",
+    commercialAppName: "afc-dev",
+    consumerTenantId: tenantId,
+    globalAccountId: accountId,
+    subaccountId: tenantId,
+    subscriptionGUID: subscriptionId,
+    code: "standard",
+    amount: 1,
+    state,
+    createdOn: "Fri Mar 19 09:51:40 GMT 2021",
+    changedOn,
+    internalSubscriptionId: "afc-dev!t5874_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_afc-dev!t5874",
+    authProviderState: "SUBSCRIBED",
+    callbackState: "UPDATE_CALLBACK_SUCCEEDED",
+  };
+};
 
 const fakeRegUpdateImplementationFactory = () => (options) => {
   const match = /\/saas-manager\/v1\/application\/tenants\/(.*)\/subscriptions/.exec(options.pathname);
@@ -172,14 +171,14 @@ describe("reg tests", () => {
       ["only failed", false, true],
       ["only stale and failed", true, true],
     ])("reg list paging %s", async (_, doOnlyStale, doOnlyFail) => {
-      const fakeSubscriptions = Array.from({ length: 20 }).map((x, i) =>
-        fakeRegSubscriptionFactory(i + 1, { doFail: i + 1 <= 2 || i + 1 >= 19, doRecent: i + 1 >= 15 })
+      const fakeSubscriptions = Array.from({ length: 10 }).map((x, i) =>
+        fakeRegSubscriptionFactory(i + 1, { doFail: i + 1 <= 2 || i + 1 >= 9, doRecent: i + 1 >= 6 })
       );
       mockRequest.request.mockReturnValueOnce({
-        json: () => ({ subscriptions: fakeSubscriptions.slice(0, 10), morePages: true }),
+        json: () => ({ subscriptions: fakeSubscriptions.slice(0, 5), morePages: true }),
       });
       mockRequest.request.mockReturnValueOnce({
-        json: () => ({ subscriptions: fakeSubscriptions.slice(10) }),
+        json: () => ({ subscriptions: fakeSubscriptions.slice(5) }),
       });
 
       const regListOutput = await reg.registryListSubscriptions(
@@ -387,11 +386,11 @@ describe("reg tests", () => {
       ["only failed", false, true],
       ["only stale and failed", true, true],
     ])("reg list paging %s", async (_, doOnlyStale, doOnlyFail) => {
-      const fakeRegSubscriptions = Array.from({ length: 10 }).map((x, i) =>
-        fakeRegSubscriptionFactory(i + 1, { doFail: i + 1 <= 2 || i + 1 >= 9, doRecent: i + 1 >= 5 })
-      );
       const fakeSmsSubscriptions = Array.from({ length: 10 }).map((x, i) =>
-        fakeSmsSubscriptionFactory(i + 1, { doFail: i + 1 <= 2 || i + 1 >= 9, doRecent: i + 1 >= 5 })
+        fakeSmsSubscriptionFactory(i + 1, { doFail: i + 1 <= 2 || i + 1 >= 9, doRecent: i + 1 >= 6 })
+      );
+      const fakeRegSubscriptions = Array.from({ length: 10 }).map((x, i) =>
+        fakeRegSubscriptionFactory(10 + i + 1, { doFail: i + 1 <= 2 || i + 1 >= 9, doRecent: i + 1 >= 6 })
       );
       const firstResponse = (reqOptions) => ({
         json: () => ({
