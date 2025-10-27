@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## v0.10.3 - tbd
 
+### CHANGED
+
+- [experimental] core: requests that fail and get a retry, will be logged with a request id `[req-xx]` for easier
+  correlation.
+- [experimental] core: extended list of correlation headers to: `X-CorrelationId`, `X-Correlation-Id`, `X-Request-Id`,
+  `X-Vcap-Request-Id`.
+
 ### ADDED
 
 - set: added a new configuration option for an app to access subscription manager.
@@ -18,13 +25,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - reg: new command `--registry-migrate` to migrate one tenant from saas registry to subscription manager. this
   operation is irreversible and requires that the tenant's subaccount trusts an IAS with origin `sap.custom`.
-
-### CHANGED
-
-- [experimental] core: requests that fail and get a retry, will be logged with a request id `[req-xx]` for easier
-  correlation.
-- [experimental] core: extended list of correlation headers to: `X-CorrelationId`, `X-Correlation-Id`, `X-Request-Id`,
-  `X-Vcap-Request-Id`.
 
 ### FIXED
 
