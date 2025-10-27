@@ -56,4 +56,18 @@ describe("context tests", () => {
       `[Error: no vcap service information in environment, check cf user permissions]`
     );
   });
+
+  test("has reg/sms info", async () => {
+    mockStatic.spawnAsync.mockReturnValueOnce(["oauth-token"]);
+    mockStatic.tryReadJsonSync.mockReturnValueOnce(mockCfConfig);
+    mockStatic.tryAccessSync.mockReturnValueOnce(true);
+    mockStatic.tryReadJsonSync.mockReturnValueOnce({ regAppName: "reg-app" });
+    mockRequest.mockReturnValueOnce({ json: () => mockCfApps });
+    mockRequest.mockReturnValueOnce({ json: () => mockCfEnvNoServices });
+
+    const context = await newContext();
+
+    expect(context.hasRegInfo).toBe(true);
+    expect(context.hasSmsInfo).toBe(false);
+  });
 });

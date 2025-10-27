@@ -10,7 +10,7 @@ const { anonymizeNock } = require("./util/anonymizeNock");
 nock.back.fixtures = pathlib.resolve(`${__dirname}/__nock-fixtures__`);
 nock.back.setMode("update");
 
-jest.setTimeout(480000);
+jest.setTimeout(600000); // 10 min
 
 const { Logger } = require("../src/shared/logger");
 const errorLoggerSpy = jest.spyOn(Logger.getInstance(), "error");
@@ -59,30 +59,30 @@ describe("reg tests", () => {
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
 
-  test("reg update tenant", async () => {
-    const { nockDone } = await nock.back("reg-update-tenant.json", { afterRecord: anonymizeNock });
+  test("reg update dependencies tenant", async () => {
+    const { nockDone } = await nock.back("reg-update-deps-tenant.json", { afterRecord: anonymizeNock });
     await reg.registryUpdateDependencies(await freshContext(), [testTenantId], []);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
 
-  test("reg update tenant all", async () => {
-    const { nockDone } = await nock.back("reg-update-tenant-all.json", { afterRecord: anonymizeNock });
+  test("reg update dependencies all", async () => {
+    const { nockDone } = await nock.back("reg-update-deps-all.json", { afterRecord: anonymizeNock });
     await reg.registryUpdateAllDependencies(await freshContext(), undefined, []);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
 
-  test("reg update tenant application url all", async () => {
-    const { nockDone } = await nock.back("reg-update-tenant-app-url-all.json", { afterRecord: anonymizeNock });
-    await reg.registryUpdateApplicationURL(await freshContext(), [], []);
+  test("reg update url tenant", async () => {
+    const { nockDone } = await nock.back("reg-update-url-tenant.json", { afterRecord: anonymizeNock });
+    await reg.registryUpdateApplicationURL(await freshContext(), [testTenantId], []);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
 
-  test("reg update tenant application url with tenant", async () => {
-    const { nockDone } = await nock.back("reg-update-tenant-app-url.json", { afterRecord: anonymizeNock });
-    await reg.registryUpdateApplicationURL(await freshContext(), [testTenantId], []);
+  test("reg update url all", async () => {
+    const { nockDone } = await nock.back("reg-update-url-all.json", { afterRecord: anonymizeNock });
+    await reg.registryUpdateApplicationURL(await freshContext(), [], []);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });

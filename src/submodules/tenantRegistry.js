@@ -1,9 +1,11 @@
 /**
- * This is a wrapper for APIs of the saas-registry
+ * APIs of the saas-registry
  * - https://help.sap.com/viewer/65de2977205c403bbc107264b8eccf4b/Cloud/en-US/ed08c7dcb35d4082936c045e7d7b3ecd.html
- * - https://int.controlcenter.ondemand.com/index.html#/knowledge_center/articles/f239e5501a534b64ab5f8dde9bd83c53
  * - https://saas-manager.cfapps.sap.hana.ondemand.com/api (Application Operations)
- * - https://saas-manager.cfapps.sap.hana.ondemand.com/api?scope=saas-registry-service (Service Operations)
+ * - https://saas-manager.cfapps.sap.hana.ondemand.com/api?scope=saas-registry-service (Service Operations) [not supported anymore]
+ *
+ * APIs of the subscription-manager
+ * - https://int.api.hana.ondemand.com/api/APISubscriptionManagerService/resource/IAS_Subscription_Operations_for_Providers_or_Systems
  */
 "use strict";
 
@@ -13,11 +15,13 @@ const {
   sleep,
   tableList,
   dateDiffInDays,
+  dateDiffInSeconds,
   formatTimestampsWithRelativeDays,
   resolveTenantArg,
   parseIntWithFallback,
+  compareFor,
 } = require("../shared/static");
-const { assert } = require("../shared/error");
+const { assert, fail } = require("../shared/error");
 const { request } = require("../shared/request");
 const { Logger } = require("../shared/logger");
 const { limiter } = require("../shared/funnel");
@@ -27,21 +31,33 @@ const ENV = Object.freeze({
   REG_FREQUENCY: "MTX_REG_FREQUENCY",
 });
 
+const HTTP_ACCEPTED = 202;
+const HTTP_NO_CONTENT = 204;
+
 const REGISTRY_PAGE_SIZE = 200;
 const REGISTRY_JOB_POLL_FREQUENCY_FALLBACK = 15000;
 const REGISTRY_REQUEST_CONCURRENCY_FALLBACK = 6;
+
+const SUBSCRIPTION_CALL_IS_SUCCESS = Symbol("IS_SUCCESS");
 const JOB_STATE = Object.freeze({
   STARTED: "STARTED",
   SUCCEEDED: "SUCCEEDED",
   FAILED: "FAILED",
 });
 const SUBSCRIPTION_STATE = Object.freeze({
+  IN_PROCESS: "IN_PROCESS",
   SUBSCRIBED: "SUBSCRIBED",
+  SUBSCRIBE_FAILED: "SUBSCRIBE_FAILED",
   UPDATE_FAILED: "UPDATE_FAILED",
+});
+const SUBSCRIPTION_SOURCE = Object.freeze({
+  SUBSCRIPTION_MANAGER: "SUBSCRIPTION_MANAGER",
+  SAAS_REGISTRY: "SAAS_REGISTRY",
 });
 const UPDATABLE_STATES = [SUBSCRIPTION_STATE.SUBSCRIBED, SUBSCRIPTION_STATE.UPDATE_FAILED];
 
 const logger = Logger.getInstance();
+const compareForTenantId = compareFor((subscription) => subscription.tenantId.toUpperCase());
 
 const regRequestConcurrency = parseIntWithFallback(
   process.env[ENV.REG_CONCURRENCY],
@@ -49,51 +65,156 @@ const regRequestConcurrency = parseIntWithFallback(
 );
 const regPollFrequency = parseIntWithFallback(process.env[ENV.REG_FREQUENCY], REGISTRY_JOB_POLL_FREQUENCY_FALLBACK);
 
-const _registrySubscriptionsPaged = async (context, { tenant, onlyFailed, onlyStale, onlyUpdatable } = {}) => {
-  const { subdomain: filterSubdomain, tenantId: filterTenantId } = resolveTenantArg(tenant);
-  filterSubdomain && assert(isDashedWord(filterSubdomain), `argument "${filterSubdomain}" is not a valid subdomain`);
+const _callSms = async (context, reqOptions) => {
+  const credentials = (await context.getSmsInfo()).cfService.credentials;
+  const token = await context.getCachedUaaTokenFromCredentials(credentials);
+  return await request({
+    ...reqOptions,
+    url: credentials.subscription_manager_url,
+    auth: { token },
+  });
+};
 
-  const {
-    cfService: { plan, credentials },
-  } = await context.getRegInfo();
-  const { saas_registry_url, appName } = credentials;
+const _callReg = async (context, reqOptions) => {
+  const credentials = (await context.getRegInfo()).cfService.credentials;
+  const token = await context.getCachedUaaTokenFromCredentials(credentials);
+  return await request({
+    ...reqOptions,
+    url: credentials.saas_registry_url,
+    auth: { token },
+  });
+};
 
+const _call = async (context, source, reqOptions) => {
+  switch (source) {
+    case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
+      return await _callSms(context, reqOptions);
+    }
+    case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
+      return await _callReg(context, reqOptions);
+    }
+  }
+};
+
+const _getSubscriptionsPage = async (context, source, { filterTenantId, size, page }) => {
+  switch (source) {
+    case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
+      const credentials = (await context.getSmsInfo()).cfService.credentials;
+      return await _callSms(context, {
+        pathname: "/subscription-manager/v1/subscriptions",
+        query: {
+          appName: credentials.app_name,
+          ...(filterTenantId && { app_tid: filterTenantId }),
+          size,
+          page,
+        },
+        headers: { Accept: "application/json" },
+      });
+    }
+    case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
+      const credentials = (await context.getRegInfo()).cfService.credentials;
+      return await _callReg(context, {
+        pathname: "/saas-manager/v1/application/subscriptions",
+        query: {
+          appName: credentials.appName,
+          ...(filterTenantId && { tenantId: filterTenantId }),
+          size,
+          page,
+        },
+        headers: { Accept: "application/json" },
+      });
+    }
+  }
+};
+
+const _getSubscriptions = async (context, source, { filterTenantId }) => {
   let subscriptions = [];
   let page = 1;
-  const token = await context.getCachedUaaTokenFromCredentials(credentials);
-  const query = {
-    appName,
-    ...(filterTenantId && { tenantId: filterTenantId }),
-    ...(plan === "service" && { includeIndirectSubscriptions: true }),
-    size: REGISTRY_PAGE_SIZE,
-  };
   while (true) {
-    const response = await request({
-      url: saas_registry_url,
-      pathname: `/saas-manager/v1/${plan}/subscriptions`,
-      query: {
-        ...query,
-        page: page++,
-      },
-      headers: { Accept: "application/json" },
-      auth: { token },
+    const response = await _getSubscriptionsPage(context, source, {
+      filterTenantId,
+      size: REGISTRY_PAGE_SIZE,
+      page: page++,
     });
     const { subscriptions: pageSubscriptions, morePages } = await response.json();
     subscriptions = subscriptions.concat(pageSubscriptions);
     if (!morePages) {
-      break;
+      return subscriptions;
+    }
+  }
+};
+
+const _normalizedSubscriptionFromSms = (subscription) => ({
+  source: SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER,
+  id: subscription.subscriptionGUID,
+  tenantId: subscription.subscriber.app_tid,
+  globalAccountId: subscription.subscriber.globalAccountId,
+  subdomain: subscription.subscriber.subaccountSubdomain,
+  appName: subscription.provider.appName,
+  plan: subscription.subscriptionPlanName,
+  state: subscription.subscriptionState,
+  url: subscription.subscriptionUrl,
+  createdOn: subscription.createdDate,
+  updatedOn: subscription.modifiedDate,
+});
+
+const _normalizedSubscriptionFromReg = (subscription) => ({
+  source: SUBSCRIPTION_SOURCE.SAAS_REGISTRY,
+  id: subscription.subscriptionGUID,
+  tenantId: subscription.consumerTenantId,
+  globalAccountId: subscription.globalAccountId,
+  subdomain: subscription.subdomain,
+  appName: subscription.appName,
+  plan: subscription.code,
+  state: subscription.state,
+  url: subscription.url,
+  createdOn: subscription.createdOn,
+  updatedOn: subscription.changedOn,
+});
+
+const _filterNormalizedSubscription = (
+  normalizedSubscription,
+  { filterSubdomain, onlyFailed, onlyUpdatable, onlyStale }
+) =>
+  (!filterSubdomain || normalizedSubscription.subdomain === filterSubdomain) &&
+  (!onlyFailed || normalizedSubscription.state === SUBSCRIPTION_STATE.UPDATE_FAILED) &&
+  (!onlyUpdatable || UPDATABLE_STATES.includes(normalizedSubscription.state)) &&
+  (!onlyStale || dateDiffInDays(new Date(normalizedSubscription.updatedOn), new Date()) > 0);
+
+const _getSubscriptionInfos = async (context, { tenant, onlyFailed, onlyStale, onlyUpdatable } = {}) => {
+  assert(context.hasSmsInfo || context.hasRegInfo, "found no subscription-manager or saas-registry configuration");
+  const { subdomain: filterSubdomain, tenantId: filterTenantId } = resolveTenantArg(tenant);
+  filterSubdomain && assert(isDashedWord(filterSubdomain), `argument "${filterSubdomain}" is not a valid subdomain`);
+
+  const [smsSubscriptionsUnfiltered, regSubscriptionsUnfiltered] = await Promise.all([
+    context.hasSmsInfo ? _getSubscriptions(context, SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER, { filterTenantId }) : [],
+    context.hasRegInfo ? _getSubscriptions(context, SUBSCRIPTION_SOURCE.SAAS_REGISTRY, { filterTenantId }) : [],
+  ]);
+  const smsSubscriptions = [];
+  const regSubscriptions = [];
+  const normalizedSubscriptions = [];
+
+  for (const subscription of smsSubscriptionsUnfiltered) {
+    const normalizedSubscription = _normalizedSubscriptionFromSms(subscription);
+    if (
+      _filterNormalizedSubscription(normalizedSubscription, { filterSubdomain, onlyFailed, onlyStale, onlyUpdatable })
+    ) {
+      smsSubscriptions.push(subscription);
+      normalizedSubscriptions.push(normalizedSubscription);
+    }
+  }
+  for (const subscription of regSubscriptionsUnfiltered) {
+    const normalizedSubscription = _normalizedSubscriptionFromReg(subscription);
+    if (
+      _filterNormalizedSubscription(normalizedSubscription, { filterSubdomain, onlyFailed, onlyStale, onlyUpdatable })
+    ) {
+      regSubscriptions.push(subscription);
+      normalizedSubscriptions.push(normalizedSubscription);
     }
   }
 
-  subscriptions = subscriptions.filter(
-    ({ state, subdomain, changedOn }) =>
-      (!filterSubdomain || subdomain === filterSubdomain) &&
-      (!onlyFailed || state === SUBSCRIPTION_STATE.UPDATE_FAILED) &&
-      (!onlyUpdatable || UPDATABLE_STATES.includes(state)) &&
-      (!onlyStale || dateDiffInDays(new Date(changedOn), new Date()) > 0)
-  );
-
-  return { subscriptions };
+  normalizedSubscriptions.sort(compareForTenantId);
+  return { smsSubscriptions, regSubscriptions, normalizedSubscriptions };
 };
 
 const registryListSubscriptions = async (
@@ -101,188 +222,309 @@ const registryListSubscriptions = async (
   [tenant],
   [doTimestamps, doJsonOutput, doOnlyStale, doOnlyFailed]
 ) => {
-  const subscriptionInfos = await _registrySubscriptionsPaged(context, {
+  const subscriptionInfos = await _getSubscriptionInfos(context, {
     tenant,
     onlyStale: doOnlyStale,
     onlyFailed: doOnlyFailed,
   });
-  const { subscriptions } = subscriptionInfos;
+  const { smsSubscriptions, regSubscriptions, normalizedSubscriptions } = subscriptionInfos;
 
   if (doJsonOutput) {
-    return subscriptionInfos;
+    return { smsSubscriptions, regSubscriptions };
   }
 
-  const headerRow = ["consumerTenantId", "globalAccountId", "subdomain", "plan", "state", "url"];
+  const headerRow = [
+    "consumerTenantId",
+    "subscriptionId",
+    "globalAccountId",
+    "subdomain",
+    "appName",
+    "plan",
+    "state",
+    "url",
+  ];
   doTimestamps && headerRow.push("created_on", "updated_on");
   const nowDate = new Date();
-  const subscriptionMap = ({
-    consumerTenantId,
-    globalAccountId,
-    subdomain,
-    code,
-    state,
-    url,
-    createdOn,
-    changedOn,
-  }) => {
-    const row = [consumerTenantId, globalAccountId, subdomain, code ?? "", state, url];
-    doTimestamps && row.push(...formatTimestampsWithRelativeDays([createdOn, changedOn], nowDate));
+  const subscriptionMap = (normalizedSubscription) => {
+    const row = [
+      normalizedSubscription.tenantId,
+      normalizedSubscription.id,
+      normalizedSubscription.globalAccountId,
+      normalizedSubscription.subdomain,
+      normalizedSubscription.appName,
+      normalizedSubscription.plan ?? "",
+      normalizedSubscription.state,
+      normalizedSubscription.url,
+    ];
+    doTimestamps &&
+      row.push(
+        ...formatTimestampsWithRelativeDays(
+          [normalizedSubscription.createdOn, normalizedSubscription.updatedOn],
+          nowDate
+        )
+      );
     return row;
   };
-  const table = subscriptions && subscriptions.length ? [headerRow].concat(subscriptions.map(subscriptionMap)) : null;
+  const table =
+    normalizedSubscriptions && normalizedSubscriptions.length
+      ? [headerRow].concat(normalizedSubscriptions.map(subscriptionMap))
+      : null;
   return tableList(table, { withRowNumber: !tenant });
 };
 
 const registryLongListSubscriptions = async (context, [tenant], [, doOnlyStale, doOnlyFailed]) => {
-  return await _registrySubscriptionsPaged(context, { tenant, onlyStale: doOnlyStale, onlyFailed: doOnlyFailed });
+  const { smsSubscriptions, regSubscriptions } = await _getSubscriptionInfos(context, {
+    tenant,
+    onlyStale: doOnlyStale,
+    onlyFailed: doOnlyFailed,
+  });
+  return { smsSubscriptions, regSubscriptions };
 };
 
 const registryServiceConfig = async (context) => {
-  const {
-    cfService: {
-      credentials: { appUrls },
-    },
-  } = await context.getRegInfo();
-  return JSON.parse(appUrls);
+  return {
+    ...(context.hasSmsInfo && {
+      smsServiceConfig: JSON.parse((await context.getSmsInfo()).cfService.credentials.app_urls),
+    }),
+    ...(context.hasRegInfo && {
+      regServiceConfig: JSON.parse((await context.getRegInfo()).cfService.credentials.appUrls),
+    }),
+  };
 };
 
-const _registryJobPoll = async (context, location, { skipFirst = false } = {}) => {
-  const {
-    cfService: { credentials },
-  } = await context.getRegInfo();
-  const { saas_registry_url } = credentials;
-  while (true) {
-    if (!skipFirst) {
-      await sleep(regPollFrequency);
-      skipFirst = false;
-    }
-    const token = await context.getCachedUaaTokenFromCredentials(credentials);
-    const response = await request({
-      url: saas_registry_url,
-      pathname: location,
-      headers: { Accept: "application/json" },
-      auth: { token },
-    });
-    const responseBody = await response.json();
-    const { state } = responseBody;
-    assert(state, "got job poll response without state\n%j", responseBody);
-    if (state !== JOB_STATE.STARTED) {
-      return responseBody;
-    }
-  }
-};
-
-const _registryCallForTenant = async (
-  context,
-  subscription,
-  method,
-  {
-    noCallbacksAppNames,
-    updateApplicationURL,
-    skipUnchangedDependencies,
-    skipUpdatingDependencies,
-    doJobPoll = true,
-  } = {}
-) => {
-  const { consumerTenantId: tenantId, subscriptionGUID: subscriptionId } = subscription;
-  const {
-    cfService: { plan, credentials },
-  } = await context.getRegInfo();
-  const { saas_registry_url } = credentials;
-  const query =
-    plan === "service"
-      ? {}
-      : {
-          ...(noCallbacksAppNames && { noCallbacksAppNames }),
-          ...(updateApplicationURL && { updateApplicationURL }),
-          ...(skipUnchangedDependencies && { skipUnchangedDependencies }),
-          ...(skipUpdatingDependencies && { skipUpdatingDependencies }),
-        };
-  const pathname =
-    plan === "service"
-      ? `/saas-manager/v1/${plan}/subscriptions/${subscriptionId}`
-      : `/saas-manager/v1/${plan}/tenants/${tenantId}/subscriptions`;
-  const token = await context.getCachedUaaTokenFromCredentials(credentials);
-  let response;
+const _callAndPollAndMarkInner = async (context, source, reqOptions) => {
   try {
-    response = await request({
-      method,
-      url: saas_registry_url,
-      pathname,
-      ...(Object.keys(query).length !== 0 && { query }),
-      auth: { token },
-    });
+    const initialResponse = await _call(context, source, reqOptions);
+    assert(
+      initialResponse.status === HTTP_ACCEPTED,
+      "got unexpected response code for polling from %s",
+      reqOptions.pathname
+    );
+    const [location] = initialResponse.headers.raw().location;
+    assert(location, "missing location header for polling from %s", reqOptions.pathname);
+
+    logger.info("polling subscription %s with interval %isec", location, regPollFrequency / 1000);
+
+    while (true) {
+      await sleep(regPollFrequency);
+      const pollResponse = await _call(context, source, { pathname: location });
+
+      switch (source) {
+        case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
+          if (pollResponse.status === HTTP_NO_CONTENT && reqOptions.method === "DELETE") {
+            return {
+              info: "delete succeeded",
+              [SUBSCRIPTION_CALL_IS_SUCCESS]: true,
+            };
+          }
+          const pollResponseBody = await pollResponse.json();
+          const { subscriptionId, subscriptionState, subscriptionStateDetails } = pollResponseBody;
+          assert(subscriptionState, "got subscription poll response without state\n%j", pollResponseBody);
+          if (subscriptionState !== SUBSCRIPTION_STATE.IN_PROCESS) {
+            return {
+              subscriptionId,
+              subscriptionState,
+              ...(subscriptionStateDetails && { error: subscriptionStateDetails }),
+              [SUBSCRIPTION_CALL_IS_SUCCESS]: subscriptionState === SUBSCRIPTION_STATE.SUBSCRIBED,
+            };
+          }
+          break;
+        }
+        case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
+          const pollResponseBody = await pollResponse.json();
+          const { id: jobId, state: jobState, error: err } = pollResponseBody;
+          assert(jobState, "got subscription poll response without state\n%j", pollResponseBody);
+          if (jobState !== JOB_STATE.STARTED) {
+            return {
+              jobId,
+              jobState,
+              ...(err && { error: err.message }),
+              [SUBSCRIPTION_CALL_IS_SUCCESS]: jobState === JOB_STATE.SUCCEEDED,
+            };
+          }
+          break;
+        }
+      }
+    }
   } catch (err) {
-    return { tenantId, state: JOB_STATE.FAILED, message: err.message };
+    return {
+      error: err.message,
+      [SUBSCRIPTION_CALL_IS_SUCCESS]: false,
+    };
   }
-
-  if (!doJobPoll) {
-    // NOTE: with checkStatus being true by default, the above request only returns for successful changes
-    return { tenantId, state: JOB_STATE.SUCCEEDED };
-  }
-  const [location] = response.headers.raw().location;
-  const responseText = await response.text();
-  logger.info("response: %s", responseText);
-  logger.info("polling job %s with interval %isec", location, regPollFrequency / 1000);
-
-  const jobResult = await _registryJobPoll(context, location);
-
-  return { tenantId, jobId: jobResult.id, state: jobResult.state };
 };
 
-const _registryCall = async (context, method, tenantId, options) => {
-  let results;
-  if (tenantId) {
-    assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
-    const { subscriptions } = await _registrySubscriptionsPaged(context, {
-      tenant: tenantId,
-    });
-    assert(subscriptions.length >= 1, "could not find tenant %s", tenantId);
-    results = [await _registryCallForTenant(context, subscriptions[0], method, options)];
-  } else {
-    const { onlyStaleSubscriptions, onlyFailedSubscriptions } = options ?? {};
-    const { subscriptions } = await _registrySubscriptionsPaged(context, {
-      onlyFailed: onlyFailedSubscriptions,
-      onlyStale: onlyStaleSubscriptions,
-      onlyUpdatable: true,
-    });
-    results = await limiter(
-      regRequestConcurrency,
-      subscriptions,
-      async (subscription) => await _registryCallForTenant(context, subscription, method, options)
-    );
+const _callAndPollAndMark = async (context, source, tenantId, reqOptions) => {
+  const startTime = new Date();
+  const result = await _callAndPollAndMarkInner(context, source, reqOptions);
+  return {
+    tenantId,
+    duration: `${dateDiffInSeconds(startTime, new Date()).toFixed(0)} sec`,
+    ...result,
+  };
+};
+
+const _callAndPollAndAssert = async (context, source, tenantId, reqOptions) => {
+  const result = await _callAndPollAndMark(context, source, tenantId, reqOptions);
+  if (!result[SUBSCRIPTION_CALL_IS_SUCCESS]) {
+    logger.error(JSON.stringify(result, null, 2));
+    return fail("call failed for tenant %s", tenantId);
   }
-  assert(Array.isArray(results), "got invalid results from registry %s call with %j", method, options);
-  logger.info(JSON.stringify(results.length === 1 ? results[0] : results, null, 2));
-  assert(
-    results.every(({ state }) => state === JOB_STATE.SUCCEEDED),
-    "registry %s failed for some tenant",
-    method
+  return result;
+};
+
+const _patchUpdateDependenciesPathname = (subscription) => {
+  switch (subscription.source) {
+    case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
+      return `/subscription-manager/v1/subscriptions/${subscription.tenantId}`;
+    }
+    case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
+      return `/saas-manager/v1/application/tenants/${subscription.tenantId}/subscriptions`;
+    }
+  }
+};
+
+const _callAndMarkInner = async (context, source, reqOptions) => {
+  try {
+    await _call(context, source, reqOptions);
+    const operation = reqOptions.method.toLowerCase().replace("patch", "update");
+    return {
+      info: `${operation} succeeded`,
+      [SUBSCRIPTION_CALL_IS_SUCCESS]: true,
+    };
+  } catch (err) {
+    return {
+      error: err.message,
+      [SUBSCRIPTION_CALL_IS_SUCCESS]: false,
+    };
+  }
+};
+
+const _callAndMark = async (context, source, tenantId, reqOptions) => {
+  const startTime = new Date();
+  const result = await _callAndMarkInner(context, source, reqOptions);
+  return {
+    tenantId,
+    duration: `${dateDiffInSeconds(startTime, new Date()).toFixed(0)} sec`,
+    ...result,
+  };
+};
+
+const _patchUpdateDependencies = async (context, { filterOptions, query, isPoll = true }) => {
+  const { normalizedSubscriptions: subscriptions } = await _getSubscriptionInfos(context, filterOptions);
+  const _callExecutor = isPoll ? _callAndPollAndMark : _callAndMark;
+  const results = await limiter(
+    regRequestConcurrency,
+    subscriptions,
+    async (subscription) =>
+      await _callExecutor(context, subscription.source, subscription.tenantId, {
+        method: "PATCH",
+        pathname: _patchUpdateDependenciesPathname(subscription),
+        query,
+      })
   );
+
+  const failedResults = results.filter((result) => !result[SUBSCRIPTION_CALL_IS_SUCCESS]);
+  if (failedResults.length) {
+    logger.error(JSON.stringify(results, null, 2));
+    return fail("call failed for tenants %s", failedResults.map((result) => result.tenantId).join(", "));
+  }
+  return results;
 };
 
 const registryUpdateDependencies = async (context, [tenantId], [doSkipUnchanged]) =>
-  await _registryCall(context, "PATCH", tenantId, { skipUnchangedDependencies: doSkipUnchanged });
+  await _patchUpdateDependencies(context, {
+    filterOptions: { tenant: tenantId },
+    query: {
+      ...(doSkipUnchanged && { skipUnchangedDependencies: doSkipUnchanged }),
+    },
+  });
 
 const registryUpdateAllDependencies = async (context, _, [doSkipUnchanged, doOnlyStale, doOnlyFailed]) =>
-  await _registryCall(context, "PATCH", undefined, {
-    skipUnchangedDependencies: doSkipUnchanged,
-    onlyStaleSubscriptions: doOnlyStale,
-    onlyFailedSubscriptions: doOnlyFailed,
+  await _patchUpdateDependencies(context, {
+    filterOptions: {
+      onlyStale: doOnlyStale,
+      onlyFailed: doOnlyFailed,
+      onlyUpdatable: true,
+    },
+    query: {
+      ...(doSkipUnchanged && { skipUnchangedDependencies: doSkipUnchanged }),
+    },
   });
 
 const registryUpdateApplicationURL = async (context, [tenantId], [doOnlyStale, doOnlyFailed]) =>
-  await _registryCall(context, "PATCH", tenantId, {
-    updateApplicationURL: true,
-    skipUpdatingDependencies: true,
-    doJobPoll: false,
-    onlyStaleSubscriptions: doOnlyStale,
-    onlyFailedSubscriptions: doOnlyFailed,
+  await _patchUpdateDependencies(context, {
+    filterOptions: tenantId
+      ? { tenant: tenantId }
+      : {
+          onlyStale: doOnlyStale,
+          onlyFailed: doOnlyFailed,
+          onlyUpdatable: true,
+        },
+    query: { updateApplicationURL: true, skipUpdatingDependencies: true },
+    isPoll: false,
   });
-const registryOffboardSubscription = async (context, [tenantId]) => await _registryCall(context, "DELETE", tenantId);
 
-const registryOffboardSubscriptionSkip = async (context, [tenantId, skipApps]) =>
-  await _registryCall(context, "DELETE", tenantId, { noCallbacksAppNames: skipApps });
+const _resolveUniqueSubscription = async (context, tenantId) => {
+  const { normalizedSubscriptions: subscriptions } = await _getSubscriptionInfos(context, { tenant: tenantId });
+  assert(
+    Array.isArray(subscriptions) && subscriptions.length === 1,
+    "could not find unique subscription for tenantId %s",
+    tenantId
+  );
+  return subscriptions[0];
+};
+
+const registryMigrate = async (context, [tenantId]) => {
+  assert(
+    context.hasRegInfo && context.hasSmsInfo,
+    "registry migrate needs both subscription-manager and saas-registry configuration"
+  );
+  assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
+  const subscription = await _resolveUniqueSubscription(context, tenantId);
+  assert(
+    subscription.source === SUBSCRIPTION_SOURCE.SAAS_REGISTRY,
+    "registry migrate is only supported for tenants in saas registry"
+  );
+  return await _callAndPollAndAssert(context, SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER, tenantId, {
+    method: "PATCH",
+    pathname: `/subscription-manager/v1/subscriptions/${tenantId}/moveFromSaasProvisioning`,
+  });
+};
+
+const _deleteOffboardPathname = (subscription) => {
+  switch (subscription.source) {
+    case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
+      return `/subscription-manager/v1/subscriptions/${subscription.id}`;
+    }
+    case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
+      return `/saas-manager/v1/application/tenants/${subscription.tenantId}/subscriptions`;
+    }
+  }
+};
+
+const registryOffboardSubscription = async (context, [tenantId]) => {
+  assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
+  const subscription = await _resolveUniqueSubscription(context, tenantId);
+  return await _callAndPollAndAssert(context, subscription.source, subscription.tenantId, {
+    method: "DELETE",
+    pathname: _deleteOffboardPathname(subscription),
+  });
+};
+
+const registryOffboardSubscriptionSkip = async (context, [tenantId, skipApps]) => {
+  assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
+  const subscription = await _resolveUniqueSubscription(context, tenantId);
+  assert(
+    subscription.source === SUBSCRIPTION_SOURCE.SAAS_REGISTRY,
+    "registry offboard with skipping apps is only supported for saas registry"
+  );
+  return await _callAndPollAndAssert(context, SUBSCRIPTION_SOURCE.SAAS_REGISTRY, subscription.tenantId, {
+    method: "DELETE",
+    pathname: _deleteOffboardPathname(subscription),
+    query: { noCallbacksAppNames: skipApps },
+  });
+};
 
 module.exports = {
   registryListSubscriptions,
@@ -291,6 +533,7 @@ module.exports = {
   registryUpdateDependencies,
   registryUpdateAllDependencies,
   registryUpdateApplicationURL,
+  registryMigrate,
   registryOffboardSubscription,
   registryOffboardSubscriptionSkip,
 };

@@ -42,6 +42,7 @@ Commands for this area are:
           --registry-update TENANT_ID                   update tenant dependencies
           --registry-update-all                         update dependencies for all subscribed tenants
           --registry-update-url [TENANT_ID]             update all subscribed application URL
+*         --registry-migrate TENANT_ID                  migrate tenant to subscription manager
 *         --registry-offboard TENANT_ID                 offboard tenant subscription
 *         --registry-offboard-skip TENANT_ID SKIP_APPS  offboard tenant subscription skipping apps
           ...    [TENANT]                               filter list for tenant id or subdomain

@@ -11,12 +11,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### CHANGED
 
-- cds: cdsl table now has a new columns `commercialAppName` in addition to `appName`. the two name are different for all
-  tenants held in subscription manager. they are the same for all tenants held in saas registry.
+- [experimental] core: requests that fail and get a retry, will be logged with a request id `[req-xx]` for easier
+  correlation.
+- [experimental] core: extended list of correlation headers to: `X-CorrelationId`, `X-Correlation-Id`, `X-Request-Id`,
+  `X-Vcap-Request-Id`.
+
+### ADDED
+
+- set: added a new configuration option for an app to access subscription manager.
+
+- reg: all `reg` commands will work with either subscription manager or saas registry or both depending on what is
+  configured with `set` (fixes #100).
+
+- reg: new command `--registry-migrate` to migrate one tenant from saas registry to subscription manager. this
+  operation is irreversible and requires that the tenant's subaccount trusts an IAS with origin `sap.custom`.
 
 ### FIXED
 
-- cds: cdsl will correctly display values for tenants held in subscription manager.
+- cds: cdsl will correctly display values for tenants held in either saas registry or subscription manager (fixes #127).
 
 ## v0.10.2 - 2025-07-29
 
