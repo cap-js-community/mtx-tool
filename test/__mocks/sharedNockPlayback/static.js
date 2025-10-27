@@ -17,7 +17,8 @@ const mockCfConfig = {
 
 const mockRuntimeConfig = {
   uaaAppName: "afc-backend",
-  regAppName: "afc-frontend",
+  regAppName: "afc-mtx",
+  smsAppName: "afc-mtx",
   cdsAppName: "afc-mtx",
   hdiAppName: "afc-backend",
   srvAppName: "afc-backend",
