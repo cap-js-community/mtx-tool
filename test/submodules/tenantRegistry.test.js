@@ -33,9 +33,7 @@ const fakeContextOnlyReg = {
   getCachedUaaTokenFromCredentials: () => "token",
 };
 
-// TODO add test for mixed scenario
-/*
-const fakeContext = {
+const fakeContextMixed = {
   hasSmsInfo: true,
   hasRegInfo: true,
   getSmsInfo: () => ({
@@ -58,9 +56,8 @@ const fakeContext = {
   }),
   getCachedUaaTokenFromCredentials: () => "token",
 };
-*/
 
-const fakeSubscriptionFactory = (index, { doFail, doRecent } = {}) => {
+const fakeRegSubscriptionFactory = (index, { doFail, doRecent } = {}) => {
   const paddedCount = String(index).padStart(4, "0");
   const paddedAltCount = String(10000 - index).padStart(4, "0");
   const tenantId = `00000000-0000-0000-0000-00000000${paddedCount}`;
@@ -88,7 +85,52 @@ const fakeSubscriptionFactory = (index, { doFail, doRecent } = {}) => {
   };
 };
 
-const fakeUpdateImplementationFactory = () => (options) => {
+const fakeSmsSubscriptionFactory = (index, { doFail, doRecent } = {}) => {
+  const paddedCount = String(index).padStart(4, "0");
+  const paddedAltCount = String(10000 - index).padStart(4, "0");
+  const tenantId = `00000000-0000-0000-0000-00000000${paddedCount}`;
+  const accountId = `00000000-0000-0000-0000-00000000${paddedAltCount}`;
+  const subscriptionId = `0000${paddedCount}-0000-0000-0000-000000000000`;
+  const name = `skyfin-${paddedCount}`;
+
+  return {
+    subscriptionId: "00000000-0000-0000-0000-000000000000",
+    subscriptionGUID: subscriptionId,
+    subscriptionUrl: `https://${name}.dev-afc-sap.cfapps.sap.hana.ondemand.com`,
+    subscriptionState: "SUBSCRIBED",
+    subscriptionPlanName: "standard",
+    subscriber: {
+      zoneId: tenantId,
+      app_tid: tenantId,
+      subaccountId: tenantId,
+      subaccountSubdomain: name,
+      globalAccountId: accountId,
+      licenseType: "SAPDEV",
+    },
+    provider: {
+      appName: "afc-dev-sms",
+      commercialAppName: "afc-dev",
+      iasServiceInstanceId: "00000000-0000-0000-0000-000000000000",
+      zoneId: "00000000-0000-0000-0000-000000000000",
+      app_tid: "00000000-0000-0000-0000-000000000000",
+    },
+    iasAppRefId: "00000000-0000-0000-0000-000000000000",
+    iasAppRefState: "SUBSCRIBED",
+    iasServiceInstanceId: "00000000-0000-0000-0000-000000000000",
+    callbackState: "UPDATE_CALLBACK_SUCCEEDED",
+    createdDate: "Fri Sep 19 09:15:52 UTC 2025",
+    createdBy: "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+    modifiedDate: "Fri Oct 24 13:38:39 UTC 2025",
+    modifiedBy: "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+  };
+};
+
+const fakeMixedSubscriptionFactory = (index, { doFail, doRecent } = {}) =>
+  index % 2 === 0
+    ? fakeRegSubscriptionFactory(index, { doFail, doRecent })
+    : fakeSmsSubscriptionFactory(index, { doFail, doRecent });
+
+const fakeRegUpdateImplementationFactory = () => (options) => {
   const match = /\/saas-manager\/v1\/application\/tenants\/(.*)\/subscriptions/.exec(options.pathname);
   const [, tenantId] = match;
   const jobId = "11111111" + tenantId.substring(8);
@@ -104,7 +146,7 @@ const fakeUpdateImplementationFactory = () => (options) => {
   };
 };
 
-const fakeJobImplementationFactory =
+const fakeRegJobImplementationFactory =
   (_, { doFail = false, doFailRequest = false } = {}) =>
   (options) => {
     const match = /\/api\/v2\.0\/jobs\/(.*)/.exec(options.pathname);
@@ -123,47 +165,49 @@ const fakeJobImplementationFactory =
   };
 
 describe("reg tests", () => {
-  test.each([
-    ["unfiltered", false, false],
-    ["only stale", true, false],
-    ["only failed", false, true],
-    ["only stale and failed", true, true],
-  ])("reg list paging %s", async (_, doOnlyStale, doOnlyFail) => {
-    const fakeSubscriptions = Array.from({ length: 20 }).map((x, i) =>
-      fakeSubscriptionFactory(i + 1, { doFail: i + 1 <= 2 || i + 1 >= 19, doRecent: i + 1 >= 15 })
-    );
-    mockRequest.request.mockReturnValueOnce({
-      json: () => ({ subscriptions: fakeSubscriptions.slice(0, 10), morePages: true }),
-    });
-    mockRequest.request.mockReturnValueOnce({
-      json: () => ({ subscriptions: fakeSubscriptions.slice(10) }),
+  describe("only reg", () => {
+    test.each([
+      ["unfiltered", false, false],
+      ["only stale", true, false],
+      ["only failed", false, true],
+      ["only stale and failed", true, true],
+    ])("reg list paging %s", async (_, doOnlyStale, doOnlyFail) => {
+      const fakeSubscriptions = Array.from({ length: 20 }).map((x, i) =>
+        fakeRegSubscriptionFactory(i + 1, { doFail: i + 1 <= 2 || i + 1 >= 19, doRecent: i + 1 >= 15 })
+      );
+      mockRequest.request.mockReturnValueOnce({
+        json: () => ({ subscriptions: fakeSubscriptions.slice(0, 10), morePages: true }),
+      });
+      mockRequest.request.mockReturnValueOnce({
+        json: () => ({ subscriptions: fakeSubscriptions.slice(10) }),
+      });
+
+      const regListOutput = await reg.registryListSubscriptions(
+        fakeContextOnlyReg,
+        [],
+        [false, false, doOnlyStale, doOnlyFail]
+      );
+      expect(mockRequest.request.mock.calls).toMatchSnapshot();
+      expect(regListOutput).toMatchSnapshot();
+      expect(mockLogger.info).toHaveBeenCalledTimes(0);
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
 
-    const regListOutput = await reg.registryListSubscriptions(
-      fakeContextOnlyReg,
-      [],
-      [false, false, doOnlyStale, doOnlyFail]
-    );
-    expect(mockRequest.request.mock.calls).toMatchSnapshot();
-    expect(regListOutput).toMatchSnapshot();
-    expect(mockLogger.info).toHaveBeenCalledTimes(0);
-    expect(mockLogger.error).toHaveBeenCalledTimes(0);
-  });
+    test("reg update without failure", async () => {
+      const n = 4;
+      const fakeSubscriptions = Array.from({ length: n }).map((x, i) => fakeRegSubscriptionFactory(i + 1));
+      mockRequest.request.mockReturnValueOnce({
+        json: () => ({ subscriptions: fakeSubscriptions }),
+      });
+      for (let index = 0; index < n; index++) {
+        mockRequest.request.mockImplementationOnce(fakeRegUpdateImplementationFactory(index));
+      }
+      for (let index = 0; index < n; index++) {
+        mockRequest.request.mockImplementationOnce(fakeRegJobImplementationFactory(index));
+      }
 
-  test("reg update without failure", async () => {
-    const n = 4;
-    const fakeSubscriptions = Array.from({ length: n }).map((x, i) => fakeSubscriptionFactory(i + 1));
-    mockRequest.request.mockReturnValueOnce({
-      json: () => ({ subscriptions: fakeSubscriptions }),
-    });
-    for (let index = 0; index < n; index++) {
-      mockRequest.request.mockImplementationOnce(fakeUpdateImplementationFactory(index));
-    }
-    for (let index = 0; index < n; index++) {
-      mockRequest.request.mockImplementationOnce(fakeJobImplementationFactory(index));
-    }
-
-    await expect(reg.registryUpdateAllDependencies(fakeContextOnlyReg, undefined, [])).resolves.toMatchInlineSnapshot(`
+      await expect(reg.registryUpdateAllDependencies(fakeContextOnlyReg, undefined, [])).resolves
+        .toMatchInlineSnapshot(`
             [
               {
                 "duration": "0 sec",
@@ -196,53 +240,53 @@ describe("reg tests", () => {
             ]
           `);
 
-    expect(mockRequest.request).toHaveBeenCalledTimes(1 + n * 2);
+      expect(mockRequest.request).toHaveBeenCalledTimes(1 + n * 2);
 
-    expect(mockShared.sleep.mock.calls).toMatchSnapshot();
+      expect(mockShared.sleep.mock.calls).toMatchSnapshot();
 
-    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
+      expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000001 with interval 15sec
       polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000002 with interval 15sec
       polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000003 with interval 15sec
       polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000004 with interval 15sec"
     `);
-    expect(mockLogger.error).toHaveBeenCalledTimes(0);
-  });
-
-  test("reg update with state failed", async () => {
-    const n = 4;
-    const fakeSubscriptions = Array.from({ length: n }).map((x, i) => fakeSubscriptionFactory(i + 1));
-    mockRequest.request.mockReturnValueOnce({
-      json: () => ({ subscriptions: fakeSubscriptions }),
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
-    for (let index = 0; index < n; index++) {
-      mockRequest.request.mockImplementationOnce(fakeUpdateImplementationFactory(index));
-    }
-    for (let index = 0; index < n; index++) {
-      mockRequest.request.mockImplementationOnce(fakeJobImplementationFactory(index, { doFail: index === n / 2 }));
-    }
 
-    let caughtErr;
-    try {
-      await reg.registryUpdateAllDependencies(fakeContextOnlyReg, undefined, []);
-    } catch (err) {
-      caughtErr = err;
-    }
+    test("reg update with state failed", async () => {
+      const n = 4;
+      const fakeSubscriptions = Array.from({ length: n }).map((x, i) => fakeRegSubscriptionFactory(i + 1));
+      mockRequest.request.mockReturnValueOnce({
+        json: () => ({ subscriptions: fakeSubscriptions }),
+      });
+      for (let index = 0; index < n; index++) {
+        mockRequest.request.mockImplementationOnce(fakeRegUpdateImplementationFactory(index));
+      }
+      for (let index = 0; index < n; index++) {
+        mockRequest.request.mockImplementationOnce(fakeRegJobImplementationFactory(index, { doFail: index === n / 2 }));
+      }
 
-    expect(mockRequest.request).toHaveBeenCalledTimes(1 + n * 2);
+      let caughtErr;
+      try {
+        await reg.registryUpdateAllDependencies(fakeContextOnlyReg, undefined, []);
+      } catch (err) {
+        caughtErr = err;
+      }
 
-    expect(caughtErr).toBeDefined();
-    expect(caughtErr.message).toMatchInlineSnapshot(`"call failed for tenants 00000000-0000-0000-0000-000000000003"`);
+      expect(mockRequest.request).toHaveBeenCalledTimes(1 + n * 2);
 
-    expect(mockShared.sleep.mock.calls).toMatchSnapshot();
+      expect(caughtErr).toBeDefined();
+      expect(caughtErr.message).toMatchInlineSnapshot(`"call failed for tenants 00000000-0000-0000-0000-000000000003"`);
 
-    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
+      expect(mockShared.sleep.mock.calls).toMatchSnapshot();
+
+      expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000001 with interval 15sec
       polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000002 with interval 15sec
       polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000003 with interval 15sec
       polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000004 with interval 15sec"
     `);
-    expect(outputFromLogger(mockLogger.error.mock.calls)).toMatchInlineSnapshot(`
+      expect(outputFromLogger(mockLogger.error.mock.calls)).toMatchInlineSnapshot(`
       "[
         {
           "tenantId": "00000000-0000-0000-0000-000000000001",
@@ -270,38 +314,38 @@ describe("reg tests", () => {
         }
       ]"
     `);
-  });
-
-  test("reg update with request failed", async () => {
-    const n = 4;
-    const fakeSubscriptions = Array.from({ length: n }).map((x, i) => fakeSubscriptionFactory(i + 1));
-    mockRequest.request.mockReturnValueOnce({
-      json: () => ({ subscriptions: fakeSubscriptions }),
     });
-    for (let index = 0; index < n; index++) {
-      mockRequest.request.mockImplementationOnce(fakeUpdateImplementationFactory(index));
-    }
-    for (let index = 0; index < n; index++) {
-      mockRequest.request.mockImplementationOnce(
-        fakeJobImplementationFactory(index, { doFailRequest: index === n / 2 })
-      );
-    }
 
-    let caughtErr;
-    try {
-      await reg.registryUpdateAllDependencies(fakeContextOnlyReg, undefined, []);
-    } catch (err) {
-      caughtErr = err;
-    }
+    test("reg update with request failed", async () => {
+      const n = 4;
+      const fakeSubscriptions = Array.from({ length: n }).map((x, i) => fakeRegSubscriptionFactory(i + 1));
+      mockRequest.request.mockReturnValueOnce({
+        json: () => ({ subscriptions: fakeSubscriptions }),
+      });
+      for (let index = 0; index < n; index++) {
+        mockRequest.request.mockImplementationOnce(fakeRegUpdateImplementationFactory(index));
+      }
+      for (let index = 0; index < n; index++) {
+        mockRequest.request.mockImplementationOnce(
+          fakeRegJobImplementationFactory(index, { doFailRequest: index === n / 2 })
+        );
+      }
 
-    expect(mockRequest.request).toHaveBeenCalledTimes(1 + n * 2);
+      let caughtErr;
+      try {
+        await reg.registryUpdateAllDependencies(fakeContextOnlyReg, undefined, []);
+      } catch (err) {
+        caughtErr = err;
+      }
 
-    expect(caughtErr).toBeDefined();
-    expect(caughtErr.message).toMatchInlineSnapshot(`"call failed for tenants 00000000-0000-0000-0000-000000000003"`);
+      expect(mockRequest.request).toHaveBeenCalledTimes(1 + n * 2);
 
-    expect(mockShared.sleep.mock.calls).toMatchSnapshot();
+      expect(caughtErr).toBeDefined();
+      expect(caughtErr.message).toMatchInlineSnapshot(`"call failed for tenants 00000000-0000-0000-0000-000000000003"`);
 
-    expect(outputFromLogger(mockLogger.error.mock.calls)).toMatchInlineSnapshot(`
+      expect(mockShared.sleep.mock.calls).toMatchSnapshot();
+
+      expect(outputFromLogger(mockLogger.error.mock.calls)).toMatchInlineSnapshot(`
       "[
         {
           "tenantId": "00000000-0000-0000-0000-000000000001",
@@ -328,11 +372,245 @@ describe("reg tests", () => {
         }
       ]"
     `);
-    expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
+      expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000001 with interval 15sec
       polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000002 with interval 15sec
       polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000003 with interval 15sec
       polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000004 with interval 15sec"
     `);
+    });
+  });
+  describe("mixed reg and sms", () => {
+    test.each([
+      ["unfiltered", false, false],
+      ["only stale", true, false],
+      ["only failed", false, true],
+      ["only stale and failed", true, true],
+    ])("reg list paging %s", async (_, doOnlyStale, doOnlyFail) => {
+      const fakeRegSubscriptions = Array.from({ length: 10 }).map((x, i) =>
+        fakeRegSubscriptionFactory(i + 1, { doFail: i + 1 <= 2 || i + 1 >= 9, doRecent: i + 1 >= 5 })
+      );
+      const fakeSmsSubscriptions = Array.from({ length: 10 }).map((x, i) =>
+        fakeSmsSubscriptionFactory(i + 1, { doFail: i + 1 <= 2 || i + 1 >= 9, doRecent: i + 1 >= 5 })
+      );
+      const firstResponse = (reqOptions) => ({
+        json: () => ({
+          subscriptions:
+            reqOptions.url === "subscription_manager_url"
+              ? fakeSmsSubscriptions.slice(0, 5)
+              : fakeRegSubscriptions.slice(0, 5),
+          morePages: true,
+        }),
+      });
+      const secondResponse = (reqOptions) => ({
+        json: () => ({
+          subscriptions:
+            reqOptions.url === "subscription_manager_url"
+              ? fakeSmsSubscriptions.slice(5)
+              : fakeRegSubscriptions.slice(5),
+        }),
+      });
+      mockRequest.request.mockImplementationOnce(firstResponse);
+      mockRequest.request.mockImplementationOnce(firstResponse);
+      mockRequest.request.mockImplementationOnce(secondResponse);
+      mockRequest.request.mockImplementationOnce(secondResponse);
+
+      const regListOutput = await reg.registryListSubscriptions(
+        fakeContextMixed,
+        [],
+        [false, false, doOnlyStale, doOnlyFail]
+      );
+      expect(mockRequest.request.mock.calls).toMatchSnapshot();
+      expect(regListOutput).toMatchSnapshot();
+      expect(mockLogger.info).toHaveBeenCalledTimes(0);
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
+    });
+
+    // test("reg update without failure", async () => {
+    //   const n = 4;
+    //   const fakeSubscriptions = Array.from({ length: n }).map((x, i) => fakeRegSubscriptionFactory(i + 1));
+    //   mockRequest.request.mockReturnValueOnce({
+    //     json: () => ({ subscriptions: fakeSubscriptions }),
+    //   });
+    //   for (let index = 0; index < n; index++) {
+    //     mockRequest.request.mockImplementationOnce(fakeRegUpdateImplementationFactory(index));
+    //   }
+    //   for (let index = 0; index < n; index++) {
+    //     mockRequest.request.mockImplementationOnce(fakeRegJobImplementationFactory(index));
+    //   }
+    //
+    //   await expect(reg.registryUpdateAllDependencies(fakeContextOnlyReg, undefined, [])).resolves
+    //     .toMatchInlineSnapshot(`
+    //         [
+    //           {
+    //             "duration": "0 sec",
+    //             "jobId": "11111111-0000-0000-0000-000000000001",
+    //             "jobState": "SUCCEEDED",
+    //             "tenantId": "00000000-0000-0000-0000-000000000001",
+    //             Symbol(IS_SUCCESS): true,
+    //           },
+    //           {
+    //             "duration": "0 sec",
+    //             "jobId": "11111111-0000-0000-0000-000000000002",
+    //             "jobState": "SUCCEEDED",
+    //             "tenantId": "00000000-0000-0000-0000-000000000002",
+    //             Symbol(IS_SUCCESS): true,
+    //           },
+    //           {
+    //             "duration": "0 sec",
+    //             "jobId": "11111111-0000-0000-0000-000000000003",
+    //             "jobState": "SUCCEEDED",
+    //             "tenantId": "00000000-0000-0000-0000-000000000003",
+    //             Symbol(IS_SUCCESS): true,
+    //           },
+    //           {
+    //             "duration": "0 sec",
+    //             "jobId": "11111111-0000-0000-0000-000000000004",
+    //             "jobState": "SUCCEEDED",
+    //             "tenantId": "00000000-0000-0000-0000-000000000004",
+    //             Symbol(IS_SUCCESS): true,
+    //           },
+    //         ]
+    //       `);
+    //
+    //   expect(mockRequest.request).toHaveBeenCalledTimes(1 + n * 2);
+    //
+    //   expect(mockShared.sleep.mock.calls).toMatchSnapshot();
+    //
+    //   expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
+    //   "polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000001 with interval 15sec
+    //   polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000002 with interval 15sec
+    //   polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000003 with interval 15sec
+    //   polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000004 with interval 15sec"
+    // `);
+    //   expect(mockLogger.error).toHaveBeenCalledTimes(0);
+    // });
+    //
+    // test("reg update with state failed", async () => {
+    //   const n = 4;
+    //   const fakeSubscriptions = Array.from({ length: n }).map((x, i) => fakeRegSubscriptionFactory(i + 1));
+    //   mockRequest.request.mockReturnValueOnce({
+    //     json: () => ({ subscriptions: fakeSubscriptions }),
+    //   });
+    //   for (let index = 0; index < n; index++) {
+    //     mockRequest.request.mockImplementationOnce(fakeRegUpdateImplementationFactory(index));
+    //   }
+    //   for (let index = 0; index < n; index++) {
+    //     mockRequest.request.mockImplementationOnce(fakeRegJobImplementationFactory(index, { doFail: index === n / 2 }));
+    //   }
+    //
+    //   let caughtErr;
+    //   try {
+    //     await reg.registryUpdateAllDependencies(fakeContextOnlyReg, undefined, []);
+    //   } catch (err) {
+    //     caughtErr = err;
+    //   }
+    //
+    //   expect(mockRequest.request).toHaveBeenCalledTimes(1 + n * 2);
+    //
+    //   expect(caughtErr).toBeDefined();
+    //   expect(caughtErr.message).toMatchInlineSnapshot(`"call failed for tenants 00000000-0000-0000-0000-000000000003"`);
+    //
+    //   expect(mockShared.sleep.mock.calls).toMatchSnapshot();
+    //
+    //   expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
+    //   "polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000001 with interval 15sec
+    //   polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000002 with interval 15sec
+    //   polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000003 with interval 15sec
+    //   polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000004 with interval 15sec"
+    // `);
+    //   expect(outputFromLogger(mockLogger.error.mock.calls)).toMatchInlineSnapshot(`
+    //   "[
+    //     {
+    //       "tenantId": "00000000-0000-0000-0000-000000000001",
+    //       "duration": "0 sec",
+    //       "jobId": "11111111-0000-0000-0000-000000000001",
+    //       "jobState": "SUCCEEDED"
+    //     },
+    //     {
+    //       "tenantId": "00000000-0000-0000-0000-000000000002",
+    //       "duration": "0 sec",
+    //       "jobId": "11111111-0000-0000-0000-000000000002",
+    //       "jobState": "SUCCEEDED"
+    //     },
+    //     {
+    //       "tenantId": "00000000-0000-0000-0000-000000000003",
+    //       "duration": "0 sec",
+    //       "jobId": "11111111-0000-0000-0000-000000000003",
+    //       "jobState": "FAILED"
+    //     },
+    //     {
+    //       "tenantId": "00000000-0000-0000-0000-000000000004",
+    //       "duration": "0 sec",
+    //       "jobId": "11111111-0000-0000-0000-000000000004",
+    //       "jobState": "SUCCEEDED"
+    //     }
+    //   ]"
+    // `);
+    // });
+    //
+    // test("reg update with request failed", async () => {
+    //   const n = 4;
+    //   const fakeSubscriptions = Array.from({ length: n }).map((x, i) => fakeRegSubscriptionFactory(i + 1));
+    //   mockRequest.request.mockReturnValueOnce({
+    //     json: () => ({ subscriptions: fakeSubscriptions }),
+    //   });
+    //   for (let index = 0; index < n; index++) {
+    //     mockRequest.request.mockImplementationOnce(fakeRegUpdateImplementationFactory(index));
+    //   }
+    //   for (let index = 0; index < n; index++) {
+    //     mockRequest.request.mockImplementationOnce(
+    //       fakeRegJobImplementationFactory(index, { doFailRequest: index === n / 2 })
+    //     );
+    //   }
+    //
+    //   let caughtErr;
+    //   try {
+    //     await reg.registryUpdateAllDependencies(fakeContextOnlyReg, undefined, []);
+    //   } catch (err) {
+    //     caughtErr = err;
+    //   }
+    //
+    //   expect(mockRequest.request).toHaveBeenCalledTimes(1 + n * 2);
+    //
+    //   expect(caughtErr).toBeDefined();
+    //   expect(caughtErr.message).toMatchInlineSnapshot(`"call failed for tenants 00000000-0000-0000-0000-000000000003"`);
+    //
+    //   expect(mockShared.sleep.mock.calls).toMatchSnapshot();
+    //
+    //   expect(outputFromLogger(mockLogger.error.mock.calls)).toMatchInlineSnapshot(`
+    //   "[
+    //     {
+    //       "tenantId": "00000000-0000-0000-0000-000000000001",
+    //       "duration": "0 sec",
+    //       "jobId": "11111111-0000-0000-0000-000000000001",
+    //       "jobState": "SUCCEEDED"
+    //     },
+    //     {
+    //       "tenantId": "00000000-0000-0000-0000-000000000002",
+    //       "duration": "0 sec",
+    //       "jobId": "11111111-0000-0000-0000-000000000002",
+    //       "jobState": "SUCCEEDED"
+    //     },
+    //     {
+    //       "tenantId": "00000000-0000-0000-0000-000000000003",
+    //       "duration": "0 sec",
+    //       "error": "server feels ill"
+    //     },
+    //     {
+    //       "tenantId": "00000000-0000-0000-0000-000000000004",
+    //       "duration": "0 sec",
+    //       "jobId": "11111111-0000-0000-0000-000000000004",
+    //       "jobState": "SUCCEEDED"
+    //     }
+    //   ]"
+    // `);
+    //   expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
+    //   "polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000001 with interval 15sec
+    //   polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000002 with interval 15sec
+    //   polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000003 with interval 15sec
+    //   polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000004 with interval 15sec"
+    // `);
+    // });
   });
 });
