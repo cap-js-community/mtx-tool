@@ -57,7 +57,7 @@ const fakeContextMixed = {
   getCachedUaaTokenFromCredentials: () => "token",
 };
 
-const fakeSmsSubscriptionFactory = (index, { doFail, doRecent } = {}) => {
+const fakeSubscriptionFactorySms = (index, { doFail, doRecent } = {}) => {
   const paddedCount = String(index).padStart(4, "0");
   const paddedAltCount = String(10000 - index).padStart(4, "0");
   const tenantId = `00000000-0000-0000-0000-00000000${paddedCount}`;
@@ -99,7 +99,7 @@ const fakeSmsSubscriptionFactory = (index, { doFail, doRecent } = {}) => {
   };
 };
 
-const fakeRegSubscriptionFactory = (index, { doFail, doRecent } = {}) => {
+const fakeSubscriptionFactoryReg = (index, { doFail, doRecent } = {}) => {
   const paddedCount = String(index).padStart(4, "0");
   const paddedAltCount = String(10000 - index).padStart(4, "0");
   const tenantId = `00000000-0000-0000-0000-00000000${paddedCount}`;
@@ -129,7 +129,22 @@ const fakeRegSubscriptionFactory = (index, { doFail, doRecent } = {}) => {
   };
 };
 
-const fakeRegUpdateImplementationFactory = () => (options) => {
+const initialUpdateResponseFactorySms = () => (options) => {
+  const match = /\/subscription-manager\/v1\/subscriptions\/(.*)/.exec(options.pathname);
+  const [, tenantId] = match;
+  const jobId = "11111111" + tenantId.substring(8);
+  return {
+    status: 202,
+    statusText: "Accepted",
+    headers: {
+      raw: () => ({
+        location: [`/subscription-manager/v1/subscriptions/${jobId}`],
+      }),
+    },
+  };
+};
+
+const initialUpdateResponseFactoryReg = () => (options) => {
   const match = /\/saas-manager\/v1\/application\/tenants\/(.*)\/subscriptions/.exec(options.pathname);
   const [, tenantId] = match;
   const jobId = "11111111" + tenantId.substring(8);
@@ -145,7 +160,25 @@ const fakeRegUpdateImplementationFactory = () => (options) => {
   };
 };
 
-const fakeRegJobImplementationFactory =
+const pollUpdateResponseFactorySms =
+  (_, { doFail = false, doFailRequest = false } = {}) =>
+  (options) => {
+    const match = /\/subscription-manager\/v1\/subscriptions\/(.*)/.exec(options.pathname);
+    const [, jobId] = match;
+    if (doFailRequest) {
+      throw new Error("server feels ill");
+    }
+    return {
+      status: 200,
+      statusText: "OK",
+      json: async () => ({
+        subscriptionId: jobId,
+        subscriptionState: doFail ? "FAILED" : "SUCCEEDED",
+        ...(doFail && { subscriptionStateDetails: "some error details" }),
+      }),
+    };
+  };
+const pollUpdateResponseFactoryReg =
   (_, { doFail = false, doFailRequest = false } = {}) =>
   (options) => {
     const match = /\/api\/v2\.0\/jobs\/(.*)/.exec(options.pathname);
@@ -172,7 +205,7 @@ describe("reg tests", () => {
       ["only stale and failed", true, true],
     ])("reg list paging %s", async (_, doOnlyStale, doOnlyFail) => {
       const fakeSubscriptions = Array.from({ length: 10 }).map((x, i) =>
-        fakeRegSubscriptionFactory(i + 1, { doFail: i + 1 <= 2 || i + 1 >= 9, doRecent: i + 1 >= 6 })
+        fakeSubscriptionFactoryReg(i + 1, { doFail: i + 1 <= 2 || i + 1 >= 9, doRecent: i + 1 >= 6 })
       );
       mockRequest.request.mockReturnValueOnce({
         json: () => ({ subscriptions: fakeSubscriptions.slice(0, 5), morePages: true }),
@@ -194,15 +227,15 @@ describe("reg tests", () => {
 
     test("reg update without failure", async () => {
       const n = 4;
-      const fakeSubscriptions = Array.from({ length: n }).map((x, i) => fakeRegSubscriptionFactory(i + 1));
+      const fakeSubscriptions = Array.from({ length: n }).map((x, i) => fakeSubscriptionFactoryReg(i + 1));
       mockRequest.request.mockReturnValueOnce({
         json: () => ({ subscriptions: fakeSubscriptions }),
       });
       for (let index = 0; index < n; index++) {
-        mockRequest.request.mockImplementationOnce(fakeRegUpdateImplementationFactory(index));
+        mockRequest.request.mockImplementationOnce(initialUpdateResponseFactoryReg(index));
       }
       for (let index = 0; index < n; index++) {
-        mockRequest.request.mockImplementationOnce(fakeRegJobImplementationFactory(index));
+        mockRequest.request.mockImplementationOnce(pollUpdateResponseFactoryReg(index));
       }
 
       await expect(reg.registryUpdateAllDependencies(fakeContextOnlyReg, undefined, [])).resolves
@@ -254,15 +287,15 @@ describe("reg tests", () => {
 
     test("reg update with state failed", async () => {
       const n = 4;
-      const fakeSubscriptions = Array.from({ length: n }).map((x, i) => fakeRegSubscriptionFactory(i + 1));
+      const fakeSubscriptions = Array.from({ length: n }).map((x, i) => fakeSubscriptionFactoryReg(i + 1));
       mockRequest.request.mockReturnValueOnce({
         json: () => ({ subscriptions: fakeSubscriptions }),
       });
       for (let index = 0; index < n; index++) {
-        mockRequest.request.mockImplementationOnce(fakeRegUpdateImplementationFactory(index));
+        mockRequest.request.mockImplementationOnce(initialUpdateResponseFactoryReg(index));
       }
       for (let index = 0; index < n; index++) {
-        mockRequest.request.mockImplementationOnce(fakeRegJobImplementationFactory(index, { doFail: index === n / 2 }));
+        mockRequest.request.mockImplementationOnce(pollUpdateResponseFactoryReg(index, { doFail: index === n / 2 }));
       }
 
       let caughtErr;
@@ -317,16 +350,16 @@ describe("reg tests", () => {
 
     test("reg update with request failed", async () => {
       const n = 4;
-      const fakeSubscriptions = Array.from({ length: n }).map((x, i) => fakeRegSubscriptionFactory(i + 1));
+      const fakeSubscriptions = Array.from({ length: n }).map((x, i) => fakeSubscriptionFactoryReg(i + 1));
       mockRequest.request.mockReturnValueOnce({
         json: () => ({ subscriptions: fakeSubscriptions }),
       });
       for (let index = 0; index < n; index++) {
-        mockRequest.request.mockImplementationOnce(fakeRegUpdateImplementationFactory(index));
+        mockRequest.request.mockImplementationOnce(initialUpdateResponseFactoryReg(index));
       }
       for (let index = 0; index < n; index++) {
         mockRequest.request.mockImplementationOnce(
-          fakeRegJobImplementationFactory(index, { doFailRequest: index === n / 2 })
+          pollUpdateResponseFactoryReg(index, { doFailRequest: index === n / 2 })
         );
       }
 
@@ -386,33 +419,33 @@ describe("reg tests", () => {
       ["only failed", false, true],
       ["only stale and failed", true, true],
     ])("reg list paging %s", async (_, doOnlyStale, doOnlyFail) => {
-      const fakeSmsSubscriptions = Array.from({ length: 10 }).map((x, i) =>
-        fakeSmsSubscriptionFactory(i + 1, { doFail: i + 1 <= 2 || i + 1 >= 9, doRecent: i + 1 >= 6 })
+      const fakeSubscriptionsSms = Array.from({ length: 10 }).map((x, i) =>
+        fakeSubscriptionFactorySms(i + 1, { doFail: i + 1 <= 2 || i + 1 >= 9, doRecent: i + 1 >= 6 })
       );
-      const fakeRegSubscriptions = Array.from({ length: 10 }).map((x, i) =>
-        fakeRegSubscriptionFactory(10 + i + 1, { doFail: i + 1 <= 2 || i + 1 >= 9, doRecent: i + 1 >= 6 })
+      const fakeSubscriptionsReg = Array.from({ length: 10 }).map((x, i) =>
+        fakeSubscriptionFactoryReg(10 + i + 1, { doFail: i + 1 <= 2 || i + 1 >= 9, doRecent: i + 1 >= 6 })
       );
-      const firstResponse = (reqOptions) => ({
+      const listPageOneResponse = (reqOptions) => ({
         json: () => ({
           subscriptions:
             reqOptions.url === "subscription_manager_url"
-              ? fakeSmsSubscriptions.slice(0, 5)
-              : fakeRegSubscriptions.slice(0, 5),
+              ? fakeSubscriptionsSms.slice(0, 5)
+              : fakeSubscriptionsReg.slice(0, 5),
           morePages: true,
         }),
       });
-      const secondResponse = (reqOptions) => ({
+      const listPageTwoResponse = (reqOptions) => ({
         json: () => ({
           subscriptions:
             reqOptions.url === "subscription_manager_url"
-              ? fakeSmsSubscriptions.slice(5)
-              : fakeRegSubscriptions.slice(5),
+              ? fakeSubscriptionsSms.slice(5)
+              : fakeSubscriptionsReg.slice(5),
         }),
       });
-      mockRequest.request.mockImplementationOnce(firstResponse);
-      mockRequest.request.mockImplementationOnce(firstResponse);
-      mockRequest.request.mockImplementationOnce(secondResponse);
-      mockRequest.request.mockImplementationOnce(secondResponse);
+      mockRequest.request.mockImplementationOnce(listPageOneResponse);
+      mockRequest.request.mockImplementationOnce(listPageOneResponse);
+      mockRequest.request.mockImplementationOnce(listPageTwoResponse);
+      mockRequest.request.mockImplementationOnce(listPageTwoResponse);
 
       const regListOutput = await reg.registryListSubscriptions(
         fakeContextMixed,
@@ -425,66 +458,42 @@ describe("reg tests", () => {
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
 
-    // test("reg update without failure", async () => {
-    //   const n = 4;
-    //   const fakeSubscriptions = Array.from({ length: n }).map((x, i) => fakeRegSubscriptionFactory(i + 1));
-    //   mockRequest.request.mockReturnValueOnce({
-    //     json: () => ({ subscriptions: fakeSubscriptions }),
-    //   });
-    //   for (let index = 0; index < n; index++) {
-    //     mockRequest.request.mockImplementationOnce(fakeRegUpdateImplementationFactory(index));
-    //   }
-    //   for (let index = 0; index < n; index++) {
-    //     mockRequest.request.mockImplementationOnce(fakeRegJobImplementationFactory(index));
-    //   }
-    //
-    //   await expect(reg.registryUpdateAllDependencies(fakeContextOnlyReg, undefined, [])).resolves
-    //     .toMatchInlineSnapshot(`
-    //         [
-    //           {
-    //             "duration": "0 sec",
-    //             "jobId": "11111111-0000-0000-0000-000000000001",
-    //             "jobState": "SUCCEEDED",
-    //             "tenantId": "00000000-0000-0000-0000-000000000001",
-    //             Symbol(IS_SUCCESS): true,
-    //           },
-    //           {
-    //             "duration": "0 sec",
-    //             "jobId": "11111111-0000-0000-0000-000000000002",
-    //             "jobState": "SUCCEEDED",
-    //             "tenantId": "00000000-0000-0000-0000-000000000002",
-    //             Symbol(IS_SUCCESS): true,
-    //           },
-    //           {
-    //             "duration": "0 sec",
-    //             "jobId": "11111111-0000-0000-0000-000000000003",
-    //             "jobState": "SUCCEEDED",
-    //             "tenantId": "00000000-0000-0000-0000-000000000003",
-    //             Symbol(IS_SUCCESS): true,
-    //           },
-    //           {
-    //             "duration": "0 sec",
-    //             "jobId": "11111111-0000-0000-0000-000000000004",
-    //             "jobState": "SUCCEEDED",
-    //             "tenantId": "00000000-0000-0000-0000-000000000004",
-    //             Symbol(IS_SUCCESS): true,
-    //           },
-    //         ]
-    //       `);
-    //
-    //   expect(mockRequest.request).toHaveBeenCalledTimes(1 + n * 2);
-    //
-    //   expect(mockShared.sleep.mock.calls).toMatchSnapshot();
-    //
-    //   expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
-    //   "polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000001 with interval 15sec
-    //   polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000002 with interval 15sec
-    //   polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000003 with interval 15sec
-    //   polling subscription /api/v2.0/jobs/11111111-0000-0000-0000-000000000004 with interval 15sec"
-    // `);
-    //   expect(mockLogger.error).toHaveBeenCalledTimes(0);
-    // });
-    //
+    test("reg update without failure", async () => {
+      const n = 2;
+      const fakeSubscriptionsSms = Array.from({ length: n }).map((x, i) => fakeSubscriptionFactorySms(i + 1));
+      const fakeSubscriptionsReg = Array.from({ length: n }).map((x, i) => fakeSubscriptionFactoryReg(n + i + 1));
+      const subscriptionResponse = (reqOptions) => ({
+        json: () => ({
+          subscriptions: reqOptions.url === "subscription_manager_url" ? fakeSubscriptionsSms : fakeSubscriptionsReg,
+        }),
+      });
+      mockRequest.request.mockImplementationOnce(subscriptionResponse);
+      mockRequest.request.mockImplementationOnce(subscriptionResponse);
+      const initialUpdateResponse = (index) => (reqOptions) =>
+        reqOptions.url === "subscription_manager_url"
+          ? initialUpdateResponseFactorySms(index)(reqOptions)
+          : initialUpdateResponseFactoryReg(index)(reqOptions);
+      for (let index = 0; index < 2 * n; index++) {
+        mockRequest.request.mockImplementationOnce(initialUpdateResponse(index));
+      }
+      const pollUpdateResponse = (index) => (reqOptions) =>
+        reqOptions.url === "subscription_manager_url"
+          ? pollUpdateResponseFactorySms(index)(reqOptions)
+          : pollUpdateResponseFactoryReg(index)(reqOptions);
+      for (let index = 0; index < 2 * n; index++) {
+        mockRequest.request.mockImplementationOnce(pollUpdateResponse(index));
+      }
+
+      await expect(reg.registryUpdateAllDependencies(fakeContextMixed, undefined, [])).resolves.toMatchInlineSnapshot();
+
+      expect(mockRequest.request).toHaveBeenCalledTimes(2 + n * 4);
+
+      expect(mockShared.sleep.mock.calls).toMatchSnapshot();
+
+      expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot();
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
+    });
+
     // test("reg update with state failed", async () => {
     //   const n = 4;
     //   const fakeSubscriptions = Array.from({ length: n }).map((x, i) => fakeRegSubscriptionFactory(i + 1));
