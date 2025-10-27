@@ -64,7 +64,7 @@ describe("reg nock tests", () => {
         "GET https://api.cf.sap.hana.ondemand.com:443": 5,
       }
     `);
-    expect(collectRequestCount(require(`${nock.back.fixtures}/reg-update-tenant.json`))).toMatchInlineSnapshot(`
+    expect(collectRequestCount(require(`${nock.back.fixtures}/reg-update-deps-tenant.json`))).toMatchInlineSnapshot(`
       {
         "GET https://api.cf.sap.hana.ondemand.com:443": 5,
         "GET https://saas-manager.mesh.cf.sap.hana.ondemand.com:443": 5,
@@ -72,7 +72,7 @@ describe("reg nock tests", () => {
         "POST https://skyfin.authentication.sap.hana.ondemand.com:443": 1,
       }
     `);
-    expect(collectRequestCount(require(`${nock.back.fixtures}/reg-update-tenant-all.json`))).toMatchInlineSnapshot(`
+    expect(collectRequestCount(require(`${nock.back.fixtures}/reg-update-deps-all.json`))).toMatchInlineSnapshot(`
       {
         "GET https://api.cf.sap.hana.ondemand.com:443": 5,
         "GET https://saas-manager.mesh.cf.sap.hana.ondemand.com:443": 45,
@@ -80,7 +80,7 @@ describe("reg nock tests", () => {
         "POST https://skyfin.authentication.sap.hana.ondemand.com:443": 1,
       }
     `);
-    expect(collectRequestCount(require(`${nock.back.fixtures}/reg-update-tenant-app-url.json`))).toMatchInlineSnapshot(`
+    expect(collectRequestCount(require(`${nock.back.fixtures}/reg-update-url-tenant.json`))).toMatchInlineSnapshot(`
       {
         "GET https://api.cf.sap.hana.ondemand.com:443": 5,
         "GET https://saas-manager.mesh.cf.sap.hana.ondemand.com:443": 1,
@@ -88,8 +88,7 @@ describe("reg nock tests", () => {
         "POST https://skyfin.authentication.sap.hana.ondemand.com:443": 1,
       }
     `);
-    expect(collectRequestCount(require(`${nock.back.fixtures}/reg-update-tenant-app-url-all.json`)))
-      .toMatchInlineSnapshot(`
+    expect(collectRequestCount(require(`${nock.back.fixtures}/reg-update-url-all.json`))).toMatchInlineSnapshot(`
       {
         "GET https://api.cf.sap.hana.ondemand.com:443": 5,
         "GET https://saas-manager.mesh.cf.sap.hana.ondemand.com:443": 1,
@@ -249,7 +248,7 @@ describe("reg nock tests", () => {
   });
 
   test("reg update tenant", async () => {
-    await nock.back("reg-update-tenant.json");
+    await nock.back("reg-update-deps-tenant.json");
     await expect(reg.registryUpdateDependencies(await freshContext(), [testTenantId], [])).resolves
       .toMatchInlineSnapshot(`
             [
@@ -277,7 +276,7 @@ describe("reg nock tests", () => {
   });
 
   test("reg update tenant all", async () => {
-    await nock.back("reg-update-tenant-all.json");
+    await nock.back("reg-update-deps-all.json");
     await expect(reg.registryUpdateAllDependencies(await freshContext(), undefined, [])).resolves
       .toMatchInlineSnapshot(`
             [
@@ -427,7 +426,7 @@ describe("reg nock tests", () => {
   });
 
   test("reg update tenant application url all", async () => {
-    await nock.back("reg-update-tenant-app-url-all.json");
+    await nock.back("reg-update-url-all.json");
     await expect(reg.registryUpdateApplicationURL(await freshContext(), [], [])).resolves.toMatchInlineSnapshot(`
             [
               {
@@ -512,7 +511,7 @@ describe("reg nock tests", () => {
   });
 
   test("reg update tenant application url with tenant", async () => {
-    await nock.back("reg-update-tenant-app-url.json");
+    await nock.back("reg-update-url-tenant.json");
     await expect(reg.registryUpdateApplicationURL(await freshContext(), [testTenantId], [])).resolves
       .toMatchInlineSnapshot(`
             [
