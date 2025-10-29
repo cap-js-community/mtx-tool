@@ -55,6 +55,11 @@ const checkOption = async (cliOption, args) => {
     requiredPassArgs.join(", ")
   );
   assert(
+    allPassArgs.length > 0 || (allPassArgs.length === 0 && passArgs.length === 0),
+    'command "%s" takes no arguments',
+    command
+  );
+  assert(
     passArgs.length <= allPassArgs.length,
     'command "%s" takes %s %s',
     command,

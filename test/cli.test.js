@@ -33,6 +33,18 @@ describe("cli tests", () => {
     expect(processExitSpy).toHaveBeenCalledTimes(0);
   });
 
+  test("help with unnecessary arguments", async () => {
+    await cli(["--help", "123"]);
+    expect(mockLogger.error).toHaveBeenCalledTimes(1);
+    expect(mockLogger.error.mock.calls[0]).toMatchInlineSnapshot(`
+      [
+        "error: command "--help" takes no arguments",
+      ]
+    `);
+    expect(processExitSpy).toHaveBeenCalledTimes(1);
+    expect(processExitSpy).toHaveBeenCalledWith(-1);
+  });
+
   test("version", async () => {
     await cli(["--version"]);
     expect(mockLogger.info).toHaveBeenCalledTimes(1);
@@ -49,7 +61,11 @@ describe("cli tests", () => {
   test("uaa user with too few variables", async () => {
     await cli(["--uaa-user", mockUsername]);
     expect(mockLogger.error).toHaveBeenCalledTimes(1);
-    expect(mockLogger.error.mock.calls[0]).toMatchSnapshot();
+    expect(mockLogger.error.mock.calls[0]).toMatchInlineSnapshot(`
+      [
+        "error: command "--uaa-user" requires arguments USERNAME, PASSWORD",
+      ]
+    `);
     expect(processExitSpy).toHaveBeenCalledTimes(1);
     expect(processExitSpy).toHaveBeenCalledWith(-1);
   });
@@ -57,7 +73,11 @@ describe("cli tests", () => {
   test("uaa user with too many variables", async () => {
     await cli(["--uaa-user", mockUsername, mockPassword, mockTenant, mockService]);
     expect(mockLogger.error).toHaveBeenCalledTimes(1);
-    expect(mockLogger.error.mock.calls[0]).toMatchSnapshot();
+    expect(mockLogger.error.mock.calls[0]).toMatchInlineSnapshot(`
+      [
+        "error: command "--uaa-user" takes arguments USERNAME, PASSWORD, TENANT",
+      ]
+    `);
     expect(processExitSpy).toHaveBeenCalledTimes(1);
     expect(processExitSpy).toHaveBeenCalledWith(-1);
   });
