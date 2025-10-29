@@ -57,8 +57,8 @@ git add . && git commit -m "mtx-tool config"
 **In pipeline, for example**
 
 ```
-npx @cap-js-community/mtx-tool@0.10.2 --svm-repair-bindings all-services
-npx @cap-js-community/mtx-tool@0.10.2 --svm-refresh-bindings all-services all-tenants
+npx @cap-js-community/mtx-tool@0.10.3 --svm-repair-bindings all-services
+npx @cap-js-community/mtx-tool@0.10.3 --svm-refresh-bindings all-services all-tenants
 ...
-npx @cap-js-community/mtx-tool@0.10.2 --cds-upgrade-all
+npx @cap-js-community/mtx-tool@0.10.3 --cds-upgrade-all
 ```
