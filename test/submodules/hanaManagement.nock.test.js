@@ -87,10 +87,10 @@ describe("hdi nock tests", () => {
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
         
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings?labelQuery=service_plan_id%20eq%20'1b702f36-bd66-4fad-b4d8-75cf0a0b8347' 200 OK (88ms)
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances?fieldQuery=service_plan_id%20eq%20'1b702f36-bd66-4fad-b4d8-75cf0a0b8347' 200 OK (88ms)
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_offerings?fieldQuery=name%20eq%20'hana' 200 OK (88ms)
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_plans?fieldQuery=service_offering_id%20eq%20'8c3922c9-fcbd-469e-9393-2d941400f2c1'%20and%20name%20eq%20'hdi-shared' 200 OK (88ms)"
+        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings?labelQuery=service_plan_id+eq+'1b702f36-bd66-4fad-b4d8-75cf0a0b8347' 200 OK (88ms)
+        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances?fieldQuery=service_plan_id+eq+'1b702f36-bd66-4fad-b4d8-75cf0a0b8347' 200 OK (88ms)
+        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_offerings?fieldQuery=name+eq+'hana' 200 OK (88ms)
+        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_plans?fieldQuery=service_offering_id+eq+'8c3922c9-fcbd-469e-9393-2d941400f2c1'+and+name+eq+'hdi-shared' 200 OK (88ms)"
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
@@ -136,10 +136,10 @@ describe("hdi nock tests", () => {
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
         
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings?labelQuery=service_plan_id%20eq%20'1b702f36-bd66-4fad-b4d8-75cf0a0b8347'%20and%20tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances?fieldQuery=service_plan_id%20eq%20'1b702f36-bd66-4fad-b4d8-75cf0a0b8347'&labelQuery=tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_offerings?fieldQuery=name%20eq%20'hana' 200 OK (88ms)
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_plans?fieldQuery=service_offering_id%20eq%20'8c3922c9-fcbd-469e-9393-2d941400f2c1'%20and%20name%20eq%20'hdi-shared' 200 OK (88ms)"
+        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings?labelQuery=service_plan_id+eq+'1b702f36-bd66-4fad-b4d8-75cf0a0b8347'+and+tenant_id+eq+'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)
+        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances?fieldQuery=service_plan_id+eq+'1b702f36-bd66-4fad-b4d8-75cf0a0b8347'&labelQuery=tenant_id+eq+'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)
+        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_offerings?fieldQuery=name+eq+'hana' 200 OK (88ms)
+        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_plans?fieldQuery=service_offering_id+eq+'8c3922c9-fcbd-469e-9393-2d941400f2c1'+and+name+eq+'hdi-shared' 200 OK (88ms)"
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
@@ -170,10 +170,10 @@ describe("hdi nock tests", () => {
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
         
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings?labelQuery=service_plan_id%20eq%20'1b702f36-bd66-4fad-b4d8-75cf0a0b8347' 200 OK (88ms)
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances?fieldQuery=service_plan_id%20eq%20'1b702f36-bd66-4fad-b4d8-75cf0a0b8347' 200 OK (88ms)
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_offerings?fieldQuery=name%20eq%20'hana' 200 OK (88ms)
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_plans?fieldQuery=service_offering_id%20eq%20'8c3922c9-fcbd-469e-9393-2d941400f2c1'%20and%20name%20eq%20'hdi-shared' 200 OK (88ms)"
+        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings?labelQuery=service_plan_id+eq+'1b702f36-bd66-4fad-b4d8-75cf0a0b8347' 200 OK (88ms)
+        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances?fieldQuery=service_plan_id+eq+'1b702f36-bd66-4fad-b4d8-75cf0a0b8347' 200 OK (88ms)
+        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_offerings?fieldQuery=name+eq+'hana' 200 OK (88ms)
+        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_plans?fieldQuery=service_offering_id+eq+'8c3922c9-fcbd-469e-9393-2d941400f2c1'+and+name+eq+'hdi-shared' 200 OK (88ms)"
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
@@ -199,10 +199,10 @@ describe("hdi nock tests", () => {
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
         
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings?labelQuery=service_plan_id%20eq%20'1b702f36-bd66-4fad-b4d8-75cf0a0b8347'%20and%20tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances?fieldQuery=service_plan_id%20eq%20'1b702f36-bd66-4fad-b4d8-75cf0a0b8347'&labelQuery=tenant_id%20eq%20'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_offerings?fieldQuery=name%20eq%20'hana' 200 OK (88ms)
-        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_plans?fieldQuery=service_offering_id%20eq%20'8c3922c9-fcbd-469e-9393-2d941400f2c1'%20and%20name%20eq%20'hdi-shared' 200 OK (88ms)"
+        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_bindings?labelQuery=service_plan_id+eq+'1b702f36-bd66-4fad-b4d8-75cf0a0b8347'+and+tenant_id+eq+'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)
+        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_instances?fieldQuery=service_plan_id+eq+'1b702f36-bd66-4fad-b4d8-75cf0a0b8347'&labelQuery=tenant_id+eq+'5ecc7413-2b7e-414a-9496-ad4a61f6cccf' 200 OK (88ms)
+        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_offerings?fieldQuery=name+eq+'hana' 200 OK (88ms)
+        GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_plans?fieldQuery=service_offering_id+eq+'8c3922c9-fcbd-469e-9393-2d941400f2c1'+and+name+eq+'hdi-shared' 200 OK (88ms)"
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });

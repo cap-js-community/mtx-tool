@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
           # NOTE: the explicit registry-url is currently needed for the auth token to work
           registry-url: https://registry.npmjs.org/

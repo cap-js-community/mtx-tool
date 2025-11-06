@@ -1,6 +1,5 @@
 "use strict";
 
-const urllib = require("url");
 const fetchlib = require("node-fetch");
 const crypto = require("crypto");
 
@@ -99,16 +98,32 @@ const _request = async ({
       search = path.slice(searchIndex);
     }
   }
-  const _url = urllib.format({
-    ...urllib.parse(url),
-    ...(protocol && { protocol }),
-    ...(host && { host }),
-    ...(hostname && { hostname }),
-    ...(pathname && { pathname }),
-    ...(search && { search }),
-    ...(query && { query }),
-    ...(hash && { hash }),
-  });
+
+  const _url = new URL(url || "http://localhost");
+  if (protocol) {
+    _url.protocol = protocol;
+  }
+  if (host) {
+    _url.host = host;
+  }
+  if (hostname) {
+    _url.hostname = hostname;
+  }
+  if (pathname) {
+    _url.pathname = pathname;
+  }
+  if (search) {
+    _url.search = search;
+  }
+  if (query) {
+    for (const [key, value] of Object.entries(query)) {
+      _url.searchParams.set(key, value);
+    }
+  }
+  if (hash) {
+    _url.hash = hash;
+  }
+
   const _basicAuthHeader =
     auth &&
     Object.prototype.hasOwnProperty.call(auth, "username") &&
@@ -148,7 +163,7 @@ const _request = async ({
       logRequestId ??= doLogAttempt && LogRequestId.next();
       const logParts = [
         ...(doLogAttempt ? [`[req-${logRequestId} ${attempt + 1}/${RETRY_SLEEP_TIMES.length}]`] : []),
-        `${_method} ${_url} ${response.status} ${response.statusText}`,
+        `${_method} ${decodeURI(_url.href)} ${response.status} ${response.statusText}`,
         ...(showCorrelation
           ? [`(${responseTime}ms, ${correlationHeader}: ${response.headers.get(correlationHeader)})`]
           : [`(${responseTime}ms)`]),

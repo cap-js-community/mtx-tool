@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## v0.10.4 - tbd
 
+### CHANGED
+
+- core: require node engine >= 20.0.0
+
+### FIXED
+
+- core: move from deprecated url.parse() to silly WHATWG API
+
 ## v0.10.3 - 2025-10-29
 
 ### CHANGED
