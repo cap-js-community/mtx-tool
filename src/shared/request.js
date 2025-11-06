@@ -118,7 +118,7 @@ const _request = async ({
   }
   if (query) {
     for (const [key, value] of Object.entries(query)) {
-      _url.searchParams.append(key, value);
+      _url.searchParams.set(key, value);
     }
   }
   if (hash) {
@@ -164,7 +164,7 @@ const _request = async ({
       logRequestId ??= doLogAttempt && LogRequestId.next();
       const logParts = [
         ...(doLogAttempt ? [`[req-${logRequestId} ${attempt + 1}/${RETRY_SLEEP_TIMES.length}]`] : []),
-        `${_method} ${_url} ${response.status} ${response.statusText}`,
+        `${_method} ${decodeURI(_url.href)} ${response.status} ${response.statusText}`,
         ...(showCorrelation
           ? [`(${responseTime}ms, ${correlationHeader}: ${response.headers.get(correlationHeader)})`]
           : [`(${responseTime}ms)`]),
