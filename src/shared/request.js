@@ -1,6 +1,5 @@
 "use strict";
 
-const urllib = require("url");
 const fetchlib = require("node-fetch");
 const crypto = require("crypto");
 
@@ -100,7 +99,7 @@ const _request = async ({
     }
   }
 
-  const _url = new URL(url);
+  const _url = new URL(url || "http://localhost");
   if (protocol) {
     _url.protocol = protocol;
   }
