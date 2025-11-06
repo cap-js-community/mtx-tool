@@ -95,8 +95,8 @@ const _cfRequestPaged = async (cfInfo, path) => {
       break;
     }
     if (pagination && pagination.next && pagination.next.href) {
-      const { path: nextPath } = urllib.parse(pagination.next.href);
-      path = nextPath;
+      const nextUrl = new URL(pagination.next.href);
+      path = nextUrl.pathname;
     } else {
       break;
     }
