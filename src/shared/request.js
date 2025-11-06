@@ -99,16 +99,32 @@ const _request = async ({
       search = path.slice(searchIndex);
     }
   }
-  const _url = urllib.format({
-    ...urllib.parse(url),
-    ...(protocol && { protocol }),
-    ...(host && { host }),
-    ...(hostname && { hostname }),
-    ...(pathname && { pathname }),
-    ...(search && { search }),
-    ...(query && { query }),
-    ...(hash && { hash }),
-  });
+
+  const _url = new URL(url);
+  if (protocol) {
+    _url.protocol = protocol;
+  }
+  if (host) {
+    _url.host = host;
+  }
+  if (hostname) {
+    _url.hostname = hostname;
+  }
+  if (pathname) {
+    _url.pathname = pathname;
+  }
+  if (search) {
+    _url.search = search;
+  }
+  if (query) {
+    for (const [key, value] of Object.entries(query)) {
+      _url.searchParams.append(key, value);
+    }
+  }
+  if (hash) {
+    _url.hash = hash;
+  }
+
   const _basicAuthHeader =
     auth &&
     Object.prototype.hasOwnProperty.call(auth, "username") &&
