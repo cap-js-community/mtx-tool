@@ -58,21 +58,15 @@ UAA Credentials:
 
 const getIasTokenFromCredentials = async (credentials) => {
   const {
-    url: serviceUrlPaas,
-    clientid: clientId,
-    clientsecret: clientSecret,
-    certurl: certUrlPaas,
-    certificate,
+    url,
+    app_tid: tenantId,
+    client_id: clientId,
+    "certificate-type": certificateType,
     key,
-    identityzone: credentialIdentityZone,
+    certificate,
   } = credentials;
-  identityZone = identityZone ?? credentialIdentityZone;
-  const isX509Enabled = !clientSecret && certUrlPaas;
-  const serviceUrl = subdomain ? serviceUrlPaas.replace(identityZone, subdomain) : serviceUrlPaas;
-  const certUrl = subdomain && certUrlPaas ? certUrlPaas.replace(identityZone, subdomain) : certUrlPaas;
-  const url = isX509Enabled ? certUrl : serviceUrl;
+  console.log("!!!", credentials);
 
-  const baseOptions = { clientId, tenantId, passcode, username, password };
   return await getToken(url, options);
 };
 
