@@ -463,8 +463,8 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
       }
     );
 
-  const getCachedTokenFromAuthService = async (service, options) => {
-    const { label, credentials } = service;
+  const getCachedTokenFromAuthService = async (cfService, options) => {
+    const { label, credentials } = cfService;
     switch (label) {
       case "xsuaa":
         return await getCachedUaaTokenFromCredentials(credentials, options);
