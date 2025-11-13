@@ -96,7 +96,7 @@ const _cfRequestPaged = async (cfInfo, path) => {
     }
     if (pagination && pagination.next && pagination.next.href) {
       const nextUrl = new URL(pagination.next.href);
-      path = nextUrl.pathname;
+      path = nextUrl.pathname + (nextUrl.search ? nextUrl.search : "");
     } else {
       break;
     }
