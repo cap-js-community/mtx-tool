@@ -56,6 +56,26 @@ UAA Credentials:
 //   const { subdomain, identityZone, tenantId, passcode, username, password } = options;
 // };
 
+const getIasTokenFromCredentials = async (credentials) => {
+  const {
+    url: serviceUrlPaas,
+    clientid: clientId,
+    clientsecret: clientSecret,
+    certurl: certUrlPaas,
+    certificate,
+    key,
+    identityzone: credentialIdentityZone,
+  } = credentials;
+  identityZone = identityZone ?? credentialIdentityZone;
+  const isX509Enabled = !clientSecret && certUrlPaas;
+  const serviceUrl = subdomain ? serviceUrlPaas.replace(identityZone, subdomain) : serviceUrlPaas;
+  const certUrl = subdomain && certUrlPaas ? certUrlPaas.replace(identityZone, subdomain) : certUrlPaas;
+  const url = isX509Enabled ? certUrl : serviceUrl;
+
+  const baseOptions = { clientId, tenantId, passcode, username, password };
+  return await getToken(url, options);
+};
+
 const getUaaTokenFromCredentials = async (
   credentials,
   { subdomain, identityZone, tenantId, passcode, username, password } = {}
@@ -86,10 +106,10 @@ const getUaaTokenFromCredentials = async (
 
   const baseOptions = { clientId, tenantId, passcode, username, password };
   const options = isX509Enabled ? { ...baseOptions, certificate, key } : { ...baseOptions, clientSecret };
-  return await getUaaToken(url, options);
+  return await getToken(url, options);
 };
 
-const getUaaToken = async (
+const getToken = async (
   url,
   { clientId, clientSecret, certificate, key, tenantId, passcode, username, password } = {}
 ) => {
@@ -124,4 +144,5 @@ const getUaaToken = async (
 
 module.exports = {
   getUaaTokenFromCredentials,
+  getIasTokenFromCredentials,
 };
