@@ -46,12 +46,8 @@ const _cdsTenants = async (context, tenant) => {
   const { subdomain: filterSubdomain, tenantId: filterTenantId } = resolveTenantArg(tenant);
   filterSubdomain && assert(isDashedWord(filterSubdomain), `argument "${filterSubdomain}" is not a valid subdomain`);
 
-  const {
-    cfRouteUrl,
-    cfService: { credentials },
-  } = await context.getCdsInfo();
-
-  const token = await context.getCachedUaaTokenFromCredentials(credentials);
+  const { cfRouteUrl, cfService } = await context.getCdsInfo();
+  const token = await context.getCachedTokenFromAuthService(cfService);
   const _getTenantRequestOptionsPathname = () =>
     filterTenantId ? `/-/cds/saas-provisioning/tenant/${filterTenantId}` : "/-/cds/saas-provisioning/tenant";
   const response = await request({
@@ -97,11 +93,8 @@ const cdsLongList = async (context, [tenant]) => {
 };
 
 const _cdsOnboard = async (context, tenantId, metadata = {}) => {
-  const {
-    cfRouteUrl,
-    cfService: { credentials },
-  } = await context.getCdsInfo();
-  const token = await context.getCachedUaaTokenFromCredentials(credentials);
+  const { cfRouteUrl, cfService } = await context.getCdsInfo();
+  const token = await context.getCachedTokenFromAuthService(cfService);
   await request({
     method: "PUT",
     url: cfRouteUrl,
@@ -168,18 +161,13 @@ const _cdsUpgradeMtxs = async (
     return;
   }
   const autoUndeployOptions = { options: { _: { hdi: { deploy: { auto_undeploy: true } } } } };
-  const {
-    cfAppGuid,
-    cfRouteUrl,
-    cfService: { credentials },
-    cfSsh,
-  } = await context.getCdsInfo();
+  const { cfAppGuid, cfRouteUrl, cfService, cfSsh } = await context.getCdsInfo();
 
   const upgradeResponse = await request({
     method: "POST",
     url: cfRouteUrl,
     pathname: "/-/cds/saas-provisioning/upgrade",
-    auth: { token: await context.getCachedUaaTokenFromCredentials(credentials) },
+    auth: { token: await await context.getCachedTokenFromAuthService(cfService) },
     headers: {
       "Content-Type": "application/json",
       "X-Cf-App-Instance": `${cfAppGuid}:${appInstance}`,
@@ -204,7 +192,7 @@ const _cdsUpgradeMtxs = async (
     const pollJobResponse = await request({
       url: cfRouteUrl,
       pathname: `/-/cds/jobs/pollJob(ID='${jobId}')`,
-      auth: { token: await context.getCachedUaaTokenFromCredentials(credentials) },
+      auth: { token: await context.getCachedTokenFromAuthService(cfService) },
     });
     pollJobResponseData = await _safeMaterializeJson(pollJobResponse, "poll job");
 
@@ -308,11 +296,8 @@ const cdsUpgradeAll = async (context, _, [doAutoUndeploy, doFirstInstance]) => {
 };
 
 const _cdsOffboard = async (context, tenantId) => {
-  const {
-    cfRouteUrl,
-    cfService: { credentials },
-  } = await context.getCdsInfo();
-  const token = await context.getCachedUaaTokenFromCredentials(credentials);
+  const { cfRouteUrl, cfService } = await context.getCdsInfo();
+  const token = await context.getCachedTokenFromAuthService(cfService);
   await request({
     method: "DELETE",
     url: cfRouteUrl,
