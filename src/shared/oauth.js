@@ -82,10 +82,10 @@ const getToken = async (
     grant_type: grantType,
     client_id: clientId,
     ...(clientSecret && { client_secret: clientSecret }),
-    ...(loginHint && { login_hint: loginHint }),
     ...(passcode && { passcode }),
     ...(username && { username }),
     ...(password && { password }),
+    ...(loginHint && { login_hint: loginHint }),
     ...bodyFields,
   }).toString();
   return await (
