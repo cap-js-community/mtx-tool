@@ -487,6 +487,8 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     getSrvInfo,
     getCachedUaaTokenFromCredentials,
     getCachedTokenFromAuthService,
+    // TODO remove API
+    getCachedUaaToken: () => {},
     getAppNameInfoCached,
   };
 };
