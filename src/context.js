@@ -456,7 +456,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const getCachedIasTokenFromCredentials = async (credentials, options) =>
     await cfTokenCache.getSetCb(
       credentials.clientid,
-      async () => await oauth.getUaaTokenFromCredentials(credentials, options),
+      async () => await oauth.getIasTokenFromCredentials(credentials, options),
       {
         expirationExtractor: ({ expires_in }) => Date.now() + expires_in * 1000,
         valueExtractor: ({ access_token }) => access_token,
