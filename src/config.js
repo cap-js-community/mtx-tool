@@ -81,9 +81,22 @@ const CONFIG_INFOS = {
     config: "cdsAppName",
     name: "cds-mtx app",
     envVariable: ENV.CDS_APP,
-    question: "cf app running @sap/cds-mtx or @sap/cds-mtxs library (optional)?",
-    failMessage: "option requires configured app running @sap/cds-mtx",
+    question: "cf app running @sap/cds-mtxs bound to an auth service (optional)?",
+    failMessage:
+      "option requires configured app running @sap/cds-mtxs bound to an auth service " +
+      "label:xsuaa plan:application or " +
+      "label:identity plan:application",
     requireRoute: true,
+    requireServices: [
+      {
+        label: "xsuaa",
+        plan: "application",
+      },
+      {
+        label: "identity",
+        plan: "application",
+      },
+    ],
   },
 
   [CONFIG_TYPE.HDI_APP]: {

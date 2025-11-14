@@ -40,7 +40,7 @@ const mockCdsInfoMultiInstance = {
 
 const fakeContext = ({ isMultiInstance = false } = {}) => ({
   getCdsInfo: () => (isMultiInstance ? mockCdsInfoMultiInstance : mockCdsInfo),
-  getCachedUaaToken: () => "token",
+  getCachedTokenFromAuthService: () => "token",
   getCachedUaaTokenFromCredentials: () => "token",
 });
 

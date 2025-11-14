@@ -57,13 +57,8 @@ const cfEnvServicesMock = {
 
 const contextMock = {
   getUaaInfo: jest.fn(() => ({ cfService: uaaCfServiceMock })),
-  getCachedUaaToken: jest.fn((options) => {
-    return contextMock.getCachedUaaTokenFromCredentials(options);
-  }),
-  getCachedUaaTokenFromCredentials: jest.fn((options) => {
-    return sharedOAuthMock
-      .getUaaTokenFromCredentials(uaaCfServiceMock.credentials, options)
-      .then(({ access_token }) => access_token);
+  getCachedUaaTokenFromCredentials: jest.fn((credentials, options) => {
+    return sharedOAuthMock.getUaaTokenFromCredentials(credentials, options).then(({ access_token }) => access_token);
   }),
 };
 

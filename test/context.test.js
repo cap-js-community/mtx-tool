@@ -53,7 +53,7 @@ describe("context tests", () => {
     mockRequest.mockReturnValueOnce({ json: () => mockCfProcess });
     mockRequest.mockReturnValueOnce({ json: () => mockCfRoutes });
 
-    await expect(context.getCachedUaaToken()).rejects.toMatchInlineSnapshot(
+    await expect(context.getUaaInfo()).rejects.toMatchInlineSnapshot(
       `[Error: no vcap service information in environment, check cf user permissions]`
     );
   });
