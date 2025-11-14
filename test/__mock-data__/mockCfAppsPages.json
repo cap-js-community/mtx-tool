@@ -1,0 +1,80 @@
+[
+  {
+    "pagination": {
+      "total_results": 2,
+      "total_pages": 2,
+      "first": {
+        "href": "https://api.cf.sap.hana.ondemand.com/v3/apps?page=1&per_page=50&space_guids=0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+      },
+      "last": {
+        "href": "https://api.cf.sap.hana.ondemand.com/v3/apps?page=2&per_page=50&space_guids=0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+      },
+      "next": {
+        "href": "https://api.cf.sap.hana.ondemand.com/v3/apps?page=2&per_page=50&space_guids=0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+      },
+      "previous": null
+    },
+    "resources": [
+      {
+        "guid": "f84d681e-7123-442f-b8ea-2c747c11e145",
+        "created_at": "2020-04-22T16:43:08Z",
+        "updated_at": "2024-06-03T20:00:02Z",
+        "name": "uaa-app-1",
+        "state": "STARTED",
+        "lifecycle": {
+          "type": "buildpack",
+          "data": {
+            "buildpacks": ["https://github.com/cloudfoundry/nodejs-buildpack.git#v1.8.24"],
+            "stack": "cflinuxfs4"
+          }
+        },
+        "relationships": {
+          "space": {
+            "data": {
+              "guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "pagination": {
+      "total_results": 2,
+      "total_pages": 2,
+      "first": {
+        "href": "https://api.cf.sap.hana.ondemand.com/v3/apps?page=1&per_page=50&space_guids=0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+      },
+      "last": {
+        "href": "https://api.cf.sap.hana.ondemand.com/v3/apps?page=2&per_page=50&space_guids=0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+      },
+      "next": null,
+      "previous": {
+        "href": "https://api.cf.sap.hana.ondemand.com/v3/apps?page=1&per_page=50&space_guids=0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+      }
+    },
+    "resources": [
+      {
+        "guid": "8d09ad4f-482c-4591-8dd4-bf2028fce713",
+        "created_at": "2020-04-22T16:43:08Z",
+        "updated_at": "2024-06-03T20:00:02Z",
+        "name": "uaa-app-2",
+        "state": "STARTED",
+        "lifecycle": {
+          "type": "buildpack",
+          "data": {
+            "buildpacks": ["https://github.com/cloudfoundry/nodejs-buildpack.git#v1.8.24"],
+            "stack": "cflinuxfs4"
+          }
+        },
+        "relationships": {
+          "space": {
+            "data": {
+              "guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+            }
+          }
+        }
+      }
+    ]
+  }
+]
