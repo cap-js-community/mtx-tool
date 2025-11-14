@@ -28,6 +28,7 @@ jest.mock("../src/shared/request", () => {
 const mockCfConfig = require("./__mock-data__/mockCfConfig.json");
 const mockCfEnvNoServices = require("./__mock-data__/mockCfEnvNoServices.json");
 const mockCfApps = require("./__mock-data__/mockCfApps.json");
+const mockCfAppsPages = require("./__mock-data__/mockCfAppsPages.json");
 const mockCfProcess = require("./__mock-data__/mockCfProcess.json");
 const mockCfRoutes = require("./__mock-data__/mockCfRoutes.json");
 const mockRuntimeConfig = {
@@ -55,6 +56,20 @@ describe("context tests", () => {
     await expect(context.getUaaInfo()).rejects.toMatchInlineSnapshot(
       `[Error: no vcap service information in environment, check cf user permissions]`
     );
+  });
+
+  test("can create context for paged cf apps", async () => {
+    mockStatic.spawnAsync.mockReturnValueOnce(["oauth-token"]);
+    mockStatic.tryReadJsonSync.mockReturnValueOnce(mockCfConfig);
+    mockStatic.tryAccessSync.mockReturnValueOnce(true);
+    mockStatic.tryReadJsonSync.mockReturnValueOnce(mockRuntimeConfig);
+    for (const mockCfAppsPage of mockCfAppsPages) {
+      mockRequest.mockReturnValueOnce({ json: () => mockCfAppsPage });
+    }
+    mockRequest.mockReturnValueOnce({ json: () => mockCfEnvNoServices });
+
+    await expect(newContext()).resolves.toBeDefined();
+    expect(mockRequest.mock.calls).toMatchSnapshot();
   });
 
   test("has reg/sms info", async () => {
