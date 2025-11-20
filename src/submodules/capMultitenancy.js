@@ -42,19 +42,20 @@ const logger = Logger.getInstance();
 const cdsRequestConcurrency = parseIntWithFallback(process.env[ENV.CDS_CONCURRENCY], CDS_REQUEST_CONCURRENCY_FALLBACK);
 const cdsPollFrequency = parseIntWithFallback(process.env[ENV.CDS_FREQUENCY], CDS_JOB_POLL_FREQUENCY_FALLBACK);
 
+const _serverRequest = async (context, reqOptions = {}) => {
+  const { cfRouteUrl, cfService } = await context.getCdsInfo();
+  const auth = { token: await context.getCachedTokenFromAuthService(cfService) };
+  return await request({ cfRouteUrl, auth, ...reqOptions });
+};
+
 const _cdsTenants = async (context, tenant) => {
   const { subdomain: filterSubdomain, tenantId: filterTenantId } = resolveTenantArg(tenant);
   filterSubdomain && assert(isDashedWord(filterSubdomain), `argument "${filterSubdomain}" is not a valid subdomain`);
 
-  const { cfRouteUrl, cfService } = await context.getCdsInfo();
-  const token = await context.getCachedTokenFromAuthService(cfService);
-  const _getTenantRequestOptionsPathname = () =>
-    filterTenantId ? `/-/cds/saas-provisioning/tenant/${filterTenantId}` : "/-/cds/saas-provisioning/tenant";
-  const response = await request({
-    url: cfRouteUrl,
-    pathname: _getTenantRequestOptionsPathname(),
-    auth: { token },
-  });
+  const pathname = filterTenantId
+    ? `/-/cds/saas-provisioning/tenant/${filterTenantId}`
+    : "/-/cds/saas-provisioning/tenant";
+  const response = await _serverRequest(context, { pathname });
   const resultRaw = await response.json();
   let result = Array.isArray(resultRaw) ? resultRaw : [resultRaw];
   if (filterSubdomain) {
@@ -92,20 +93,13 @@ const cdsLongList = async (context, [tenant]) => {
   return await _cdsTenants(context, tenant);
 };
 
-const _cdsOnboard = async (context, tenantId, metadata = {}) => {
-  const { cfRouteUrl, cfService } = await context.getCdsInfo();
-  const token = await context.getCachedTokenFromAuthService(cfService);
-  await request({
+const _cdsOnboard = async (context, tenantId, metadata = {}) =>
+  await _serverRequest(context, {
     method: "PUT",
-    url: cfRouteUrl,
     pathname: `/-/cds/saas-provisioning/tenant/${tenantId}`,
-    auth: { token },
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ ...metadata, eventType: "CREATE" }),
   });
-};
 
 const cdsOnboardTenant = async (context, [tenantId, rawMetadata]) => {
   let metadata;
@@ -161,13 +155,11 @@ const _cdsUpgradeMtxs = async (
     return;
   }
   const autoUndeployOptions = { options: { _: { hdi: { deploy: { auto_undeploy: true } } } } };
-  const { cfAppGuid, cfRouteUrl, cfService, cfSsh } = await context.getCdsInfo();
+  const { cfAppGuid, cfSsh } = await context.getCdsInfo();
 
-  const upgradeResponse = await request({
+  const upgradeResponse = await _serverRequest(context, {
     method: "POST",
-    url: cfRouteUrl,
     pathname: "/-/cds/saas-provisioning/upgrade",
-    auth: { token: await await context.getCachedTokenFromAuthService(cfService) },
     headers: {
       "Content-Type": "application/json",
       "X-Cf-App-Instance": `${cfAppGuid}:${appInstance}`,
@@ -189,11 +181,7 @@ const _cdsUpgradeMtxs = async (
 
   while (true) {
     await sleep(cdsPollFrequency);
-    const pollJobResponse = await request({
-      url: cfRouteUrl,
-      pathname: `/-/cds/jobs/pollJob(ID='${jobId}')`,
-      auth: { token: await context.getCachedTokenFromAuthService(cfService) },
-    });
+    const pollJobResponse = await _serverRequest({ pathname: `/-/cds/jobs/pollJob(ID='${jobId}')` });
     pollJobResponseData = await _safeMaterializeJson(pollJobResponse, "poll job");
 
     const { status, tasks } = pollJobResponseData || {};
@@ -295,16 +283,11 @@ const cdsUpgradeAll = async (context, _, [doAutoUndeploy, doFirstInstance]) => {
   );
 };
 
-const _cdsOffboard = async (context, tenantId) => {
-  const { cfRouteUrl, cfService } = await context.getCdsInfo();
-  const token = await context.getCachedTokenFromAuthService(cfService);
-  await request({
+const _cdsOffboard = async (context, tenantId) =>
+  await _serverRequest(context, {
     method: "DELETE",
-    url: cfRouteUrl,
     pathname: `/-/cds/saas-provisioning/tenant/${tenantId}`,
-    auth: { token },
   });
-};
 
 const cdsOffboardTenant = async (context, [tenantId]) => {
   assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
