@@ -200,7 +200,7 @@ const _cdsUpgradeMtxs = async (
 
   while (true) {
     await sleep(cdsPollFrequency);
-    const pollJobResponse = await _serverRequest({ pathname: `/-/cds/jobs/pollJob(ID='${jobId}')` });
+    const pollJobResponse = await _serverRequest(context, { pathname: `/-/cds/jobs/pollJob(ID='${jobId}')` });
     pollJobResponseData = await _safeMaterializeJson(pollJobResponse, "poll job");
 
     const { status, tasks } = pollJobResponseData || {};
@@ -266,11 +266,9 @@ const _cdsUpgradeMtxs = async (
   assert(!hasChangeTimeout, "no task progress after %s", CDS_CHANGE_TIMEOUT_TEXT);
 };
 
-const _cdsUpgrade = async (context, options) => await _cdsUpgradeMtxs(context, options);
-
 const cdsUpgradeTenant = async (context, [tenantId], [doAutoUndeploy]) => {
   assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
-  return await _cdsUpgrade(context, { tenants: [tenantId], doAutoUndeploy });
+  return await _cdsUpgradeMtxs(context, { tenants: [tenantId], doAutoUndeploy });
 };
 
 const cdsUpgradeAll = async (context, _, [doAutoUndeploy, doFirstInstance]) => {
@@ -278,7 +276,7 @@ const cdsUpgradeAll = async (context, _, [doAutoUndeploy, doFirstInstance]) => {
   const appInstances = cfProcess && cfProcess.instances;
 
   if (doFirstInstance || !appInstances || appInstances <= 1) {
-    return await _cdsUpgrade(context, { doAutoUndeploy });
+    return await _cdsUpgradeMtxs(context, { doAutoUndeploy });
   }
 
   // NOTE: we sort by tenantId to get a stable pseudo-random order
@@ -297,7 +295,7 @@ const cdsUpgradeAll = async (context, _, [doAutoUndeploy, doFirstInstance]) => {
 
   await assertAll("problems occurred during tenant upgrade")(
     tenantIdParts.map(
-      async (tenants, appInstance) => await _cdsUpgrade(context, { tenants, doAutoUndeploy, appInstance })
+      async (tenants, appInstance) => await _cdsUpgradeMtxs(context, { tenants, doAutoUndeploy, appInstance })
     )
   );
 };

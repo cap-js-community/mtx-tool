@@ -30,6 +30,7 @@ const mockCdsInfo = {
   cfAppGuid: "app-mtx-guid",
   cfRouteUrl: "route-url",
   cfProcess: { instances: 1 },
+  cfService: { label: "xsuaa", credentials: {} },
   cfSsh: jest.fn().mockReturnValue([]),
 };
 
