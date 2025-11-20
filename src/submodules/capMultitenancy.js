@@ -64,7 +64,7 @@ const _serverRequest = async (context, reqOptions = {}) => {
     }
   }
   const auth = { token };
-  return await request({ ...(agent && { agent }), cfRouteUrl, auth, ...reqOptions });
+  return await request({ ...(agent && { agent }), url: cfRouteUrl, auth, ...reqOptions });
 };
 
 const _cdsTenants = async (context, tenant) => {
