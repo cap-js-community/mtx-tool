@@ -463,18 +463,6 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
       }
     );
 
-  const getCachedTokenFromAuthService = async (cfService, options) => {
-    const { label, credentials } = cfService;
-    switch (label) {
-      case "xsuaa":
-        return await getCachedUaaTokenFromCredentials(credentials, options);
-      case "identity":
-        return await getCachedIasTokenFromCredentials(credentials, options);
-      default:
-        return fail("unknown auth service label %s", label);
-    }
-  };
-
   return {
     runtimeConfig,
     getUaaInfo,
@@ -486,7 +474,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     getHdiInfo,
     getSrvInfo,
     getCachedUaaTokenFromCredentials,
-    getCachedTokenFromAuthService,
+    getCachedIasTokenFromCredentials,
     getAppNameInfoCached,
   };
 };

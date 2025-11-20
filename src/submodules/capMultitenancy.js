@@ -1,5 +1,6 @@
 "use strict";
 
+const https = require("https");
 const {
   isUUID,
   isDashedWord,
@@ -43,9 +44,27 @@ const cdsRequestConcurrency = parseIntWithFallback(process.env[ENV.CDS_CONCURREN
 const cdsPollFrequency = parseIntWithFallback(process.env[ENV.CDS_FREQUENCY], CDS_JOB_POLL_FREQUENCY_FALLBACK);
 
 const _serverRequest = async (context, reqOptions = {}) => {
-  const { cfRouteUrl, cfService } = await context.getCdsInfo();
-  const auth = { token: await context.getCachedTokenFromAuthService(cfService) };
-  return await request({ cfRouteUrl, auth, ...reqOptions });
+  const {
+    cfRouteUrl,
+    cfService: { label, credentials },
+  } = await context.getCdsInfo();
+  assert(["xsuaa", "identity"].includes(label), "unknown auth service label %s", label);
+
+  let agent;
+  let token;
+  switch (label) {
+    case "xsuaa": {
+      token = await context.getCachedUaaTokenFromCredentials(credentials);
+      break;
+    }
+    case "identity": {
+      agent = new https.Agent({ key: credentials.key, cert: credentials.certificate });
+      token = await context.getCachedIasTokenFromCredentials(credentials);
+      break;
+    }
+  }
+  const auth = { token };
+  return await request({ ...(agent && { agent }), cfRouteUrl, auth, ...reqOptions });
 };
 
 const _cdsTenants = async (context, tenant) => {
