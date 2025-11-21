@@ -1,5 +1,10 @@
 "use strict";
 
+const mockHttps = require("https");
+jest.mock("https", () => ({
+  Agent: jest.fn(),
+}));
+
 const mockRequest = require("../../src/shared/request");
 jest.mock("../../src/shared/request", () => ({
   request: jest.fn(),
@@ -30,6 +35,7 @@ const mockCdsInfo = {
   cfAppGuid: "app-mtx-guid",
   cfRouteUrl: "route-url",
   cfProcess: { instances: 1 },
+  cfService: { label: "xsuaa", credentials: {} },
   cfSsh: jest.fn().mockReturnValue([]),
 };
 
@@ -38,10 +44,15 @@ const mockCdsInfoMultiInstance = {
   cfProcess: { instances: 2 },
 };
 
-const fakeContext = ({ isMultiInstance = false } = {}) => ({
-  getCdsInfo: () => (isMultiInstance ? mockCdsInfoMultiInstance : mockCdsInfo),
-  getCachedUaaToken: () => "token",
-  getCachedUaaTokenFromCredentials: () => "token",
+const mockCdsInfoIas = {
+  ...mockCdsInfo,
+  cfService: { label: "identity", credentials: { key: "key", certificate: "cert" } },
+};
+
+const fakeContext = ({ isMultiInstance = false, isIas = false } = {}) => ({
+  getCdsInfo: () => (isMultiInstance ? mockCdsInfoMultiInstance : isIas ? mockCdsInfoIas : mockCdsInfo),
+  getCachedUaaTokenFromCredentials: jest.fn().mockReturnValue("token"),
+  getCachedIasTokenFromCredentials: jest.fn().mockReturnValue("token"),
 });
 
 const mockTenants = [
@@ -151,6 +162,40 @@ const mockOngoingResponse = ({ jobId: inputJobId, tenantIds, jobStatus = JOB_STA
 describe("cds tests", () => {
   beforeEach(() => {
     jest.useFakeTimers();
+  });
+
+  describe("cds list", () => {
+    test("auth with xsuaa", async () => {
+      mockRequest.request.mockReturnValueOnce({ json: () => mockTenants });
+      const context = fakeContext();
+      await expect(cds.cdsList(context, [], [false, false])).resolves.toMatchInlineSnapshot(`
+              "#  tenantId                              subdomain             appName  eventType
+              1  00000000-0000-4000-8000-000000000101  virtual001                     undefined
+              2  00000000-0000-4000-8000-000000000102  virtual002                     undefined
+              3  00000000-0000-4000-8000-000000000103  virtual003                     undefined
+              4  5ecc7413-2b7e-414a-9496-ad4a61f6cccf  skyfin-company                 undefined
+              5  6917dfd6-7590-4033-af2a-140b75263b0d  skyfin-debug-company           undefined
+              6  dde70ec5-983d-4848-b50c-fb2cdac7d359  skyfin-test-3                  undefined"
+            `);
+      expect(context.getCachedUaaTokenFromCredentials).toHaveBeenCalledTimes(1);
+      expect(mockHttps.Agent).toHaveBeenCalledTimes(0);
+    });
+    test("auth with ias", async () => {
+      mockRequest.request.mockReturnValueOnce({ json: () => mockTenants });
+      const context = fakeContext({ isIas: true });
+      await expect(cds.cdsList(context, [], [false, false])).resolves.toMatchInlineSnapshot(`
+              "#  tenantId                              subdomain             appName  eventType
+              1  00000000-0000-4000-8000-000000000101  virtual001                     undefined
+              2  00000000-0000-4000-8000-000000000102  virtual002                     undefined
+              3  00000000-0000-4000-8000-000000000103  virtual003                     undefined
+              4  5ecc7413-2b7e-414a-9496-ad4a61f6cccf  skyfin-company                 undefined
+              5  6917dfd6-7590-4033-af2a-140b75263b0d  skyfin-debug-company           undefined
+              6  dde70ec5-983d-4848-b50c-fb2cdac7d359  skyfin-test-3                  undefined"
+            `);
+      expect(context.getCachedIasTokenFromCredentials).toHaveBeenCalledTimes(1);
+      expect(mockHttps.Agent).toHaveBeenCalledTimes(1);
+      expect(mockHttps.Agent).toHaveBeenCalledWith({ key: "key", cert: "cert" });
+    });
   });
 
   describe("upgrade distribution", () => {

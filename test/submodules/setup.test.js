@@ -51,7 +51,7 @@ describe("set tests", () => {
       "1/6 | cf app bound to xsuaa service (optional)? mock-uaa-app
       2/6 | cf app bound to saas-registry service (optional)? mock-reg-app
       3/6 | cf app bound to subscription manager service (optional)? mock-sms-app
-      4/6 | cf app running @sap/cds-mtx or @sap/cds-mtxs library (optional)? mock-cds-app
+      4/6 | cf app running @sap/cds-mtxs bound to an auth service (optional)? mock-cds-app
       5/6 | cf app bound to service-manager (optional)? mock-hdi-app
       6/6 | cf app with server (optional)? mock-srv-app"
     `);

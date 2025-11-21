@@ -2,8 +2,34 @@
 
 const https = require("https");
 const { isDashedWord, isUUID } = require("./static");
-const { assert } = require("./error");
+const { assert, fail } = require("./error");
 const { request } = require("./request");
+
+const getIasTokenFromCredentials = async (credentials) => {
+  const {
+    url,
+    app_tid: tenantId,
+    clientid: clientId,
+    "credential-type": credentialType,
+    key,
+    certificate,
+  } = credentials;
+
+  switch (credentialType) {
+    case "X509_GENERATED": {
+      return await getToken(url, {
+        pathname: "/oauth2/token",
+        bodyFields: { app_tid: tenantId },
+        clientId,
+        certificate,
+        key,
+      });
+    }
+    default: {
+      return fail("ias credential type not supported %s", credentialType);
+    }
+  }
+};
 
 const getUaaTokenFromCredentials = async (
   credentials,
@@ -33,14 +59,21 @@ const getUaaTokenFromCredentials = async (
       `"argument ${passcode}" is not a valid passcode, get one at ${serviceUrl}/passcode`
     );
 
-  const baseOptions = { clientId, tenantId, passcode, username, password };
+  const baseOptions = {
+    pathname: "/oauth/token",
+    ...(tenantId && { headerFields: { "X-Zid": tenantId } }),
+    clientId,
+    passcode,
+    username,
+    password,
+  };
   const options = isX509Enabled ? { ...baseOptions, certificate, key } : { ...baseOptions, clientSecret };
-  return await getUaaToken(url, options);
+  return await getToken(url, options);
 };
 
-const getUaaToken = async (
+const getToken = async (
   url,
-  { clientId, clientSecret, certificate, key, tenantId, passcode, username, password } = {}
+  { pathname, clientId, clientSecret, certificate, key, passcode, username, password, bodyFields, headerFields } = {}
 ) => {
   const agent = certificate && new https.Agent({ ...(key && { key }), ...(certificate && { cert: certificate }) });
   const grantType = passcode || username ? "password" : "client_credentials";
@@ -53,18 +86,19 @@ const getUaaToken = async (
     ...(username && { username }),
     ...(password && { password }),
     ...(loginHint && { login_hint: loginHint }),
+    ...bodyFields,
   }).toString();
   return await (
     await request({
       ...(agent && { agent }),
       method: "POST",
       url,
-      pathname: "/oauth/token",
+      pathname,
       body,
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         Accept: "application/json",
-        ...(tenantId && { "X-Zid": tenantId }),
+        ...headerFields,
       },
       logged: false,
     })
@@ -72,6 +106,6 @@ const getUaaToken = async (
 };
 
 module.exports = {
-  getUaaToken,
   getUaaTokenFromCredentials,
+  getIasTokenFromCredentials,
 };

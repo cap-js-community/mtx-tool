@@ -39,9 +39,6 @@ const mockContext = {
   getHdiInfo() {
     return { cfSsh: mockCfSsh, cfService: { credentials: mockCredentials } };
   },
-  getCachedUaaToken() {
-    return "token";
-  },
   getCachedUaaTokenFromCredentials() {
     return "token";
   },

@@ -15,7 +15,7 @@ const {
 } = require("./shared/static");
 const { assert, fail } = require("./shared/error");
 const { request } = require("./shared/request");
-const { getUaaTokenFromCredentials: sharedUaaTokenFromCredentials } = require("./shared/oauth");
+const oauth = require("./shared/oauth");
 const { LazyCache, ExpiringLazyCache } = require("./shared/cache");
 const { Logger } = require("./shared/logger");
 const { CONFIG_TYPE, CONFIG_INFOS } = require("./config");
@@ -231,7 +231,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const runtimeConfig = readRuntimeConfig(configPath);
   const cachePath = pathlib.join(dir, FILENAME.CACHE);
   const cfApps = await _getCfApps(cfInfo);
-  const cfUaaTokenCache = new ExpiringLazyCache({ expirationGap: UAA_TOKEN_CACHE_EXPIRY_GAP });
+  const cfTokenCache = new ExpiringLazyCache({ expirationGap: UAA_TOKEN_CACHE_EXPIRY_GAP });
   const settingTypeToAppNameCache = new LazyCache();
   const appNameToCfAppCache = new LazyCache();
   let rawAppMemoryCache = {};
@@ -444,21 +444,24 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const getSrvInfo = makeOneTime(getAppInfoCached(CONFIG_TYPE.SERVER_APP));
 
   const getCachedUaaTokenFromCredentials = async (credentials, options) =>
-    await cfUaaTokenCache.getSetCb(
+    await cfTokenCache.getSetCb(
       credentials.clientid,
-      async () => await sharedUaaTokenFromCredentials(credentials, options),
+      async () => await oauth.getUaaTokenFromCredentials(credentials, options),
       {
         expirationExtractor: ({ expires_in }) => Date.now() + expires_in * 1000,
         valueExtractor: ({ access_token }) => access_token,
       }
     );
 
-  const getCachedUaaToken = async (options) => {
-    const {
-      cfService: { credentials },
-    } = await getUaaInfo();
-    return getCachedUaaTokenFromCredentials(credentials, options);
-  };
+  const getCachedIasTokenFromCredentials = async (credentials, options) =>
+    await cfTokenCache.getSetCb(
+      credentials.clientid,
+      async () => await oauth.getIasTokenFromCredentials(credentials, options),
+      {
+        expirationExtractor: ({ expires_in }) => Date.now() + expires_in * 1000,
+        valueExtractor: ({ access_token }) => access_token,
+      }
+    );
 
   return {
     runtimeConfig,
@@ -471,7 +474,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     getHdiInfo,
     getSrvInfo,
     getCachedUaaTokenFromCredentials,
-    getCachedUaaToken,
+    getCachedIasTokenFromCredentials,
     getAppNameInfoCached,
   };
 };

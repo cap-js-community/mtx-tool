@@ -1,5 +1,6 @@
 "use strict";
 
+const https = require("https");
 const {
   isUUID,
   isDashedWord,
@@ -42,19 +43,38 @@ const logger = Logger.getInstance();
 const cdsRequestConcurrency = parseIntWithFallback(process.env[ENV.CDS_CONCURRENCY], CDS_REQUEST_CONCURRENCY_FALLBACK);
 const cdsPollFrequency = parseIntWithFallback(process.env[ENV.CDS_FREQUENCY], CDS_JOB_POLL_FREQUENCY_FALLBACK);
 
+const _serverRequest = async (context, reqOptions = {}) => {
+  const {
+    cfRouteUrl,
+    cfService: { label, credentials },
+  } = await context.getCdsInfo();
+  assert(["xsuaa", "identity"].includes(label), "unknown auth service label %s", label);
+
+  let agent;
+  let token;
+  switch (label) {
+    case "xsuaa": {
+      token = await context.getCachedUaaTokenFromCredentials(credentials);
+      break;
+    }
+    case "identity": {
+      agent = new https.Agent({ key: credentials.key, cert: credentials.certificate });
+      token = await context.getCachedIasTokenFromCredentials(credentials);
+      break;
+    }
+  }
+  const auth = { token };
+  return await request({ ...(agent && { agent }), url: cfRouteUrl, auth, ...reqOptions });
+};
+
 const _cdsTenants = async (context, tenant) => {
   const { subdomain: filterSubdomain, tenantId: filterTenantId } = resolveTenantArg(tenant);
   filterSubdomain && assert(isDashedWord(filterSubdomain), `argument "${filterSubdomain}" is not a valid subdomain`);
 
-  const { cfRouteUrl } = await context.getCdsInfo();
-
-  const _getTenantRequestOptionsPathname = () =>
-    filterTenantId ? `/-/cds/saas-provisioning/tenant/${filterTenantId}` : "/-/cds/saas-provisioning/tenant";
-  const response = await request({
-    url: cfRouteUrl,
-    pathname: _getTenantRequestOptionsPathname(),
-    auth: { token: await context.getCachedUaaToken() },
-  });
+  const pathname = filterTenantId
+    ? `/-/cds/saas-provisioning/tenant/${filterTenantId}`
+    : "/-/cds/saas-provisioning/tenant";
+  const response = await _serverRequest(context, { pathname });
   const resultRaw = await response.json();
   let result = Array.isArray(resultRaw) ? resultRaw : [resultRaw];
   if (filterSubdomain) {
@@ -92,19 +112,13 @@ const cdsLongList = async (context, [tenant]) => {
   return await _cdsTenants(context, tenant);
 };
 
-const _cdsOnboard = async (context, tenantId, metadata = {}) => {
-  const { cfRouteUrl } = await context.getCdsInfo();
-  await request({
+const _cdsOnboard = async (context, tenantId, metadata = {}) =>
+  await _serverRequest(context, {
     method: "PUT",
-    url: cfRouteUrl,
     pathname: `/-/cds/saas-provisioning/tenant/${tenantId}`,
-    auth: { token: await context.getCachedUaaToken() },
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ ...metadata, eventType: "CREATE" }),
   });
-};
 
 const cdsOnboardTenant = async (context, [tenantId, rawMetadata]) => {
   let metadata;
@@ -160,12 +174,11 @@ const _cdsUpgradeMtxs = async (
     return;
   }
   const autoUndeployOptions = { options: { _: { hdi: { deploy: { auto_undeploy: true } } } } };
-  const { cfAppGuid, cfRouteUrl, cfSsh } = await context.getCdsInfo();
-  const upgradeResponse = await request({
+  const { cfAppGuid, cfSsh } = await context.getCdsInfo();
+
+  const upgradeResponse = await _serverRequest(context, {
     method: "POST",
-    url: cfRouteUrl,
     pathname: "/-/cds/saas-provisioning/upgrade",
-    auth: { token: await context.getCachedUaaToken() },
     headers: {
       "Content-Type": "application/json",
       "X-Cf-App-Instance": `${cfAppGuid}:${appInstance}`,
@@ -187,11 +200,7 @@ const _cdsUpgradeMtxs = async (
 
   while (true) {
     await sleep(cdsPollFrequency);
-    const pollJobResponse = await request({
-      url: cfRouteUrl,
-      pathname: `/-/cds/jobs/pollJob(ID='${jobId}')`,
-      auth: { token: await context.getCachedUaaToken() },
-    });
+    const pollJobResponse = await _serverRequest(context, { pathname: `/-/cds/jobs/pollJob(ID='${jobId}')` });
     pollJobResponseData = await _safeMaterializeJson(pollJobResponse, "poll job");
 
     const { status, tasks } = pollJobResponseData || {};
@@ -257,11 +266,9 @@ const _cdsUpgradeMtxs = async (
   assert(!hasChangeTimeout, "no task progress after %s", CDS_CHANGE_TIMEOUT_TEXT);
 };
 
-const _cdsUpgrade = async (context, options) => await _cdsUpgradeMtxs(context, options);
-
 const cdsUpgradeTenant = async (context, [tenantId], [doAutoUndeploy]) => {
   assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
-  return await _cdsUpgrade(context, { tenants: [tenantId], doAutoUndeploy });
+  return await _cdsUpgradeMtxs(context, { tenants: [tenantId], doAutoUndeploy });
 };
 
 const cdsUpgradeAll = async (context, _, [doAutoUndeploy, doFirstInstance]) => {
@@ -269,7 +276,7 @@ const cdsUpgradeAll = async (context, _, [doAutoUndeploy, doFirstInstance]) => {
   const appInstances = cfProcess && cfProcess.instances;
 
   if (doFirstInstance || !appInstances || appInstances <= 1) {
-    return await _cdsUpgrade(context, { doAutoUndeploy });
+    return await _cdsUpgradeMtxs(context, { doAutoUndeploy });
   }
 
   // NOTE: we sort by tenantId to get a stable pseudo-random order
@@ -288,20 +295,16 @@ const cdsUpgradeAll = async (context, _, [doAutoUndeploy, doFirstInstance]) => {
 
   await assertAll("problems occurred during tenant upgrade")(
     tenantIdParts.map(
-      async (tenants, appInstance) => await _cdsUpgrade(context, { tenants, doAutoUndeploy, appInstance })
+      async (tenants, appInstance) => await _cdsUpgradeMtxs(context, { tenants, doAutoUndeploy, appInstance })
     )
   );
 };
 
-const _cdsOffboard = async (context, tenantId) => {
-  const { cfRouteUrl } = await context.getCdsInfo();
-  await request({
+const _cdsOffboard = async (context, tenantId) =>
+  await _serverRequest(context, {
     method: "DELETE",
-    url: cfRouteUrl,
     pathname: `/-/cds/saas-provisioning/tenant/${tenantId}`,
-    auth: { token: await context.getCachedUaaToken() },
   });
-};
 
 const cdsOffboardTenant = async (context, [tenantId]) => {
   assert(isUUID(tenantId), "TENANT_ID is not a uuid", tenantId);
