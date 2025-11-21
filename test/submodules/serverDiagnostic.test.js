@@ -67,7 +67,7 @@ describe("srv tests", () => {
       [
         {
           "appInstance": "0",
-          "command": "pkill --signal SIGUSR1 node",
+          "command": "pkill --signal SIGUSR1 -f node",
         },
       ]
     `);
@@ -96,7 +96,7 @@ describe("srv tests", () => {
       [
         {
           "appInstance": "1",
-          "command": "pkill --signal SIGUSR1 node",
+          "command": "pkill --signal SIGUSR1 -f node",
         },
       ]
     `);

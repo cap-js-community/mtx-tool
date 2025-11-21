@@ -57,7 +57,7 @@ const _serverDebug = async (context, { appName, appInstance } = {}) => {
   logger.info();
   if (runtime === RUNTIME.NODE) {
     try {
-      await cfSsh({ command: "pkill --signal SIGUSR1 node", appInstance });
+      await cfSsh({ command: "pkill --signal SIGUSR1 -f node", appInstance });
     } catch (err) {
       logger.warning("warning: could not enable debugging for node process: ", err.message);
     }
