@@ -7,15 +7,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- order is REMOVED, CHANGED, ADDED, FIXED -->
 
-## v0.10.4 - tbd
+## v0.11.0 - tbd
+
+⚠️ This release is potentially disruptive. The configured app used for `cds` commands now needs to be bound to an auth
+service: both `xsuaa` (UAA) and `identity` (IAS) are supported. For most projects, this will be the case already.
 
 ### CHANGED
 
 - core: require node engine >= 20.0.0
 
+- cds: now supports IAS-only, unless the `@sap/cds-mtxs` endpoints are protected by a custom mTLS middleware.
+
 ### FIXED
 
-- core: move from deprecated url.parse() to silly WHATWG API
+- core: move from deprecated url.parse() to silly WHATWG API.
 
 ## v0.10.3 - 2025-10-29
 
@@ -23,6 +28,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - [experimental] core: requests that fail and get a retry, will be logged with a request id `[req-xx]` for easier
   correlation.
+
 - [experimental] core: extended list of correlation headers to `X-CorrelationId`, `X-Correlation-Id`, `X-Request-Id`,
   `X-Vcap-Request-Id`.
 
