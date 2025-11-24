@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- order is REMOVED, CHANGED, ADDED, FIXED -->
 
-## v0.11.0 - tbd
+## v0.11.1 - tbd
+
+## v0.11.0 - 2025-11-24
 
 ⚠️ This release is potentially disruptive. The configured app used for `cds` commands now needs to be bound to an auth
 service: both `xsuaa` (UAA) and `identity` (IAS) are supported. For most projects, this will be the case already.
