@@ -7,9 +7,14 @@ updates:
   - package-ecosystem: npm
     directory: /
     schedule:
-      interval: daily
-      time: "11:00"
+      interval: weekly
+      day: tuesday
+      time: "08:00"
       timezone: Europe/Berlin
+    groups:
+      all-npm:
+        patterns:
+          - "*"
     allow:
       - dependency-type: production
     ignore:
@@ -17,19 +22,27 @@ updates:
       # https://github.com/node-fetch/node-fetch#commonjs
       - dependency-name: node-fetch
         versions: ["3.x"]
-    open-pull-requests-limit: 0
 
   - package-ecosystem: bundler
     directory: /docs
     schedule:
-      interval: daily
-      time: "11:00"
+      interval: weekly
+      day: tuesday
+      time: "08:00"
       timezone: Europe/Berlin
-    open-pull-requests-limit: 0
+    groups:
+      all-bundler:
+        patterns:
+          - "*"
 
   - package-ecosystem: github-actions
     directory: /.github
     schedule:
-      interval: daily
-      time: "11:00"
+      interval: weekly
+      day: tuesday
+      time: "08:00"
       timezone: Europe/Berlin
+    groups:
+      all-actions:
+        patterns:
+          - "*"
