@@ -11,10 +11,6 @@ updates:
       day: tuesday
       time: "08:00"
       timezone: Europe/Berlin
-    groups:
-      all-npm:
-        patterns:
-          - "*"
     allow:
       - dependency-type: production
     ignore:
@@ -30,19 +26,11 @@ updates:
       day: tuesday
       time: "08:00"
       timezone: Europe/Berlin
-    groups:
-      all-bundler:
-        patterns:
-          - "*"
 
   - package-ecosystem: github-actions
-    directory: /.github
+    directory: /
     schedule:
       interval: weekly
       day: tuesday
       time: "08:00"
       timezone: Europe/Berlin
-    groups:
-      all-actions:
-        patterns:
-          - "*"
