@@ -34,3 +34,7 @@ updates:
       day: tuesday
       time: "08:00"
       timezone: Europe/Berlin
+    groups:
+      all-action-dependencies:
+        patterns:
+          - "*"
