@@ -18,6 +18,10 @@ updates:
       # https://github.com/node-fetch/node-fetch#commonjs
       - dependency-name: node-fetch
         versions: ["3.x"]
+    groups:
+      all-npm-dependencies:
+        patterns:
+          - "*"
 
   - package-ecosystem: bundler
     directory: /docs
