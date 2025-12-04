@@ -17,6 +17,8 @@ const {
   randomString,
   makeOneTime,
   resetOneTime,
+  indexByKey,
+  clusterByKey,
 } = require("../shared/static");
 const { assert } = require("../shared/error");
 const { request, RETRY_MODE } = require("../shared/request");
@@ -208,26 +210,8 @@ const _requestBindings = async (
   return bindings;
 };
 
-const _indexByKey = (dataObjects, key) =>
-  dataObjects.reduce((result, dataObject) => {
-    const identifier = dataObject[key];
-    result[identifier] = dataObject;
-    return result;
-  }, {});
-
-const _clusterByKey = (dataObjects, key) =>
-  dataObjects.reduce((result, dataObject) => {
-    const identifier = dataObject[key];
-    if (result[identifier]) {
-      result[identifier].push(dataObject);
-    } else {
-      result[identifier] = [dataObject];
-    }
-    return result;
-  }, {});
-
 const _indexServicePlanNameById = (offerings, plans) => {
-  const offeringById = _indexByKey(offerings, "id");
+  const offeringById = indexByKey(offerings, "id");
   return plans.reduce((acc, plan) => {
     acc[plan.id] = `${offeringById[plan.service_offering_id].name}:${plan.name}`;
     return acc;
@@ -243,7 +227,7 @@ const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJs
   ]);
   const servicePlanNameById = _indexServicePlanNameById(offerings, plans);
   instances.sort(compareForTenantId);
-  const bindingsByInstance = _clusterByKey(bindings, "service_instance_id");
+  const bindingsByInstance = clusterByKey(bindings, "service_instance_id");
 
   if (doJsonOutput) {
     return {
@@ -376,7 +360,7 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
   instances.sort(compareForTenantId);
   bindings.sort(compareForUpdatedAtDesc);
   const servicePlanNameById = _indexServicePlanNameById(offerings, plans);
-  const bindingsByInstance = _clusterByKey(bindings, "service_instance_id");
+  const bindingsByInstance = clusterByKey(bindings, "service_instance_id");
   const changeQueue = new FunnelQueue(svmRequestConcurrency);
 
   for (const instance of instances) {
@@ -491,7 +475,7 @@ const _serviceManagerFreshBindings = async (
 
   bindings.sort(compareForUpdatedAtDesc);
   const servicePlanNameById = _indexServicePlanNameById(offerings, plans);
-  const bindingsByInstance = _clusterByKey(bindings, "service_instance_id");
+  const bindingsByInstance = clusterByKey(bindings, "service_instance_id");
 
   await limiter(svmRequestConcurrency, instances, async (instance) => {
     const [binding] = bindingsByInstance[instance.id] ?? [];
@@ -550,7 +534,7 @@ const _serviceManagerDelete = async (
   ]);
 
   if (doDeleteBindings) {
-    const instanceById = _indexByKey(instances, "id");
+    const instanceById = indexByKey(instances, "id");
     const filteredBindings = bindings.filter((binding) => instanceById[binding.service_instance_id]);
     await limiter(
       svmRequestConcurrency,
