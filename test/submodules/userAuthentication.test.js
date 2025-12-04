@@ -142,7 +142,7 @@ describe("uaa tests", () => {
     ])("%s", async (_, token, passArgs, passFlags) => {
       sharedStaticMock.isDashedWord.mockReturnValue(true);
       contextMock.getUaaInfo.mockReturnValueOnce({
-        cfEnvApp: { application_name: APP_NAME },
+        cfApp: { name: APP_NAME },
         cfService: uaaCfServiceMock,
         cfEnvServices: { [SERVICE]: [{ credentials: cfEnvServicesMock }] },
       });
@@ -192,7 +192,7 @@ describe("uaa tests", () => {
     ])("%s", async (_, token, passArgs, passFlags, fetchCalls) => {
       sharedStaticMock.isDashedWord.mockReturnValue(true);
       contextMock.getUaaInfo.mockReturnValueOnce({
-        cfEnvApp: { application_name: APP_NAME },
+        cfApp: { name: APP_NAME },
         cfService: uaaCfServiceMock,
         cfEnvServices: { [SERVICE]: [{ credentials: cfEnvServicesMock }] },
       });
@@ -245,7 +245,7 @@ describe("uaa tests", () => {
     ])("%s", async (_, token, passArgs, passFlags, fetchCalls) => {
       sharedStaticMock.isDashedWord.mockReturnValue(true);
       contextMock.getUaaInfo.mockReturnValueOnce({
-        cfEnvApp: { application_name: APP_NAME },
+        cfApp: { name: APP_NAME },
         cfService: uaaCfServiceMock,
         cfEnvServices: { [SERVICE]: [{ credentials: cfEnvServicesMock }] },
       });
