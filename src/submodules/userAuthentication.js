@@ -88,7 +88,7 @@ const _uaaSaasServiceToken = async (context, service, options = undefined) => {
   assert(isDashedWord(service), `argument "${service}" is not a valid service`);
   const {
     cfService: { credentials: uaaCredentials },
-    cfEnvApp: { application_name: appName },
+    cfApp: { name: appName },
     cfEnvServices,
   } = await context.getUaaInfo();
   let serviceCredentials = cfEnvServices[service]?.[0]?.credentials;
