@@ -20,7 +20,7 @@ const oauth = require("./shared/oauth");
 const { LazyCache, ExpiringLazyCache } = require("./shared/cache");
 const { Logger } = require("./shared/logger");
 const { CONFIG_TYPE, CONFIG_INFOS } = require("./config");
-const { Funnel, limiter } = require("./shared/funnel");
+const { limiter } = require("./shared/funnel");
 
 const ENV = Object.freeze({
   APP_SUFFIX: "MTX_APP_SUFFIX",
@@ -96,14 +96,6 @@ const _cfRequestPaged = async (cfInfo, url) => {
   }
   const result = { resources: [], included: [] };
   while (true) {
-    const response = await request({
-      url,
-      headers: {
-        Accept: "application/json",
-        Authorization: cfInfo.token,
-      },
-      logged: false,
-    });
     const { pagination, resources, included } = await _cfRequest(cfInfo, url);
     if (resources) {
       result.resources = result.resources.concat(resources);
@@ -264,7 +256,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const getRawAppInfo = async (cfApp) => {
     const cfBuildpack = cfApp.lifecycle?.data?.buildpacks?.[0];
     const [
-      cfEnvVariables,
+      { var: cfEnvVariables },
       { resources: cfProcesses },
       { resources: cfRoutes },
       { resources: cfBindingStubsRaw, included: cfServiceInstancesBuckets },
@@ -313,6 +305,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
       cfProcess,
       cfRoute,
       cfRouteDomain,
+      cfBindings,
     };
   };
 
