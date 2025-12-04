@@ -342,16 +342,14 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   };
 
   const processRawAppInfo = (appName, rawAppInfo, { requireServices, requireRoute } = {}) => {
-    const { cfApp, cfBuildpack, cfEnvServices, cfEnvApp, cfEnvVariables, cfRoute, cfRouteDomain, cfProcess } =
-      rawAppInfo;
+    const { cfApp, cfBuildpack, cfBindings, cfEnvVariables, cfRoute, cfRouteDomain, cfProcess } = rawAppInfo;
 
     let cfService = null;
     if (Array.isArray(requireServices)) {
-      assert(cfEnvServices, "no vcap service information in environment, check cf user permissions");
-      const cfEnvServicesFlat = [].concat(...Object.values(cfEnvServices));
+      assert(cfBindings, "no service binding information in environment, check cf user permissions");
       const matchingServices = requireServices
-        .map(({ label: aLabel, plan: aPlan }) =>
-          cfEnvServicesFlat.find(({ label: bLabel, plan: bPlan }) => aLabel === bLabel && aPlan === bPlan)
+        .map((service) =>
+          cfBindings.find((binding) => service.label === binding.offeringName && service.plan === binding.planName)
         )
         .filter((a) => a !== undefined);
       cfService = matchingServices.length > 0 ? matchingServices[0] : null;
@@ -381,8 +379,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
       cfAppGuid,
       cfBuildpack,
       cfProcess,
-      cfEnvServices,
-      cfEnvApp,
+      cfBindings,
       cfEnvVariables,
       cfService,
       cfRouteUrl,
