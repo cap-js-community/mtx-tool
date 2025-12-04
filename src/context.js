@@ -12,6 +12,8 @@ const {
   safeUnshift,
   escapeRegExp,
   makeOneTime,
+  indexByKey,
+  clusterByKey,
 } = require("./shared/static");
 const { assert, fail } = require("./shared/error");
 const { request } = require("./shared/request");
@@ -223,6 +225,8 @@ const _cfSsh = async (appName, { logged, localPort, remotePort, remoteHostname, 
   }
 };
 
+const _cfMergeBuckets = (buckets, key) => buckets.reduce((acc, bucket) => ((acc = acc.concat(bucket[key])), acc), []);
+
 const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false } = {}) => {
   const cfInfo = { config: _readCfConfig(), token: await _cfAuthToken() };
   const { filepath: configPath, dir, location } = _resolveDir(FILENAME.CONFIG) || {};
@@ -232,10 +236,9 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     _cfRequest(cfInfo, `/v3/apps?space_guids=${cfInfo.config.SpaceFields.GUID}`),
     _cfRequest(cfInfo, `/v3/service_plans?include=service_offering`),
   ]);
-  const cfServiceOfferings = cfServiceOfferingBuckets.reduce(
-    (acc, bucket) => ((acc = acc.concat(bucket.service_offerings)), acc),
-    []
-  );
+  const cfServiceOfferings = _cfMergeBuckets(cfServiceOfferingBuckets, "service_offerings");
+  const cfServicePlansById = indexByKey(cfServicePlans, "guid");
+  const cfServiceOfferingsById = indexByKey(cfServiceOfferings, "guid");
   const cfTokenCache = new ExpiringLazyCache({ expirationGap: UAA_TOKEN_CACHE_EXPIRY_GAP });
   const settingTypeToAppNameCache = new LazyCache();
   const appNameToCfAppCache = new LazyCache();
@@ -247,10 +250,11 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     const { resources: cfProcesses } = await _cfRequest(cfInfo, cfApp.links.processes.href);
     const { resources: cfEnvVariables } = await _cfRequest(cfInfo, cfApp.links.environment_variables.href);
 
-    const { resources: cfBindingStubs, included: cfServiceInstances } = await _cfRequest(
+    const { resources: cfBindingStubs, included: cfServiceInstancesBuckets } = await _cfRequest(
       cfInfo,
       `/v3/service_credential_bindings?app_guids=${cfApp.guid}&include=service_instance`
     );
+    const cfServiceInstances = _cfMergeBuckets(cfServiceInstancesBuckets, "service_instances");
 
     const cfBindings = await Promise.all(
       cfBindingStubs.map(async (stub) => {
