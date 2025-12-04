@@ -70,7 +70,7 @@ const _cfAuthToken = async () => {
 
 const _cfRequest = async (cfInfo, url) => {
   try {
-    if (url.startsWith("/v3/")) {
+    if (url.startsWith("/v3")) {
       url = cfInfo.config.Target + url;
     }
     const response = await request({
@@ -88,7 +88,7 @@ const _cfRequest = async (cfInfo, url) => {
 };
 
 const _cfRequestPaged = async (cfInfo, url) => {
-  if (url.startsWith("/v3/")) {
+  if (url.startsWith("/v3")) {
     url = cfInfo.config.Target + url;
   }
   let result = [];
@@ -246,12 +246,11 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     const [cfProcess] = await _cfRequestPaged(cfInfo, cfApp.links.processes.href);
     const cfEnvVariables = await _cfRequest(cfInfo, cfApp.links.environment_variables.href);
 
-    const cfBindings = await _cfRequest(cfInfo, `/v3/service_credential_bindings?app_guids=${cfApp.guid}`);
+    const cfBindings = await _cfRequestPaged(cfInfo, `/v3/service_credential_bindings?app_guids=${cfApp.guid}`);
 
-    const cfRoutes = await _cfRequestPaged(cfInfo, `/v3/apps/${cfApp.guid}/routes`);
+    const cfRoutes = await _cfRequestPaged(cfInfo, `/v3/routes?app_guids=${cfApp.guid}`);
     const cfRoute = cfRoutes?.[0];
-    const cfDomainGuid = cfRoute?.relationships?.domain?.data?.guid;
-    const cfRouteDomain = cfDomainGuid && (await _cfRequest(cfInfo, `/v3/domains/${cfDomainGuid}`));
+    const cfRouteDomain = cfRoute.links.domain && (await _cfRequest(cfInfo, cfRoute.links.domain.href));
 
     return {
       timestamp: new Date().toISOString(),
