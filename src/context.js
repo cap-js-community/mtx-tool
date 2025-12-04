@@ -13,7 +13,6 @@ const {
   escapeRegExp,
   makeOneTime,
   indexByKey,
-  clusterByKey,
 } = require("./shared/static");
 const { assert, fail } = require("./shared/error");
 const { request } = require("./shared/request");
@@ -21,7 +20,7 @@ const oauth = require("./shared/oauth");
 const { LazyCache, ExpiringLazyCache } = require("./shared/cache");
 const { Logger } = require("./shared/logger");
 const { CONFIG_TYPE, CONFIG_INFOS } = require("./config");
-const { Funnel } = require("./shared/funnel");
+const { Funnel, limiter } = require("./shared/funnel");
 
 const ENV = Object.freeze({
   APP_SUFFIX: "MTX_APP_SUFFIX",
@@ -246,32 +245,29 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
 
   const getRawAppInfo = async (cfApp) => {
     const cfBuildpack = cfApp.lifecycle?.data?.buildpacks?.[0];
-    const cfApiFunnel = new Funnel(CF_API_CONCURRENCY);
-    const { resources: cfProcesses } = await _cfRequest(cfInfo, cfApp.links.processes.href);
-    const { resources: cfEnvVariables } = await _cfRequest(cfInfo, cfApp.links.environment_variables.href);
+    const [
+      { resources: cfEnvVariables },
+      { resources: cfProcesses },
+      { resources: cfRoutes },
+      { resources: cfBindingStubs, included: cfServiceInstancesBuckets },
+    ] = await Promise.all([
+      _cfRequest(cfInfo, cfApp.links.environment_variables.href),
+      _cfRequest(cfInfo, cfApp.links.processes.href),
+      _cfRequest(cfInfo, `/v3/routes?app_guids=${cfApp.guid}`),
+      _cfRequest(cfInfo, `/v3/service_credential_bindings?app_guids=${cfApp.guid}&include=service_instance`),
+    ]);
 
-    const { resources: cfBindingStubs, included: cfServiceInstancesBuckets } = await _cfRequest(
-      cfInfo,
-      `/v3/service_credential_bindings?app_guids=${cfApp.guid}&include=service_instance`
-    );
-    const cfServiceInstances = _cfMergeBuckets(cfServiceInstancesBuckets, "service_instances");
+    const cfServiceInstancesById = indexByKey(_cfMergeBuckets(cfServiceInstancesBuckets, "service_instances"), "id");
 
-    const cfBindings = await Promise.all(
-      cfBindingStubs.map(async (stub) => {
-        const [serviceInstance, details] = await Promise.all([
-          cfApiFunnel.run(async () => await _cfRequest(cfInfo, stub.links.service_instance.href)),
-          cfApiFunnel.run(async () => await _cfRequest(cfInfo, stub.links.details.href)),
-        ]);
-        return {
-          ...stub,
-          serviceInstance,
-          credentials: details.credentials,
-        };
-      })
-    );
+    const cfBindings = await limiter(CF_API_CONCURRENCY, cfBindingStubs, async (stub) => {
+      const details = await _cfRequest(cfInfo, stub.links.details.href);
+      return {
+        ...stub,
+        credentials: details.credentials,
+      };
+    });
 
     const cfProcess = cfProcesses?.[0];
-    const cfRoutes = await _cfRequest(cfInfo, `/v3/routes?app_guids=${cfApp.guid}`);
     const cfRoute = cfRoutes?.[0];
     const cfRouteDomain = cfRoute.links.domain && (await _cfRequest(cfInfo, cfRoute.links.domain.href));
 
