@@ -19,6 +19,7 @@ const oauth = require("./shared/oauth");
 const { LazyCache, ExpiringLazyCache } = require("./shared/cache");
 const { Logger } = require("./shared/logger");
 const { CONFIG_TYPE, CONFIG_INFOS } = require("./config");
+const { Funnel } = require("./shared/funnel");
 
 const ENV = Object.freeze({
   APP_SUFFIX: "MTX_APP_SUFFIX",
@@ -43,6 +44,7 @@ const FILENAME = Object.freeze({
 
 const CACHE_GAP = 43200000; // 12 hours in milliseconds
 const UAA_TOKEN_CACHE_EXPIRY_GAP = 60000; // 1 minute
+const CF_API_CONCURRENCY = 6;
 
 const logger = Logger.getInstance();
 
@@ -69,43 +71,37 @@ const _cfAuthToken = async () => {
 };
 
 const _cfRequest = async (cfInfo, url) => {
-  try {
-    if (url.startsWith("/v3")) {
-      url = cfInfo.config.Target + url;
-    }
-    const response = await request({
-      url,
-      headers: {
-        Accept: "application/json",
-        Authorization: cfInfo.token,
-      },
-      logged: false,
-    });
-    return await response.json();
-  } catch (err) {
-    return fail("caught error during cf request %s\n%s", url, err.message);
-  }
-};
-
-const _cfRequestPaged = async (cfInfo, url) => {
   if (url.startsWith("/v3")) {
     url = cfInfo.config.Target + url;
   }
-  let result = [];
-  while (true) {
-    const { pagination, resources } = await _cfRequest(cfInfo, url);
-    if (resources) {
-      result = result.concat(resources);
-    } else {
-      break;
+  try {
+    const result = { resources: [], included: [] };
+    while (true) {
+      const response = await request({
+        url,
+        headers: {
+          Accept: "application/json",
+          Authorization: cfInfo.token,
+        },
+        logged: false,
+      });
+      const { pagination, resources, included } = await response.json();
+      if (resources) {
+        result.resources = result.resources.concat(resources);
+      }
+      if (included) {
+        result.included = result.included.concat(included);
+      }
+      if (pagination && pagination.next && pagination.next.href) {
+        url = pagination.next.href;
+      } else {
+        break;
+      }
     }
-    if (pagination && pagination.next && pagination.next.href) {
-      url = pagination.next.href;
-    } else {
-      break;
-    }
+    return result;
+  } catch (err) {
+    return fail("caught error during cf request %s\n%s", url, err.message);
   }
-  return result;
 };
 
 const _readCfConfig = () => {
@@ -227,15 +223,19 @@ const _cfSsh = async (appName, { logged, localPort, remotePort, remoteHostname, 
   }
 };
 
-const _getCfApps = async (cfInfo) =>
-  await _cfRequestPaged(cfInfo, `/v3/apps?space_guids=${cfInfo.config.SpaceFields.GUID}`);
-
 const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false } = {}) => {
   const cfInfo = { config: _readCfConfig(), token: await _cfAuthToken() };
   const { filepath: configPath, dir, location } = _resolveDir(FILENAME.CONFIG) || {};
   const runtimeConfig = readRuntimeConfig(configPath);
   const cachePath = pathlib.join(dir, FILENAME.CACHE);
-  const cfApps = await _getCfApps(cfInfo);
+  const [{ resources: cfApps }, { resources: cfServicePlans, included: cfServiceOfferingBuckets }] = await Promise.all([
+    _cfRequest(cfInfo, `/v3/apps?space_guids=${cfInfo.config.SpaceFields.GUID}`),
+    _cfRequest(cfInfo, `/v3/service_plans?include=service_offering`),
+  ]);
+  const cfServiceOfferings = cfServiceOfferingBuckets.reduce(
+    (acc, bucket) => ((acc = acc.concat(bucket.service_offerings)), acc),
+    []
+  );
   const cfTokenCache = new ExpiringLazyCache({ expirationGap: UAA_TOKEN_CACHE_EXPIRY_GAP });
   const settingTypeToAppNameCache = new LazyCache();
   const appNameToCfAppCache = new LazyCache();
@@ -243,12 +243,31 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
 
   const getRawAppInfo = async (cfApp) => {
     const cfBuildpack = cfApp.lifecycle?.data?.buildpacks?.[0];
-    const [cfProcess] = await _cfRequestPaged(cfInfo, cfApp.links.processes.href);
-    const cfEnvVariables = await _cfRequest(cfInfo, cfApp.links.environment_variables.href);
+    const cfApiFunnel = new Funnel(CF_API_CONCURRENCY);
+    const { resources: cfProcesses } = await _cfRequest(cfInfo, cfApp.links.processes.href);
+    const { resources: cfEnvVariables } = await _cfRequest(cfInfo, cfApp.links.environment_variables.href);
 
-    const cfBindings = await _cfRequestPaged(cfInfo, `/v3/service_credential_bindings?app_guids=${cfApp.guid}`);
+    const { resources: cfBindingStubs, included: cfServiceInstances } = await _cfRequest(
+      cfInfo,
+      `/v3/service_credential_bindings?app_guids=${cfApp.guid}&include=service_instance`
+    );
 
-    const cfRoutes = await _cfRequestPaged(cfInfo, `/v3/routes?app_guids=${cfApp.guid}`);
+    const cfBindings = await Promise.all(
+      cfBindingStubs.map(async (stub) => {
+        const [serviceInstance, details] = await Promise.all([
+          cfApiFunnel.run(async () => await _cfRequest(cfInfo, stub.links.service_instance.href)),
+          cfApiFunnel.run(async () => await _cfRequest(cfInfo, stub.links.details.href)),
+        ]);
+        return {
+          ...stub,
+          serviceInstance,
+          credentials: details.credentials,
+        };
+      })
+    );
+
+    const cfProcess = cfProcesses?.[0];
+    const cfRoutes = await _cfRequest(cfInfo, `/v3/routes?app_guids=${cfApp.guid}`);
     const cfRoute = cfRoutes?.[0];
     const cfRouteDomain = cfRoute.links.domain && (await _cfRequest(cfInfo, cfRoute.links.domain.href));
 
