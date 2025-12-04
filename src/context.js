@@ -72,37 +72,52 @@ const _cfAuthToken = async () => {
 };
 
 const _cfRequest = async (cfInfo, url) => {
-  if (url.startsWith("/v3")) {
-    url = cfInfo.config.Target + url;
-  }
   try {
-    const result = { resources: [], included: [] };
-    while (true) {
-      const response = await request({
-        url,
-        headers: {
-          Accept: "application/json",
-          Authorization: cfInfo.token,
-        },
-        logged: false,
-      });
-      const { pagination, resources, included } = await response.json();
-      if (resources) {
-        result.resources = result.resources.concat(resources);
-      }
-      if (included) {
-        result.included = result.included.concat(included);
-      }
-      if (pagination && pagination.next && pagination.next.href) {
-        url = pagination.next.href;
-      } else {
-        break;
-      }
+    if (url.startsWith("/v3")) {
+      url = cfInfo.config.Target + url;
     }
-    return result;
+    const response = await request({
+      url,
+      headers: {
+        Accept: "application/json",
+        Authorization: cfInfo.token,
+      },
+      logged: false,
+    });
+    return await response.json();
   } catch (err) {
     return fail("caught error during cf request %s\n%s", url, err.message);
   }
+};
+
+const _cfRequestPaged = async (cfInfo, url) => {
+  if (url.startsWith("/v3")) {
+    url = cfInfo.config.Target + url;
+  }
+  const result = { resources: [], included: [] };
+  while (true) {
+    const response = await request({
+      url,
+      headers: {
+        Accept: "application/json",
+        Authorization: cfInfo.token,
+      },
+      logged: false,
+    });
+    const { pagination, resources, included } = await _cfRequest(cfInfo, url);
+    if (resources) {
+      result.resources = result.resources.concat(resources);
+    }
+    if (included) {
+      result.included = result.included.concat(included);
+    }
+    if (pagination && pagination.next && pagination.next.href) {
+      url = pagination.next.href;
+    } else {
+      break;
+    }
+  }
+  return result;
 };
 
 const _readCfConfig = () => {
@@ -231,9 +246,12 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const { filepath: configPath, dir, location } = _resolveDir(FILENAME.CONFIG) || {};
   const runtimeConfig = readRuntimeConfig(configPath);
   const cachePath = pathlib.join(dir, FILENAME.CACHE);
-  const [{ resources: cfApps }, { resources: cfServicePlans, included: cfServiceOfferingBuckets }] = await Promise.all([
-    _cfRequest(cfInfo, `/v3/apps?space_guids=${cfInfo.config.SpaceFields.GUID}`),
-    _cfRequest(cfInfo, `/v3/service_plans?include=service_offering`),
+  const [
+    { resources: cfApps }, //
+    { resources: cfServicePlans, included: cfServiceOfferingBuckets },
+  ] = await Promise.all([
+    _cfRequestPaged(cfInfo, `/v3/apps?space_guids=${cfInfo.config.SpaceFields.GUID}`),
+    _cfRequestPaged(cfInfo, `/v3/service_plans?include=service_offering`),
   ]);
   const cfServiceOfferings = _cfMergeBuckets(cfServiceOfferingBuckets, "service_offerings");
   const cfServicePlansById = indexByKey(cfServicePlans, "guid");
@@ -246,23 +264,38 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const getRawAppInfo = async (cfApp) => {
     const cfBuildpack = cfApp.lifecycle?.data?.buildpacks?.[0];
     const [
-      { resources: cfEnvVariables },
+      cfEnvVariables,
       { resources: cfProcesses },
       { resources: cfRoutes },
-      { resources: cfBindingStubs, included: cfServiceInstancesBuckets },
+      { resources: cfBindingStubsRaw, included: cfServiceInstancesBuckets },
     ] = await Promise.all([
       _cfRequest(cfInfo, cfApp.links.environment_variables.href),
-      _cfRequest(cfInfo, cfApp.links.processes.href),
-      _cfRequest(cfInfo, `/v3/routes?app_guids=${cfApp.guid}`),
-      _cfRequest(cfInfo, `/v3/service_credential_bindings?app_guids=${cfApp.guid}&include=service_instance`),
+      _cfRequestPaged(cfInfo, cfApp.links.processes.href),
+      _cfRequestPaged(cfInfo, `/v3/routes?app_guids=${cfApp.guid}`),
+      _cfRequestPaged(cfInfo, `/v3/service_credential_bindings?app_guids=${cfApp.guid}&include=service_instance`),
     ]);
 
-    const cfServiceInstancesById = indexByKey(_cfMergeBuckets(cfServiceInstancesBuckets, "service_instances"), "id");
+    const cfServiceInstances = _cfMergeBuckets(cfServiceInstancesBuckets, "service_instances").filter(
+      (instance) => instance.type === "managed"
+    );
+    const cfServiceInstancesById = indexByKey(cfServiceInstances, "guid");
+    const cfBindingStubs = cfBindingStubsRaw.filter((stub) =>
+      Object.prototype.hasOwnProperty.call(cfServiceInstancesById, stub.relationships.service_instance.data.guid)
+    );
 
     const cfBindings = await limiter(CF_API_CONCURRENCY, cfBindingStubs, async (stub) => {
+      const instance = cfServiceInstancesById[stub.relationships.service_instance.data.guid];
+      const plan = cfServicePlansById[instance.relationships.service_plan.data.guid];
+      const offering = cfServiceOfferingsById[plan.relationships.service_offering.data.guid];
       const details = await _cfRequest(cfInfo, stub.links.details.href);
       return {
         ...stub,
+        offeringId: offering.guid,
+        offeringName: offering.name,
+        planId: plan.guid,
+        planName: plan.name,
+        instanceId: instance.guid,
+        instanceName: instance.name,
         credentials: details.credentials,
       };
     });
@@ -275,9 +308,9 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
       timestamp: new Date().toISOString(),
       version,
       cfApp,
-      cfProcess,
       cfBuildpack,
       cfEnvVariables,
+      cfProcess,
       cfRoute,
       cfRouteDomain,
     };
