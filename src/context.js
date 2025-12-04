@@ -68,11 +68,13 @@ const _cfAuthToken = async () => {
   }
 };
 
-const _cfRequest = async (cfInfo, path) => {
+const _cfRequest = async (cfInfo, url) => {
   try {
+    if (url.startsWith("/v3/")) {
+      url = cfInfo.config.Target + url;
+    }
     const response = await request({
-      url: cfInfo.config.Target,
-      path,
+      url,
       headers: {
         Accept: "application/json",
         Authorization: cfInfo.token,
@@ -81,22 +83,24 @@ const _cfRequest = async (cfInfo, path) => {
     });
     return await response.json();
   } catch (err) {
-    return fail("caught error during cf request %s\n%s", path, err.message);
+    return fail("caught error during cf request %s\n%s", url, err.message);
   }
 };
 
-const _cfRequestPaged = async (cfInfo, path) => {
+const _cfRequestPaged = async (cfInfo, url) => {
+  if (url.startsWith("/v3/")) {
+    url = cfInfo.config.Target + url;
+  }
   let result = [];
   while (true) {
-    const { pagination, resources } = await _cfRequest(cfInfo, path);
+    const { pagination, resources } = await _cfRequest(cfInfo, url);
     if (resources) {
       result = result.concat(resources);
     } else {
       break;
     }
     if (pagination && pagination.next && pagination.next.href) {
-      const nextUrl = new URL(pagination.next.href);
-      path = nextUrl.pathname + (nextUrl.search ? nextUrl.search : "");
+      url = pagination.next.href;
     } else {
       break;
     }
@@ -223,7 +227,8 @@ const _cfSsh = async (appName, { logged, localPort, remotePort, remoteHostname, 
   }
 };
 
-const _getCfApps = async (cfInfo) => _cfRequestPaged(cfInfo, `/v3/apps?space_guids=${cfInfo.config.SpaceFields.GUID}`);
+const _getCfApps = async (cfInfo) =>
+  await _cfRequestPaged(cfInfo, `/v3/apps?space_guids=${cfInfo.config.SpaceFields.GUID}`);
 
 const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false } = {}) => {
   const cfInfo = { config: _readCfConfig(), token: await _cfAuthToken() };
@@ -238,11 +243,10 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
 
   const getRawAppInfo = async (cfApp) => {
     const cfBuildpack = cfApp.lifecycle?.data?.buildpacks?.[0];
-    const cfEnv = await _cfRequest(cfInfo, `/v3/apps/${cfApp.guid}/env`);
-    const [cfProcess] = await _cfRequestPaged(cfInfo, `/v3/apps/${cfApp.guid}/processes`);
-    const cfEnvServices = cfEnv.system_env_json?.VCAP_SERVICES;
-    const cfEnvApp = cfEnv.application_env_json?.VCAP_APPLICATION;
-    const cfEnvVariables = cfEnv.environment_variables;
+    const [cfProcess] = await _cfRequestPaged(cfInfo, cfApp.links.processes.href);
+    const cfEnvVariables = await _cfRequest(cfInfo, cfApp.links.environment_variables.href);
+
+    const cfBindings = await _cfRequest(cfInfo, `/v3/service_credential_bindings?app_guids=${cfApp.guid}`);
 
     const cfRoutes = await _cfRequestPaged(cfInfo, `/v3/apps/${cfApp.guid}/routes`);
     const cfRoute = cfRoutes?.[0];
@@ -255,8 +259,6 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
       cfApp,
       cfProcess,
       cfBuildpack,
-      cfEnvServices,
-      cfEnvApp,
       cfEnvVariables,
       cfRoute,
       cfRouteDomain,
