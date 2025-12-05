@@ -18,12 +18,19 @@ const DEFAULT_ENV_FILENAME = "default-env.json";
 const logger = Logger.getInstance();
 
 const serverEnvironment = async (context, [appName]) => {
-  const { cfEnvServices, cfEnvApp, cfEnvVariables } = appName
-    ? await context.getAppNameInfoCached(appName)
-    : await context.getSrvInfo();
+  const { cfAppName } = await context.getSrvInfo();
+  const {
+    environment_variables: cfEnvVariables,
+    system_env_json: cfSystemEnv,
+    application_env_json: cfAppEnv,
+  } = await context.getCfEnv(appName ?? cfAppName);
   writeTextSync(
     DEFAULT_ENV_FILENAME,
-    orderedStringify({ VCAP_SERVICES: cfEnvServices, VCAP_APPLICATION: cfEnvApp, ...cfEnvVariables }, null, 2) + "\n"
+    orderedStringify(
+      { VCAP_SERVICES: cfSystemEnv.VCAP_SERVICES, VCAP_APPLICATION: cfAppEnv.VCAP_APPLICATION, ...cfEnvVariables },
+      null,
+      2
+    ) + "\n"
   );
   logger.info(`saved system environment to ${DEFAULT_ENV_FILENAME}`);
 };
