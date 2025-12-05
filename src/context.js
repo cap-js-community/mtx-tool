@@ -508,6 +508,11 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
       }
     );
 
+  const getCfEnv = async (appName) => {
+    const cfApp = _getCfAppFromAppName(appName);
+    return await _cfRequest(cfInfo, `/v3/apps/${cfApp.guid}/env`);
+  };
+
   return {
     runtimeConfig,
     getUaaInfo,
@@ -518,6 +523,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     getCdsInfo,
     getHdiInfo,
     getSrvInfo,
+    getCfEnv,
     getCachedUaaTokenFromCredentials,
     getCachedIasTokenFromCredentials,
     getAppNameInfoCached,
