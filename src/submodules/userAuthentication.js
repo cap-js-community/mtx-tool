@@ -54,8 +54,8 @@ const _uaaOutput = (token, { doDecode = false, doJsonOutput, userInfo } = {}) =>
 };
 
 const _getUaaToken = async (context, options) => {
-  const { cfService } = await context.getUaaInfo();
-  return await context.getCachedUaaTokenFromCredentials(cfService.credentials, options);
+  const { cfBinding } = await context.getUaaInfo();
+  return await context.getCachedUaaTokenFromCredentials(cfBinding.credentials, options);
 };
 
 const uaaDecode = async ([token], [doJsonOutput]) => {

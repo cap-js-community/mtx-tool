@@ -40,7 +40,7 @@ const uaaUserInfoMock = {
   userStuff: "details",
 };
 
-const uaaCfServiceMock = {
+const uaaCfBindingMock = {
   credentials: {
     url: "https://identityzone.authentication",
     identityzone: "identityzone",
@@ -56,7 +56,7 @@ const cfEnvServicesMock = {
 };
 
 const contextMock = {
-  getUaaInfo: jest.fn(() => ({ cfBinding: uaaCfServiceMock })),
+  getUaaInfo: jest.fn(() => ({ cfBinding: uaaCfBindingMock })),
   getCachedUaaTokenFromCredentials: jest.fn((credentials, options) => {
     return sharedOAuthMock.getUaaTokenFromCredentials(credentials, options).then(({ access_token }) => access_token);
   }),
@@ -143,7 +143,7 @@ describe("uaa tests", () => {
       sharedStaticMock.isDashedWord.mockReturnValue(true);
       contextMock.getUaaInfo.mockReturnValueOnce({
         cfApp: { name: APP_NAME },
-        cfBinding: uaaCfServiceMock,
+        cfBinding: uaaCfBindingMock,
         cfEnvServices: { [SERVICE]: [{ credentials: cfEnvServicesMock }] },
       });
       contextMock.getCachedUaaTokenFromCredentials.mockReturnValueOnce(token);
@@ -193,7 +193,7 @@ describe("uaa tests", () => {
       sharedStaticMock.isDashedWord.mockReturnValue(true);
       contextMock.getUaaInfo.mockReturnValueOnce({
         cfApp: { name: APP_NAME },
-        cfBinding: uaaCfServiceMock,
+        cfBinding: uaaCfBindingMock,
         cfEnvServices: { [SERVICE]: [{ credentials: cfEnvServicesMock }] },
       });
       contextMock.getCachedUaaTokenFromCredentials.mockReturnValueOnce(token);
@@ -246,7 +246,7 @@ describe("uaa tests", () => {
       sharedStaticMock.isDashedWord.mockReturnValue(true);
       contextMock.getUaaInfo.mockReturnValueOnce({
         cfApp: { name: APP_NAME },
-        cfBinding: uaaCfServiceMock,
+        cfBinding: uaaCfBindingMock,
         cfEnvServices: { [SERVICE]: [{ credentials: cfEnvServicesMock }] },
       });
       contextMock.getCachedUaaTokenFromCredentials.mockReturnValueOnce(token);
