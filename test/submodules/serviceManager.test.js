@@ -101,7 +101,6 @@ const mockBindingFactory = (i) => ({
   labels: {
     container_id: [`container-id-${i}`],
     subaccount_id: [`subaccount-id-${i}`],
-    tenant_id: [`tenant-id-${i}`],
   },
 });
 

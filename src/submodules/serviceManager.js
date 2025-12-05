@@ -469,7 +469,8 @@ const _serviceManagerRefreshBindings = async (context, { filterServicePlanId, fi
   const filteredBindings = bindings.filter((binding) => instanceById[binding.service_instance_id]);
   await limiter(svmRequestConcurrency, filteredBindings, async (binding) => {
     const instance = instanceById[binding.service_instance_id];
-    await _requestCreateBinding(context, instance.id, instance.service_plan_id, instance.labels, { parameters });
+    const newLabels = { ...instance.labels, ...binding.labels };
+    await _requestCreateBinding(context, instance.id, instance.service_plan_id, newLabels, { parameters });
     await _requestDeleteBinding(context, binding.id);
   });
   logger.info("refreshed %i binding%s", filteredBindings.length, filteredBindings.length === 1 ? "" : "s");

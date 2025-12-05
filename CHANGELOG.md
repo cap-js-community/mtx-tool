@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## v0.11.1 - tbd
 
+- svm: new bindings created via `--svm-refresh-bindings` will combine the labels from the associated instance and from
+  the previous binding.
+
 ## v0.11.0 - 2025-11-24
 
 ⚠️ This release is potentially disruptive. The configured app used for `cds` commands now needs to be bound to an auth
