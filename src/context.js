@@ -283,7 +283,9 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
       const offering = cfServiceOfferingsById[plan.relationships.service_offering.data.guid];
       const details = await _cfRequest(cfInfo, stub.links.details.href);
       return {
-        ...stub,
+        id: stub.guid,
+        createdAt: stub.created_at,
+        updatedAt: stub.updated_at,
         offeringId: offering.guid,
         offeringName: offering.name,
         planId: plan.guid,
@@ -381,9 +383,9 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
       cfAppGuid,
       cfBuildpack,
       cfProcess,
+      cfService,
       cfBindings,
       cfEnvVariables,
-      cfService,
       cfRouteUrl,
       cfSsh,
     };
