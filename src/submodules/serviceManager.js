@@ -104,7 +104,7 @@ const _getQuery = (components) => {
 
 const _serviceManagerRequest = async (context, reqOptions = {}) => {
   const {
-    cfService: { credentials },
+    cfBinding: { credentials },
   } = await context.getHdiInfo();
   const url = credentials.sm_url;
   const auth = { token: await context.getCachedUaaTokenFromCredentials(credentials) };
