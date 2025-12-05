@@ -266,8 +266,8 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
       { resources: cfBindingStubsRaw, included: cfServiceInstancesBuckets },
     ] = await Promise.all([
       _cfServiceInfoMaps(),
-      _cfRequest(cfInfo, cfApp.links.environment_variables.href),
-      _cfRequestPaged(cfInfo, cfApp.links.processes.href),
+      _cfRequest(cfInfo, `/v3/apps/${cfApp.guid}/environment_variables`),
+      _cfRequestPaged(cfInfo, `/v3/apps/${cfApp.guid}/processes`),
       _cfRequestPaged(cfInfo, `/v3/routes?app_guids=${cfApp.guid}&include=domain`),
       _cfRequestPaged(cfInfo, `/v3/service_credential_bindings?app_guids=${cfApp.guid}&include=service_instance`),
     ]);
@@ -286,7 +286,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
       const instance = cfServiceInstancesById[stub.relationships.service_instance.data.guid];
       const plan = cfServicePlansById[instance.relationships.service_plan.data.guid];
       const offering = cfServiceOfferingsById[plan.relationships.service_offering.data.guid];
-      const details = await _cfRequest(cfInfo, stub.links.details.href);
+      const details = await _cfRequest(cfInfo, `/v3/service_credential_bindings/${stub.guid}/details`);
       return {
         id: stub.guid,
         createdAt: stub.created_at,
