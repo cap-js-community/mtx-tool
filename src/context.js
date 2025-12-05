@@ -43,7 +43,7 @@ const FILENAME = Object.freeze({
   CACHE: ".mtxcache.json",
 });
 
-const CACHE_GAP = 43200000; // 12 hours in milliseconds
+const CACHE_GAP = 14400000; // 4 hours in milliseconds
 const UAA_TOKEN_CACHE_EXPIRY_GAP = 60000; // 1 minute
 const CF_API_CONCURRENCY = 6;
 
