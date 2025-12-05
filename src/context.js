@@ -238,29 +238,34 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const { filepath: configPath, dir, location } = _resolveDir(FILENAME.CONFIG) || {};
   const runtimeConfig = readRuntimeConfig(configPath);
   const cachePath = pathlib.join(dir, FILENAME.CACHE);
-  const [
-    { resources: cfApps }, //
-    { resources: cfServicePlans, included: cfServiceOfferingBuckets },
-  ] = await Promise.all([
-    _cfRequestPaged(cfInfo, `/v3/apps?space_guids=${cfInfo.config.SpaceFields.GUID}`),
-    _cfRequestPaged(cfInfo, `/v3/service_plans?include=service_offering`),
-  ]);
-  const cfServiceOfferings = _cfMergeBuckets(cfServiceOfferingBuckets, "service_offerings");
-  const cfServicePlansById = indexByKey(cfServicePlans, "guid");
-  const cfServiceOfferingsById = indexByKey(cfServiceOfferings, "guid");
+  const { resources: cfApps } = await _cfRequestPaged(cfInfo, `/v3/apps?space_guids=${cfInfo.config.SpaceFields.GUID}`);
   const cfTokenCache = new ExpiringLazyCache({ expirationGap: UAA_TOKEN_CACHE_EXPIRY_GAP });
   const settingTypeToAppNameCache = new LazyCache();
   const appNameToCfAppCache = new LazyCache();
   let rawAppMemoryCache = {};
 
+  const _cfServiceInfoMaps = makeOneTime(async () => {
+    const { resources: cfServicePlans, included: cfServiceOfferingBuckets } = await _cfRequestPaged(
+      cfInfo,
+      `/v3/service_plans?include=service_offering`
+    );
+    const cfServiceOfferings = _cfMergeBuckets(cfServiceOfferingBuckets, "service_offerings");
+    return {
+      cfServiceOfferingsById: indexByKey(cfServiceOfferings, "guid"),
+      cfServicePlansById: indexByKey(cfServicePlans, "guid"),
+    };
+  });
+
   const getRawAppInfo = async (cfApp) => {
     const cfBuildpack = cfApp.lifecycle?.data?.buildpacks?.[0];
     const [
+      { cfServiceOfferingsById, cfServicePlansById },
       { var: cfEnvVariables },
       { resources: cfProcesses },
       { resources: cfRoutes, included: cfRouteDomainBuckets },
       { resources: cfBindingStubsRaw, included: cfServiceInstancesBuckets },
     ] = await Promise.all([
+      _cfServiceInfoMaps(),
       _cfRequest(cfInfo, cfApp.links.environment_variables.href),
       _cfRequestPaged(cfInfo, cfApp.links.processes.href),
       _cfRequestPaged(cfInfo, `/v3/routes?app_guids=${cfApp.guid}&include=domain`),
