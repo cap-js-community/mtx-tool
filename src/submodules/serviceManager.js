@@ -15,7 +15,6 @@ const {
   partition,
   randomString,
   makeOneTime,
-  resetOneTime,
   indexByKey,
   clusterByKey,
 } = require("../shared/static");
@@ -112,34 +111,6 @@ const _serviceManagerRequest = async (context, reqOptions = {}) => {
   return (await response.json())?.items ?? [];
 };
 
-const _requestOfferings = makeOneTime(
-  async (context, { filterServiceOfferingName } = {}) =>
-    await _serviceManagerRequest(context, {
-      pathname: "/v1/service_offerings",
-      ..._getQuery([
-        { predicate: filterServiceOfferingName, type: QUERY_TYPE.FIELD, key: "name", value: filterServiceOfferingName },
-      ]),
-    })
-);
-
-const _requestPlans = makeOneTime(
-  async (context, { filterServicePlanId, filterServiceOfferingId, filterServicePlanName } = {}) => {
-    return await _serviceManagerRequest(context, {
-      pathname: "/v1/service_plans",
-      ..._getQuery([
-        { predicate: filterServicePlanId, type: QUERY_TYPE.FIELD, key: "id", value: filterServicePlanId },
-        {
-          predicate: filterServiceOfferingId,
-          type: QUERY_TYPE.FIELD,
-          key: "service_offering_id",
-          value: filterServiceOfferingId,
-        },
-        { predicate: filterServicePlanName, type: QUERY_TYPE.FIELD, key: "name", value: filterServicePlanName },
-      ]),
-    });
-  }
-);
-
 const _requestInstances = async (
   context,
   { filterTenantId, filterServicePlanId, doEnsureReady = false, doEnsureTenantLabel = false } = {}
@@ -195,22 +166,20 @@ const _requestBindings = async (
   return bindings;
 };
 
-const _indexServicePlanNameById = (offerings, plans) => {
-  const offeringById = indexByKey(offerings, "id");
-  return plans.reduce((acc, plan) => {
-    acc[plan.id] = `${offeringById[plan.service_offering_id].name}:${plan.name}`;
+const _getServicePlanNameById = makeOneTime(async (context) => {
+  const { cfServiceOfferingsById, cfServicePlansById } = context;
+  return Object.values(cfServicePlansById).reduce((acc, plan) => {
+    acc[plan.guid] = `${cfServiceOfferingsById[plan.relationships.service_offering.data.guid].name}:${plan.name}`;
     return acc;
   }, {});
-};
+});
 
 const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJsonOutput }) => {
-  const [offerings, plans, instances, bindings] = await Promise.all([
-    _requestOfferings(context),
-    _requestPlans(context),
+  const [instances, bindings] = await Promise.all([
     _requestInstances(context, { filterTenantId, doEnsureTenantLabel: true }),
     _requestBindings(context, { filterTenantId }),
   ]);
-  const servicePlanNameById = _indexServicePlanNameById(offerings, plans);
+  const servicePlanNameById = await _getServicePlanNameById(context);
   instances.sort(compareForTenantId);
   const bindingsByInstance = clusterByKey(bindings, "service_instance_id");
 
@@ -335,14 +304,12 @@ const _requestDeleteBinding = async (context, serviceBindingId) =>
   });
 
 const _serviceManagerRepairBindings = async (context, { filterServicePlanId, parameters } = {}) => {
-  const [offerings, plans, instances, bindings] = await Promise.all([
-    _requestOfferings(context),
-    _requestPlans(context, { filterServicePlanId }),
+  const [instances, bindings] = await Promise.all([
     _requestInstances(context, { filterServicePlanId, doEnsureReady: true, doEnsureTenantLabel: true }),
     _requestBindings(context),
   ]);
 
-  const servicePlanNameById = _indexServicePlanNameById(offerings, plans);
+  const servicePlanNameById = await _getServicePlanNameById(context);
   const bindingsByInstance = clusterByKey(bindings, "service_instance_id");
   instances.sort(compareForTenantId);
   const changeQueue = new FunnelQueue(svmRequestConcurrency);
@@ -422,14 +389,14 @@ const _resolveServicePlanId = async (context, servicePlanName) => {
     `could not detect form "offering:plan" or "${SERVICE_PLAN_ALL_IDENTIFIER}" in "${servicePlanName}"`
   );
   const [, offeringName, planName] = match;
-  const [offering] = await _requestOfferings(context, { filterServiceOfferingName: offeringName });
-  assert(offering?.id, `could not find service offering "${offeringName}"`);
-  const [plan] = await _requestPlans(context, {
-    filterServicePlanName: planName,
-    filterServiceOfferingId: offering.id,
-  });
-  assert(plan?.id, `could not find service plan "${planName}" within offering "${offeringName}"`);
-  return plan.id;
+  const { cfServiceOfferingsById, cfServicePlansById } = context;
+  const offering = Object.values(cfServiceOfferingsById).find((offering) => offering.name === offeringName);
+  assert(offering, `could not find service offering "${offeringName}"`);
+  const plan = Object.values(cfServicePlansById).find(
+    (plan) => plan.name === planName && plan.relationships.service_offering.data.guid === offering.guid
+  );
+  assert(plan, `could not find service plan "${planName}" within offering "${offeringName}"`);
+  return plan.guid;
 };
 
 const serviceManagerRepairBindings = async (context, [servicePlanName], [rawParameters]) => {
@@ -547,11 +514,4 @@ module.exports = {
   serviceManagerRefreshBindings,
   serviceManagerDeleteBindings,
   serviceManagerDeleteInstancesAndBindings,
-
-  _: {
-    _reset() {
-      resetOneTime(_requestOfferings);
-      resetOneTime(_requestPlans);
-    },
-  },
 };
