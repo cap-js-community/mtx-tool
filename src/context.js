@@ -256,13 +256,11 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     const cfBuildpack = cfApp.lifecycle?.data?.buildpacks?.[0];
     const [
       { cfServiceOfferingsById, cfServicePlansById },
-      { var: cfEnvVariables },
       { resources: cfProcesses },
       { resources: cfRoutes, included: cfRouteDomainBuckets },
       { resources: cfBindingStubsRaw, included: cfServiceInstancesBuckets },
     ] = await Promise.all([
       _cfServiceInfoMaps(),
-      _cfRequest(cfInfo, `/v3/apps/${cfApp.guid}/environment_variables`),
       _cfRequestPaged(cfInfo, `/v3/apps/${cfApp.guid}/processes`),
       _cfRequestPaged(cfInfo, `/v3/routes?app_guids=${cfApp.guid}&include=domain`),
       _cfRequestPaged(cfInfo, `/v3/service_credential_bindings?app_guids=${cfApp.guid}&include=service_instance`),
@@ -306,7 +304,6 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
       version,
       cfApp,
       cfBuildpack,
-      cfEnvVariables,
       cfProcess,
       cfRoute,
       cfRouteDomain,
