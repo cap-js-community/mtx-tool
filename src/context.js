@@ -258,15 +258,17 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     const [
       { var: cfEnvVariables },
       { resources: cfProcesses },
-      { resources: cfRoutes },
+      { resources: cfRoutes, included: cfRouteDomainBuckets },
       { resources: cfBindingStubsRaw, included: cfServiceInstancesBuckets },
     ] = await Promise.all([
       _cfRequest(cfInfo, cfApp.links.environment_variables.href),
       _cfRequestPaged(cfInfo, cfApp.links.processes.href),
-      _cfRequestPaged(cfInfo, `/v3/routes?app_guids=${cfApp.guid}`),
+      _cfRequestPaged(cfInfo, `/v3/routes?app_guids=${cfApp.guid}&include=domain`),
       _cfRequestPaged(cfInfo, `/v3/service_credential_bindings?app_guids=${cfApp.guid}&include=service_instance`),
     ]);
 
+    const cfRouteDomains = _cfMergeBuckets(cfRouteDomainBuckets, "domains");
+    const cfRouteDomainsById = indexByKey(cfRouteDomains, "guid");
     const cfServiceInstances = _cfMergeBuckets(cfServiceInstancesBuckets, "service_instances").filter(
       (instance) => instance.type === "managed"
     );
@@ -294,7 +296,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
 
     const cfProcess = cfProcesses?.[0];
     const cfRoute = cfRoutes?.[0];
-    const cfRouteDomain = cfRoute.links.domain && (await _cfRequest(cfInfo, cfRoute.links.domain.href));
+    const cfRouteDomain = cfRouteDomainsById[cfRoute?.relationships.domain?.data.guid];
 
     return {
       timestamp: new Date().toISOString(),
