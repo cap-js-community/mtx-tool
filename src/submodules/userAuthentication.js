@@ -12,7 +12,7 @@ const _tokenDecode = (token) =>
 
 const _uaaUserInfo = async (context, token) => {
   const {
-    cfService: {
+    cfBinding: {
       credentials: { url: paasUrl, identityzone: paasZoneDomain },
     },
   } = await context.getUaaInfo();
@@ -87,7 +87,7 @@ const uaaUser = async (context, [username, password, tenant], [doDecode, doJsonO
 const _uaaSaasServiceToken = async (context, service, options = undefined) => {
   assert(isDashedWord(service), `argument "${service}" is not a valid service`);
   const {
-    cfService: { credentials: uaaCredentials },
+    cfBinding: { credentials: uaaCredentials },
     cfApp: { name: appName },
     cfEnvServices,
   } = await context.getUaaInfo();
