@@ -478,6 +478,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const getAppNameInfoCached = async (appName, setting) => {
     assert(appName, "used getAppNameInfoCached without appName parameter");
 
+    // TODO(tricky) this needs an early out if appName is already in the cache then cfAppFromName need not be called to save the cf request
     const cfApp = _getCfAppFromAppName(appName);
     const rawAppInfo = await getRawAppInfoCached(cfApp);
     return processRawAppInfo(cfApp.name, rawAppInfo, setting);
