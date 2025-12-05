@@ -71,11 +71,10 @@ const _cfAuthToken = async () => {
   }
 };
 
-const _cfRequest = async (cfInfo, url) => {
+const _cfRequest = async (cfInfo, urlOrPath) => {
+  let url;
   try {
-    if (url.startsWith("/v3")) {
-      url = cfInfo.config.Target + url;
-    }
+    url = urlOrPath.startsWith("/v3") ? cfInfo.config.Target + urlOrPath : urlOrPath;
     const response = await request({
       url,
       headers: {
@@ -90,13 +89,10 @@ const _cfRequest = async (cfInfo, url) => {
   }
 };
 
-const _cfRequestPaged = async (cfInfo, url) => {
-  if (url.startsWith("/v3")) {
-    url = cfInfo.config.Target + url;
-  }
+const _cfRequestPaged = async (cfInfo, urlOrPath) => {
   const result = { resources: [], included: [] };
   while (true) {
-    const { pagination, resources, included } = await _cfRequest(cfInfo, url);
+    const { pagination, resources, included } = await _cfRequest(cfInfo, urlOrPath);
     if (resources) {
       result.resources = result.resources.concat(resources);
     }
@@ -104,7 +100,7 @@ const _cfRequestPaged = async (cfInfo, url) => {
       result.included = result.included.concat(included);
     }
     if (pagination && pagination.next && pagination.next.href) {
-      url = pagination.next.href;
+      urlOrPath = pagination.next.href;
     } else {
       break;
     }
