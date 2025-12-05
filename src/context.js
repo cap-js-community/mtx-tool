@@ -348,7 +348,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const processRawAppInfo = (appName, rawAppInfo, { requireServices, requireRoute } = {}) => {
     const { cfApp, cfBuildpack, cfBindings, cfEnvVariables, cfRoute, cfRouteDomain, cfProcess } = rawAppInfo;
 
-    let cfService = null;
+    let cfBinding = null;
     if (Array.isArray(requireServices)) {
       assert(cfBindings, "no service binding information in environment, check cf user permissions");
       const matchingServices = requireServices
@@ -356,9 +356,9 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
           cfBindings.find((binding) => service.label === binding.offeringName && service.plan === binding.planName)
         )
         .filter((a) => a !== undefined);
-      cfService = matchingServices.length > 0 ? matchingServices[0] : null;
+      cfBinding = matchingServices.length > 0 ? matchingServices[0] : null;
       assert(
-        cfService,
+        cfBinding,
         `could not access required service-bindings for app "${appName}" services "${JSON.stringify(requireServices)}"`
       );
     }
@@ -383,7 +383,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
       cfAppGuid,
       cfBuildpack,
       cfProcess,
-      cfService,
+      cfBinding,
       cfBindings,
       cfEnvVariables,
       cfRouteUrl,
