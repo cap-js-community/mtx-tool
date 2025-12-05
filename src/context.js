@@ -471,11 +471,8 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
 
   const getAppInfoCached = (type) => async () => {
     const appName = _getAppNameFromSettingType(type);
-
-    const cfApp = _getCfAppFromAppName(appName);
-    const rawAppInfo = await getRawAppInfoCached(cfApp);
     const setting = CONFIG_INFOS[type];
-    return processRawAppInfo(cfApp.name, rawAppInfo, setting);
+    return await getAppNameInfoCached(appName, setting);
   };
 
   const getAppNameInfoCached = async (appName, setting) => {
