@@ -36,7 +36,7 @@
     "docs": "cd docs && bundle exec jekyll serve",
     "docs:install": "cd docs && npx shx rm -rf vendor Gemfile.lock && bundle install",
     "cloc": "npx cloc --vcs=git src",
-    "upgrade-lock": "npx shx rm -rf package-lock.json node_modules && npm i && npm run patch"
+    "upgrade-lock": "npm i && npm run patch"
   },
   "engines": {
     "node": ">=20.0.0"
