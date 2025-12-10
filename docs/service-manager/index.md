@@ -98,7 +98,7 @@ mtx --svm-fresh-bindings SERVICE_PLAN TENANT_ID
 mtx --svm-refresh-bindings SERVICE_PLAN TENANT_ID
 ```
 
-will create new bindings and, for refresh, also remove the current binding. Regular credential rotation is recommended
+will create new bindings and, for refresh, also remove the current bindings. Regular credential rotation is recommended
 to increase security.
 
 You can select which managed bindings you want to include with the following combinations:
@@ -116,7 +116,7 @@ this gracefully or be restarted.
 
 {: .info}
 Fresh will not invalidate current credentials, but you should use the repair command for cleanup once the new
-credentials are used in all relevant servers.
+credentials are active in all relevant servers.
 
 Both the fresh and refresh commands allow you to pass arbitrary parameters to the service binding that gets created in
 service manager. In other words,
