@@ -467,7 +467,10 @@ const serviceManagerRepairBindings = async (context, [servicePlanName], [rawPara
   });
 };
 
-const _serviceManagerRefreshBindings = async (context, { filterServicePlanId, filterTenantId, parameters } = {}) => {
+const _serviceManagerFreshBindings = async (
+  context,
+  { filterServicePlanId, filterTenantId, parameters, doDelete = false } = {}
+) => {
   const [offerings, plans, instances, bindings] = await Promise.all([
     _requestOfferings(context),
     _requestPlans(context, { filterServicePlanId }),
@@ -487,12 +490,14 @@ const _serviceManagerRefreshBindings = async (context, { filterServicePlanId, fi
       ...(servicePlanName === HANA_CONTAINER_OFFERING_PLAN_NAME && HANA_CONTAINER_LABELS),
     };
     await _requestCreateBinding(context, instance.id, instance.service_plan_id, newLabels, { parameters });
-    await _requestDeleteBinding(context, binding.id);
+    if (doDelete) {
+      await _requestDeleteBinding(context, binding.id);
+    }
   });
   logger.info("refreshed %i binding%s", filteredBindings.length, filteredBindings.length === 1 ? "" : "s");
 };
 
-const serviceManagerRefreshBindings = async (context, [servicePlanName, tenantId], [rawParameters]) => {
+async function _resolveFreshBindingsOptions(context, servicePlanName, tenantId, rawParameters) {
   const doFilterServicePlan = servicePlanName !== SERVICE_PLAN_ALL_IDENTIFIER;
   const filterServicePlanId = doFilterServicePlan && (await _resolveServicePlanId(context, servicePlanName));
   const doFilterTenantId = tenantId !== TENANT_ID_ALL_IDENTIFIER;
@@ -500,13 +505,24 @@ const serviceManagerRefreshBindings = async (context, [servicePlanName, tenantId
   assert(!doFilterTenantId || isValidTenantId(filterTenantId), `argument "${tenantId}" is not a valid tenant id`);
   const parameters = tryJsonParse(rawParameters);
   assert(!rawParameters || isObject(parameters), `argument "${rawParameters}" needs to be a valid JSON object`);
-
-  return await _serviceManagerRefreshBindings(context, {
+  return {
     ...(doFilterServicePlan && { filterServicePlanId }),
     ...(doFilterTenantId && { filterTenantId }),
     parameters,
+  };
+}
+
+const serviceManagerRefreshBindings = async (context, [servicePlanName, tenantId], [rawParameters]) =>
+  await _serviceManagerFreshBindings(context, {
+    doDelete: true,
+    ...(await _resolveFreshBindingsOptions(context, servicePlanName, tenantId, rawParameters)),
   });
-};
+
+const serviceManagerFreshBindings = async (context, [servicePlanName, tenantId], [rawParameters]) =>
+  await _serviceManagerFreshBindings(
+    context,
+    await _resolveFreshBindingsOptions(context, servicePlanName, tenantId, rawParameters)
+  );
 
 const _serviceManagerDelete = async (
   context,
@@ -577,6 +593,7 @@ module.exports = {
   serviceManagerList,
   serviceManagerLongList,
   serviceManagerRepairBindings,
+  serviceManagerFreshBindings,
   serviceManagerRefreshBindings,
   serviceManagerDeleteBindings,
   serviceManagerDeleteInstancesAndBindings,
