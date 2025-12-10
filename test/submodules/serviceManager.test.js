@@ -128,13 +128,13 @@ describe("svm tests", () => {
           "GET service-manager-url /v1/service_instances { fieldQuery: "ready eq 'true'" }",
           "GET service-manager-url /v1/service_bindings",
           "POST service-manager-url /v1/service_bindings { async: false }
-        '{"name":"xxx","service_instance_id":"instance-id-0","labels":{"instance_id":["instance-id-0"],"tenant_id":["tenant-id-0"],"service_plan_id":["plan-id-0"]}}'",
+        '{"name":"xxx","service_instance_id":"instance-id-0","labels":{"instance_id":["instance-id-0"],"tenant_id":["tenant-id-0"],"service_plan_id":["plan-id-0"],"managing_client_lib":["instance-manager-client-lib"]}}'",
           "POST service-manager-url /v1/service_bindings { async: false }
         '{"name":"xxx","service_instance_id":"instance-id-1","labels":{"instance_id":["instance-id-1"],"tenant_id":["tenant-id-0"],"service_plan_id":["plan-id-1"]}}'",
           "POST service-manager-url /v1/service_bindings { async: false }
         '{"name":"xxx","service_instance_id":"instance-id-3","labels":{"instance_id":["instance-id-3"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-1"]}}'",
           "POST service-manager-url /v1/service_bindings { async: false }
-        '{"name":"xxx","service_instance_id":"instance-id-4","labels":{"instance_id":["instance-id-4"],"tenant_id":["tenant-id-2"],"service_plan_id":["plan-id-0"]}}'",
+        '{"name":"xxx","service_instance_id":"instance-id-4","labels":{"instance_id":["instance-id-4"],"tenant_id":["tenant-id-2"],"service_plan_id":["plan-id-0"],"managing_client_lib":["instance-manager-client-lib"]}}'",
         ]
       `);
       expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
@@ -165,9 +165,9 @@ describe("svm tests", () => {
           "GET service-manager-url /v1/service_instances { fieldQuery: "ready eq 'true' and service_plan_id eq 'plan-id-0'" }",
           "GET service-manager-url /v1/service_bindings",
           "POST service-manager-url /v1/service_bindings { async: false }
-        '{"name":"xxx","service_instance_id":"instance-id-0","labels":{"instance_id":["instance-id-0"],"tenant_id":["tenant-id-0"],"service_plan_id":["plan-id-0"]}}'",
+        '{"name":"xxx","service_instance_id":"instance-id-0","labels":{"instance_id":["instance-id-0"],"tenant_id":["tenant-id-0"],"service_plan_id":["plan-id-0"],"managing_client_lib":["instance-manager-client-lib"]}}'",
           "POST service-manager-url /v1/service_bindings { async: false }
-        '{"name":"xxx","service_instance_id":"instance-id-4","labels":{"instance_id":["instance-id-4"],"tenant_id":["tenant-id-2"],"service_plan_id":["plan-id-0"]}}'",
+        '{"name":"xxx","service_instance_id":"instance-id-4","labels":{"instance_id":["instance-id-4"],"tenant_id":["tenant-id-2"],"service_plan_id":["plan-id-0"],"managing_client_lib":["instance-manager-client-lib"]}}'",
         ]
       `);
       expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
@@ -194,15 +194,15 @@ describe("svm tests", () => {
           "GET service-manager-url /v1/service_instances { fieldQuery: "ready eq 'true'" }",
           "GET service-manager-url /v1/service_bindings",
           "POST service-manager-url /v1/service_bindings { async: false }
-        '{"name":"xxx","service_instance_id":"instance-id-0","labels":{"instance_id":["instance-id-0"],"tenant_id":["tenant-id-0"],"service_plan_id":["plan-id-0"]}}'",
+        '{"name":"xxx","service_instance_id":"instance-id-0","labels":{"instance_id":["instance-id-0"],"tenant_id":["tenant-id-0"],"service_plan_id":["plan-id-0"],"managing_client_lib":["instance-manager-client-lib"]}}'",
           "POST service-manager-url /v1/service_bindings { async: false }
         '{"name":"xxx","service_instance_id":"instance-id-1","labels":{"instance_id":["instance-id-1"],"tenant_id":["tenant-id-0"],"service_plan_id":["plan-id-1"]}}'",
           "POST service-manager-url /v1/service_bindings { async: false }
-        '{"name":"xxx","service_instance_id":"instance-id-2","labels":{"instance_id":["instance-id-2"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-0"]}}'",
+        '{"name":"xxx","service_instance_id":"instance-id-2","labels":{"instance_id":["instance-id-2"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-0"],"managing_client_lib":["instance-manager-client-lib"]}}'",
           "POST service-manager-url /v1/service_bindings { async: false }
         '{"name":"xxx","service_instance_id":"instance-id-3","labels":{"instance_id":["instance-id-3"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-1"]}}'",
           "POST service-manager-url /v1/service_bindings { async: false }
-        '{"name":"xxx","service_instance_id":"instance-id-4","labels":{"instance_id":["instance-id-4"],"tenant_id":["tenant-id-2"],"service_plan_id":["plan-id-0"]}}'",
+        '{"name":"xxx","service_instance_id":"instance-id-4","labels":{"instance_id":["instance-id-4"],"tenant_id":["tenant-id-2"],"service_plan_id":["plan-id-0"],"managing_client_lib":["instance-manager-client-lib"]}}'",
           "POST service-manager-url /v1/service_bindings { async: false }
         '{"name":"xxx","service_instance_id":"instance-id-5","labels":{"instance_id":["instance-id-5"],"tenant_id":["tenant-id-2"],"service_plan_id":["plan-id-1"]}}'",
           "DELETE service-manager-url /v1/service_bindings/binding-id-0 { async: false }",
@@ -237,11 +237,11 @@ describe("svm tests", () => {
           "GET service-manager-url /v1/service_instances { fieldQuery: "ready eq 'true' and service_plan_id eq 'plan-id-0'" }",
           "GET service-manager-url /v1/service_bindings",
           "POST service-manager-url /v1/service_bindings { async: false }
-        '{"name":"xxx","service_instance_id":"instance-id-0","labels":{"instance_id":["instance-id-0"],"tenant_id":["tenant-id-0"],"service_plan_id":["plan-id-0"]}}'",
+        '{"name":"xxx","service_instance_id":"instance-id-0","labels":{"instance_id":["instance-id-0"],"tenant_id":["tenant-id-0"],"service_plan_id":["plan-id-0"],"managing_client_lib":["instance-manager-client-lib"]}}'",
           "POST service-manager-url /v1/service_bindings { async: false }
-        '{"name":"xxx","service_instance_id":"instance-id-2","labels":{"instance_id":["instance-id-2"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-0"]}}'",
+        '{"name":"xxx","service_instance_id":"instance-id-2","labels":{"instance_id":["instance-id-2"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-0"],"managing_client_lib":["instance-manager-client-lib"]}}'",
           "POST service-manager-url /v1/service_bindings { async: false }
-        '{"name":"xxx","service_instance_id":"instance-id-4","labels":{"instance_id":["instance-id-4"],"tenant_id":["tenant-id-2"],"service_plan_id":["plan-id-0"]}}'",
+        '{"name":"xxx","service_instance_id":"instance-id-4","labels":{"instance_id":["instance-id-4"],"tenant_id":["tenant-id-2"],"service_plan_id":["plan-id-0"],"managing_client_lib":["instance-manager-client-lib"]}}'",
           "DELETE service-manager-url /v1/service_bindings/binding-id-0 { async: false }",
           "DELETE service-manager-url /v1/service_bindings/binding-id-2 { async: false }",
           "DELETE service-manager-url /v1/service_bindings/binding-id-4 { async: false }",
@@ -265,7 +265,7 @@ describe("svm tests", () => {
           "GET service-manager-url /v1/service_instances { fieldQuery: "ready eq 'true'", labelQuery: "tenant_id eq 'tenant-id-1'" }",
           "GET service-manager-url /v1/service_bindings { labelQuery: "tenant_id eq 'tenant-id-1'" }",
           "POST service-manager-url /v1/service_bindings { async: false }
-        '{"name":"xxx","service_instance_id":"instance-id-2","labels":{"instance_id":["instance-id-2"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-0"]}}'",
+        '{"name":"xxx","service_instance_id":"instance-id-2","labels":{"instance_id":["instance-id-2"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-0"],"managing_client_lib":["instance-manager-client-lib"]}}'",
           "POST service-manager-url /v1/service_bindings { async: false }
         '{"name":"xxx","service_instance_id":"instance-id-3","labels":{"instance_id":["instance-id-3"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-1"]}}'",
           "DELETE service-manager-url /v1/service_bindings/binding-id-2 { async: false }",
@@ -298,7 +298,7 @@ describe("svm tests", () => {
           "GET service-manager-url /v1/service_instances { fieldQuery: "ready eq 'true' and service_plan_id eq 'plan-id-0'", labelQuery: "tenant_id eq 'tenant-id-1'" }",
           "GET service-manager-url /v1/service_bindings { labelQuery: "tenant_id eq 'tenant-id-1'" }",
           "POST service-manager-url /v1/service_bindings { async: false }
-        '{"name":"xxx","service_instance_id":"instance-id-2","labels":{"instance_id":["instance-id-2"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-0"]}}'",
+        '{"name":"xxx","service_instance_id":"instance-id-2","labels":{"instance_id":["instance-id-2"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-0"],"managing_client_lib":["instance-manager-client-lib"]}}'",
           "DELETE service-manager-url /v1/service_bindings/binding-id-2 { async: false }",
         ]
       `);
