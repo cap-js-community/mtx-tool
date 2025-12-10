@@ -120,6 +120,7 @@ commands:
 ~  svml   --svm-list [TENANT_ID]                                  list all managed service instances and binding
 ~  svmll  --svm-long-list [TENANT_ID]                             long list all managed service instances and bindings
           --svm-repair-bindings SERVICE_PLAN [PARAMS]             repair missing and ambivalent service bindings
+          --svm-fresh-bindings SERVICE_PLAN TENANT_ID [PARAMS]    create new service bindings
           --svm-refresh-bindings SERVICE_PLAN TENANT_ID [PARAMS]  delete and recreate service bindings
 *         --svm-delete-bindings SERVICE_PLAN TENANT_ID            delete service bindings
 *         --svm-delete SERVICE_PLAN TENANT_ID                     delete service instances and bindings
@@ -365,6 +366,13 @@ const APP_COMMAND_INFOS = Object.freeze({
     requiredPassArgs: [PASS_ARG.SERVICE_PLAN],
     optionalPassArgs: [PASS_ARG.PARAMS],
     callback: svm.serviceManagerRepairBindings,
+    useCache: false,
+  },
+  SVM_FRESH_BINDINGS: {
+    commandVariants: ["--svm-fresh-bindings"],
+    requiredPassArgs: [PASS_ARG.SERVICE_PLAN, PASS_ARG.TENANT_ID],
+    optionalPassArgs: [PASS_ARG.PARAMS],
+    callback: svm.serviceManagerFreshBindings,
     useCache: false,
   },
   SVM_REFRESH_BINDINGS: {

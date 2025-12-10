@@ -31,6 +31,7 @@ Commands for this area are:
 ~  svml   --svm-list [TENANT_ID]                                  list all managed service instances and binding
 ~  svmll  --svm-long-list [TENANT_ID]                             long list all managed service instances and bindings
           --svm-repair-bindings SERVICE_PLAN [PARAMS]             repair missing and ambivalent service bindings
+          --svm-fresh-bindings SERVICE_PLAN TENANT_ID [PARAMS]    create new service bindings
           --svm-refresh-bindings SERVICE_PLAN TENANT_ID [PARAMS]  delete and recreate service bindings
 *         --svm-delete-bindings SERVICE_PLAN TENANT_ID            delete service bindings
 *         --svm-delete SERVICE_PLAN TENANT_ID                     delete service instances and bindings
@@ -88,16 +89,17 @@ mtx --svm-repair-bindings SERVICE_PLAN
 will normalize all service instances, so that they have exactly one binding. Missing bindings are created and ambivalent
 ones are removed. This happens either for a given service plan, e.g. `objectstore:standard`, or for `all-services`.
 
-## Refresh Bindings
+## Fresh or Refresh Bindings
 
-The refresh command
+The fresh and refresh commands
 
 ```
+mtx --svm-fresh-bindings SERVICE_PLAN TENANT_ID
 mtx --svm-refresh-bindings SERVICE_PLAN TENANT_ID
 ```
 
-will create a new binding and afterward remove the current binding. Regular credential rotation is recommended to
-increase security.
+will create new bindings and, for refresh, also remove the current bindings. Regular credential rotation is recommended
+to increase security.
 
 You can select which managed bindings you want to include with the following combinations:
 
@@ -112,14 +114,19 @@ You can select which managed bindings you want to include with the following com
 Refreshing will invalidate current credentials, i.e. all applications that have them in memory need to either handle
 this gracefully or be restarted.
 
-The refresh command allows you to pass arbitrary parameters to the service binding that gets created in service
-manager. In other words,
+{: .info}
+Fresh will not invalidate current credentials, but you should use the repair command for cleanup once the new
+credentials are active in all relevant servers.
+
+Both the fresh and refresh commands allow you to pass arbitrary parameters to the service binding that gets created in
+service manager. In other words,
 
 ```
+mtx --svm-fresh-bindings SERVICE_PLAN TENANT_ID '{"special":true}'
 mtx --svm-refresh-bindings SERVICE_PLAN TENANT_ID '{"special":true}'
 ```
 
-corresponds to
+correspond to
 
 ```
 cf bind-service <some-app> <service-instance matching tenant and service-plan> -c '{"special":true}'
