@@ -16,14 +16,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - svm: new command `--svm-fresh-bindings` to create new bindings _without deleting the current bindings_. this is meant
   for scenarios, where you create new bindings, do rolling restarts, and then run `--svm-repair-bindings` for cleanup.
 
-- svm: new bindings created via `--svm-refresh-bindings` or `--svm-repair-bindings` will have `managing_client_lib`
-  label if their associated instances have offering `hana` plan `hdi-shared`. this label was expected by cap java
-  until recently.
+- svm: new bindings created via `--svm-fresh-bindings`, `--svm-refresh-bindings`, or `--svm-repair-bindings` will have
+  a `managing_client_lib` label if their associated instances have the offering `hana` and plan `hdi-shared`. this
+  specific label was expected by cap java until recently.
 
 ### FIXED
 
-- svm: new bindings created via `--svm-refresh-bindings` will combine the labels from the associated instance and from
-  the previous binding.
+- svm: new bindings created via `--svm-fresh-bindings` or `--svm-refresh-bindings` will combine the labels from the
+  associated instance and from the previous binding.
 
 ## v0.11.0 - 2025-11-24
 

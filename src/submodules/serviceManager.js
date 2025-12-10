@@ -362,16 +362,16 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
     _requestBindings(context),
   ]);
 
+  instances.sort(compareForTenantId);
+  bindings.sort(compareForUpdatedAtDesc);
   const servicePlanNameById = _indexServicePlanNameById(offerings, plans);
   const bindingsByInstance = _clusterByKey(bindings, "service_instance_id");
-  instances.sort(compareForTenantId);
   const changeQueue = new FunnelQueue(svmRequestConcurrency);
 
   for (const instance of instances) {
     const tenantId = instance.labels.tenant_id[0];
     const servicePlanName = servicePlanNameById[instance.service_plan_id];
     const instanceBindings = bindingsByInstance[instance.id] ?? [];
-    instanceBindings.sort(compareForUpdatedAtDesc);
 
     const [readyBindings, unreadyBindings] = partition(instanceBindings, (binding) => binding.ready);
     if (readyBindings.length < SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
@@ -478,26 +478,27 @@ const _serviceManagerFreshBindings = async (
     _requestBindings(context, { filterTenantId }),
   ]);
 
+  bindings.sort(compareForUpdatedAtDesc);
   const servicePlanNameById = _indexServicePlanNameById(offerings, plans);
-  const instanceById = _indexByKey(instances, "id");
-  const filteredBindings = bindings.filter((binding) => instanceById[binding.service_instance_id]);
-  await limiter(svmRequestConcurrency, filteredBindings, async (binding) => {
-    const instance = instanceById[binding.service_instance_id];
+  const bindingsByInstance = _clusterByKey(bindings, "service_instance_id");
+
+  await limiter(svmRequestConcurrency, instances, async (instance) => {
+    const [binding] = bindingsByInstance[instance.id] ?? [];
     const servicePlanName = servicePlanNameById[instance.service_plan_id];
     const newLabels = {
       ...instance.labels,
-      ...binding.labels,
+      ...(binding && binding.labels),
       ...(servicePlanName === HANA_CONTAINER_OFFERING_PLAN_NAME && HANA_CONTAINER_LABELS),
     };
     await _requestCreateBinding(context, instance.id, instance.service_plan_id, newLabels, { parameters });
-    if (doRefresh) {
+    if (doRefresh && binding) {
       await _requestDeleteBinding(context, binding.id);
     }
   });
   if (doRefresh) {
-    logger.info("refreshed %i binding%s", filteredBindings.length, filteredBindings.length === 1 ? "" : "s");
+    logger.info("refreshed %i binding%s", instances.length, instances.length === 1 ? "" : "s");
   } else {
-    logger.info("created %i binding%s", filteredBindings.length, filteredBindings.length === 1 ? "" : "s");
+    logger.info("created %i binding%s", instances.length, instances.length === 1 ? "" : "s");
   }
 };
 
