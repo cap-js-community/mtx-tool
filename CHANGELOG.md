@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## v0.11.1 - tbd
 
+### ADDED
+
+- svm: new bindings created via `--svm-refresh-bindings` or `--svm-repair-bindings` will have `managing_client_lib`
+  label if their associated instances have offering `hana` plan `hdi-shared`. this label was expected by cap java
+  until recently.
+
+### FIXED
+
 - svm: new bindings created via `--svm-refresh-bindings` will combine the labels from the associated instance and from
   the previous binding.
 
