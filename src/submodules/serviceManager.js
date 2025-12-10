@@ -469,7 +469,7 @@ const serviceManagerRepairBindings = async (context, [servicePlanName], [rawPara
 
 const _serviceManagerFreshBindings = async (
   context,
-  { filterServicePlanId, filterTenantId, parameters, doDelete = false } = {}
+  { filterServicePlanId, filterTenantId, parameters, doRefresh = false } = {}
 ) => {
   const [offerings, plans, instances, bindings] = await Promise.all([
     _requestOfferings(context),
@@ -490,11 +490,15 @@ const _serviceManagerFreshBindings = async (
       ...(servicePlanName === HANA_CONTAINER_OFFERING_PLAN_NAME && HANA_CONTAINER_LABELS),
     };
     await _requestCreateBinding(context, instance.id, instance.service_plan_id, newLabels, { parameters });
-    if (doDelete) {
+    if (doRefresh) {
       await _requestDeleteBinding(context, binding.id);
     }
   });
-  logger.info("refreshed %i binding%s", filteredBindings.length, filteredBindings.length === 1 ? "" : "s");
+  if (doRefresh) {
+    logger.info("refreshed %i binding%s", filteredBindings.length, filteredBindings.length === 1 ? "" : "s");
+  } else {
+    logger.info("created %i binding%s", filteredBindings.length, filteredBindings.length === 1 ? "" : "s");
+  }
 };
 
 async function _resolveFreshBindingsOptions(context, servicePlanName, tenantId, rawParameters) {
@@ -514,7 +518,7 @@ async function _resolveFreshBindingsOptions(context, servicePlanName, tenantId, 
 
 const serviceManagerRefreshBindings = async (context, [servicePlanName, tenantId], [rawParameters]) =>
   await _serviceManagerFreshBindings(context, {
-    doDelete: true,
+    doRefresh: true,
     ...(await _resolveFreshBindingsOptions(context, servicePlanName, tenantId, rawParameters)),
   });
 
