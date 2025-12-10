@@ -56,6 +56,11 @@ const mockFilteredOfferingResponse = {
     items: [{ id: `offering-id-0`, name: `myOffering` }],
   }),
 };
+const mockFilteredHanaContainerOfferingResponse = {
+  json: () => ({
+    items: [{ id: `offering-id-0`, name: `hana` }],
+  }),
+};
 const mockPlanResponse = {
   json: () => ({
     items: [
@@ -67,6 +72,11 @@ const mockPlanResponse = {
 const mockFilteredPlanResponse = {
   json: () => ({
     items: [{ id: `plan-id-0`, service_offering_id: `offering-id-0`, name: `myPlan` }],
+  }),
+};
+const mockFilteredHanaContainerPlanResponse = {
+  json: () => ({
+    items: [{ id: `plan-id-0`, service_offering_id: `offering-id-0`, name: `hdi-shared` }],
   }),
 };
 
@@ -107,6 +117,7 @@ const mockBindingFactory = (i) => ({
 describe("svm tests", () => {
   afterEach(() => {
     svm._._reset();
+    mockRequest.request.mockClear();
   });
 
   describe("svm repair bindings", () => {
@@ -128,13 +139,13 @@ describe("svm tests", () => {
           "GET service-manager-url /v1/service_instances { fieldQuery: "ready eq 'true'" }",
           "GET service-manager-url /v1/service_bindings",
           "POST service-manager-url /v1/service_bindings { async: false }
-        '{"name":"xxx","service_instance_id":"instance-id-0","labels":{"instance_id":["instance-id-0"],"tenant_id":["tenant-id-0"],"service_plan_id":["plan-id-0"],"managing_client_lib":["instance-manager-client-lib"]}}'",
+        '{"name":"xxx","service_instance_id":"instance-id-0","labels":{"instance_id":["instance-id-0"],"tenant_id":["tenant-id-0"],"service_plan_id":["plan-id-0"]}}'",
           "POST service-manager-url /v1/service_bindings { async: false }
         '{"name":"xxx","service_instance_id":"instance-id-1","labels":{"instance_id":["instance-id-1"],"tenant_id":["tenant-id-0"],"service_plan_id":["plan-id-1"]}}'",
           "POST service-manager-url /v1/service_bindings { async: false }
         '{"name":"xxx","service_instance_id":"instance-id-3","labels":{"instance_id":["instance-id-3"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-1"]}}'",
           "POST service-manager-url /v1/service_bindings { async: false }
-        '{"name":"xxx","service_instance_id":"instance-id-4","labels":{"instance_id":["instance-id-4"],"tenant_id":["tenant-id-2"],"service_plan_id":["plan-id-0"],"managing_client_lib":["instance-manager-client-lib"]}}'",
+        '{"name":"xxx","service_instance_id":"instance-id-4","labels":{"instance_id":["instance-id-4"],"tenant_id":["tenant-id-2"],"service_plan_id":["plan-id-0"]}}'",
         ]
       `);
       expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
@@ -165,9 +176,9 @@ describe("svm tests", () => {
           "GET service-manager-url /v1/service_instances { fieldQuery: "ready eq 'true' and service_plan_id eq 'plan-id-0'" }",
           "GET service-manager-url /v1/service_bindings",
           "POST service-manager-url /v1/service_bindings { async: false }
-        '{"name":"xxx","service_instance_id":"instance-id-0","labels":{"instance_id":["instance-id-0"],"tenant_id":["tenant-id-0"],"service_plan_id":["plan-id-0"],"managing_client_lib":["instance-manager-client-lib"]}}'",
+        '{"name":"xxx","service_instance_id":"instance-id-0","labels":{"instance_id":["instance-id-0"],"tenant_id":["tenant-id-0"],"service_plan_id":["plan-id-0"]}}'",
           "POST service-manager-url /v1/service_bindings { async: false }
-        '{"name":"xxx","service_instance_id":"instance-id-4","labels":{"instance_id":["instance-id-4"],"tenant_id":["tenant-id-2"],"service_plan_id":["plan-id-0"],"managing_client_lib":["instance-manager-client-lib"]}}'",
+        '{"name":"xxx","service_instance_id":"instance-id-4","labels":{"instance_id":["instance-id-4"],"tenant_id":["tenant-id-2"],"service_plan_id":["plan-id-0"]}}'",
         ]
       `);
       expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
@@ -181,6 +192,8 @@ describe("svm tests", () => {
 
   describe("svm refresh bindings", () => {
     test("all-services all-tenants", async () => {
+      mockRequest.request.mockReturnValueOnce(mockOfferingResponse);
+      mockRequest.request.mockReturnValueOnce(mockPlanResponse);
       mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6));
       mockRequest.request.mockReturnValueOnce({
         json: () => ({
@@ -191,18 +204,20 @@ describe("svm tests", () => {
       expect(await svm.serviceManagerRefreshBindings(mockContext, ["all-services", "all-tenants"], [])).toBeUndefined();
       expect(collectRequestMockCallsStable(mockRequest.request)).toMatchInlineSnapshot(`
         [
+          "GET service-manager-url /v1/service_offerings",
+          "GET service-manager-url /v1/service_plans",
           "GET service-manager-url /v1/service_instances { fieldQuery: "ready eq 'true'" }",
           "GET service-manager-url /v1/service_bindings",
           "POST service-manager-url /v1/service_bindings { async: false }
-        '{"name":"xxx","service_instance_id":"instance-id-0","labels":{"instance_id":["instance-id-0"],"tenant_id":["tenant-id-0"],"service_plan_id":["plan-id-0"],"managing_client_lib":["instance-manager-client-lib"]}}'",
+        '{"name":"xxx","service_instance_id":"instance-id-0","labels":{"instance_id":["instance-id-0"],"tenant_id":["tenant-id-0"],"service_plan_id":["plan-id-0"]}}'",
           "POST service-manager-url /v1/service_bindings { async: false }
         '{"name":"xxx","service_instance_id":"instance-id-1","labels":{"instance_id":["instance-id-1"],"tenant_id":["tenant-id-0"],"service_plan_id":["plan-id-1"]}}'",
           "POST service-manager-url /v1/service_bindings { async: false }
-        '{"name":"xxx","service_instance_id":"instance-id-2","labels":{"instance_id":["instance-id-2"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-0"],"managing_client_lib":["instance-manager-client-lib"]}}'",
+        '{"name":"xxx","service_instance_id":"instance-id-2","labels":{"instance_id":["instance-id-2"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-0"]}}'",
           "POST service-manager-url /v1/service_bindings { async: false }
         '{"name":"xxx","service_instance_id":"instance-id-3","labels":{"instance_id":["instance-id-3"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-1"]}}'",
           "POST service-manager-url /v1/service_bindings { async: false }
-        '{"name":"xxx","service_instance_id":"instance-id-4","labels":{"instance_id":["instance-id-4"],"tenant_id":["tenant-id-2"],"service_plan_id":["plan-id-0"],"managing_client_lib":["instance-manager-client-lib"]}}'",
+        '{"name":"xxx","service_instance_id":"instance-id-4","labels":{"instance_id":["instance-id-4"],"tenant_id":["tenant-id-2"],"service_plan_id":["plan-id-0"]}}'",
           "POST service-manager-url /v1/service_bindings { async: false }
         '{"name":"xxx","service_instance_id":"instance-id-5","labels":{"instance_id":["instance-id-5"],"tenant_id":["tenant-id-2"],"service_plan_id":["plan-id-1"]}}'",
           "DELETE service-manager-url /v1/service_bindings/binding-id-0 { async: false }",
@@ -218,8 +233,8 @@ describe("svm tests", () => {
     });
 
     test("myPlan all-tenants", async () => {
-      mockRequest.request.mockReturnValueOnce(mockFilteredOfferingResponse);
-      mockRequest.request.mockReturnValueOnce(mockFilteredPlanResponse);
+      mockRequest.request.mockReturnValueOnce(mockFilteredHanaContainerOfferingResponse);
+      mockRequest.request.mockReturnValueOnce(mockFilteredHanaContainerPlanResponse);
       mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isPlanFiltered: true }));
       mockRequest.request.mockReturnValueOnce({
         json: () => ({
@@ -237,11 +252,11 @@ describe("svm tests", () => {
           "GET service-manager-url /v1/service_instances { fieldQuery: "ready eq 'true' and service_plan_id eq 'plan-id-0'" }",
           "GET service-manager-url /v1/service_bindings",
           "POST service-manager-url /v1/service_bindings { async: false }
-        '{"name":"xxx","service_instance_id":"instance-id-0","labels":{"instance_id":["instance-id-0"],"tenant_id":["tenant-id-0"],"service_plan_id":["plan-id-0"],"managing_client_lib":["instance-manager-client-lib"]}}'",
+        '{"name":"xxx","service_instance_id":"instance-id-0","labels":{"instance_id":["instance-id-0"],"tenant_id":["tenant-id-0"],"managing_client_lib":["instance-manager-client-lib"],"service_plan_id":["plan-id-0"]}}'",
           "POST service-manager-url /v1/service_bindings { async: false }
-        '{"name":"xxx","service_instance_id":"instance-id-2","labels":{"instance_id":["instance-id-2"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-0"],"managing_client_lib":["instance-manager-client-lib"]}}'",
+        '{"name":"xxx","service_instance_id":"instance-id-2","labels":{"instance_id":["instance-id-2"],"tenant_id":["tenant-id-1"],"managing_client_lib":["instance-manager-client-lib"],"service_plan_id":["plan-id-0"]}}'",
           "POST service-manager-url /v1/service_bindings { async: false }
-        '{"name":"xxx","service_instance_id":"instance-id-4","labels":{"instance_id":["instance-id-4"],"tenant_id":["tenant-id-2"],"service_plan_id":["plan-id-0"],"managing_client_lib":["instance-manager-client-lib"]}}'",
+        '{"name":"xxx","service_instance_id":"instance-id-4","labels":{"instance_id":["instance-id-4"],"tenant_id":["tenant-id-2"],"managing_client_lib":["instance-manager-client-lib"],"service_plan_id":["plan-id-0"]}}'",
           "DELETE service-manager-url /v1/service_bindings/binding-id-0 { async: false }",
           "DELETE service-manager-url /v1/service_bindings/binding-id-2 { async: false }",
           "DELETE service-manager-url /v1/service_bindings/binding-id-4 { async: false }",
@@ -252,6 +267,8 @@ describe("svm tests", () => {
     });
 
     test("all-services myTenant", async () => {
+      mockRequest.request.mockReturnValueOnce(mockOfferingResponse);
+      mockRequest.request.mockReturnValueOnce(mockPlanResponse);
       mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isTenantFiltered: true }));
       mockRequest.request.mockReturnValueOnce({
         json: () => ({
@@ -262,10 +279,12 @@ describe("svm tests", () => {
       expect(await svm.serviceManagerRefreshBindings(mockContext, ["all-services", testTenantId], [])).toBeUndefined();
       expect(collectRequestMockCallsStable(mockRequest.request)).toMatchInlineSnapshot(`
         [
+          "GET service-manager-url /v1/service_offerings",
+          "GET service-manager-url /v1/service_plans",
           "GET service-manager-url /v1/service_instances { fieldQuery: "ready eq 'true'", labelQuery: "tenant_id eq 'tenant-id-1'" }",
           "GET service-manager-url /v1/service_bindings { labelQuery: "tenant_id eq 'tenant-id-1'" }",
           "POST service-manager-url /v1/service_bindings { async: false }
-        '{"name":"xxx","service_instance_id":"instance-id-2","labels":{"instance_id":["instance-id-2"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-0"],"managing_client_lib":["instance-manager-client-lib"]}}'",
+        '{"name":"xxx","service_instance_id":"instance-id-2","labels":{"instance_id":["instance-id-2"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-0"]}}'",
           "POST service-manager-url /v1/service_bindings { async: false }
         '{"name":"xxx","service_instance_id":"instance-id-3","labels":{"instance_id":["instance-id-3"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-1"]}}'",
           "DELETE service-manager-url /v1/service_bindings/binding-id-2 { async: false }",
@@ -298,7 +317,7 @@ describe("svm tests", () => {
           "GET service-manager-url /v1/service_instances { fieldQuery: "ready eq 'true' and service_plan_id eq 'plan-id-0'", labelQuery: "tenant_id eq 'tenant-id-1'" }",
           "GET service-manager-url /v1/service_bindings { labelQuery: "tenant_id eq 'tenant-id-1'" }",
           "POST service-manager-url /v1/service_bindings { async: false }
-        '{"name":"xxx","service_instance_id":"instance-id-2","labels":{"instance_id":["instance-id-2"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-0"],"managing_client_lib":["instance-manager-client-lib"]}}'",
+        '{"name":"xxx","service_instance_id":"instance-id-2","labels":{"instance_id":["instance-id-2"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-0"]}}'",
           "DELETE service-manager-url /v1/service_bindings/binding-id-2 { async: false }",
         ]
       `);
