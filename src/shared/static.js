@@ -378,7 +378,9 @@ const parseIntWithFallback = (input, fallback) => {
 const indexByKey = (dataObjects, key) =>
   dataObjects.reduce((result, dataObject) => {
     const identifier = dataObject[key];
-    result[identifier] = dataObject;
+    if (!Object.prototype.hasOwnProperty.call(result, identifier)) {
+      result[identifier] = dataObject;
+    }
     return result;
   }, {});
 
