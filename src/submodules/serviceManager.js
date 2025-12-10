@@ -323,8 +323,13 @@ const _requestCreateBinding = async (
 ) => {
   // NOTE: service-manager sets the container_id and subaccount_id itself and will block requests that set these
   // NOTE: cds-mtxs relies on service_plan_id label
+  // NOTE: old versions of cap java relied on managing_client_lib label for hana containers
+  const hanaContainerPlanId = await _resolveHanaContainerPlanId(context);
   const labels = Object.entries(labelsInput)
-    .concat([["service_plan_id", [servicePlanId]]])
+    .concat([
+      ["service_plan_id", [servicePlanId]],
+      ...(servicePlanId === hanaContainerPlanId ? [["managing_client_lib", ["instance-manager-client-lib"]]] : []),
+    ])
     .filter(([key]) => !["container_id", "subaccount_id"].includes(key))
     .reduce((acc, [key, value]) => ((acc[key] = value), acc), {});
   await _serviceManagerRequest(context, {
@@ -447,6 +452,10 @@ const _resolveServicePlanId = async (context, servicePlanName) => {
   assert(plan?.id, `could not find service plan "${planName}" within offering "${offeringName}"`);
   return plan.id;
 };
+
+const _resolveHanaContainerPlanId = makeOneTime(
+  async (context) => await _resolveServicePlanId(context, "hana:hdi-shared")
+);
 
 const serviceManagerRepairBindings = async (context, [servicePlanName], [rawParameters]) => {
   const doFilterServicePlan = servicePlanName !== SERVICE_PLAN_ALL_IDENTIFIER;
