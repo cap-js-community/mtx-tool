@@ -39,6 +39,10 @@ const QUERY_TYPE = {
   LABEL: "labelQuery",
 };
 
+// NOTE: old versions of cap java relied on managing_client_lib label for hana containers
+const HANA_CONTAINER_OFFERING_PLAN_NAME = "hana:hdi-shared";
+const HANA_CONTAINER_LABELS = { managing_client_lib: ["instance-manager-client-lib"] };
+
 const logger = Logger.getInstance();
 
 const svmRequestConcurrency = parseIntWithFallback(
@@ -373,9 +377,13 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
     if (readyBindings.length < SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
       const missingBindingCount = SERVICE_MANAGER_IDEAL_BINDING_COUNT - instanceBindings.length;
       for (let i = 0; i < missingBindingCount; i++) {
+        const newLabels = {
+          ...instance.labels,
+          ...(servicePlanName === HANA_CONTAINER_OFFERING_PLAN_NAME && HANA_CONTAINER_LABELS),
+        };
         changeQueue.enqueue(
           async () =>
-            await _requestCreateBinding(context, instance.id, instance.service_plan_id, instance.labels, { parameters })
+            await _requestCreateBinding(context, instance.id, instance.service_plan_id, newLabels, { parameters })
         );
       }
       changeQueue.milestone().then(() => {
@@ -460,16 +468,24 @@ const serviceManagerRepairBindings = async (context, [servicePlanName], [rawPara
 };
 
 const _serviceManagerRefreshBindings = async (context, { filterServicePlanId, filterTenantId, parameters } = {}) => {
-  const [instances, bindings] = await Promise.all([
+  const [offerings, plans, instances, bindings] = await Promise.all([
+    _requestOfferings(context),
+    _requestPlans(context, { filterServicePlanId }),
     _requestInstances(context, { filterTenantId, filterServicePlanId, doEnsureReady: true, doEnsureTenantLabel: true }),
     _requestBindings(context, { filterTenantId }),
   ]);
 
+  const servicePlanNameById = _indexServicePlanNameById(offerings, plans);
   const instanceById = _indexByKey(instances, "id");
   const filteredBindings = bindings.filter((binding) => instanceById[binding.service_instance_id]);
   await limiter(svmRequestConcurrency, filteredBindings, async (binding) => {
     const instance = instanceById[binding.service_instance_id];
-    const newLabels = { ...instance.labels, ...binding.labels };
+    const servicePlanName = servicePlanNameById[instance.service_plan_id];
+    const newLabels = {
+      ...instance.labels,
+      ...binding.labels,
+      ...(servicePlanName === HANA_CONTAINER_OFFERING_PLAN_NAME && HANA_CONTAINER_LABELS),
+    };
     await _requestCreateBinding(context, instance.id, instance.service_plan_id, newLabels, { parameters });
     await _requestDeleteBinding(context, binding.id);
   });
