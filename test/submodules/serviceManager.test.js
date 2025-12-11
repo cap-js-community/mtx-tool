@@ -120,6 +120,23 @@ describe("svm tests", () => {
     mockRequest.request.mockClear();
   });
 
+  describe("svm basics", () => {
+    test("client headers", async () => {
+      mockRequest.request.mockReturnValueOnce(mockOfferingResponse);
+      mockRequest.request.mockReturnValueOnce(mockPlanResponse);
+      mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6));
+      mockRequest.request.mockReturnValueOnce({
+        json: () => ({
+          items: [mockBindingFactory(2), mockBindingFactory(5)],
+        }),
+      });
+
+      await expect(svm.serviceManagerList(mockContext, [], [false, false])).resolves.toBeDefined();
+
+      expect(mockRequest.request.mock.calls).toMatchSnapshot();
+    });
+  });
+
   describe("svm repair bindings", () => {
     test("all-services", async () => {
       mockRequest.request.mockReturnValueOnce(mockOfferingResponse);
