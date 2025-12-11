@@ -1,5 +1,6 @@
 "use strict";
 
+const packageInfo = require("../../package.json");
 const mockRequest = require("../../src/shared/request");
 jest.mock("../../src/shared/request", () => {
   const { RETRY_MODE } = jest.requireActual("../../src/shared/request");
@@ -133,7 +134,13 @@ describe("svm tests", () => {
 
       await expect(svm.serviceManagerList(mockContext, [], [false, false])).resolves.toBeDefined();
 
-      expect(mockRequest.request.mock.calls).toMatchSnapshot();
+      expect(mockRequest.request.mock.calls).toMatchObject(
+        mockRequest.request.mock.calls.map(() => [
+          {
+            headers: { "Client-Name": packageInfo.name, "Client-Version": packageInfo.version },
+          },
+        ])
+      );
     });
   });
 
