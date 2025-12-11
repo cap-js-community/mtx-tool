@@ -1,5 +1,6 @@
 "use strict";
 
+const packageInfo = require("../../package.json");
 const mockRequest = require("../../src/shared/request");
 jest.mock("../../src/shared/request", () => {
   const { RETRY_MODE } = jest.requireActual("../../src/shared/request");
@@ -118,6 +119,29 @@ describe("svm tests", () => {
   afterEach(() => {
     svm._._reset();
     mockRequest.request.mockClear();
+  });
+
+  describe("svm basics", () => {
+    test("client headers", async () => {
+      mockRequest.request.mockReturnValueOnce(mockOfferingResponse);
+      mockRequest.request.mockReturnValueOnce(mockPlanResponse);
+      mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6));
+      mockRequest.request.mockReturnValueOnce({
+        json: () => ({
+          items: [mockBindingFactory(2), mockBindingFactory(5)],
+        }),
+      });
+
+      await expect(svm.serviceManagerList(mockContext, [], [false, false])).resolves.toBeDefined();
+
+      expect(mockRequest.request.mock.calls).toMatchObject(
+        mockRequest.request.mock.calls.map(() => [
+          {
+            headers: { "Client-Name": packageInfo.name, "Client-Version": packageInfo.version },
+          },
+        ])
+      );
+    });
   });
 
   describe("svm repair bindings", () => {

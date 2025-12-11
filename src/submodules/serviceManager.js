@@ -5,6 +5,7 @@
  */
 "use strict";
 
+const packageInfo = require("../../package.json");
 const {
   parseIntWithFallback,
   compareFor,
@@ -105,7 +106,17 @@ const _serviceManagerRequest = async (context, reqOptions = {}) => {
   } = await context.getHdiInfo();
   const url = credentials.sm_url;
   const auth = { token: await context.getCachedUaaTokenFromCredentials(credentials) };
-  const response = await request({ url, auth, ...reqOptions });
+  const response = await request({
+    url,
+    auth,
+    ...reqOptions,
+    headers: {
+      // NOTE: service-manager uses this client information for better consumption reporting and rate-limiting
+      "Client-Name": packageInfo.name,
+      "Client-Version": packageInfo.version,
+      ...reqOptions?.headers,
+    },
+  });
 
   if (reqOptions.method) {
     return response;
