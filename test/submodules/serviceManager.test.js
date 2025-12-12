@@ -33,7 +33,7 @@ const mockCfSsh = jest.fn();
 
 const mockContext = {
   getHdiInfo() {
-    return { cfSsh: mockCfSsh, cfService: { credentials: mockCredentials } };
+    return { cfSsh: mockCfSsh, cfBinding: { credentials: mockCredentials } };
   },
   getCachedUaaTokenFromCredentials() {
     return "token";

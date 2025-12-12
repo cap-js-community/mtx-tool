@@ -26,13 +26,24 @@ const _urlTransform = (nodePath, value) => {
   return url.toString();
 };
 
-const sensitiveCfEnvFieldTransforms = [
+const sensitiveFieldTransforms = [
   {
     matcher: (nodePath, key) => {
       const lowerKey = key.toLocaleLowerCase();
       return (
         ["key", "secret", "user", "pass", "token"].some((part) => lowerKey.includes(part)) ||
-        ["certificate", "clientid", "clientsecret", "schema", "host", "bucket"].includes(lowerKey)
+        [
+          "certificate",
+          "clientid",
+          "clientsecret",
+          "schema",
+          "host",
+          "bucket",
+          "createdby", // registry subscription
+          "modifiedby", // registry subscription
+          "email", // cds subscription
+          "subIdp", // cds subscription
+        ].includes(lowerKey)
       );
     },
     transform: _anonymizeTransform,
@@ -80,7 +91,7 @@ const _transformValue = (nodePath, value, transformers) => {
   return value;
 };
 
-const _processSubNode = (nodePath, node, transformers = sensitiveCfEnvFieldTransforms) => {
+const _processSubNode = (nodePath, node, transformers = sensitiveFieldTransforms) => {
   if (node === null || node === undefined || node === "") {
     return node;
   }
@@ -104,13 +115,28 @@ const anonymizeCfEnvCall = (call) => {
   return call;
 };
 
+const anonymizeCfCredentialCall = (call) => {
+  call.response = _processSubNode(["cf-credentials"], call.response);
+  return call;
+};
+
 const anonymizeServiceManagerCall = (call) => {
   call.response = _processSubNode(["service-manager"], call.response);
   return call;
 };
 
 const anonymizeSaasRegistryCall = (call) => {
-  call.response = _processSubNode(["subscriptions"], call.response, sensitiveSaasRegistryFieldTransforms);
+  call.response = _processSubNode(["saas-registry"], call.response, sensitiveSaasRegistryFieldTransforms);
+  return call;
+};
+
+const anonymizeSubscriptionManagerCall = (call) => {
+  call.response = _processSubNode(["subscription-manager"], call.response, sensitiveSaasRegistryFieldTransforms);
+  return call;
+};
+
+const anonymizeCdsProvisioningCall = (call) => {
+  call.response = _processSubNode(["cds-provisioning"], call.response);
   return call;
 };
 
@@ -140,7 +166,7 @@ const anonymizeNock = (calls) => {
       return anonymizeUaaAuthCall(call);
     }
 
-    // ##### CF-API
+    // ##### CF-API /v3/apps/{guid}/env
     // "scope": "https://api.cf.sap.hana.ondemand.com:443",
     // "path": "/v3/apps/188569c2-8a80-4eb2-a80b-4aa58dd40c7b/env",
     if (
@@ -148,6 +174,16 @@ const anonymizeNock = (calls) => {
       /\/v3\/apps\/[0-9a-f-]+\/env/.test(call.path)
     ) {
       return anonymizeCfEnvCall(call);
+    }
+
+    // ##### CF-API /v3/service_credential_bindings
+    // "scope": "https://api.cf.sap.hana.ondemand.com:443",
+    // "path": "/v3/service_credential_bindings",
+    if (
+      /https:\/\/api\.cf\.[a-z]+\.hana\.ondemand\.com:443/.test(call.scope) &&
+      /\/v3\/service_credential_bindings/.test(call.path)
+    ) {
+      return anonymizeCfCredentialCall(call);
     }
 
     // ##### SERVICE-MANAGER
@@ -170,7 +206,43 @@ const anonymizeNock = (calls) => {
       return anonymizeSaasRegistryCall(call);
     }
 
-    return call;
+    // ##### SUBSCRIPTION-MANAGER
+    // "scope": "https://saas-manager.mesh.cf.sap.hana.ondemand.com:443",
+    if (/https:\/\/service-manager\.cfapps\.sap\.hana\.ondemand\.com:443/.test(call.scope)) {
+      return anonymizeSubscriptionManagerCall(call);
+    }
+
+    // ##### CDS
+    // "scope": "https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com:443",
+    // "path": "/-/cds/saas-provisioning/tenant",
+    if (
+      /https:\/\/skyfin-dev-afc-mtx\.cfapps\.sap\.hana\.ondemand\.com:443/.test(call.scope) &&
+      /\/-\/cds\/saas-provisioning\//.test(call.path)
+    ) {
+      return anonymizeCdsProvisioningCall(call);
+    }
+
+    // ##### PASS CF
+    // "scope": "https://api.cf.sap.hana.ondemand.com:443",
+    // "path": "/v3/apps", "/v3/routes", "\/v3\/service_plans"
+    if (
+      /https:\/\/api\.cf\.[a-z]+\.hana\.ondemand\.com:443/.test(call.scope) &&
+      (/\/v3\/apps/.test(call.path) || /\/v3\/routes/.test(call.path) || /\/v3\/service_plans/.test(call.path))
+    ) {
+      return call;
+    }
+
+    // ##### PASS CDS
+    // "scope": "https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com:443",
+    // "path": "/-/cds/jobs/",
+    if (
+      /https:\/\/skyfin-dev-afc-mtx\.cfapps\.sap\.hana\.ondemand\.com:443/.test(call.scope) &&
+      /\/-\/cds\/jobs\//.test(call.path)
+    ) {
+      return call;
+    }
+
+    throw new Error(`unhandled scope ${call.scope} and path ${call.path}`);
   });
 };
 
