@@ -157,7 +157,7 @@ In most cases, the BTP cockpit's subaccount _unsubscribe_ functionality, or even
 
 ## Downtime Free Credential Rotation
 
-It is recommended to do credential rotation on a regular basis for security reasons. Especially in productive environments, it is necessary to perform the rotation in a downtime free manner to ensure business continuity. The following procedure describes a pattern which can be applied to rotate credentials best which are stored in bindings managed by Service Manager: 
+Especially in productive environments, it is necessary to perform the rotation in a downtime free manner to ensure business continuity. The following procedure describes a pattern which can be applied to rotate credentials best which are stored in bindings managed by Service Manager: 
 
 1) _Create new bindings_: Use
 
