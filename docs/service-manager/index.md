@@ -157,9 +157,9 @@ In most cases, the BTP cockpit's subaccount _unsubscribe_ functionality, or even
 
 ## Downtime Free Credential Rotation
 
-It is a recommended to do credential rotation on a regular basis for security reasons. Especially in productive environments, it is necessary to do this in a downtime free manner. The following procedure describes a pattern in which credentials stored in bindings managed by Service Manager can be rotated best: 
+It is recommended to do credential rotation on a regular basis for security reasons. Especially in productive environments, it is necessary to perform the rotation in a downtime free manner to ensure business continuity. The following procedure describes a pattern which can be applied to rotate credentials best which are stored in bindings managed by Service Manager: 
 
-1) Use
+1) _Create new bindings_: Use
 
 ```
 mtx --svm-fresh-bindings SERVICE_PLAN <TENANT_ID>
@@ -167,16 +167,16 @@ mtx --svm-fresh-bindings SERVICE_PLAN <TENANT_ID>
 
 to ensure that for the given tenant(s) a new binding with fresh credentials is created. Existing bindings stored in memory by applications are not invalidated and can still be used.
 
-2) Restart your application e.g. using a blue-green deployment to ensure business continuity. This can be accomplished for example using the command `cf bg-deploy`. This will ensure that all bindings previously stored in memory are not used anymore and newly created bindings will be used from now on.
+2) _Ensure old bindings are not used anymore_: Restart your application e.g. using a blue-green deployment to ensure business continuity. This can be accomplished for example using the command `cf bg-deploy`. This will ensure that all bindings previously stored in memory are not used anymore and newly created bindings will be used from now on.
 
-3) Use
+3) _Delete old bindings_: Use
 
 ```
 mtx --svm-repair-bindings SERVICE_PLAN <TENANT_ID>
 ```
 
-to ensure that all bindings for the given tenant(s) will be deleted except the newly created one. After this step has been performed, credentials are fully rotated.
+to ensure that all bindings for the given tenant(s) are deleted except the newly created one. After this step has been performed, credentials are fully rotated.
 
 {: .warn}
-For Service Manager APIs, rate limits are in place. API requests for credential rotation count in addition to the regular APIs to Service Manager APIs performed by your application. Depending on the number of tenants, it is recommended to split the tenants into batches and perform the rotation on an individual basis. 
+For Service Manager APIs, rate limits are in place. API requests for credential rotation count in addition to the regular calls to Service Manager APIs performed by your application. Depending on the number of tenants, it is recommended to split the tenants into batches and perform the rotation on an individual basis. 
 
