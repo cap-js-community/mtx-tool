@@ -165,7 +165,7 @@ stored in bindings managed by Service Manager:
 1.  _Create new bindings_: Use
 
     ```
-      mtx --svm-fresh-bindings SERVICE_PLAN TENANT_ID
+    mtx --svm-fresh-bindings SERVICE_PLAN TENANT_ID
     ```
 
     to ensure that for the given tenant(s) a new binding with fresh credentials is created. Existing bindings stored in
