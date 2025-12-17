@@ -162,32 +162,32 @@ Especially in productive environments, it is necessary to perform the rotation w
 continuity. The following procedure describes a pattern which can be applied to rotate credentials best which are
 stored in bindings managed by Service Manager:
 
-1. _Create new bindings_: Use
+1.  _Create new bindings_: Use
 
-```
-mtx --svm-fresh-bindings SERVICE_PLAN TENANT_ID
-```
+    ```
+      mtx --svm-fresh-bindings SERVICE_PLAN TENANT_ID
+    ```
 
-to ensure that for the given tenant(s) a new binding with fresh credentials is created. Existing bindings stored in
-memory by applications are not invalidated and can still be used.
+    to ensure that for the given tenant(s) a new binding with fresh credentials is created. Existing bindings stored in
+    memory by applications are not invalidated and can still be used.
 
-2. _Ensure old bindings are not used anymore_: Restart your application e.g. using a blue-green deployment to ensure
-   business continuity. This can be accomplished for example using the command `cf deploy --strategy blue-green`. This
-   will ensure that all bindings previously stored in memory are not used anymore and newly created bindings will be
-   used from now on.
+2.  _Ensure old bindings are not used anymore_: Restart your application e.g. using a blue-green deployment to ensure
+    business continuity. This can be accomplished for example using the command `cf deploy --strategy blue-green`. This
+    will ensure that all bindings previously stored in memory are not used anymore and newly created bindings will be
+    used from now on.
 
-See [Blue-Green Deployment of Multitarget Applications](https://help.sap.com/docs/btp/sap-business-technology-platform/blue-green-deployment-of-multitarget-applications) for details.
+    See [Blue-Green Deployment of Multitarget Applications](https://help.sap.com/docs/btp/sap-business-technology-platform/blue-green-deployment-of-multitarget-applications) for details.
 
-3. _Delete old bindings_: Use
+3.  _Delete old bindings_: Use
 
-```
-mtx --svm-repair-bindings SERVICE_PLAN
-```
+    ```
+    mtx --svm-repair-bindings SERVICE_PLAN
+    ```
 
-to ensure that all bindings for the given tenant(s) are deleted except the newly created one. After this step has been
-performed, credentials are fully rotated.
+    to ensure that all bindings for the given tenant(s) are deleted except the newly created one. After this step has been
+    performed, credentials are fully rotated.
 
-{: .warn}
-For Service Manager APIs, rate limits are in place. API requests for credential rotation count in addition to the
-regular calls to Service Manager APIs performed by your application. If the request limit is a concern, you should
-use the `MTX_SVM_CONCURRENCY` env variable to limit concurrency.
+    {: .warn}
+    For Service Manager APIs, rate limits are in place. API requests for credential rotation count in addition to the
+    regular calls to Service Manager APIs performed by your application. If the request limit is a concern, you should
+    use the `MTX_SVM_CONCURRENCY` env variable to limit concurrency.
