@@ -169,9 +169,7 @@ to ensure that for the given tenant(s) a new binding with fresh credentials is c
 
 2) _Ensure old bindings are not used anymore_: Restart your application e.g. using a blue-green deployment to ensure business continuity. This can be accomplished for example using the command `cf deploy --strategy blue-green`. This will ensure that all bindings previously stored in memory are not used anymore and newly created bindings will be used from now on.
 
-See [Blue-Green Deployment of Multitarget Applications](https://help.sap.com/docs/btp/sap-business-technology-platform/blue-green-deployment-strategy
-https://help.sap.com/docs/btp/sap-business-technology-platform/incremental-blue-green-deployment-strategy
-) for details.
+See [Blue-Green Deployment of Multitarget Applications](https://help.sap.com/docs/btp/sap-business-technology-platform/blue-green-deployment-of-multitarget-applications) for details.
 
 3) _Delete old bindings_: Use
 
