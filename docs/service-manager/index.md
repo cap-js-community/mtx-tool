@@ -180,5 +180,5 @@ mtx --svm-repair-bindings SERVICE_PLAN
 to ensure that all bindings for the given tenant(s) are deleted except the newly created one. After this step has been performed, credentials are fully rotated.
 
 {: .warn}
-For Service Manager APIs, rate limits are in place. API requests for credential rotation count in addition to the regular calls to Service Manager APIs performed by your application. Depending on the number of tenants, it is recommended to split the tenants into batches and perform the rotation on an individual basis. 
+For Service Manager APIs, rate limits are in place. API requests for credential rotation count in addition to the regular calls to Service Manager APIs performed by your application. If the request limit is a concern, you should use the `MTX_SVM_CONCURRENCY` env variable to limit concurrency.
 
