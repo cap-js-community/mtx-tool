@@ -112,7 +112,7 @@ You can select which managed bindings you want to include with the following com
 
 {: .warn}
 Refreshing will invalidate current credentials, i.e. all applications that have them in memory need to either handle
-this gracefully or be restarted. See [Downtime Free Credential Rotation](#downtime-free-credential-rotation) how to perform credential rotation in productive environments.
+this gracefully or be restarted. See [Downtime Free Credential Rotation](#downtime-free-credential-rotation) for how to perform credential rotation in productive environments.
 
 {: .info}
 Fresh will not invalidate current credentials, but you should use the repair command for cleanup once the new
