@@ -112,7 +112,7 @@ You can select which managed bindings you want to include with the following com
 
 {: .warn}
 Refreshing will invalidate current credentials, i.e. all applications that have them in memory need to either handle
-this gracefully or be restarted.
+this gracefully or be restarted. See [Downtime Free Credential Rotation](#downtime-free-credential-rotation) how to perform credential rotation in productive environments.
 
 {: .info}
 Fresh will not invalidate current credentials, but you should use the repair command for cleanup once the new
@@ -154,3 +154,29 @@ to clean up both bindings and instances.
 {: .info}
 In most cases, the BTP cockpit's subaccount _unsubscribe_ functionality, or even
 [Offboard Tenant]({{ site.baseurl }}/cap-multitenancy/#offboard-tenant), should be used instead.
+
+## Downtime Free Credential Rotation
+
+It is a recommended to do credential rotation on a regular basis for security reasons. Especially in productive environments, it is necessary to do this in a downtime free manner. The following procedure describes a pattern in which credentials stored in bindings managed by Service Manager can be rotated best: 
+
+1) Use
+
+```
+mtx --svm-fresh-bindings SERVICE_PLAN <TENANT_ID>
+```
+
+to ensure that for the given tenant(s) a new binding with fresh credentials is created. Existing bindings stored in memory by applications are not invalidated and can still be used.
+
+2) Restart your application e.g. using a blue-green deployment to ensure business continuity. This can be accomplished for example using the command `cf bg-deploy`. This will ensure that all bindings previously stored in memory are not used anymore and newly created bindings will be used from now on.
+
+3) Use
+
+```
+mtx --svm-repair-bindings SERVICE_PLAN <TENANT_ID>
+```
+
+to ensure that all bindings for the given tenant(s) will be deleted except the newly created one. After this step has been performed, credentials are fully rotated.
+
+{: .warn}
+For Service Manager APIs, rate limits are in place. API requests for credential rotation count in addition to the regular APIs to Service Manager APIs performed by your application. Depending on the number of tenants, it is recommended to split the tenants into batches and perform the rotation on an individual basis. 
+
