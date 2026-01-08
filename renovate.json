@@ -1,0 +1,31 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", "schedule:weekly"],
+  "ignorePresets": ["group:recommended", "group:monorepos"],
+  "groupName": "all",
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "packageRules": [
+    {
+      "description": "manage node upgrades manually",
+      "matchPackageNames": ["node", "actions/node-versions"],
+      "enabled": false
+    },
+    {
+      "description": "manage ruby upgrades manually",
+      "matchPackageNames": ["ruby"],
+      "enabled": false
+    },
+    {
+      "description": "limit node-fetch for commonjs",
+      "matchPackageNames": ["node-fetch"],
+      "allowedVersions": "< 3.0.0"
+    },
+    {
+      "description": "limit eslint until flat config is in place",
+      "matchPackageNames": ["eslint"],
+      "allowedVersions": "< 9.0.0"
+    }
+  ]
+}
