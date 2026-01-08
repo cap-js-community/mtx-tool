@@ -8,6 +8,11 @@
   },
   "packageRules": [
     {
+      "description": "manage npm overrides manually",
+      "matchDepTypes": ["overrides"],
+      "enabled": false
+    },
+    {
       "description": "manage node upgrades manually",
       "matchPackageNames": ["node", "actions/node-versions"],
       "enabled": false
@@ -19,6 +24,11 @@
     },
     {
       "description": "limit node-fetch for commonjs",
+      "matchPackageNames": ["node-fetch"],
+      "allowedVersions": "< 3.0.0"
+    },
+    {
+      "description": "limit what-wg for node-fetch",
       "matchPackageNames": ["node-fetch"],
       "allowedVersions": "< 3.0.0"
     },
