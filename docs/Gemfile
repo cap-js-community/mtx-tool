@@ -10,4 +10,4 @@ ruby "~> 3.3.0"
 gem "github-pages", "~> 232", group: :jekyll_plugins
 
 # https://github.com/just-the-docs/just-the-docs/releases
-gem "just-the-docs", "~> 0.11.1"
+gem "just-the-docs", "~> 0.12.0"
