@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - svm: add client headers `Client-Name` and `Client-Version` for all calls to service-manager.
 
+### FIXED
+
+- cds: list filter for subdomain works again
+
 ## v0.11.1 - 2025-12-10
 
 ### ADDED

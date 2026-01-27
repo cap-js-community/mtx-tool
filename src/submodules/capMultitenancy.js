@@ -78,7 +78,9 @@ const _cdsTenants = async (context, tenant) => {
   const resultRaw = await response.json();
   let result = Array.isArray(resultRaw) ? resultRaw : [resultRaw];
   if (filterSubdomain) {
-    result = result.filter(({ subscribedSubdomain }) => subscribedSubdomain === filterSubdomain);
+    result = result.filter(
+      (tenant) => filterSubdomain === (tenant.subscriber?.subaccountSubdomain ?? tenant.subscribedSubdomain)
+    );
   }
   return result;
 };
