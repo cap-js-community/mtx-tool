@@ -262,7 +262,7 @@ const _hdiListServiceManager = async (context, { filterTenantId, doTimestamps, d
       binding ? binding.credentials?.schema : "",
       binding ? instance.ready && binding.ready : "",
     ];
-    doShowDbTenantColumn && row.splice(1, 0, binding ? (binding.credentials?.tenantId ?? "") : "missing binding");
+    doShowDbTenantColumn && row.splice(1, 0, instance.id);
     doTimestamps && row.push(...formatTimestampsWithRelativeDays([instance.created_at, instance.updated_at], nowDate));
     return row;
   };
