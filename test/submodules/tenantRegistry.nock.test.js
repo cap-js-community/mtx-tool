@@ -292,8 +292,8 @@ describe("reg nock tests", () => {
 
   test("reg update tenant", async () => {
     await nock.back("reg-update-deps-tenant.json");
-    await expect(reg.registryUpdateDependencies(await freshContext(), [testTenantId], [])).resolves.
-            toMatchInlineSnapshot(`
+    await expect(reg.registryUpdateDependencies(await freshContext(), [testTenantId], [])).resolves
+      .toMatchInlineSnapshot(`
             [
               {
                 "duration": "0 sec",
@@ -319,8 +319,8 @@ describe("reg nock tests", () => {
 
   test("reg update tenant all", async () => {
     await nock.back("reg-update-deps-all.json");
-    await expect(reg.registryUpdateAllDependencies(await freshContext(), undefined, [])).resolves.
-            toMatchInlineSnapshot(`
+    await expect(reg.registryUpdateAllDependencies(await freshContext(), undefined, [])).resolves
+      .toMatchInlineSnapshot(`
             [
               {
                 "duration": "0 sec",
