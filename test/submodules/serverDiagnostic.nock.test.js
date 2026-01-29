@@ -27,22 +27,22 @@ describe("srv nock tests", () => {
   test("request count", async () => {
     expect(collectRequestCount(require(`${nock.back.fixtures}/srv-env-default.json`))).toMatchInlineSnapshot(`
       {
-        "GET https://api.cf.sap.hana.ondemand.com:443": 5,
+        "GET https://api.cf.sap.hana.ondemand.com:443": 21,
       }
     `);
     expect(collectRequestCount(require(`${nock.back.fixtures}/srv-env-custom.json`))).toMatchInlineSnapshot(`
       {
-        "GET https://api.cf.sap.hana.ondemand.com:443": 5,
+        "GET https://api.cf.sap.hana.ondemand.com:443": 21,
       }
     `);
     expect(collectRequestCount(require(`${nock.back.fixtures}/srv-cert-default.json`))).toMatchInlineSnapshot(`
       {
-        "GET https://api.cf.sap.hana.ondemand.com:443": 5,
+        "GET https://api.cf.sap.hana.ondemand.com:443": 20,
       }
     `);
     expect(collectRequestCount(require(`${nock.back.fixtures}/srv-cert-custom.json`))).toMatchInlineSnapshot(`
       {
-        "GET https://api.cf.sap.hana.ondemand.com:443": 5,
+        "GET https://api.cf.sap.hana.ondemand.com:443": 17,
       }
     `);
   });
