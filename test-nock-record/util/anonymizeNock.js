@@ -196,20 +196,34 @@ const anonymizeNock = (calls) => {
       return anonymizeServiceManagerCall(call);
     }
 
-    // ##### SAAS-REGISTRY
+    // ##### SAAS | SAAS-REGISTRY
     // "scope": "https://saas-manager.mesh.cf.sap.hana.ondemand.com:443",
-    // "path": "/saas-manager/v1/application/subscriptions?appName=afc-dev",
+    // "path": "/saas-manager/v1/",
     if (
       /https:\/\/saas-manager\.mesh\.cf\.sap\.hana\.ondemand\.com:443/.test(call.scope) &&
-      /\/saas-manager\/v1\/application\/subscriptions\?appName=.*/.test(call.path)
+      /\/saas-manager\/v1\//.test(call.path)
     ) {
       return anonymizeSaasRegistryCall(call);
     }
 
-    // ##### SUBSCRIPTION-MANAGER
+    // ##### SAAS | SUBSCRIPTION-MANAGER
     // "scope": "https://saas-manager.mesh.cf.sap.hana.ondemand.com:443",
-    if (/https:\/\/service-manager\.cfapps\.sap\.hana\.ondemand\.com:443/.test(call.scope)) {
+    // "path": "/subscription-manager/v1/",
+    if (
+      /https:\/\/saas-manager\.mesh\.cf\.sap\.hana\.ondemand\.com:443/.test(call.scope) &&
+      /\/subscription-manager\/v1\//.test(call.path)
+    ) {
       return anonymizeSubscriptionManagerCall(call);
+    }
+
+    // ##### SAAS | JOBS
+    // "scope": "https://saas-manager.mesh.cf.sap.hana.ondemand.com:443",
+    // "path": "/api/v2.0/jobs/",
+    if (
+      /https:\/\/saas-manager\.mesh\.cf\.sap\.hana\.ondemand\.com:443/.test(call.scope) &&
+      /\/api\/v2\.0\/jobs\//.test(call.path)
+    ) {
+      return call;
     }
 
     // ##### CDS
