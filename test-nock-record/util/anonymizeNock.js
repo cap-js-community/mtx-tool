@@ -110,8 +110,11 @@ const anonymizeCfEnvCall = (call) => {
   Reflect.deleteProperty(call.response, "environment_variables");
   Reflect.deleteProperty(call.response, "staging_env_json");
   Reflect.deleteProperty(call.response, "running_env_json");
-  Reflect.deleteProperty(call.response, "application_env_json");
   call.response.system_env_json.VCAP_SERVICES = _processSubNode([], call.response.system_env_json.VCAP_SERVICES);
+  call.response.application_env_json.VCAP_APPLICATION = _processSubNode(
+    [],
+    call.response.application_env_json.VCAP_APPLICATION
+  );
   return call;
 };
 
