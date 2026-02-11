@@ -15,7 +15,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### FIXED
 
-- cds: list filter for subdomain works again
+- cds: list filter for subdomain works again.
+
+- cds: works with xsuaa broker plan again (fixes #161).
 
 ## v0.11.1 - 2025-12-10
 
