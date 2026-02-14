@@ -23,8 +23,8 @@ const { outputFromLogger } = require("../test-util/static");
 const fakeContextOnlyReg = {
   hasRegInfo: true,
   getRegInfo: () => ({
-    cfService: {
-      plan: "planReg",
+    cfBinding: {
+      planName: "planReg",
       credentials: {
         saas_registry_url: "saas_registry_url",
         appName: "appNameReg",
@@ -38,8 +38,8 @@ const fakeContextMixed = {
   hasSmsInfo: true,
   hasRegInfo: true,
   getSmsInfo: () => ({
-    cfService: {
-      plan: "planSms",
+    cfBinding: {
+      planName: "planSms",
       credentials: {
         subscription_manager_url: "subscription_manager_url",
         app_name: "appNameSms",
@@ -47,8 +47,8 @@ const fakeContextMixed = {
     },
   }),
   getRegInfo: () => ({
-    cfService: {
-      plan: "planReg",
+    cfBinding: {
+      planName: "planReg",
       credentials: {
         saas_registry_url: "saas_registry_url",
         appName: "appNameReg",

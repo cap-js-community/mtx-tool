@@ -35,7 +35,7 @@ const mockCdsInfo = {
   cfAppGuid: "app-mtx-guid",
   cfRouteUrl: "route-url",
   cfProcess: { instances: 1 },
-  cfService: { label: "xsuaa", credentials: {} },
+  cfBinding: { offeringName: "xsuaa", credentials: {} },
   cfSsh: jest.fn().mockReturnValue([]),
 };
 
@@ -46,7 +46,7 @@ const mockCdsInfoMultiInstance = {
 
 const mockCdsInfoIas = {
   ...mockCdsInfo,
-  cfService: { label: "identity", credentials: { key: "key", certificate: "cert" } },
+  cfBinding: { offeringName: "identity", credentials: { key: "key", certificate: "cert" } },
 };
 
 const fakeContext = ({ isMultiInstance = false, isIas = false } = {}) => ({
