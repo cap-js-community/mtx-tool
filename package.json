@@ -48,9 +48,11 @@
     "whatwg-url": "^14.0.0"
   },
   "devDependencies": {
-    "eslint": "^8.57.1",
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.0.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jest": "^29.15.0",
+    "globals": "^17.3.0",
     "jest": "^30.2.0",
     "nock": "^13.5.6",
     "prettier": "^3.8.1",
