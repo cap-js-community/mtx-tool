@@ -36,11 +36,6 @@
       "description": "limit nock until it works",
       "matchPackageNames": ["nock"],
       "allowedVersions": "< 14.0.0"
-    },
-    {
-      "description": "limit eslint until flat config is in place",
-      "matchPackageNames": ["eslint"],
-      "allowedVersions": "< 9.0.0"
     }
   ]
 }
