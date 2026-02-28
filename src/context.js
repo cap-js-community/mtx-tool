@@ -12,6 +12,7 @@ const {
   safeUnshift,
   escapeRegExp,
   makeOneTime,
+  indexByKey,
 } = require("./shared/static");
 const { assert, fail } = require("./shared/error");
 const { request } = require("./shared/request");
@@ -19,6 +20,7 @@ const oauth = require("./shared/oauth");
 const { LazyCache, ExpiringLazyCache } = require("./shared/cache");
 const { Logger } = require("./shared/logger");
 const { CONFIG_TYPE, CONFIG_INFOS } = require("./config");
+const { limiter } = require("./shared/funnel");
 
 const ENV = Object.freeze({
   APP_SUFFIX: "MTX_APP_SUFFIX",
@@ -41,8 +43,9 @@ const FILENAME = Object.freeze({
   CACHE: ".mtxcache.json",
 });
 
-const CACHE_GAP = 43200000; // 12 hours in milliseconds
+const CACHE_GAP = 14400000; // 4 hours in milliseconds
 const UAA_TOKEN_CACHE_EXPIRY_GAP = 60000; // 1 minute
+const CF_API_CONCURRENCY = 6;
 
 const logger = Logger.getInstance();
 
@@ -68,11 +71,12 @@ const _cfAuthToken = async () => {
   }
 };
 
-const _cfRequest = async (cfInfo, path) => {
+const _cfRequest = async (cfInfo, urlOrPath) => {
+  let url;
   try {
+    url = urlOrPath.startsWith("/v3") ? cfInfo.config.Target + urlOrPath : urlOrPath;
     const response = await request({
-      url: cfInfo.config.Target,
-      path,
+      url,
       headers: {
         Accept: "application/json",
         Authorization: cfInfo.token,
@@ -81,22 +85,22 @@ const _cfRequest = async (cfInfo, path) => {
     });
     return await response.json();
   } catch (err) {
-    return fail("caught error during cf request %s\n%s", path, err.message);
+    return fail("caught error during cf request %s\n%s", url, err.message);
   }
 };
 
-const _cfRequestPaged = async (cfInfo, path) => {
-  let result = [];
+const _cfRequestPaged = async (cfInfo, urlOrPath) => {
+  const result = { resources: [], included: [] };
   while (true) {
-    const { pagination, resources } = await _cfRequest(cfInfo, path);
+    const { pagination, resources, included } = await _cfRequest(cfInfo, urlOrPath);
     if (resources) {
-      result = result.concat(resources);
-    } else {
-      break;
+      result.resources = result.resources.concat(resources);
+    }
+    if (included) {
+      result.included = result.included.concat(included);
     }
     if (pagination && pagination.next && pagination.next.href) {
-      const nextUrl = new URL(pagination.next.href);
-      path = nextUrl.pathname + (nextUrl.search ? nextUrl.search : "");
+      urlOrPath = pagination.next.href;
     } else {
       break;
     }
@@ -223,43 +227,87 @@ const _cfSsh = async (appName, { logged, localPort, remotePort, remoteHostname, 
   }
 };
 
-const _getCfApps = async (cfInfo) => _cfRequestPaged(cfInfo, `/v3/apps?space_guids=${cfInfo.config.SpaceFields.GUID}`);
+const _cfMergeBuckets = (buckets, key) => buckets.reduce((acc, bucket) => ((acc = acc.concat(bucket[key])), acc), []);
 
 const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false } = {}) => {
   const cfInfo = { config: _readCfConfig(), token: await _cfAuthToken() };
   const { filepath: configPath, dir, location } = _resolveDir(FILENAME.CONFIG) || {};
   const runtimeConfig = readRuntimeConfig(configPath);
   const cachePath = pathlib.join(dir, FILENAME.CACHE);
-  const cfApps = await _getCfApps(cfInfo);
+  const { resources: cfApps } = await _cfRequestPaged(cfInfo, `/v3/apps?space_guids=${cfInfo.config.SpaceFields.GUID}`);
   const cfTokenCache = new ExpiringLazyCache({ expirationGap: UAA_TOKEN_CACHE_EXPIRY_GAP });
   const settingTypeToAppNameCache = new LazyCache();
   const appNameToCfAppCache = new LazyCache();
   let rawAppMemoryCache = {};
 
+  const _cfServiceInfoMaps = makeOneTime(async () => {
+    const { resources: cfServicePlans, included: cfServiceOfferingBuckets } = await _cfRequestPaged(
+      cfInfo,
+      `/v3/service_plans?include=service_offering`
+    );
+    const cfServiceOfferings = _cfMergeBuckets(cfServiceOfferingBuckets, "service_offerings");
+    return {
+      cfServiceOfferingsById: indexByKey(cfServiceOfferings, "guid"),
+      cfServicePlansById: indexByKey(cfServicePlans, "guid"),
+    };
+  });
+
   const getRawAppInfo = async (cfApp) => {
     const cfBuildpack = cfApp.lifecycle?.data?.buildpacks?.[0];
-    const cfEnv = await _cfRequest(cfInfo, `/v3/apps/${cfApp.guid}/env`);
-    const [cfProcess] = await _cfRequestPaged(cfInfo, `/v3/apps/${cfApp.guid}/processes`);
-    const cfEnvServices = cfEnv.system_env_json?.VCAP_SERVICES;
-    const cfEnvApp = cfEnv.application_env_json?.VCAP_APPLICATION;
-    const cfEnvVariables = cfEnv.environment_variables;
+    const [
+      { cfServiceOfferingsById, cfServicePlansById },
+      { resources: cfProcesses },
+      { resources: cfRoutes, included: cfRouteDomainBuckets },
+      { resources: cfBindingStubsRaw, included: cfServiceInstancesBuckets },
+    ] = await Promise.all([
+      _cfServiceInfoMaps(),
+      _cfRequestPaged(cfInfo, `/v3/apps/${cfApp.guid}/processes`),
+      _cfRequestPaged(cfInfo, `/v3/routes?app_guids=${cfApp.guid}&include=domain`),
+      _cfRequestPaged(cfInfo, `/v3/service_credential_bindings?app_guids=${cfApp.guid}&include=service_instance`),
+    ]);
 
-    const cfRoutes = await _cfRequestPaged(cfInfo, `/v3/apps/${cfApp.guid}/routes`);
+    const cfRouteDomains = _cfMergeBuckets(cfRouteDomainBuckets, "domains");
+    const cfRouteDomainsById = indexByKey(cfRouteDomains, "guid");
+    const cfServiceInstances = _cfMergeBuckets(cfServiceInstancesBuckets, "service_instances").filter(
+      (instance) => instance.type === "managed"
+    );
+    const cfServiceInstancesById = indexByKey(cfServiceInstances, "guid");
+    const cfBindingStubs = cfBindingStubsRaw.filter((stub) =>
+      Object.prototype.hasOwnProperty.call(cfServiceInstancesById, stub.relationships.service_instance.data.guid)
+    );
+
+    const cfBindings = await limiter(CF_API_CONCURRENCY, cfBindingStubs, async (stub) => {
+      const instance = cfServiceInstancesById[stub.relationships.service_instance.data.guid];
+      const plan = cfServicePlansById[instance.relationships.service_plan.data.guid];
+      const offering = cfServiceOfferingsById[plan.relationships.service_offering.data.guid];
+      const details = await _cfRequest(cfInfo, `/v3/service_credential_bindings/${stub.guid}/details`);
+      return {
+        id: stub.guid,
+        createdAt: stub.created_at,
+        updatedAt: stub.updated_at,
+        offeringId: offering.guid,
+        offeringName: offering.name,
+        planId: plan.guid,
+        planName: plan.name,
+        instanceId: instance.guid,
+        instanceName: instance.name,
+        credentials: details.credentials,
+      };
+    });
+
+    const cfProcess = cfProcesses?.[0];
     const cfRoute = cfRoutes?.[0];
-    const cfDomainGuid = cfRoute?.relationships?.domain?.data?.guid;
-    const cfRouteDomain = cfDomainGuid && (await _cfRequest(cfInfo, `/v3/domains/${cfDomainGuid}`));
+    const cfRouteDomain = cfRouteDomainsById[cfRoute?.relationships.domain?.data.guid];
 
     return {
       timestamp: new Date().toISOString(),
       version,
       cfApp,
-      cfProcess,
       cfBuildpack,
-      cfEnvServices,
-      cfEnvApp,
-      cfEnvVariables,
+      cfProcess,
       cfRoute,
       cfRouteDomain,
+      cfBindings,
     };
   };
 
@@ -296,21 +344,19 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   };
 
   const processRawAppInfo = (appName, rawAppInfo, { requireServices, requireRoute } = {}) => {
-    const { cfApp, cfBuildpack, cfEnvServices, cfEnvApp, cfEnvVariables, cfRoute, cfRouteDomain, cfProcess } =
-      rawAppInfo;
+    const { cfApp, cfBuildpack, cfBindings, cfEnvVariables, cfRoute, cfRouteDomain, cfProcess } = rawAppInfo;
 
-    let cfService = null;
+    let cfBinding = null;
     if (Array.isArray(requireServices)) {
-      assert(cfEnvServices, "no vcap service information in environment, check cf user permissions");
-      const cfEnvServicesFlat = [].concat(...Object.values(cfEnvServices));
+      assert(cfBindings, "no service binding information in environment, check cf user permissions");
       const matchingServices = requireServices
-        .map(({ label: aLabel, plan: aPlan }) =>
-          cfEnvServicesFlat.find(({ label: bLabel, plan: bPlan }) => aLabel === bLabel && aPlan === bPlan)
+        .map((service) =>
+          cfBindings.find((binding) => service.label === binding.offeringName && service.plan === binding.planName)
         )
         .filter((a) => a !== undefined);
-      cfService = matchingServices.length > 0 ? matchingServices[0] : null;
+      cfBinding = matchingServices.length > 0 ? matchingServices[0] : null;
       assert(
-        cfService,
+        cfBinding,
         `could not access required service-bindings for app "${appName}" services "${JSON.stringify(requireServices)}"`
       );
     }
@@ -335,10 +381,9 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
       cfAppGuid,
       cfBuildpack,
       cfProcess,
-      cfEnvServices,
-      cfEnvApp,
+      cfBinding,
+      cfBindings,
       cfEnvVariables,
-      cfService,
       cfRouteUrl,
       cfSsh,
     };
@@ -419,16 +464,14 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
 
   const getAppInfoCached = (type) => async () => {
     const appName = _getAppNameFromSettingType(type);
-
-    const cfApp = _getCfAppFromAppName(appName);
-    const rawAppInfo = await getRawAppInfoCached(cfApp);
     const setting = CONFIG_INFOS[type];
-    return processRawAppInfo(cfApp.name, rawAppInfo, setting);
+    return await getAppNameInfoCached(appName, setting);
   };
 
   const getAppNameInfoCached = async (appName, setting) => {
     assert(appName, "used getAppNameInfoCached without appName parameter");
 
+    // TODO(tricky) this needs an early out if appName is already in the cache then cfAppFromName need not be called to save the cf request
     const cfApp = _getCfAppFromAppName(appName);
     const rawAppInfo = await getRawAppInfoCached(cfApp);
     return processRawAppInfo(cfApp.name, rawAppInfo, setting);
@@ -463,6 +506,11 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
       }
     );
 
+  const getCfEnv = async (appName) => {
+    const cfApp = _getCfAppFromAppName(appName);
+    return await _cfRequest(cfInfo, `/v3/apps/${cfApp.guid}/env`);
+  };
+
   return {
     runtimeConfig,
     getUaaInfo,
@@ -473,6 +521,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     getCdsInfo,
     getHdiInfo,
     getSrvInfo,
+    getCfEnv,
     getCachedUaaTokenFromCredentials,
     getCachedIasTokenFromCredentials,
     getAppNameInfoCached,

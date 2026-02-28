@@ -40,7 +40,7 @@ const uaaUserInfoMock = {
   userStuff: "details",
 };
 
-const uaaCfServiceMock = {
+const uaaCfBindingMock = {
   credentials: {
     url: "https://identityzone.authentication",
     identityzone: "identityzone",
@@ -56,7 +56,7 @@ const cfEnvServicesMock = {
 };
 
 const contextMock = {
-  getUaaInfo: jest.fn(() => ({ cfService: uaaCfServiceMock })),
+  getUaaInfo: jest.fn(() => ({ cfBinding: uaaCfBindingMock })),
   getCachedUaaTokenFromCredentials: jest.fn((credentials, options) => {
     return sharedOAuthMock.getUaaTokenFromCredentials(credentials, options).then(({ access_token }) => access_token);
   }),
@@ -142,8 +142,8 @@ describe("uaa tests", () => {
     ])("%s", async (_, token, passArgs, passFlags) => {
       sharedStaticMock.isDashedWord.mockReturnValue(true);
       contextMock.getUaaInfo.mockReturnValueOnce({
-        cfEnvApp: { application_name: APP_NAME },
-        cfService: uaaCfServiceMock,
+        cfApp: { name: APP_NAME },
+        cfBinding: uaaCfBindingMock,
         cfEnvServices: { [SERVICE]: [{ credentials: cfEnvServicesMock }] },
       });
       contextMock.getCachedUaaTokenFromCredentials.mockReturnValueOnce(token);
@@ -192,8 +192,8 @@ describe("uaa tests", () => {
     ])("%s", async (_, token, passArgs, passFlags, fetchCalls) => {
       sharedStaticMock.isDashedWord.mockReturnValue(true);
       contextMock.getUaaInfo.mockReturnValueOnce({
-        cfEnvApp: { application_name: APP_NAME },
-        cfService: uaaCfServiceMock,
+        cfApp: { name: APP_NAME },
+        cfBinding: uaaCfBindingMock,
         cfEnvServices: { [SERVICE]: [{ credentials: cfEnvServicesMock }] },
       });
       contextMock.getCachedUaaTokenFromCredentials.mockReturnValueOnce(token);
@@ -245,8 +245,8 @@ describe("uaa tests", () => {
     ])("%s", async (_, token, passArgs, passFlags, fetchCalls) => {
       sharedStaticMock.isDashedWord.mockReturnValue(true);
       contextMock.getUaaInfo.mockReturnValueOnce({
-        cfEnvApp: { application_name: APP_NAME },
-        cfService: uaaCfServiceMock,
+        cfApp: { name: APP_NAME },
+        cfBinding: uaaCfBindingMock,
         cfEnvServices: { [SERVICE]: [{ credentials: cfEnvServicesMock }] },
       });
       contextMock.getCachedUaaTokenFromCredentials.mockReturnValueOnce(token);

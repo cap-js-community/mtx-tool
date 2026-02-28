@@ -375,6 +375,26 @@ const parseIntWithFallback = (input, fallback) => {
   return isNaN(result) ? fallback : result;
 };
 
+const indexByKey = (dataObjects, key) =>
+  dataObjects.reduce((result, dataObject) => {
+    const identifier = dataObject[key];
+    if (!Object.prototype.hasOwnProperty.call(result, identifier)) {
+      result[identifier] = dataObject;
+    }
+    return result;
+  }, {});
+
+const clusterByKey = (dataObjects, key) =>
+  dataObjects.reduce((result, dataObject) => {
+    const identifier = dataObject[key];
+    if (result[identifier]) {
+      result[identifier].push(dataObject);
+    } else {
+      result[identifier] = [dataObject];
+    }
+    return result;
+  }, {});
+
 module.exports = {
   isPortFree,
   nextFreePort,
@@ -409,4 +429,6 @@ module.exports = {
   makeOneTime,
   resetOneTime,
   parseIntWithFallback,
+  indexByKey,
+  clusterByKey,
 };

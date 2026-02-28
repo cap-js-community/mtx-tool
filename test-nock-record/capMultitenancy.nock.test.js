@@ -1,5 +1,13 @@
 "use strict";
 
+jest.mock("../src/shared/static", () => {
+  const staticlib = jest.requireActual("../src/shared/static");
+  return {
+    ...staticlib,
+    writeTextAsync: jest.fn(),
+  };
+});
+
 const pathlib = require("path");
 const nock = require("nock");
 

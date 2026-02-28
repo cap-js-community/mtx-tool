@@ -18,6 +18,7 @@
     "test:remove-file-snapshots": "npx shx rm '**/__snapshots__/*.snap'",
     "test:remove-inline-snapshots": "npx replace '\\.toMatchInlineSnapshot\\(\\s*`[\\s\\S]*?`\\s*\\);' '.toMatchInlineSnapshot();' test -r --include='*.test.js'",
     "test:resnap": "npm run patch && npm run test:remove-inline-snapshots && npm run test:remove-file-snapshots && npm t -- -u && npm run lint:fix",
+    "test:record": "npm run test:record:reg && npm run test:record:cds && npm run test:record:hdi && npm run test:record:svm && npm run test:record:srv",
     "test:record:reg": "jest --runInBand --config jest-nock-record.config.js test-nock-record/tenantRegistry.nock.test.js",
     "test:record:reg:list": "jest --runInBand --config jest-nock-record.config.js test-nock-record/tenantRegistry.nock.test.js --testNamePattern 'reg list|reg long list|reg service config'",
     "test:record:reg:update-deps": "jest --runInBand --config jest-nock-record.config.js test-nock-record/tenantRegistry.nock.test.js --testNamePattern 'reg update dependencies'",
@@ -36,7 +37,7 @@
     "docs": "cd docs && bundle exec jekyll serve",
     "docs:install": "cd docs && npx shx rm -rf vendor Gemfile.lock && bundle install",
     "cloc": "npx cloc --vcs=git src",
-    "upgrade-lock": "npx shx rm -rf package-lock.json node_modules && npm i && npm run patch"
+    "upgrade-lock": "npm i && npm run patch"
   },
   "engines": {
     "node": ">=20.0.0"
