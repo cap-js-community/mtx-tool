@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", "schedule:weekly"],
+  "extends": ["config:recommended", "schedule:monthly"],
   "ignorePresets": ["group:recommended", "group:monorepos"],
   "groupName": "all",
   "lockFileMaintenance": {
