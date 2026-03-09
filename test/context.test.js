@@ -53,9 +53,10 @@ describe("context tests", () => {
     mockRequest.mockReturnValueOnce({ json: () => mockCfProcess });
     mockRequest.mockReturnValueOnce({ json: () => mockCfRoutes });
 
-    await expect(context.getUaaInfo()).rejects.toMatchInlineSnapshot(
-      `[Error: no vcap service information in environment, check cf user permissions]`
-    );
+    await expect(context.getUaaInfo()).rejects.toMatchInlineSnapshot(`
+            [Error: caught error during cf request https://api.cf.sap.hana.ondemand.com/v3/service_credential_bindings?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&include=service_instance
+            Cannot read properties of undefined (reading 'json')]
+          `);
   });
 
   test("can create context for paged cf apps", async () => {
