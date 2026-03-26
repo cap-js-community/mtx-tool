@@ -3,6 +3,7 @@
 const pathlib = require("path");
 const nock = require("nock");
 
+const { resetMakeOneTime } = require("../../src/shared/execution-control");
 const { newContext } = require("../../src/context");
 const hdi = require("../../src/submodules/hanaManagement");
 const { outputFromLoggerPartitionFetch, anonymizeListTimestamps, collectRequestCount } = require("../test-util/static");
@@ -27,7 +28,7 @@ const freshContext = async () => await newContext({ usePersistedCache: false, is
 describe("hdi nock tests", () => {
   afterEach(() => {
     LogRequestId.reset();
-    hdi._._reset();
+    resetMakeOneTime(hdi._._getHdiSharedPlanId);
     nock.restore();
   });
 

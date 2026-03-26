@@ -355,18 +355,6 @@ const escapeRegExp = (input) => {
   return input && reHasRegExpChar.test(input) ? input.replace(reRegExpChar, "\\$&") : input;
 };
 
-const makeOneTime = (cb) => {
-  const oneTimeCb = async (...args) => {
-    if (!Object.prototype.hasOwnProperty.call(oneTimeCb, "__result")) {
-      oneTimeCb.__result = cb(...args);
-    }
-    return await oneTimeCb.__result;
-  };
-  return oneTimeCb;
-};
-
-const resetOneTime = (cb) => Reflect.deleteProperty(cb, "__result");
-
 const parseIntWithFallback = (input, fallback) => {
   if (typeof input !== "string") {
     return fallback;
@@ -406,7 +394,5 @@ module.exports = {
   isObject,
   safeUnshift,
   escapeRegExp,
-  makeOneTime,
-  resetOneTime,
   parseIntWithFallback,
 };

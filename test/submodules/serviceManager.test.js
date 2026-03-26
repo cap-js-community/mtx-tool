@@ -1,6 +1,7 @@
 "use strict";
 
 const packageInfo = require("../../package.json");
+const { resetMakeOneTime } = require("../../src/shared/execution-control");
 const mockRequest = require("../../src/shared/request");
 jest.mock("../../src/shared/request", () => {
   const { RETRY_MODE } = jest.requireActual("../../src/shared/request");
@@ -117,7 +118,8 @@ const mockBindingFactory = (i) => ({
 
 describe("svm tests", () => {
   afterEach(() => {
-    svm._._reset();
+    resetMakeOneTime(svm._._requestOfferings);
+    resetMakeOneTime(svm._._requestPlans);
     mockRequest.request.mockClear();
   });
 
