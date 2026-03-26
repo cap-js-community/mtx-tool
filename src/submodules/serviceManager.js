@@ -15,9 +15,8 @@ const {
   isObject,
   partition,
   randomString,
-  makeOneTime,
-  resetOneTime,
 } = require("../shared/static");
+const { makeOneTime, resetMakeOneTime } = require("../shared/execution-control");
 const { assert } = require("../shared/error");
 const { request, RETRY_MODE } = require("../shared/request");
 const { Logger } = require("../shared/logger");
@@ -616,8 +615,8 @@ module.exports = {
 
   _: {
     _reset() {
-      resetOneTime(_requestOfferings);
-      resetOneTime(_requestPlans);
+      resetMakeOneTime(_requestOfferings);
+      resetMakeOneTime(_requestPlans);
     },
   },
 };

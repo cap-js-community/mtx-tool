@@ -1,13 +1,7 @@
 "use strict";
 
-const {
-  tableList,
-  isPortFree,
-  formatTimestampsWithRelativeDays,
-  compareFor,
-  makeOneTime,
-  resetOneTime,
-} = require("../shared/static");
+const { tableList, isPortFree, formatTimestampsWithRelativeDays, compareFor } = require("../shared/static");
+const { makeOneTime, resetMakeOneTime } = require("../shared/execution-control");
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
 const { Logger } = require("../shared/logger");
@@ -308,7 +302,7 @@ module.exports = {
 
   _: {
     _reset() {
-      resetOneTime(_getHdiSharedPlanId);
+      resetMakeOneTime(_getHdiSharedPlanId);
     },
   },
 };
