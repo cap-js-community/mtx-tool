@@ -3,6 +3,7 @@
 const pathlib = require("path");
 const nock = require("nock");
 
+const { resetMakeOneTime } = require("../../src/shared/execution-control");
 const { newContext } = require("../../src/context");
 const svm = require("../../src/submodules/serviceManager");
 const { outputFromLoggerPartitionFetch, anonymizeListTimestamps, collectRequestCount } = require("../test-util/static");
@@ -27,7 +28,8 @@ const freshContext = async () => await newContext({ usePersistedCache: false, is
 describe("svm nock tests", () => {
   afterEach(() => {
     LogRequestId.reset();
-    svm._._reset();
+    resetMakeOneTime(svm._._requestOfferings);
+    resetMakeOneTime(svm._._requestPlans);
     nock.restore();
   });
 

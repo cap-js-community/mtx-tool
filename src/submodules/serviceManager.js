@@ -16,7 +16,7 @@ const {
   partition,
   randomString,
 } = require("../shared/static");
-const { makeOneTime, resetMakeOneTime } = require("../shared/execution-control");
+const { makeOneTime } = require("../shared/execution-control");
 const { assert } = require("../shared/error");
 const { request, RETRY_MODE } = require("../shared/request");
 const { Logger } = require("../shared/logger");
@@ -614,9 +614,7 @@ module.exports = {
   serviceManagerDeleteInstancesAndBindings,
 
   _: {
-    _reset() {
-      resetMakeOneTime(_requestOfferings);
-      resetMakeOneTime(_requestPlans);
-    },
+    _requestOfferings,
+    _requestPlans,
   },
 };
