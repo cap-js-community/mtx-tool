@@ -1,11 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", "schedule:monthly"],
+  "extends": ["config:recommended", "schedule:monthly", ":maintainLockFilesMonthly"],
   "ignorePresets": ["group:recommended", "group:monorepos"],
   "groupName": "all",
-  "lockFileMaintenance": {
-    "enabled": true
-  },
   "packageRules": [
     {
       "description": "manage npm overrides manually",
