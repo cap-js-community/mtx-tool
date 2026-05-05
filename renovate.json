@@ -4,6 +4,7 @@
   "ignorePresets": ["group:recommended", "group:monorepos"],
   "platformAutomerge": true,
   "groupName": "all",
+  "minimumReleaseAge": "7 days",
   "packageRules": [
     {
       "description": "manage npm overrides manually",
@@ -22,11 +23,6 @@
     },
     {
       "description": "limit node-fetch for commonjs",
-      "matchPackageNames": ["node-fetch"],
-      "allowedVersions": "< 3.0.0"
-    },
-    {
-      "description": "limit what-wg for node-fetch",
       "matchPackageNames": ["node-fetch"],
       "allowedVersions": "< 3.0.0"
     },
