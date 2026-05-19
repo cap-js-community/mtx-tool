@@ -23,6 +23,7 @@ jobs:
           node-version: 24
           # NOTE: the explicit registry-url is currently needed for the auth token to work
           registry-url: https://registry.npmjs.org/
+          package-manager-cache: false
       # NOTE: the npm update is needed for trusted publisher id-token integration to work
       - run: npm install -g npm@latest
       - run: npm ci
