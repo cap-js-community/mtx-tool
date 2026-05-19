@@ -1,6 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", "schedule:monthly", ":automergeMinor", ":maintainLockFilesMonthly"],
+  "extends": [
+    "config:recommended",
+    "schedule:monthly",
+    ":automergeMinor",
+    ":maintainLockFilesMonthly",
+    "helpers:pinGitHubActionDigests"
+  ],
   "ignorePresets": ["group:recommended", "group:monorepos"],
   "platformAutomerge": true,
   "groupName": "all",
@@ -13,12 +19,12 @@
     },
     {
       "description": "manage node upgrades manually",
-      "matchPackageNames": ["node", "actions/node-versions"],
+      "matchDepNames": ["node"],
       "enabled": false
     },
     {
       "description": "manage ruby upgrades manually",
-      "matchPackageNames": ["ruby"],
+      "matchDepNames": ["ruby"],
       "enabled": false
     },
     {
