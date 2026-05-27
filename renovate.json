@@ -11,6 +11,7 @@
   "platformAutomerge": true,
   "groupName": "all",
   "minimumReleaseAge": "7 days",
+  "rangeStrategy": "bump",
   "packageRules": [
     {
       "description": "manage npm overrides manually",
