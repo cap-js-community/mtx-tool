@@ -93,6 +93,10 @@ const CONFIG_INFOS = {
         plan: "application",
       },
       {
+        label: "xsuaa",
+        plan: "broker",
+      },
+      {
         label: "identity",
         plan: "application",
       },

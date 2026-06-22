@@ -1,11 +1,17 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", "schedule:weekly"],
+  "extends": [
+    "config:recommended",
+    "schedule:monthly",
+    ":automergeMinor",
+    ":maintainLockFilesMonthly",
+    "helpers:pinGitHubActionDigests"
+  ],
   "ignorePresets": ["group:recommended", "group:monorepos"],
+  "platformAutomerge": true,
   "groupName": "all",
-  "lockFileMaintenance": {
-    "enabled": true
-  },
+  "minimumReleaseAge": "7 days",
+  "rangeStrategy": "bump",
   "packageRules": [
     {
       "description": "manage npm overrides manually",
@@ -14,12 +20,12 @@
     },
     {
       "description": "manage node upgrades manually",
-      "matchPackageNames": ["node", "actions/node-versions"],
+      "matchDepNames": ["node"],
       "enabled": false
     },
     {
       "description": "manage ruby upgrades manually",
-      "matchPackageNames": ["ruby"],
+      "matchDepNames": ["ruby"],
       "enabled": false
     },
     {
@@ -28,19 +34,9 @@
       "allowedVersions": "< 3.0.0"
     },
     {
-      "description": "limit what-wg for node-fetch",
-      "matchPackageNames": ["node-fetch"],
-      "allowedVersions": "< 3.0.0"
-    },
-    {
       "description": "limit nock until it works",
       "matchPackageNames": ["nock"],
       "allowedVersions": "< 14.0.0"
-    },
-    {
-      "description": "limit eslint until flat config is in place",
-      "matchPackageNames": ["eslint"],
-      "allowedVersions": "< 9.0.0"
     }
   ]
 }

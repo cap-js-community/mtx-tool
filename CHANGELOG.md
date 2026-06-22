@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- order is REMOVED, CHANGED, ADDED, FIXED -->
 
-## v0.11.2 - tbd
+## v0.11.3 - tbd
+
+## v0.11.2 - 2025-02-17
 
 ### ADDED
 
@@ -15,7 +17,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### FIXED
 
-- cds: list filter for subdomain works again
+- cds: list filter for subdomain works again.
+
+- cds: works with xsuaa broker plan again (fixes #161).
 
 ## v0.11.1 - 2025-12-10
 

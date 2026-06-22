@@ -1,5 +1,6 @@
 "use strict";
 
+const { resetMakeOneTime } = require("../../src/shared/execution-control");
 const mockRequest = require("../../src/shared/request");
 jest.mock("../../src/shared/request", () => ({
   request: jest.fn(),
@@ -46,7 +47,7 @@ const mockContext = {
 
 describe("hdi tests", () => {
   afterEach(() => {
-    hdi._._reset();
+    resetMakeOneTime(hdi._._getHdiSharedPlanId);
   });
 
   test("hdi tunnel", async () => {

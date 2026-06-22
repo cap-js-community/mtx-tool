@@ -1,13 +1,7 @@
 "use strict";
 
-const {
-  tableList,
-  isPortFree,
-  formatTimestampsWithRelativeDays,
-  compareFor,
-  makeOneTime,
-  resetOneTime,
-} = require("../shared/static");
+const { tableList, isPortFree, formatTimestampsWithRelativeDays, compareFor } = require("../shared/static");
+const { makeOneTime } = require("../shared/execution-control");
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
 const { Logger } = require("../shared/logger");
@@ -307,8 +301,6 @@ module.exports = {
   hdiTunnelTenant,
 
   _: {
-    _reset() {
-      resetOneTime(_getHdiSharedPlanId);
-    },
+    _getHdiSharedPlanId,
   },
 };

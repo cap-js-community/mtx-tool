@@ -12,8 +12,6 @@ on:
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 # Allow one concurrent deployment
 concurrency:
@@ -23,36 +21,41 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: github.repository_owner == 'cap-js-community' # don't build on forks
     defaults:
       run:
         working-directory: docs
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@97ecb7b512899eb71ab1bf2310a624c6f1589ac6 # v1.308.0
         with:
           ruby-version: "3.3"
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
           working-directory: docs
       - name: Setup Pages
         id: pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
       - name: Build with Jekyll
         # Outputs to the 'docs/_site' directory
-        run: |
-          echo "url: $GITHUB_PAGES_ORIGIN" > _config.dynamic.yml
-          bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}" --config _config.yml,_config.dynamic.yml
         env:
           JEKYLL_ENV: production
           GITHUB_PAGES_ORIGIN: ${{ steps.pages.outputs.origin }}
+          GITHUB_PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+        run: |
+          echo "url: $GITHUB_PAGES_ORIGIN" > _config.dynamic.yml
+          bundle exec jekyll build --baseurl "$GITHUB_PAGES_BASE_PATH" --config _config.yml,_config.dynamic.yml
       - name: Upload artifact
         # Uploads artifact from the 'docs/_site' directory
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:
           path: docs/_site
 
   deploy:
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -61,4 +64,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5

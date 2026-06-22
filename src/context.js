@@ -11,9 +11,9 @@ const {
   spawnAsync,
   safeUnshift,
   escapeRegExp,
-  makeOneTime,
   indexByKey,
 } = require("./shared/static");
+const { makeOneTime } = require("./shared/execution-control");
 const { assert, fail } = require("./shared/error");
 const { request } = require("./shared/request");
 const oauth = require("./shared/oauth");
