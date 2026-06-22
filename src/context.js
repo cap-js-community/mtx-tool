@@ -348,7 +348,6 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
 
     let cfBinding = null;
     if (Array.isArray(requireServices)) {
-      assert(cfBindings, "no service binding information in environment, check cf user permissions");
       const matchingServices = requireServices
         .map((service) =>
           cfBindings.find((binding) => service.label === binding.offeringName && service.plan === binding.planName)
