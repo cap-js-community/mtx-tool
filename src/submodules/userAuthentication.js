@@ -88,15 +88,11 @@ const _uaaSaasServiceToken = async (context, service, options = undefined) => {
   assert(isDashedWord(service), `argument "${service}" is not a valid service`);
   const {
     cfBinding: { credentials: uaaCredentials },
-    cfApp: { name: appName },
-    cfEnvServices,
+    cfAppName: appName,
+    cfBindings,
   } = await context.getUaaInfo();
-  let serviceCredentials = cfEnvServices[service]?.[0]?.credentials;
-  if (serviceCredentials === undefined) {
-    serviceCredentials = cfEnvServices["user-provided"]?.find((userProvidedService) =>
-      userProvidedService.tags.includes(service)
-    )?.credentials;
-  }
+  const serviceBinding = cfBindings.find((binding) => binding.offeringName === service);
+  let serviceCredentials = serviceBinding?.credentials;
   serviceCredentials = serviceCredentials?.uaa ?? serviceCredentials;
   assert(serviceCredentials, "service %s not bound to xsuaa app %s", service, appName);
 

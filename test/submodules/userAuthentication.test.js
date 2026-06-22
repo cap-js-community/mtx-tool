@@ -49,11 +49,16 @@ const uaaCfBindingMock = {
   },
 };
 
-const cfEnvServicesMock = {
-  url: "serviceurl",
-  clientid: "serviceclientid",
-  clientsecret: "serviceclientsecret",
-};
+const cfBindingsMock = [
+  {
+    offeringName: SERVICE,
+    credentials: {
+      url: "serviceurl",
+      clientid: "serviceclientid",
+      clientsecret: "serviceclientsecret",
+    },
+  },
+];
 
 const contextMock = {
   getUaaInfo: jest.fn(() => ({ cfBinding: uaaCfBindingMock })),
@@ -142,9 +147,9 @@ describe("uaa tests", () => {
     ])("%s", async (_, token, passArgs, passFlags) => {
       sharedStaticMock.isDashedWord.mockReturnValue(true);
       contextMock.getUaaInfo.mockReturnValueOnce({
-        cfApp: { name: APP_NAME },
+        cfAppName: APP_NAME,
         cfBinding: uaaCfBindingMock,
-        cfEnvServices: { [SERVICE]: [{ credentials: cfEnvServicesMock }] },
+        cfBindings: cfBindingsMock,
       });
       contextMock.getCachedUaaTokenFromCredentials.mockReturnValueOnce(token);
 
@@ -192,9 +197,9 @@ describe("uaa tests", () => {
     ])("%s", async (_, token, passArgs, passFlags, fetchCalls) => {
       sharedStaticMock.isDashedWord.mockReturnValue(true);
       contextMock.getUaaInfo.mockReturnValueOnce({
-        cfApp: { name: APP_NAME },
+        cfAppName: APP_NAME,
         cfBinding: uaaCfBindingMock,
-        cfEnvServices: { [SERVICE]: [{ credentials: cfEnvServicesMock }] },
+        cfBindings: cfBindingsMock,
       });
       contextMock.getCachedUaaTokenFromCredentials.mockReturnValueOnce(token);
       if (fetchCalls > 0) {
@@ -245,9 +250,9 @@ describe("uaa tests", () => {
     ])("%s", async (_, token, passArgs, passFlags, fetchCalls) => {
       sharedStaticMock.isDashedWord.mockReturnValue(true);
       contextMock.getUaaInfo.mockReturnValueOnce({
-        cfApp: { name: APP_NAME },
+        cfAppName: APP_NAME,
         cfBinding: uaaCfBindingMock,
-        cfEnvServices: { [SERVICE]: [{ credentials: cfEnvServicesMock }] },
+        cfBindings: cfBindingsMock,
       });
       contextMock.getCachedUaaTokenFromCredentials.mockReturnValueOnce(token);
       if (fetchCalls > 0) {
