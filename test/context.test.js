@@ -6,10 +6,11 @@ jest.mock("../src/shared/logger", () => require("./__mocks/shared/logger"));
 
 const mockStatic = require("../src/shared/static");
 jest.mock("../src/shared/static", () => {
-  const { safeUnshift, escapeRegExp } = jest.requireActual("../src/shared/static");
+  const { safeUnshift, escapeRegExp, indexByKey } = jest.requireActual("../src/shared/static");
   return {
     safeUnshift,
     escapeRegExp,
+    indexByKey,
     tryAccessSync: jest.fn(),
     tryReadJsonSync: jest.fn(),
     writeJsonSync: jest.fn(),
@@ -30,6 +31,8 @@ const mockCfApps = require("./__mock-data__/mockCfApps.json");
 const mockCfAppsPages = require("./__mock-data__/mockCfAppsPages.json");
 const mockCfProcess = require("./__mock-data__/mockCfProcess.json");
 const mockCfRoutes = require("./__mock-data__/mockCfRoutes.json");
+const mockCfServicePlans = require("./__mock-data__/mockCfServicePlans.json");
+const mockCfBindingsEmpty = require("./__mock-data__/mockCfBindingsEmpty.json");
 const mockRuntimeConfig = {
   uaaAppName: "uaa-app",
   regAppName: "reg-app",
@@ -38,24 +41,39 @@ const mockRuntimeConfig = {
   srvAppName: "srv-app",
 };
 
+// getRawAppInfo fans out 4 parallel paged requests via Promise.all in the order:
+//   1. /v3/service_plans?include=service_offering   (via _cfServiceInfoMaps)
+//   2. /v3/apps/{guid}/processes
+//   3. /v3/routes?app_guids={guid}&include=domain
+//   4. /v3/service_credential_bindings?app_guids={guid}&include=service_instance
+// Queue the matching responses in that order.
+const mockRawAppInfoRequests = ({
+  bindings,
+  servicePlans = mockCfServicePlans,
+  processes = mockCfProcess,
+  routes = mockCfRoutes,
+}) => {
+  mockRequest.mockReturnValueOnce({ json: () => servicePlans });
+  mockRequest.mockReturnValueOnce({ json: () => processes });
+  mockRequest.mockReturnValueOnce({ json: () => routes });
+  mockRequest.mockReturnValueOnce({ json: () => bindings });
+};
+
 describe("context tests", () => {
-  test("no vcap service information means no uaa token (space supporter role)", async () => {
+  test("fail with an error when bindings are empty", async () => {
     mockStatic.spawnAsync.mockReturnValueOnce(["oauth-token"]);
     mockStatic.tryReadJsonSync.mockReturnValueOnce(mockCfConfig);
     mockStatic.tryAccessSync.mockReturnValueOnce(true);
     mockStatic.tryReadJsonSync.mockReturnValueOnce(mockRuntimeConfig);
     mockRequest.mockReturnValueOnce({ json: () => mockCfApps });
-    mockRequest.mockReturnValueOnce({ json: () => mockCfEnvNoServices });
 
     const context = await newContext();
 
-    mockRequest.mockReturnValueOnce({ json: () => mockCfProcess });
-    mockRequest.mockReturnValueOnce({ json: () => mockCfRoutes });
+    mockRawAppInfoRequests({ bindings: mockCfBindingsEmpty });
 
-    await expect(context.getUaaInfo()).rejects.toMatchInlineSnapshot(`
-            [Error: caught error during cf request https://api.cf.sap.hana.ondemand.com/v3/service_credential_bindings?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&include=service_instance
-            Cannot read properties of undefined (reading 'json')]
-          `);
+    await expect(context.getUaaInfo()).rejects.toMatchInlineSnapshot(
+      `[Error: could not access required service-bindings for app "uaa-app" services "[{"label":"xsuaa","plan":"application"},{"label":"xsuaa","plan":"broker"}]"]`
+    );
   });
 
   test("can create context for paged cf apps", async () => {
