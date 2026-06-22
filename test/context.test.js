@@ -39,6 +39,8 @@ const mockCfServicePlansUaa = require("./__mock-data__/mockCfServicePlansUaa.jso
 const mockCfBindingsUaa = require("./__mock-data__/mockCfBindingsUaa.json");
 const mockCfBindingsUaaDetails = require("./__mock-data__/mockCfBindingsUaaDetails.json");
 
+const mockCfAppEnv = require("./__mock-data__/mockCfAppEnv.json");
+
 const mockRuntimeConfig = {
   uaaAppName: "uaa-app",
   regAppName: "reg-app",
@@ -126,6 +128,26 @@ describe("context tests", () => {
       }
     `);
     expect(uaaInfo.cfBindings).toHaveLength(1);
+  });
+
+  test("getCfEnv fetches the app env endpoint and returns the raw payload", async () => {
+    mockStatic.spawnAsync.mockReturnValueOnce(["oauth-token"]);
+    mockStatic.tryReadJsonSync.mockReturnValueOnce(mockCfConfig);
+    mockStatic.tryAccessSync.mockReturnValueOnce(true);
+    mockStatic.tryReadJsonSync.mockReturnValueOnce(mockRuntimeConfig);
+    mockRequest.mockReturnValueOnce({ json: () => mockCfApps });
+
+    const context = await newContext();
+
+    mockRequest.mockReturnValueOnce({ json: () => mockCfAppEnv });
+
+    const env = await context.getCfEnv("uaa-app");
+    expect(env).toBe(mockCfAppEnv);
+    expect(mockRequest).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        url: "https://api.cf.sap.hana.ondemand.com/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/env",
+      })
+    );
   });
 
   test("can create context for paged cf apps", async () => {
