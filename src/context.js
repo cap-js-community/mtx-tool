@@ -268,9 +268,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
 
     const cfRouteDomains = _cfMergeBuckets(cfRouteDomainBuckets, "domains");
     const cfRouteDomainsById = indexByKey(cfRouteDomains, "guid");
-    const cfServiceInstances = _cfMergeBuckets(cfServiceInstancesBuckets, "service_instances").filter(
-      (instance) => instance.type === "managed"
-    );
+    const cfServiceInstances = _cfMergeBuckets(cfServiceInstancesBuckets, "service_instances");
     const cfServiceInstancesById = indexByKey(cfServiceInstances, "guid");
     const cfBindingStubs = cfBindingStubsRaw.filter((stub) =>
       Object.prototype.hasOwnProperty.call(cfServiceInstancesById, stub.relationships.service_instance.data.guid)
@@ -278,21 +276,29 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
 
     const cfBindings = await limiter(CF_API_CONCURRENCY, cfBindingStubs, async (stub) => {
       const instance = cfServiceInstancesById[stub.relationships.service_instance.data.guid];
-      const plan = cfServicePlansById[instance.relationships.service_plan.data.guid];
-      const offering = cfServiceOfferingsById[plan.relationships.service_offering.data.guid];
       const details = await _cfRequest(cfInfo, `/v3/service_credential_bindings/${stub.guid}/details`);
-      return {
+      const result = {
         id: stub.guid,
         createdAt: stub.created_at,
         updatedAt: stub.updated_at,
-        offeringId: offering.guid,
-        offeringName: offering.name,
-        planId: plan.guid,
-        planName: plan.name,
         instanceId: instance.guid,
         instanceName: instance.name,
+        instanceTags: instance.tags,
         credentials: details.credentials,
       };
+
+      if (instance.type === "managed") {
+        const plan = cfServicePlansById[instance.relationships.service_plan.data.guid];
+        const offering = cfServiceOfferingsById[plan.relationships.service_offering.data.guid];
+        Object.assign(result, {
+          offeringId: offering.guid,
+          offeringName: offering.name,
+          planId: plan.guid,
+          planName: plan.name,
+        });
+      }
+
+      return result;
     });
 
     const cfProcess = cfProcesses?.[0];
