@@ -32,7 +32,6 @@ const mockCfAppsPages = require("./__mock-data__/mockCfAppsPages.json");
 const mockCfProcess = require("./__mock-data__/mockCfProcess.json");
 const mockCfRoutes = require("./__mock-data__/mockCfRoutes.json");
 
-const mockCfEnvNoServices = require("./__mock-data__/mockCfEnvNoServices.json");
 const mockCfServicePlansEmpty = require("./__mock-data__/mockCfServicePlansEmpty.json");
 const mockCfBindingsEmpty = require("./__mock-data__/mockCfBindingsEmpty.json");
 
@@ -137,7 +136,6 @@ describe("context tests", () => {
     for (const mockCfAppsPage of mockCfAppsPages) {
       mockRequest.mockReturnValueOnce({ json: () => mockCfAppsPage });
     }
-    mockRequest.mockReturnValueOnce({ json: () => mockCfEnvNoServices });
 
     await expect(newContext()).resolves.toBeDefined();
     expect(mockRequest.mock.calls).toMatchSnapshot();
@@ -149,7 +147,6 @@ describe("context tests", () => {
     mockStatic.tryAccessSync.mockReturnValueOnce(true);
     mockStatic.tryReadJsonSync.mockReturnValueOnce({ regAppName: "reg-app" });
     mockRequest.mockReturnValueOnce({ json: () => mockCfApps });
-    mockRequest.mockReturnValueOnce({ json: () => mockCfEnvNoServices });
 
     const context = await newContext();
 
