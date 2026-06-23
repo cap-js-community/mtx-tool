@@ -286,6 +286,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
         updatedAt: stub.updated_at,
         instanceId: instance.guid,
         instanceName: instance.name,
+        instanceType: instance.type,
         instanceTags: instance.tags,
         credentials: details.credentials,
       };
