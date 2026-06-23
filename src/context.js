@@ -274,9 +274,6 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
       Object.prototype.hasOwnProperty.call(cfServiceInstancesById, stub.relationships.service_instance.data.guid)
     );
 
-    // TODO: re-consider all places where cfBindings are used for inclusion of user-provided services
-    // TODO: update coding for mtx uaasc to work with user-provided services, like it used to => test with notifications?
-
     const cfBindings = await limiter(CF_API_CONCURRENCY, cfBindingStubs, async (stub) => {
       const instance = cfServiceInstancesById[stub.relationships.service_instance.data.guid];
       const details = await _cfRequest(cfInfo, `/v3/service_credential_bindings/${stub.guid}/details`);
