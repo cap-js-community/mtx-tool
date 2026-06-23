@@ -40,6 +40,7 @@
         "updated_at": "2020-06-01T00:00:00Z",
         "name": "uaa-instance",
         "type": "managed",
+        "tags": ["xsuaa"],
         "relationships": {
           "service_plan": {
             "data": {

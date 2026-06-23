@@ -120,6 +120,10 @@ describe("context tests", () => {
         "id": "binding-uaa",
         "instanceId": "instance-uaa",
         "instanceName": "uaa-instance",
+        "instanceTags": [
+          "xsuaa",
+        ],
+        "instanceType": "managed",
         "offeringId": "offering-xsuaa",
         "offeringName": "xsuaa",
         "planId": "plan-xsuaa-application",

@@ -284,8 +284,8 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
         instanceId: instance.guid,
         instanceName: instance.name,
         instanceType: instance.type,
-        instanceTags: instance.tags,
-        credentials: details.credentials,
+        instanceTags: instance.tags ?? [],
+        credentials: details.credentials ?? {},
       };
 
       if (instance.type === "managed") {
