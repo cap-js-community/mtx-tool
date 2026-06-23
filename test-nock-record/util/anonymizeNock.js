@@ -12,8 +12,19 @@ const anonymizeUaaAuthCall = (call) => {
 const _anonymizeTransform = (nodePath) => nodePath.join("-");
 
 const _urlTransform = (nodePath, value) => {
+  value = value.trim();
   const serviceId = nodePath.join("-");
-  const url = new URL(/:\/\//g.test(value) ? value : `https://${value}`);
+  let url;
+  const isRelative = value.startsWith("/");
+  const hasNoProtocol = !/^(\w+:\/\/|data:|jdbc:|mailto:|file:)/g.test(value);
+  if (isRelative) {
+    url = new URL(value, "https://__fakedomain.com");
+  } else if (hasNoProtocol) {
+    url = new URL(`https://${value}`);
+  } else {
+    url = new URL(value);
+  }
+
   if (url.username) {
     url.username = `${serviceId}-username`;
   }
@@ -22,6 +33,13 @@ const _urlTransform = (nodePath, value) => {
   }
   if (url.search) {
     url.search = "";
+  }
+
+  if (hasNoProtocol) {
+    return url.toString().replace(/^https:\/\//, "");
+  }
+  if (isRelative) {
+    return url.toString().replace(/^https:\/\/__fakedomain.com/, "");
   }
   return url.toString();
 };
@@ -53,7 +71,10 @@ const sensitiveFieldTransforms = [
       const lowerKey = key.toLocaleLowerCase();
       return (
         ["url", "uri", "certurl"].some((part) => lowerKey.includes(part)) &&
-        !["urls", "uris"].some((part) => lowerKey.includes(part))
+        !["urls", "uris"].some((part) => lowerKey.includes(part)) &&
+        // fields with junk url
+        nodePath.slice(3).join("-") !== "metadata-sap-clusterScaleoutDashboardURL" &&
+        nodePath.slice(3).join("-") !== "metadata-sap-dashboardUrl"
       );
     },
     transform: _urlTransform,
@@ -194,7 +215,10 @@ const anonymizeNock = (calls) => {
     // "path": "/v1/service_bindings",
     if (
       /https:\/\/service-manager\.cfapps\.sap\.hana\.ondemand\.com:443/.test(call.scope) &&
-      /\/v1\/service_bindings.*/.test(call.path)
+      (/\/v1\/service_offerings.*/.test(call.path) ||
+        /\/v1\/service_plans.*/.test(call.path) ||
+        /\/v1\/service_instances.*/.test(call.path) ||
+        /\/v1\/service_bindings.*/.test(call.path))
     ) {
       return anonymizeServiceManagerCall(call);
     }
