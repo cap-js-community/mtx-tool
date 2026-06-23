@@ -13,6 +13,7 @@ nock.back.setMode("update");
 jest.setTimeout(300000); // 5 min
 
 const { Logger } = require("../src/shared/logger");
+const { resetMakeOneTime } = require("../src/shared/execution-control");
 const errorLoggerSpy = jest.spyOn(Logger.getInstance(), "error");
 
 const testTenantId = "5ecc7413-2b7e-414a-9496-ad4a61f6cccf";
@@ -21,7 +22,7 @@ const freshContext = async () => await newContext({ usePersistedCache: false, is
 
 describe("hdi nock", () => {
   afterEach(() => {
-    hdi._._reset();
+    resetMakeOneTime(hdi._._getHdiSharedPlanId);
     nock.restore();
   });
 
