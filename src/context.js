@@ -351,7 +351,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   };
 
   const processRawAppInfo = (appName, rawAppInfo, { requireServices, requireRoute } = {}) => {
-    const { cfApp, cfBuildpack, cfBindings, cfEnvVariables, cfRoute, cfRouteDomain, cfProcess } = rawAppInfo;
+    const { cfApp, cfBuildpack, cfBindings, cfRoute, cfRouteDomain, cfProcess } = rawAppInfo;
 
     let cfBinding = null;
     if (Array.isArray(requireServices)) {
@@ -389,7 +389,6 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
       cfProcess,
       cfBinding,
       cfBindings,
-      cfEnvVariables,
       cfRouteUrl,
       cfSsh,
     };
