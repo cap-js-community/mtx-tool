@@ -325,7 +325,6 @@ const APP_COMMAND_INFOS = Object.freeze({
     optionalPassArgs: [PASS_ARG.TENANT_ID],
     optionalFlagArgs: [FLAG_ARG.TIMESTAMPS, FLAG_ARG.JSON_OUTPUT],
     callback: hdi.hdiList,
-    useCache: false,
     readonly: true,
   },
   HDI_LONG_LIST: {
@@ -333,7 +332,6 @@ const APP_COMMAND_INFOS = Object.freeze({
     optionalPassArgs: [PASS_ARG.TENANT_ID],
     optionalFlagArgs: [FLAG_ARG.JSON_OUTPUT, FLAG_ARG.REVEAL],
     callback: hdi.hdiLongList,
-    useCache: false,
     readonly: true,
   },
   HDI_TUNNEL_TENANT: {
@@ -350,7 +348,6 @@ const APP_COMMAND_INFOS = Object.freeze({
     optionalPassArgs: [PASS_ARG.TENANT_ID],
     optionalFlagArgs: [FLAG_ARG.TIMESTAMPS, FLAG_ARG.JSON_OUTPUT],
     callback: svm.serviceManagerList,
-    useCache: false,
     readonly: true,
   },
   SVM_LONG_LIST: {
@@ -358,7 +355,6 @@ const APP_COMMAND_INFOS = Object.freeze({
     optionalPassArgs: [PASS_ARG.TENANT_ID],
     optionalFlagArgs: [FLAG_ARG.JSON_OUTPUT, FLAG_ARG.REVEAL],
     callback: svm.serviceManagerLongList,
-    useCache: false,
     readonly: true,
   },
   SVM_REPAIR_BINDINGS: {

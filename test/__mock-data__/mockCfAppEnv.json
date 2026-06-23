@@ -1,0 +1,30 @@
+{
+  "environment_variables": {
+    "NODE_ENV": "production"
+  },
+  "system_env_json": {
+    "VCAP_SERVICES": {
+      "xsuaa": [
+        {
+          "label": "xsuaa",
+          "plan": "application",
+          "name": "uaa-instance",
+          "credentials": {
+            "clientid": "test-clientid",
+            "clientsecret": "test-clientsecret",
+            "url": "https://test-tenant.authentication.sap.hana.ondemand.com"
+          }
+        }
+      ]
+    }
+  },
+  "application_env_json": {
+    "VCAP_APPLICATION": {
+      "application_id": "f84d681e-7123-442f-b8ea-2c747c11e145",
+      "application_name": "uaa-app",
+      "name": "uaa-app",
+      "space_id": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
+      "space_name": "cf-space"
+    }
+  }
+}

@@ -9,8 +9,7 @@ exports[`context tests can create context for paged cf apps 1`] = `
         "Authorization": "oauth-token",
       },
       "logged": false,
-      "path": "/v3/apps?space_guids=0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
-      "url": "https://api.cf.sap.hana.ondemand.com",
+      "url": "https://api.cf.sap.hana.ondemand.com/v3/apps?space_guids=0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
     },
   ],
   [
@@ -20,8 +19,7 @@ exports[`context tests can create context for paged cf apps 1`] = `
         "Authorization": "oauth-token",
       },
       "logged": false,
-      "path": "/v3/apps?page=2&per_page=50&space_guids=0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
-      "url": "https://api.cf.sap.hana.ondemand.com",
+      "url": "https://api.cf.sap.hana.ondemand.com/v3/apps?page=2&per_page=50&space_guids=0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
     },
   ],
 ]

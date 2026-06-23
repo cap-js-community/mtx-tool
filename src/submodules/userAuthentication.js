@@ -12,7 +12,7 @@ const _tokenDecode = (token) =>
 
 const _uaaUserInfo = async (context, token) => {
   const {
-    cfService: {
+    cfBinding: {
       credentials: { url: paasUrl, identityzone: paasZoneDomain },
     },
   } = await context.getUaaInfo();
@@ -54,8 +54,8 @@ const _uaaOutput = (token, { doDecode = false, doJsonOutput, userInfo } = {}) =>
 };
 
 const _getUaaToken = async (context, options) => {
-  const { cfService } = await context.getUaaInfo();
-  return await context.getCachedUaaTokenFromCredentials(cfService.credentials, options);
+  const { cfBinding } = await context.getUaaInfo();
+  return await context.getCachedUaaTokenFromCredentials(cfBinding.credentials, options);
 };
 
 const uaaDecode = async ([token], [doJsonOutput]) => {
@@ -87,16 +87,14 @@ const uaaUser = async (context, [username, password, tenant], [doDecode, doJsonO
 const _uaaSaasServiceToken = async (context, service, options = undefined) => {
   assert(isDashedWord(service), `argument "${service}" is not a valid service`);
   const {
-    cfService: { credentials: uaaCredentials },
-    cfEnvApp: { application_name: appName },
-    cfEnvServices,
+    cfBinding: { credentials: uaaCredentials },
+    cfAppName: appName,
+    cfBindings,
   } = await context.getUaaInfo();
-  let serviceCredentials = cfEnvServices[service]?.[0]?.credentials;
-  if (serviceCredentials === undefined) {
-    serviceCredentials = cfEnvServices["user-provided"]?.find((userProvidedService) =>
-      userProvidedService.tags.includes(service)
-    )?.credentials;
-  }
+  const serviceBinding = cfBindings.find(
+    (binding) => binding.offeringName === service || binding.instanceTags.includes(service)
+  );
+  let serviceCredentials = serviceBinding?.credentials;
   serviceCredentials = serviceCredentials?.uaa ?? serviceCredentials;
   assert(serviceCredentials, "service %s not bound to xsuaa app %s", service, appName);
 

@@ -65,7 +65,7 @@ const _getHdiSharedPlanId = makeOneTime(
 
 const _hdiInstancesServiceManager = async (context, { filterTenantId, doEnsureTenantLabel = true } = {}) => {
   const {
-    cfService: { credentials },
+    cfBinding: { credentials },
   } = await context.getHdiInfo();
   const { sm_url } = credentials;
   const token = await context.getCachedUaaTokenFromCredentials(credentials);
@@ -93,7 +93,7 @@ const _hdiBindingsServiceManager = async (
   { filterTenantId, doReveal = false, doAssertFoundSome = false, doEnsureTenantLabel = true } = {}
 ) => {
   const {
-    cfService: { credentials },
+    cfBinding: { credentials },
   } = await context.getHdiInfo();
   const { sm_url } = credentials;
   const token = await context.getCachedUaaTokenFromCredentials(credentials);

@@ -66,7 +66,7 @@ const regRequestConcurrency = parseIntWithFallback(
 const regPollFrequency = parseIntWithFallback(process.env[ENV.REG_FREQUENCY], REGISTRY_JOB_POLL_FREQUENCY_FALLBACK);
 
 const _callSms = async (context, reqOptions) => {
-  const credentials = (await context.getSmsInfo()).cfService.credentials;
+  const credentials = (await context.getSmsInfo()).cfBinding.credentials;
   const token = await context.getCachedUaaTokenFromCredentials(credentials);
   return await request({
     ...reqOptions,
@@ -76,7 +76,7 @@ const _callSms = async (context, reqOptions) => {
 };
 
 const _callReg = async (context, reqOptions) => {
-  const credentials = (await context.getRegInfo()).cfService.credentials;
+  const credentials = (await context.getRegInfo()).cfBinding.credentials;
   const token = await context.getCachedUaaTokenFromCredentials(credentials);
   return await request({
     ...reqOptions,
@@ -99,7 +99,7 @@ const _call = async (context, source, reqOptions) => {
 const _getSubscriptionsPage = async (context, source, { filterTenantId, size, page }) => {
   switch (source) {
     case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
-      const credentials = (await context.getSmsInfo()).cfService.credentials;
+      const credentials = (await context.getSmsInfo()).cfBinding.credentials;
       return await _callSms(context, {
         pathname: "/subscription-manager/v1/subscriptions",
         query: {
@@ -112,7 +112,7 @@ const _getSubscriptionsPage = async (context, source, { filterTenantId, size, pa
       });
     }
     case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
-      const credentials = (await context.getRegInfo()).cfService.credentials;
+      const credentials = (await context.getRegInfo()).cfBinding.credentials;
       return await _callReg(context, {
         pathname: "/saas-manager/v1/application/subscriptions",
         query: {
@@ -284,10 +284,10 @@ const registryLongListSubscriptions = async (context, [tenant], [, doOnlyStale, 
 const registryServiceConfig = async (context) => {
   return {
     ...(context.hasSmsInfo && {
-      smsServiceConfig: JSON.parse((await context.getSmsInfo()).cfService.credentials.app_urls),
+      smsServiceConfig: JSON.parse((await context.getSmsInfo()).cfBinding.credentials.app_urls),
     }),
     ...(context.hasRegInfo && {
-      regServiceConfig: JSON.parse((await context.getRegInfo()).cfService.credentials.appUrls),
+      regServiceConfig: JSON.parse((await context.getRegInfo()).cfBinding.credentials.appUrls),
     }),
   };
 };

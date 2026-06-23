@@ -3,10 +3,10 @@
     "total_results": 1,
     "total_pages": 1,
     "first": {
-      "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/routes?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&page=1&per_page=50"
+      "href": "https://api.cf.sap.hana.ondemand.com/v3/routes?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&include=domain&page=1&per_page=50"
     },
     "last": {
-      "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/routes?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&page=1&per_page=50"
+      "href": "https://api.cf.sap.hana.ondemand.com/v3/routes?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&include=domain&page=1&per_page=50"
     },
     "next": null,
     "previous": null
@@ -34,7 +34,30 @@
           "port": 8080,
           "protocol": "http1"
         }
-      ]
+      ],
+      "relationships": {
+        "space": {
+          "data": {
+            "guid": "0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+          }
+        },
+        "domain": {
+          "data": {
+            "guid": "d1b1b1b1-1111-2222-3333-444444444444"
+          }
+        }
+      }
     }
-  ]
+  ],
+  "included": {
+    "domains": [
+      {
+        "guid": "d1b1b1b1-1111-2222-3333-444444444444",
+        "created_at": "2019-01-01T00:00:00Z",
+        "updated_at": "2019-01-01T00:00:00Z",
+        "name": "cfapps.sap.hana.ondemand.com",
+        "internal": false
+      }
+    ]
+  }
 }

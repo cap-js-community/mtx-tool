@@ -46,13 +46,13 @@ const cdsPollFrequency = parseIntWithFallback(process.env[ENV.CDS_FREQUENCY], CD
 const _serverRequest = async (context, reqOptions = {}) => {
   const {
     cfRouteUrl,
-    cfService: { label, credentials },
+    cfBinding: { offeringName, credentials },
   } = await context.getCdsInfo();
-  assert(["xsuaa", "identity"].includes(label), "unknown auth service label %s", label);
+  assert(["xsuaa", "identity"].includes(offeringName), "unknown auth service offering %s", offeringName);
 
   let agent;
   let token;
-  switch (label) {
+  switch (offeringName) {
     case "xsuaa": {
       token = await context.getCachedUaaTokenFromCredentials(credentials);
       break;

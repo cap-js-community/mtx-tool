@@ -15,6 +15,8 @@ const {
   isObject,
   partition,
   randomString,
+  indexByKey,
+  clusterByKey,
 } = require("../shared/static");
 const { makeOneTime } = require("../shared/execution-control");
 const { assert } = require("../shared/error");
@@ -101,7 +103,7 @@ const _getQuery = (components) => {
 
 const _serviceManagerRequest = async (context, reqOptions = {}) => {
   const {
-    cfService: { credentials },
+    cfBinding: { credentials },
   } = await context.getHdiInfo();
   const url = credentials.sm_url;
   const auth = { token: await context.getCachedUaaTokenFromCredentials(credentials) };
@@ -207,26 +209,8 @@ const _requestBindings = async (
   return bindings;
 };
 
-const _indexByKey = (dataObjects, key) =>
-  dataObjects.reduce((result, dataObject) => {
-    const identifier = dataObject[key];
-    result[identifier] = dataObject;
-    return result;
-  }, {});
-
-const _clusterByKey = (dataObjects, key) =>
-  dataObjects.reduce((result, dataObject) => {
-    const identifier = dataObject[key];
-    if (result[identifier]) {
-      result[identifier].push(dataObject);
-    } else {
-      result[identifier] = [dataObject];
-    }
-    return result;
-  }, {});
-
 const _indexServicePlanNameById = (offerings, plans) => {
-  const offeringById = _indexByKey(offerings, "id");
+  const offeringById = indexByKey(offerings, "id");
   return plans.reduce((acc, plan) => {
     acc[plan.id] = `${offeringById[plan.service_offering_id].name}:${plan.name}`;
     return acc;
@@ -242,7 +226,7 @@ const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJs
   ]);
   const servicePlanNameById = _indexServicePlanNameById(offerings, plans);
   instances.sort(compareForTenantId);
-  const bindingsByInstance = _clusterByKey(bindings, "service_instance_id");
+  const bindingsByInstance = clusterByKey(bindings, "service_instance_id");
 
   if (doJsonOutput) {
     return {
@@ -375,7 +359,7 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
   instances.sort(compareForTenantId);
   bindings.sort(compareForUpdatedAtDesc);
   const servicePlanNameById = _indexServicePlanNameById(offerings, plans);
-  const bindingsByInstance = _clusterByKey(bindings, "service_instance_id");
+  const bindingsByInstance = clusterByKey(bindings, "service_instance_id");
   const changeQueue = new FunnelQueue(svmRequestConcurrency);
 
   for (const instance of instances) {
@@ -490,7 +474,7 @@ const _serviceManagerFreshBindings = async (
 
   bindings.sort(compareForUpdatedAtDesc);
   const servicePlanNameById = _indexServicePlanNameById(offerings, plans);
-  const bindingsByInstance = _clusterByKey(bindings, "service_instance_id");
+  const bindingsByInstance = clusterByKey(bindings, "service_instance_id");
 
   await limiter(svmRequestConcurrency, instances, async (instance) => {
     const [binding] = bindingsByInstance[instance.id] ?? [];
@@ -549,7 +533,7 @@ const _serviceManagerDelete = async (
   ]);
 
   if (doDeleteBindings) {
-    const instanceById = _indexByKey(instances, "id");
+    const instanceById = indexByKey(instances, "id");
     const filteredBindings = bindings.filter((binding) => instanceById[binding.service_instance_id]);
     await limiter(
       svmRequestConcurrency,
