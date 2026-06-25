@@ -10,6 +10,8 @@ const { outputFromLoggerPartitionFetch, anonymizeListTimestamps, collectRequestC
 nock.back.fixtures = pathlib.resolve(`${__dirname}/../../test-nock-record/__nock-fixtures__`);
 nock.back.setMode("lockdown");
 
+const { beforeExpandSharedRefs } = require("../../test-nock-record/util/sharedFixtures");
+
 jest.mock("../../src/shared/static", () => require("../__mocks/sharedNockPlayback/static"));
 
 const { Logger: MockLogger } = require("../../src/shared/logger");
@@ -100,7 +102,7 @@ describe("reg nock tests", () => {
 
   describe("reg list", () => {
     test("reg list basic", async () => {
-      await nock.back("reg-list.json");
+      await nock.back("reg-list.json", { before: beforeExpandSharedRefs });
       const output = await reg.registryListSubscriptions(await freshContext(), [], [false, false, false, false]);
       expect(output).toMatchInlineSnapshot(`
         "#   consumerTenantId                      subscriptionId                        globalAccountId                       subdomain                       appName      plan                  state       url                                                                 
@@ -141,7 +143,7 @@ describe("reg nock tests", () => {
     });
 
     test("reg list timestamps", async () => {
-      await nock.back("reg-list.json");
+      await nock.back("reg-list.json", { before: beforeExpandSharedRefs });
       const output = await reg.registryListSubscriptions(await freshContext(), [], [true, false, false, false]);
       expect(anonymizeListTimestamps(output)).toMatchInlineSnapshot(`
         "#   consumerTenantId                      subscriptionId                        globalAccountId                       subdomain                       appName      plan                  state       url                                                                   created_on  updated_on
@@ -176,14 +178,14 @@ describe("reg nock tests", () => {
     });
 
     test("reg list json", async () => {
-      await nock.back("reg-list.json");
+      await nock.back("reg-list.json", { before: beforeExpandSharedRefs });
       const output = await reg.registryListSubscriptions(await freshContext(), [], [true, true, false, false]);
       expect(output).toMatchSnapshot();
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
 
     test("reg list filtered basic", async () => {
-      await nock.back("reg-list-filtered.json");
+      await nock.back("reg-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await reg.registryListSubscriptions(
         await freshContext(),
         [testTenantId],
@@ -203,7 +205,7 @@ describe("reg nock tests", () => {
     });
 
     test("reg list filtered timestamps", async () => {
-      await nock.back("reg-list-filtered.json");
+      await nock.back("reg-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await reg.registryListSubscriptions(
         await freshContext(),
         [testTenantId],
@@ -217,7 +219,7 @@ describe("reg nock tests", () => {
     });
 
     test("reg list filtered json", async () => {
-      await nock.back("reg-list-filtered.json");
+      await nock.back("reg-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await reg.registryListSubscriptions(
         await freshContext(),
         [testTenantId],
@@ -230,7 +232,7 @@ describe("reg nock tests", () => {
 
   describe("reg long list", () => {
     test("reg long list basic/json", async () => {
-      await nock.back("reg-long-list.json");
+      await nock.back("reg-long-list.json", { before: beforeExpandSharedRefs });
       const output = await reg.registryLongListSubscriptions(await freshContext(), [], [false, false, false]);
       expect(output).toMatchSnapshot();
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
@@ -243,7 +245,7 @@ describe("reg nock tests", () => {
     });
 
     test("reg long list filtered basic/json", async () => {
-      await nock.back("reg-long-list-filtered.json");
+      await nock.back("reg-long-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await reg.registryLongListSubscriptions(await freshContext(), [], [false, false, false]);
       expect(output).toMatchSnapshot();
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
@@ -257,7 +259,7 @@ describe("reg nock tests", () => {
   });
 
   test("reg service config", async () => {
-    await nock.back("reg-service-config.json");
+    await nock.back("reg-service-config.json", { before: beforeExpandSharedRefs });
     const output = await reg.registryServiceConfig(await freshContext());
     expect(output).toMatchInlineSnapshot(`
       {
@@ -303,7 +305,7 @@ describe("reg nock tests", () => {
   });
 
   test("reg update tenant", async () => {
-    await nock.back("reg-update-deps-tenant.json");
+    await nock.back("reg-update-deps-tenant.json", { before: beforeExpandSharedRefs });
     await expect(reg.registryUpdateDependencies(await freshContext(), [testTenantId], [])).resolves
       .toMatchInlineSnapshot(`
             [
@@ -333,7 +335,7 @@ describe("reg nock tests", () => {
   });
 
   test("reg update tenant all", async () => {
-    await nock.back("reg-update-deps-all.json");
+    await nock.back("reg-update-deps-all.json", { before: beforeExpandSharedRefs });
     await expect(reg.registryUpdateAllDependencies(await freshContext(), undefined, [])).resolves
       .toMatchInlineSnapshot(`
             [
@@ -658,7 +660,7 @@ describe("reg nock tests", () => {
   });
 
   test("reg update tenant application url with tenant", async () => {
-    await nock.back("reg-update-url-tenant.json");
+    await nock.back("reg-update-url-tenant.json", { before: beforeExpandSharedRefs });
     await expect(reg.registryUpdateApplicationURL(await freshContext(), [testTenantId], [])).resolves
       .toMatchInlineSnapshot(`
             [
@@ -681,7 +683,7 @@ describe("reg nock tests", () => {
   });
 
   test("reg update tenant application url all", async () => {
-    await nock.back("reg-update-url-all.json");
+    await nock.back("reg-update-url-all.json", { before: beforeExpandSharedRefs });
     await expect(reg.registryUpdateApplicationURL(await freshContext(), [], [])).resolves.toMatchInlineSnapshot(`
             [
               {

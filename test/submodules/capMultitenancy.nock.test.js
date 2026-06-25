@@ -10,6 +10,8 @@ const { outputFromLoggerPartitionFetch, anonymizeListTimestamps, collectRequestC
 nock.back.fixtures = pathlib.resolve(`${__dirname}/../../test-nock-record/__nock-fixtures__`);
 nock.back.setMode("lockdown");
 
+const { beforeExpandSharedRefs } = require("../../test-nock-record/util/sharedFixtures");
+
 jest.mock("../../src/shared/static", () => require("../__mocks/sharedNockPlayback/static"));
 
 const { Logger: MockLogger } = require("../../src/shared/logger");
@@ -79,7 +81,7 @@ describe("cds nock tests", () => {
 
   describe("cds list", () => {
     test("cds list basic", async () => {
-      await nock.back("cds-list.json");
+      await nock.back("cds-list.json", { before: beforeExpandSharedRefs });
       const output = await cds.cdsList(await freshContext(), [], [false, false]);
       expect(output).toMatchInlineSnapshot(`
         "#   tenantId                              subdomain                       appName      eventType
@@ -119,7 +121,7 @@ describe("cds nock tests", () => {
     });
 
     test("cds list timestamped", async () => {
-      await nock.back("cds-list.json");
+      await nock.back("cds-list.json", { before: beforeExpandSharedRefs });
       const output = await cds.cdsList(await freshContext(), [], [true, false]);
       expect(anonymizeListTimestamps(output)).toMatchInlineSnapshot(`
         "#   tenantId                              subdomain                       appName      eventType  created_on  updated_on
@@ -154,14 +156,14 @@ describe("cds nock tests", () => {
     });
 
     test("cds list json", async () => {
-      await nock.back("cds-list.json");
+      await nock.back("cds-list.json", { before: beforeExpandSharedRefs });
       const output = await cds.cdsList(await freshContext(), [], [false, true]);
       expect(output).toMatchSnapshot();
       expect(mockLogger.error.mock.calls).toHaveLength(0);
     });
 
     test("cds list filtered basic", async () => {
-      await nock.back("cds-list-filtered.json");
+      await nock.back("cds-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await cds.cdsList(await freshContext(), [testTenantId], [false, false]);
       expect(output).toMatchInlineSnapshot(`
         "tenantId                              subdomain       appName      eventType
@@ -176,7 +178,7 @@ describe("cds nock tests", () => {
     });
 
     test("cds list filtered timestamped", async () => {
-      await nock.back("cds-list-filtered.json");
+      await nock.back("cds-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await cds.cdsList(await freshContext(), [testTenantId], [true, false]);
       expect(anonymizeListTimestamps(output)).toMatchInlineSnapshot(`
         "tenantId                              subdomain       appName      eventType  created_on  updated_on
@@ -186,7 +188,7 @@ describe("cds nock tests", () => {
     });
 
     test("cds list filtered json", async () => {
-      await nock.back("cds-list-filtered.json");
+      await nock.back("cds-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await cds.cdsList(await freshContext(), [testTenantId], [false, true]);
       expect(output).toMatchSnapshot();
       expect(mockLogger.error.mock.calls).toHaveLength(0);
@@ -195,7 +197,7 @@ describe("cds nock tests", () => {
 
   describe("cds long list", () => {
     test("cds long list basic/json", async () => {
-      await nock.back("cds-long-list.json");
+      await nock.back("cds-long-list.json", { before: beforeExpandSharedRefs });
       const output = await cds.cdsLongList(await freshContext(), []);
       expect(output).toMatchSnapshot();
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
@@ -207,7 +209,7 @@ describe("cds nock tests", () => {
     });
 
     test("cds long list filtered basic/json", async () => {
-      await nock.back("cds-long-list-filtered.json");
+      await nock.back("cds-long-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await cds.cdsLongList(await freshContext(), [testTenantId]);
       expect(output).toMatchSnapshot();
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
@@ -220,7 +222,7 @@ describe("cds nock tests", () => {
   });
 
   test("cds upgrade tenant and auto-upgrade", async () => {
-    await nock.back("cds-upgrade-tenant.json");
+    await nock.back("cds-upgrade-tenant.json", { before: beforeExpandSharedRefs });
     expect(await cds.cdsUpgradeTenant(await freshContext(), [testTenantId], [true])).toBeUndefined();
     expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
@@ -236,7 +238,7 @@ describe("cds nock tests", () => {
   });
 
   test("cds upgrade all", async () => {
-    await nock.back("cds-upgrade-all.json");
+    await nock.back("cds-upgrade-all.json", { before: beforeExpandSharedRefs });
     expect(await cds.cdsUpgradeAll(await freshContext(), null, [false, false])).toBeUndefined();
     expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
