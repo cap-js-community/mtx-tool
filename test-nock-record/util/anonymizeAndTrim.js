@@ -3,6 +3,8 @@
 const { format } = require("util");
 const { gunzipSync } = require("zlib");
 
+const { collapseSharedRefs } = require("./sharedFixtures");
+
 const anonymizeUaaAuthCall = (call) => {
   Reflect.deleteProperty(call, "body"); // NOTE: this shouldn't work, because it makes the calls ambiguous, but currently it does...
   call.response.access_token = call.response.access_token.replace(/./g, "0");
@@ -164,13 +166,41 @@ const anonymizeCdsProvisioningCall = (call) => {
   return call;
 };
 
+const trimCfServicePlansCall = (call) => {
+  const response = call.response;
+  const trimmedResources = response.resources.map((plan) => ({
+    guid: plan.guid,
+    name: plan.name,
+    relationships: {
+      service_offering: {
+        data: { guid: plan?.relationships?.service_offering?.data?.guid },
+      },
+    },
+  }));
+  let trimmedIncluded;
+  if (response.included && Array.isArray(response.included.service_offerings)) {
+    trimmedIncluded = {
+      service_offerings: response.included.service_offerings.map((offering) => ({
+        guid: offering.guid,
+        name: offering.name,
+      })),
+    };
+  }
+  call.response = {
+    pagination: response.pagination,
+    resources: trimmedResources,
+    ...(trimmedIncluded && { included: trimmedIncluded }),
+  };
+  return call;
+};
+
 const isGzippedCall = (call) => {
   const contentEndcodingIndex = call.rawHeaders.findIndex((entry) => entry === "content-encoding");
   return contentEndcodingIndex === -1 ? false : call.rawHeaders[contentEndcodingIndex + 1] === "gzip";
 };
 
-const anonymizeNock = (calls) => {
-  return calls.map((call) => {
+const anonymizeAndTrim = (calls) => {
+  const processed = calls.map((call) => {
     // gunzip responses
     if (isGzippedCall(call)) {
       const contentEndcodingIndex = call.rawHeaders.findIndex((entry) => entry === "content-encoding");
@@ -263,14 +293,16 @@ const anonymizeNock = (calls) => {
       return anonymizeCdsProvisioningCall(call);
     }
 
-    // ##### PASS CF
+    // ##### PASS/TRIM CF
     // "scope": "https://api.cf.sap.hana.ondemand.com:443",
     // "path": "/v3/apps", "/v3/routes", "\/v3\/service_plans"
-    if (
-      /https:\/\/api\.cf\.[a-z]+\.hana\.ondemand\.com:443/.test(call.scope) &&
-      (/\/v3\/apps/.test(call.path) || /\/v3\/routes/.test(call.path) || /\/v3\/service_plans/.test(call.path))
-    ) {
-      return call;
+    if (/https:\/\/api\.cf\.[a-z]+\.hana\.ondemand\.com:443/.test(call.scope)) {
+      if (/\/v3\/apps/.test(call.path) || /\/v3\/routes/.test(call.path)) {
+        return call;
+      }
+      if (/\/v3\/service_plans/.test(call.path)) {
+        return trimCfServicePlansCall(call);
+      }
     }
 
     // ##### PASS CDS
@@ -285,8 +317,10 @@ const anonymizeNock = (calls) => {
 
     throw new Error(`unhandled scope ${call.scope} and path ${call.path}`);
   });
+
+  return collapseSharedRefs(processed);
 };
 
 module.exports = {
-  anonymizeNock,
+  anonymizeAndTrim,
 };
