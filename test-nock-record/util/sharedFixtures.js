@@ -7,25 +7,23 @@
 // semantically identical across nearly all fixture files. Storing the same
 // large payload 28 times in __nock-fixtures__/*.json bloats the repo for no
 // reason. Instead we store one canonical copy in __nock-fixtures__/shared/<key>.json
-// and reference it from per-test fixtures with a tiny sentinel response:
+// and reference it from per-test fixtures with a top-level sentinel call:
 //
-//   { "response": { "$nockRef": "service_plans" } }
+//   { "$nockRef": "service_plans" }
 //
-// On record:  collapseSharedRefs(calls) replaces matching calls with sentinels.
+// The sentinel replaces a contiguous run of matching calls in the recorded
+// fixture; on replay it re-expands to the full set of calls from shared/.
+//
+// On record:  collapseSharedRefs(calls) replaces matching runs with sentinels.
 // On replay:  expandSharedRefs(defs) re-inflates sentinels back into full defs
 //             before nock.define turns them into interceptors.
 //
-// A "shared entry" describes one logical upstream resource:
-//   - key:      filename stem under __nock-fixtures__/shared/<key>.json
-//   - match(call): true if this call corresponds to that resource
-//   - expand(stubCall, sharedEntries): produces the full call(s) to register;
-//                                      returns a single call OR an array (some
-//                                      resources are paged and one stub stands
-//                                      in for multiple defs).
+// A SHARED_ENTRIES entry describes one logical upstream resource:
+//   - key:           filename stem under __nock-fixtures__/shared/<key>.json
+//   - matcher(call): returns true if a recorded call belongs to this resource
 //
-// The shared json file format is whatever expand() can consume — typically the
-// raw recorded call(s) themselves, so the on-disk representation is just the
-// nock-defs that were lifted out.
+// The shared json file is just an array of recorded nock-defs — the same shape
+// as a per-test fixture, holding the calls that were lifted out.
 
 const pathlib = require("path");
 const fs = require("fs");

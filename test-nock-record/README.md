@@ -12,7 +12,7 @@ This README documents how the two halves fit together and the project-specific b
 test-nock-record/
   __nock-fixtures__/         per-test recorded interactions
     <fixture>.json           one file per recording test
-    shared/                  canonical copies of payloads
+    shared/<key>.json        canonical copies of payloads shared across fixtures
   __snapshots__/             jest snapshots for the recording tests
   util/
     anonymizeAndTrim.js      record-side post-processor (afterRecord hook)
@@ -35,19 +35,21 @@ Recording rewrites the fixture every time, so a recording run is destructive. CI
 
 ## The `$nockRef` mechanism
 
-The CF API forces every fixture that touches an app to also pull the full `/v3/service_plans?include=service_offering` catalogue. That payload is ~510 KB and is semantically identical across every fixture in the suite. Storing it 27 times is wasteful, so we factor it out:
+Some upstream responses are large and repeat across many fixtures. The clearest example: every test that touches an app pulls the full CF `/v3/service_plans?include=service_offering` catalogue (3 pages, ~510 KB after anonymization) via `_cfServiceInfoMaps` in `src/context.js`. Storing it once per fixture is wasteful, so we factor it out:
 
-1. On record, `anonymizeAndTrim` (the `afterRecord` hook) trims the catalogue down to the fields the production code actually reads (`guid`, `name`, the `service_offering` relationship), then runs `collapseSharedRefs` to replace the trimmed paged calls with a single sentinel entry:
+1. On record, `anonymizeAndTrim` (the `afterRecord` hook) first trims known-large payloads down to the fields production code actually reads (e.g. service_plans → `guid`, `name`, the `service_offering` relationship), then runs `collapseSharedRefs`. That replaces each **contiguous run** of calls matching a `SHARED_ENTRIES` entry with a single sentinel at the position the run began:
 
    ```json
    { "$nockRef": "service_plans" }
    ```
 
-   The first time this happens for a new shared key, the canonical payload is written to `__nock-fixtures__/shared/<key>.json`; subsequent records reuse it.
+   A later, non-contiguous match becomes its own sentinel, so the order of unmatched calls relative to the sentinel positions is preserved.
+
+   The canonical payload for each `<key>` lives at `__nock-fixtures__/shared/<key>.json` and is a plain array of nock-defs — same shape as a per-test fixture.
 
 2. On playback, the test passes `before: beforeExpandSharedRefs` to `nock.back`. The hook walks the loaded defs, swaps every `$nockRef` stub back for the full set of calls in `shared/<key>.json`, and lets nock build interceptors from the result.
 
-Adding more shared payloads is a matter of dropping a new entry into `SHARED_ENTRIES` in `util/sharedFixtures.js`. Anything matched by `match(call)` gets collapsed; multi-call entries (`isMultiCall: true`) collapse all paged calls into a single sentinel.
+Adding more shared payloads is a matter of dropping a new entry into `SHARED_ENTRIES` in `util/sharedFixtures.js`. Each entry has just two fields: `key` (filename stem) and `matcher(call)` (returns true for calls that should be lifted out).
 
 ## Anonymization
 
