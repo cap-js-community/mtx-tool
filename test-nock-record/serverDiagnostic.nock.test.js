@@ -13,7 +13,7 @@ const nock = require("nock");
 
 const { newContext } = require("../src/context");
 const srv = require("../src/submodules/serverDiagnostic");
-const { anonymizeNock } = require("./util/anonymizeNock");
+const { anonymizeAndTrim } = require("./util/anonymizeAndTrim");
 
 nock.back.fixtures = pathlib.resolve(`${__dirname}/__nock-fixtures__`);
 nock.back.setMode("update");
@@ -31,28 +31,28 @@ describe("srv nock", () => {
   });
 
   test("record srv env default", async () => {
-    const { nockDone } = await nock.back("srv-env-default.json", { afterRecord: anonymizeNock });
+    const { nockDone } = await nock.back("srv-env-default.json", { afterRecord: anonymizeAndTrim });
     await srv.serverEnvironment(await freshContext(), []);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
 
   test("record srv env custom-app", async () => {
-    const { nockDone } = await nock.back("srv-env-custom.json", { afterRecord: anonymizeNock });
+    const { nockDone } = await nock.back("srv-env-custom.json", { afterRecord: anonymizeAndTrim });
     await srv.serverEnvironment(await freshContext(), ["afc-frontend"]);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
 
   test("record srv certificates default", async () => {
-    const { nockDone } = await nock.back("srv-cert-default.json", { afterRecord: anonymizeNock });
+    const { nockDone } = await nock.back("srv-cert-default.json", { afterRecord: anonymizeAndTrim });
     await srv.serverCertificates(await freshContext(), []);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
 
   test("record srv certificates custom", async () => {
-    const { nockDone } = await nock.back("srv-cert-custom.json", { afterRecord: anonymizeNock });
+    const { nockDone } = await nock.back("srv-cert-custom.json", { afterRecord: anonymizeAndTrim });
     await srv.serverCertificates(await freshContext(), ["afc-frontend", "0"]);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);

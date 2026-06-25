@@ -5,7 +5,7 @@ const nock = require("nock");
 
 const { newContext } = require("../src/context");
 const hdi = require("../src/submodules/hanaManagement");
-const { anonymizeNock } = require("./util/anonymizeNock");
+const { anonymizeAndTrim } = require("./util/anonymizeAndTrim");
 
 nock.back.fixtures = pathlib.resolve(`${__dirname}/__nock-fixtures__`);
 nock.back.setMode("update");
@@ -27,28 +27,28 @@ describe("hdi nock", () => {
   });
 
   test("record hdi list basic", async () => {
-    const { nockDone } = await nock.back("hdi-list.json", { afterRecord: anonymizeNock });
+    const { nockDone } = await nock.back("hdi-list.json", { afterRecord: anonymizeAndTrim });
     await hdi.hdiList(await freshContext(), [], [false, false]);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
 
   test("record hdi list filtered", async () => {
-    const { nockDone } = await nock.back("hdi-list-filtered.json", { afterRecord: anonymizeNock });
+    const { nockDone } = await nock.back("hdi-list-filtered.json", { afterRecord: anonymizeAndTrim });
     await hdi.hdiList(await freshContext(), [testTenantId], [false, false]);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
 
   test("record hdi long list basic", async () => {
-    const { nockDone } = await nock.back("hdi-long-list.json", { afterRecord: anonymizeNock });
+    const { nockDone } = await nock.back("hdi-long-list.json", { afterRecord: anonymizeAndTrim });
     await hdi.hdiLongList(await freshContext(), [], [false, false]);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
 
   test("record hdi long list filtered", async () => {
-    const { nockDone } = await nock.back("hdi-long-list-filtered.json", { afterRecord: anonymizeNock });
+    const { nockDone } = await nock.back("hdi-long-list-filtered.json", { afterRecord: anonymizeAndTrim });
     await hdi.hdiLongList(await freshContext(), [testTenantId], [false, false]);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
