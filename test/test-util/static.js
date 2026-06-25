@@ -1,6 +1,7 @@
 "use strict";
 const util = require("util");
 const { partition } = require("../../src/shared/static");
+const { expandSharedRefs } = require("../../test-nock-record/util/sharedFixtures");
 
 const outputFromLogger = (calls) => calls.map((args) => util.format(...args)).join("\n");
 
@@ -20,7 +21,7 @@ const anonymizeListTimestamps = (output) =>
     .replace(/\(\d+ days? ago\) */g, "(x days ago)  ");
 
 const collectRequestCount = (requests) =>
-  requests.reduce((acc, request) => {
+  expandSharedRefs(requests).reduce((acc, request) => {
     const key = `${request.method} ${request.scope}`;
     if (!acc[key]) {
       acc[key] = 0;
