@@ -89,24 +89,31 @@ const _writeShared = (ref, calls) => {
 // preserved.
 const collapseSharedRefs = (calls) => {
   const result = [];
-  let prevRef = null;
+  let pendingRef = null;
+  let pendingCount = 0;
+  const flushPending = () => {
+    if (pendingRef !== null) {
+      result.push({ [NOCK_REF_KEY]: pendingRef, count: pendingCount });
+      pendingRef = null;
+      pendingCount = 0;
+    }
+  };
   for (const call of calls) {
     const entry = SHARED_ENTRIES.find((e) => e.matcher(call));
-    if (!entry) {
+    const ref = entry ? _refOf(entry, call) : null;
+    if (ref !== null && ref === pendingRef) {
+      pendingCount += 1;
+      continue;
+    }
+    flushPending();
+    if (ref !== null) {
+      pendingRef = ref;
+      pendingCount = 1;
+    } else {
       result.push(call);
-      prevRef = null;
-      continue;
     }
-    const ref = _refOf(entry, call);
-    if (ref === prevRef) {
-      // extend the current run by bumping the count on the most recent sentinel
-      const sentinel = result[result.length - 1];
-      sentinel.count = (sentinel.count || 1) + 1;
-      continue;
-    }
-    result.push({ [NOCK_REF_KEY]: ref });
-    prevRef = ref;
   }
+  flushPending();
   return result;
 };
 
