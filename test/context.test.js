@@ -154,6 +154,43 @@ describe("context tests", () => {
     );
   });
 
+  test("getCfEnv inlines VCAP_SERVICES from VCAP_SERVICES_FILE_PATH via cf ssh", async () => {
+    mockStatic.spawnAsync.mockReturnValueOnce(["oauth-token"]);
+    mockStatic.tryReadJsonSync.mockReturnValueOnce(mockCfConfig);
+    mockStatic.tryAccessSync.mockReturnValueOnce(true);
+    mockStatic.tryReadJsonSync.mockReturnValueOnce(mockRuntimeConfig);
+    mockRequest.mockReturnValueOnce({ json: () => mockCfApps });
+
+    const context = await newContext();
+
+    const filePath = "./vcap-services.json";
+    const fileBackedServices = {
+      xsuaa: [
+        {
+          label: "xsuaa",
+          plan: "application",
+          name: "uaa-instance",
+          credentials: { clientid: "file-clientid" },
+        },
+      ],
+    };
+    const cfAppEnvWithFilePath = {
+      ...mockCfAppEnv,
+      system_env_json: { VCAP_SERVICES_FILE_PATH: filePath },
+    };
+
+    mockRequest.mockReturnValueOnce({ json: () => cfAppEnvWithFilePath });
+    mockStatic.spawnAsync.mockReturnValueOnce([JSON.stringify(fileBackedServices), ""]);
+
+    const env = await context.getCfEnv("uaa-app");
+    expect(env.system_env_json.VCAP_SERVICES).toEqual(fileBackedServices);
+    expect(mockStatic.spawnAsync).toHaveBeenLastCalledWith(
+      "cf",
+      ["ssh", "uaa-app", "--command", `cat ${filePath}`],
+      expect.any(Object)
+    );
+  });
+
   test("can create context for paged cf apps", async () => {
     mockStatic.spawnAsync.mockReturnValueOnce(["oauth-token"]);
     mockStatic.tryReadJsonSync.mockReturnValueOnce(mockCfConfig);
