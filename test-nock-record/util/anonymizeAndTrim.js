@@ -319,11 +319,11 @@ const anonymizeAndTrim = (calls) => {
       if (/^\/v3\/apps\?space_guids=/.test(call.path)) {
         return trimCfAppsListCall(call);
       }
-      if (/\/v3\/routes/.test(call.path)) {
-        return call;
-      }
       if (/\/v3\/service_plans/.test(call.path)) {
         return trimCfServicePlansCall(call);
+      }
+      if (/\/v3\/apps/.test(call.path) || /\/v3\/routes/.test(call.path)) {
+        return call;
       }
     }
 

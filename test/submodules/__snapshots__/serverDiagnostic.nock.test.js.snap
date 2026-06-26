@@ -115,7 +115,7 @@ exports[`srv nock tests srv env custom 1`] = `
   "VCAP_SERVICES": {
     "application-logs": [
       {
-        "binding_guid": "f7f1fafc-ce1f-4185-b992-b18056b778e5",
+        "binding_guid": "3a671559-ed67-4778-b853-65a542fc3f0e",
         "binding_name": null,
         "credentials": {},
         "instance_guid": "393a971c-77c1-4930-a373-f7345e2b2527",
@@ -131,7 +131,7 @@ exports[`srv nock tests srv env custom 1`] = `
     ],
     "business-logging": [
       {
-        "binding_guid": "221bc127-c39f-4524-9f28-3432f923e579",
+        "binding_guid": "93a2e4ea-1c85-4a8d-8ed5-3ceedd2213e8",
         "binding_name": null,
         "credentials": {
           "LPSCallbackDependencyName": "businesslogging-sb-prod",
@@ -200,7 +200,7 @@ exports[`srv nock tests srv env custom 1`] = `
     ],
     "dynatrace": [
       {
-        "binding_guid": "9cda18cd-d0c5-4b34-bd71-8ea527199ac9",
+        "binding_guid": "c5ef7707-1c62-4067-be85-e753068cb750",
         "binding_name": null,
         "credentials": {
           "apitoken": "dynatrace-0-credentials-apitoken",
@@ -225,7 +225,7 @@ exports[`srv nock tests srv env custom 1`] = `
     ],
     "html5-apps-repo": [
       {
-        "binding_guid": "b73a3e68-b4a4-412e-bd9e-262a6ca965e5",
+        "binding_guid": "c01f9888-c3bb-4d31-a652-c31f9f752898",
         "binding_name": null,
         "credentials": {
           "bindable": true,
@@ -279,14 +279,14 @@ exports[`srv nock tests srv env custom 1`] = `
     ],
     "identity": [
       {
-        "binding_guid": "35d583cc-838a-4bf9-9f2b-9fcecf19d80f",
+        "binding_guid": "29b32515-589a-4e11-b58e-6d28dc36cc20",
         "binding_name": null,
         "credentials": {
           "app_tid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
           "authorization_endpoint": "https://awdsp8ef4.accounts400.ondemand.com/oauth2/authorize",
           "btp-tenant-api": "https://api.authentication.sap.hana.ondemand.com",
           "certificate": "identity-0-credentials-certificate",
-          "certificate_expires_at": "2026-09-20T20:01:51Z",
+          "certificate_expires_at": "2026-09-23T20:03:21Z",
           "clientid": "identity-0-credentials-clientid",
           "credential-type": "X509_GENERATED",
           "domain": "accounts400.ondemand.com",
@@ -311,7 +311,7 @@ exports[`srv nock tests srv env custom 1`] = `
     ],
     "portal": [
       {
-        "binding_guid": "affbaa0d-7edc-4285-9ab8-0dbc4107c930",
+        "binding_guid": "4538d190-0d9b-411e-9916-374fc7dae495",
         "binding_name": null,
         "credentials": {
           "endpoints": {
@@ -367,7 +367,7 @@ exports[`srv nock tests srv env custom 1`] = `
     ],
     "redis-cache": [
       {
-        "binding_guid": "2ad7bdda-dda0-46b1-b4e2-39df19f8b090",
+        "binding_guid": "4588eda4-1689-474c-982c-1acb5a6d9848",
         "binding_name": null,
         "credentials": {
           "cluster_mode": true,
@@ -395,7 +395,7 @@ exports[`srv nock tests srv env custom 1`] = `
     ],
     "theming": [
       {
-        "binding_guid": "36fe4dbf-7663-4dec-9675-0f110398eb1d",
+        "binding_guid": "10463842-23c8-44cc-8600-e4146638447d",
         "binding_name": null,
         "credentials": {
           "endpoints": {
@@ -443,7 +443,7 @@ exports[`srv nock tests srv env custom 1`] = `
     ],
     "ui5-flexibility-keyuser": [
       {
-        "binding_guid": "70eaac0a-cf76-4c5e-8dbb-a60370e7d099",
+        "binding_guid": "d2e7b5ae-66be-407a-91c6-5d058f91264f",
         "binding_name": null,
         "credentials": {
           "endpoints": {
@@ -493,37 +493,7 @@ exports[`srv nock tests srv env custom 1`] = `
     ],
     "user-provided": [
       {
-        "binding_guid": "3661d220-673b-41e4-807a-0609cd865543",
-        "binding_name": null,
-        "credentials": {
-          "instanceName": "afc-redis",
-          "sessionSecret": "user-provided-0-credentials-sessionSecret",
-          "storageType": "redis"
-        },
-        "instance_guid": "a8c5e8fe-6ea6-44be-8616-17689195d19c",
-        "instance_name": "afc-session-config",
-        "label": "user-provided",
-        "name": "afc-session-config",
-        "syslog_drain_url": null,
-        "tags": [],
-        "volume_mounts": []
-      },
-      {
-        "binding_guid": "81b1c1f4-c513-4f47-bf8b-9f62061dbb22",
-        "binding_name": null,
-        "credentials": {},
-        "instance_guid": "9c12b0fb-ab43-46fc-94e4-82eab5e541ce",
-        "instance_name": "afc-logging-hub",
-        "label": "user-provided",
-        "name": "afc-logging-hub",
-        "syslog_drain_url": "https://user-provided-1-syslog_drain_url-username:user-provided-1-syslog_drain_url-password@ingest-sf-068034bc-13cf-4be3-9589-3a751c760bea.cls-01.cloud.logs.services.sap.hana.ondemand.com/cfsyslog",
-        "tags": [
-          "cloud-logging"
-        ],
-        "volume_mounts": []
-      },
-      {
-        "binding_guid": "61db585b-5d4f-42a8-8c92-6ab2705c1414",
+        "binding_guid": "0e60897d-1897-4b3d-993e-981230846ae7",
         "binding_name": null,
         "credentials": {
           "endpoints": {
@@ -537,8 +507,8 @@ exports[`srv nock tests srv env custom 1`] = `
           "sap.cloud.service": "alert-notification",
           "uaa": {
             "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
-            "clientid": "user-provided-2-credentials-uaa-clientid",
-            "clientsecret": "user-provided-2-credentials-uaa-clientsecret",
+            "clientid": "user-provided-0-credentials-uaa-clientid",
+            "clientsecret": "user-provided-0-credentials-uaa-clientsecret",
             "credential-type": "binding-secret",
             "identityzone": "skyfin",
             "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
@@ -549,7 +519,7 @@ exports[`srv nock tests srv env custom 1`] = `
             "tenantmode": "shared",
             "uaadomain": "authentication.sap.hana.ondemand.com",
             "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
-            "verificationkey": "user-provided-2-credentials-uaa-verificationkey",
+            "verificationkey": "user-provided-0-credentials-uaa-verificationkey",
             "xsappname": "e9f2bb15-1b46-4ea6-8530-a89508081ec4!b5874|ans-business!b2187",
             "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
           }
@@ -563,11 +533,41 @@ exports[`srv nock tests srv env custom 1`] = `
           "alert-notification"
         ],
         "volume_mounts": []
+      },
+      {
+        "binding_guid": "51450433-74cf-4c04-8976-af3f1a1fb78f",
+        "binding_name": null,
+        "credentials": {
+          "instanceName": "afc-redis",
+          "sessionSecret": "user-provided-1-credentials-sessionSecret",
+          "storageType": "redis"
+        },
+        "instance_guid": "a8c5e8fe-6ea6-44be-8616-17689195d19c",
+        "instance_name": "afc-session-config",
+        "label": "user-provided",
+        "name": "afc-session-config",
+        "syslog_drain_url": null,
+        "tags": [],
+        "volume_mounts": []
+      },
+      {
+        "binding_guid": "b92c0eb7-3724-403e-8a8b-10ebd9080e06",
+        "binding_name": null,
+        "credentials": {},
+        "instance_guid": "9c12b0fb-ab43-46fc-94e4-82eab5e541ce",
+        "instance_name": "afc-logging-hub",
+        "label": "user-provided",
+        "name": "afc-logging-hub",
+        "syslog_drain_url": "https://user-provided-2-syslog_drain_url-username:user-provided-2-syslog_drain_url-password@ingest-sf-068034bc-13cf-4be3-9589-3a751c760bea.cls-01.cloud.logs.services.sap.hana.ondemand.com/cfsyslog",
+        "tags": [
+          "cloud-logging"
+        ],
+        "volume_mounts": []
       }
     ],
     "xsuaa": [
       {
-        "binding_guid": "08edc566-32a7-47e9-8c57-8420be5020f9",
+        "binding_guid": "169523c6-8a9c-47ba-bc61-bccc8d813399",
         "binding_name": null,
         "credentials": {
           "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
@@ -639,7 +639,7 @@ exports[`srv nock tests srv env default 1`] = `
   "VCAP_SERVICES": {
     "aicore": [
       {
-        "binding_guid": "32338c67-5390-4b98-beae-a2c4a8d03527",
+        "binding_guid": "99028c4d-64d0-4536-a045-efdbd7087d45",
         "binding_name": null,
         "credentials": {
           "appname": "cff72d89-f0b9-4c3d-b1e4-6e26bc874eaf!b5874|xsuaa_std!b77089",
@@ -669,7 +669,7 @@ exports[`srv nock tests srv env default 1`] = `
     ],
     "application-logs": [
       {
-        "binding_guid": "ef39db2f-b5c1-4e8c-89d4-e1de88d87a32",
+        "binding_guid": "fb417128-16b7-48c8-bdea-f7770d658c9a",
         "binding_name": null,
         "credentials": {},
         "instance_guid": "393a971c-77c1-4930-a373-f7345e2b2527",
@@ -685,7 +685,7 @@ exports[`srv nock tests srv env default 1`] = `
     ],
     "auditlog": [
       {
-        "binding_guid": "40a2673f-7fbb-4d01-b0c4-5f520f8d23d8",
+        "binding_guid": "4171224c-584e-4ff1-96c5-e023c1c833fa",
         "binding_name": null,
         "credentials": {
           "uaa": {
@@ -750,7 +750,7 @@ exports[`srv nock tests srv env default 1`] = `
     ],
     "business-logging": [
       {
-        "binding_guid": "4c6ae60a-ee6f-4249-961e-ef64567ba871",
+        "binding_guid": "12dc772c-1d94-4e6b-bddb-f7d205ef1f8d",
         "binding_name": null,
         "credentials": {
           "LPSCallbackDependencyName": "businesslogging-sb-prod",
@@ -819,7 +819,7 @@ exports[`srv nock tests srv env default 1`] = `
     ],
     "certificate-service": [
       {
-        "binding_guid": "ab4b4f84-d550-4264-b420-f4e438174d31",
+        "binding_guid": "fa543457-3962-488c-90a4-b7a99474b499",
         "binding_name": null,
         "credentials": {
           "certificateservice": {
@@ -860,7 +860,7 @@ exports[`srv nock tests srv env default 1`] = `
     ],
     "connectivity": [
       {
-        "binding_guid": "0b18329a-8420-43dd-a187-a3e724404527",
+        "binding_guid": "920bf04a-aa73-4878-a608-84d0bb353a9f",
         "binding_name": null,
         "credentials": {
           "clientid": "connectivity-0-credentials-clientid",
@@ -903,7 +903,7 @@ exports[`srv nock tests srv env default 1`] = `
     ],
     "destination": [
       {
-        "binding_guid": "4af4e0dd-f18a-4334-9870-e3852f69c200",
+        "binding_guid": "af9d6a3c-fa3f-44fd-8cc6-aaab75097297",
         "binding_name": null,
         "credentials": {
           "clientid": "destination-0-credentials-clientid",
@@ -939,7 +939,7 @@ exports[`srv nock tests srv env default 1`] = `
     ],
     "dynatrace": [
       {
-        "binding_guid": "7ea6a402-1ba1-4846-8d6d-6c1dde7ecac7",
+        "binding_guid": "578d0ac4-7fdf-42c4-b470-3f87a49c6f4b",
         "binding_name": null,
         "credentials": {
           "apitoken": "dynatrace-0-credentials-apitoken",
@@ -964,14 +964,14 @@ exports[`srv nock tests srv env default 1`] = `
     ],
     "identity": [
       {
-        "binding_guid": "4e72b4cf-6582-4e67-9fc4-44f6d89bf119",
+        "binding_guid": "cceb4160-e9ee-48ad-baf8-9cf5b5c9668d",
         "binding_name": null,
         "credentials": {
           "app_tid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
           "authorization_endpoint": "https://awdsp8ef4.accounts400.ondemand.com/oauth2/authorize",
           "btp-tenant-api": "https://api.authentication.sap.hana.ondemand.com",
           "certificate": "identity-0-credentials-certificate",
-          "certificate_expires_at": "2026-09-20T20:02:08Z",
+          "certificate_expires_at": "2026-09-23T20:03:46Z",
           "clientid": "identity-0-credentials-clientid",
           "credential-type": "X509_GENERATED",
           "domain": "accounts400.ondemand.com",
@@ -996,7 +996,7 @@ exports[`srv nock tests srv env default 1`] = `
     ],
     "malware-scanner": [
       {
-        "binding_guid": "f82c746e-aa51-45f7-b322-82f634cedb31",
+        "binding_guid": "f67f5555-06f8-43ce-ae5f-a1d76f5e1666",
         "binding_name": null,
         "credentials": {
           "async_scan_url": "",
@@ -1019,7 +1019,7 @@ exports[`srv nock tests srv env default 1`] = `
     ],
     "redis-cache": [
       {
-        "binding_guid": "9acaeaaa-ecaa-4e05-a508-54bd07012b2e",
+        "binding_guid": "d9c30853-b03d-4073-a971-8f8a2a724a1b",
         "binding_name": null,
         "credentials": {
           "cluster_mode": true,
@@ -1047,7 +1047,7 @@ exports[`srv nock tests srv env default 1`] = `
     ],
     "service-manager": [
       {
-        "binding_guid": "ab3ea17f-351c-459a-aedf-b7f2f5edfef5",
+        "binding_guid": "df5f18f9-e694-418b-875a-47d5b998e0a1",
         "binding_name": null,
         "credentials": {
           "certificate": "service-manager-0-credentials-certificate",
@@ -1072,7 +1072,36 @@ exports[`srv nock tests srv env default 1`] = `
     ],
     "user-provided": [
       {
-        "binding_guid": "b984a565-06be-4ccb-a085-52135d6959db",
+        "binding_guid": "38494c17-f237-4867-9260-5fba6f61e4d2",
+        "binding_name": null,
+        "credentials": {},
+        "instance_guid": "9c12b0fb-ab43-46fc-94e4-82eab5e541ce",
+        "instance_name": "afc-logging-hub",
+        "label": "user-provided",
+        "name": "afc-logging-hub",
+        "syslog_drain_url": "https://user-provided-0-syslog_drain_url-username:user-provided-0-syslog_drain_url-password@ingest-sf-068034bc-13cf-4be3-9589-3a751c760bea.cls-01.cloud.logs.services.sap.hana.ondemand.com/cfsyslog",
+        "tags": [
+          "cloud-logging"
+        ],
+        "volume_mounts": []
+      },
+      {
+        "binding_guid": "4cb9471d-a885-4f63-9de2-9ad724b6abcb",
+        "binding_name": null,
+        "credentials": {
+          "pass": "user-provided-1-credentials-pass",
+          "user": "user-provided-1-credentials-user"
+        },
+        "instance_guid": "9f484b06-5918-4c1c-9ae1-aa2faa351469",
+        "instance_name": "afc-mail-service",
+        "label": "user-provided",
+        "name": "afc-mail-service",
+        "syslog_drain_url": "",
+        "tags": [],
+        "volume_mounts": []
+      },
+      {
+        "binding_guid": "82912f5e-cd33-495d-b814-f390e0b91d54",
         "binding_name": null,
         "credentials": {
           "endpoints": {
@@ -1086,8 +1115,8 @@ exports[`srv nock tests srv env default 1`] = `
           "sap.cloud.service": "alert-notification",
           "uaa": {
             "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
-            "clientid": "user-provided-0-credentials-uaa-clientid",
-            "clientsecret": "user-provided-0-credentials-uaa-clientsecret",
+            "clientid": "user-provided-2-credentials-uaa-clientid",
+            "clientsecret": "user-provided-2-credentials-uaa-clientsecret",
             "credential-type": "binding-secret",
             "identityzone": "skyfin",
             "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
@@ -1098,7 +1127,7 @@ exports[`srv nock tests srv env default 1`] = `
             "tenantmode": "shared",
             "uaadomain": "authentication.sap.hana.ondemand.com",
             "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
-            "verificationkey": "user-provided-0-credentials-uaa-verificationkey",
+            "verificationkey": "user-provided-2-credentials-uaa-verificationkey",
             "xsappname": "e9f2bb15-1b46-4ea6-8530-a89508081ec4!b5874|ans-business!b2187",
             "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
           }
@@ -1112,40 +1141,11 @@ exports[`srv nock tests srv env default 1`] = `
           "alert-notification"
         ],
         "volume_mounts": []
-      },
-      {
-        "binding_guid": "949fa22a-28a0-4c3f-b879-70e063b61a5a",
-        "binding_name": null,
-        "credentials": {},
-        "instance_guid": "9c12b0fb-ab43-46fc-94e4-82eab5e541ce",
-        "instance_name": "afc-logging-hub",
-        "label": "user-provided",
-        "name": "afc-logging-hub",
-        "syslog_drain_url": "https://user-provided-1-syslog_drain_url-username:user-provided-1-syslog_drain_url-password@ingest-sf-068034bc-13cf-4be3-9589-3a751c760bea.cls-01.cloud.logs.services.sap.hana.ondemand.com/cfsyslog",
-        "tags": [
-          "cloud-logging"
-        ],
-        "volume_mounts": []
-      },
-      {
-        "binding_guid": "8844e269-851a-4722-a53f-52d7fd71e201",
-        "binding_name": null,
-        "credentials": {
-          "pass": "user-provided-2-credentials-pass",
-          "user": "user-provided-2-credentials-user"
-        },
-        "instance_guid": "9f484b06-5918-4c1c-9ae1-aa2faa351469",
-        "instance_name": "afc-mail-service",
-        "label": "user-provided",
-        "name": "afc-mail-service",
-        "syslog_drain_url": "",
-        "tags": [],
-        "volume_mounts": []
       }
     ],
     "xsuaa": [
       {
-        "binding_guid": "7b4d4aad-b1a9-4453-b680-237d51055d9d",
+        "binding_guid": "8fc0da15-d080-44b1-bfd4-50c23b8becaa",
         "binding_name": null,
         "credentials": {
           "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
