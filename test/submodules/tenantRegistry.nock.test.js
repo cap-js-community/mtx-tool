@@ -337,8 +337,8 @@ describe("reg nock tests", () => {
 
   test("reg update tenant all", async () => {
     await nock.back("reg-update-deps-all.json", { before: beforeExpandSharedRefs });
-    await expect(reg.registryUpdateAllDependencies(await freshContext(), undefined, [])).resolves.
-            toMatchInlineSnapshot(`
+    await expect(reg.registryUpdateAllDependencies(await freshContext(), undefined, [])).resolves
+      .toMatchInlineSnapshot(`
             [
               {
                 "duration": "0 sec",
