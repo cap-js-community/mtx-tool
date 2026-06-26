@@ -513,7 +513,17 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
 
   const getCfEnv = async (appName) => {
     const cfApp = _getCfAppFromAppName(appName);
-    return await _cfRequest(cfInfo, `/v3/apps/${cfApp.guid}/env`);
+    const cfEnv = await _cfRequest(cfInfo, `/v3/apps/${cfApp.guid}/env`);
+    const filePath = cfEnv.system_env_json?.VCAP_SERVICES_FILE_PATH;
+    if (filePath) {
+      const [stdout] = await _cfSsh(cfApp.name, { command: `cat ${filePath}` });
+      try {
+        cfEnv.system_env_json.VCAP_SERVICES = JSON.parse(stdout);
+      } catch (err) {
+        return fail("caught error parsing VCAP_SERVICES_FILE_PATH content from cf ssh:\n%s", err.message);
+      }
+    }
+    return cfEnv;
   };
 
   return {
