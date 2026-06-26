@@ -135,9 +135,7 @@ const collapseSharedRefs = (calls) => {
     }
     for (let i = 0; i < pendingRun.length; i++) {
       if (!nockCallsEqual(pendingRun[i], canonical[i % canonical.length])) {
-        dumpFreshAndFail(
-          `recorded call at position ${i} differs from canonical entry [${i % canonical.length}]`
-        );
+        dumpFreshAndFail(`recorded call at position ${i} differs from canonical entry [${i % canonical.length}]`);
       }
     }
     result.push({
