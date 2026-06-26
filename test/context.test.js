@@ -163,7 +163,7 @@ describe("context tests", () => {
 
     const context = await newContext();
 
-    const filePath = "./vcap-services.json";
+    const filePath = "/etc/cf-service-bindings/vcap_services";
     const fileBackedServices = {
       xsuaa: [
         {
@@ -189,6 +189,27 @@ describe("context tests", () => {
       ["ssh", "uaa-app", "--command", `cat ${filePath}`],
       expect.any(Object)
     );
+  });
+
+  test("getCfEnv rejects an unsafe VCAP_SERVICES_FILE_PATH without invoking cf ssh", async () => {
+    mockStatic.spawnAsync.mockReturnValueOnce(["oauth-token"]);
+    mockStatic.tryReadJsonSync.mockReturnValueOnce(mockCfConfig);
+    mockStatic.tryAccessSync.mockReturnValueOnce(true);
+    mockStatic.tryReadJsonSync.mockReturnValueOnce(mockRuntimeConfig);
+    mockRequest.mockReturnValueOnce({ json: () => mockCfApps });
+
+    const context = await newContext();
+
+    const cfAppEnvWithFilePath = {
+      ...mockCfAppEnv,
+      system_env_json: { VCAP_SERVICES_FILE_PATH: "/tmp/x; rm -rf ~" },
+    };
+    mockRequest.mockReturnValueOnce({ json: () => cfAppEnvWithFilePath });
+
+    const sshCallsBefore = mockStatic.spawnAsync.mock.calls.length;
+    const err = await context.getCfEnv("uaa-app").catch((e) => e);
+    expect(err.message).toMatch(/refusing to read VCAP_SERVICES_FILE_PATH/);
+    expect(mockStatic.spawnAsync.mock.calls.length).toBe(sshCallsBefore);
   });
 
   test("can create context for paged cf apps", async () => {

@@ -516,6 +516,11 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     const cfEnv = await _cfRequest(cfInfo, `/v3/apps/${cfApp.guid}/env`);
     const filePath = cfEnv.system_env_json?.VCAP_SERVICES_FILE_PATH;
     if (filePath) {
+      assert(
+        typeof filePath === "string" && /^\/[\w./-]+$/.test(filePath),
+        'refusing to read VCAP_SERVICES_FILE_PATH: value "%s" is not a safe absolute path',
+        filePath
+      );
       const [stdout] = await _cfSsh(cfApp.name, { command: `cat ${filePath}` });
       try {
         cfEnv.system_env_json.VCAP_SERVICES = JSON.parse(stdout);
