@@ -194,6 +194,25 @@ const trimCfServicePlansCall = (call) => {
   return call;
 };
 
+// Read from each app resource by src/context.js: guid, name,
+// lifecycle.data.buildpacks (first entry consumed as cfBuildpack).
+const trimCfAppsListCall = (call) => {
+  const response = call.response;
+  call.response = {
+    pagination: response.pagination,
+    resources: response.resources.map((app) => ({
+      guid: app.guid,
+      name: app.name,
+      lifecycle: {
+        data: {
+          buildpacks: app?.lifecycle?.data?.buildpacks ?? [],
+        },
+      },
+    })),
+  };
+  return call;
+};
+
 const isGzippedCall = (call) => {
   const contentEndcodingIndex = call.rawHeaders.findIndex((entry) => entry === "content-encoding");
   return contentEndcodingIndex === -1 ? false : call.rawHeaders[contentEndcodingIndex + 1] === "gzip";
@@ -295,9 +314,12 @@ const anonymizeAndTrim = (calls) => {
 
     // ##### PASS/TRIM CF
     // "scope": "https://api.cf.sap.hana.ondemand.com:443",
-    // "path": "/v3/apps", "/v3/routes", "\/v3\/service_plans"
+    // "path": "/v3/apps", "/v3/routes", "/v3/service_plans"
     if (/https:\/\/api\.cf\.[a-z]+\.hana\.ondemand\.com:443/.test(call.scope)) {
-      if (/\/v3\/apps/.test(call.path) || /\/v3\/routes/.test(call.path)) {
+      if (/^\/v3\/apps\?space_guids=/.test(call.path)) {
+        return trimCfAppsListCall(call);
+      }
+      if (/\/v3\/routes/.test(call.path)) {
         return call;
       }
       if (/\/v3\/service_plans/.test(call.path)) {
