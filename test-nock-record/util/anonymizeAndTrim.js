@@ -3,6 +3,8 @@
 const { format } = require("util");
 const { gunzipSync } = require("zlib");
 
+const { collapseSharedRefs } = require("./sharedFixtures");
+
 const anonymizeUaaAuthCall = (call) => {
   Reflect.deleteProperty(call, "body"); // NOTE: this shouldn't work, because it makes the calls ambiguous, but currently it does...
   call.response.access_token = call.response.access_token.replace(/./g, "0");
@@ -164,13 +166,146 @@ const anonymizeCdsProvisioningCall = (call) => {
   return call;
 };
 
+const trimCfServicePlansCall = (call) => {
+  const response = call.response;
+  const trimmedResources = response.resources.map((plan) => ({
+    guid: plan.guid,
+    name: plan.name,
+    relationships: {
+      service_offering: {
+        data: { guid: plan?.relationships?.service_offering?.data?.guid },
+      },
+    },
+  }));
+  let trimmedIncluded;
+  if (response.included && Array.isArray(response.included.service_offerings)) {
+    trimmedIncluded = {
+      service_offerings: response.included.service_offerings.map((offering) => ({
+        guid: offering.guid,
+        name: offering.name,
+      })),
+    };
+  }
+  call.response = {
+    pagination: response.pagination,
+    resources: trimmedResources,
+    ...(trimmedIncluded && { included: trimmedIncluded }),
+  };
+  return call;
+};
+
+// Read from each app resource by src/context.js: guid, name,
+// lifecycle.data.buildpacks (first entry consumed as cfBuildpack).
+const trimCfAppsListCall = (call) => {
+  const response = call.response;
+  call.response = {
+    pagination: response.pagination,
+    resources: response.resources.map((app) => ({
+      guid: app.guid,
+      name: app.name,
+      lifecycle: {
+        data: {
+          buildpacks: app?.lifecycle?.data?.buildpacks ?? [],
+        },
+      },
+    })),
+  };
+  return call;
+};
+
+// Trim a CF /v3/service_credential_bindings?app_guids=...&include=service_instance
+// response. Production reads from each binding stub: guid, created_at,
+// updated_at, relationships.service_instance.data.guid. From each included
+// service_instance: guid, name, type, tags, and (for managed instances only)
+// relationships.service_plan.data.guid.
+const trimCfBindingListCall = (call) => {
+  const response = call.response;
+  const trimmedResources = response.resources.map((stub) => ({
+    guid: stub.guid,
+    created_at: stub.created_at,
+    updated_at: stub.updated_at,
+    relationships: {
+      service_instance: {
+        data: { guid: stub?.relationships?.service_instance?.data?.guid },
+      },
+    },
+  }));
+  let trimmedIncluded;
+  if (response.included && Array.isArray(response.included.service_instances)) {
+    trimmedIncluded = {
+      service_instances: response.included.service_instances.map((instance) => ({
+        guid: instance.guid,
+        name: instance.name,
+        type: instance.type,
+        tags: instance.tags ?? [],
+        ...(instance.type === "managed" && {
+          relationships: {
+            service_plan: {
+              data: { guid: instance?.relationships?.service_plan?.data?.guid },
+            },
+          },
+        }),
+      })),
+    };
+  }
+  call.response = {
+    pagination: response.pagination,
+    resources: trimmedResources,
+    ...(trimmedIncluded && { included: trimmedIncluded }),
+  };
+  return call;
+};
+
+// Trim a CF /v3/routes?app_guids=...&include=domain response. Production reads
+// only cfRoute.host and the included domain's name (joined via relationships).
+const trimCfRoutesCall = (call) => {
+  const response = call.response;
+  const trimmedResources = response.resources.map((route) => ({
+    guid: route.guid,
+    host: route.host,
+    relationships: {
+      domain: {
+        data: { guid: route?.relationships?.domain?.data?.guid },
+      },
+    },
+  }));
+  let trimmedIncluded;
+  if (response.included && Array.isArray(response.included.domains)) {
+    trimmedIncluded = {
+      domains: response.included.domains.map((domain) => ({
+        guid: domain.guid,
+        name: domain.name,
+      })),
+    };
+  }
+  call.response = {
+    pagination: response.pagination,
+    resources: trimmedResources,
+    ...(trimmedIncluded && { included: trimmedIncluded }),
+  };
+  return call;
+};
+
+// Trim a CF /v3/apps/{guid}/processes response. Production reads only
+// cfProcess.instances from the first resource.
+const trimCfProcessesCall = (call) => {
+  const response = call.response;
+  call.response = {
+    pagination: response.pagination,
+    resources: response.resources.map((process) => ({
+      instances: process.instances,
+    })),
+  };
+  return call;
+};
+
 const isGzippedCall = (call) => {
   const contentEndcodingIndex = call.rawHeaders.findIndex((entry) => entry === "content-encoding");
   return contentEndcodingIndex === -1 ? false : call.rawHeaders[contentEndcodingIndex + 1] === "gzip";
 };
 
-const anonymizeNock = (calls) => {
-  return calls.map((call) => {
+const anonymizeAndTrim = (calls) => {
+  const processed = calls.map((call) => {
     // gunzip responses
     if (isGzippedCall(call)) {
       const contentEndcodingIndex = call.rawHeaders.findIndex((entry) => entry === "content-encoding");
@@ -200,7 +335,17 @@ const anonymizeNock = (calls) => {
       return anonymizeCfEnvCall(call);
     }
 
-    // ##### CF-API /v3/service_credential_bindings
+    // ##### CF-API /v3/service_credential_bindings (list with ?app_guids=)
+    // Trimmed to fields production reads — removes large links/metadata/
+    // last_operation churn so re-records stay stable.
+    if (
+      /https:\/\/api\.cf\.[a-z]+\.hana\.ondemand\.com:443/.test(call.scope) &&
+      /^\/v3\/service_credential_bindings\?app_guids=/.test(call.path)
+    ) {
+      return trimCfBindingListCall(call);
+    }
+
+    // ##### CF-API /v3/service_credential_bindings/{guid}/details
     // "scope": "https://api.cf.sap.hana.ondemand.com:443",
     // "path": "/v3/service_credential_bindings",
     if (
@@ -263,14 +408,22 @@ const anonymizeNock = (calls) => {
       return anonymizeCdsProvisioningCall(call);
     }
 
-    // ##### PASS CF
+    // ##### PASS/TRIM CF
     // "scope": "https://api.cf.sap.hana.ondemand.com:443",
-    // "path": "/v3/apps", "/v3/routes", "\/v3\/service_plans"
-    if (
-      /https:\/\/api\.cf\.[a-z]+\.hana\.ondemand\.com:443/.test(call.scope) &&
-      (/\/v3\/apps/.test(call.path) || /\/v3\/routes/.test(call.path) || /\/v3\/service_plans/.test(call.path))
-    ) {
-      return call;
+    // "path": "/v3/apps", "/v3/routes", "/v3/service_plans"
+    if (/https:\/\/api\.cf\.[a-z]+\.hana\.ondemand\.com:443/.test(call.scope)) {
+      if (/^\/v3\/apps\?space_guids=/.test(call.path)) {
+        return trimCfAppsListCall(call);
+      }
+      if (/^\/v3\/apps\/[0-9a-f-]+\/processes/.test(call.path)) {
+        return trimCfProcessesCall(call);
+      }
+      if (/^\/v3\/routes/.test(call.path)) {
+        return trimCfRoutesCall(call);
+      }
+      if (/\/v3\/service_plans/.test(call.path)) {
+        return trimCfServicePlansCall(call);
+      }
     }
 
     // ##### PASS CDS
@@ -285,8 +438,10 @@ const anonymizeNock = (calls) => {
 
     throw new Error(`unhandled scope ${call.scope} and path ${call.path}`);
   });
+
+  return collapseSharedRefs(processed);
 };
 
 module.exports = {
-  anonymizeNock,
+  anonymizeAndTrim,
 };

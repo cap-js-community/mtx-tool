@@ -10,6 +10,8 @@ const { collectRequestCount } = require("../test-util/static");
 nock.back.fixtures = pathlib.resolve(`${__dirname}/../../test-nock-record/__nock-fixtures__`);
 nock.back.setMode("lockdown");
 
+const { beforeExpandSharedRefs } = require("../../test-nock-record/util/sharedFixtures");
+
 const mockStatic = require("../../src/shared/static");
 jest.mock("../../src/shared/static", () => require("../__mocks/sharedNockPlayback/static"));
 
@@ -49,7 +51,7 @@ describe("srv nock tests", () => {
 
   describe("srv env", () => {
     test("default", async () => {
-      await nock.back("srv-env-default.json");
+      await nock.back("srv-env-default.json", { before: beforeExpandSharedRefs });
       await expect(srv.serverEnvironment(await freshContext(), [])).resolves.toBeUndefined();
       expect(mockStatic.writeTextSync).toHaveBeenCalledTimes(1);
       expect(mockStatic.writeTextSync.mock.calls[0]).toMatchSnapshot();
@@ -57,7 +59,7 @@ describe("srv nock tests", () => {
     });
 
     test("custom", async () => {
-      await nock.back("srv-env-custom.json");
+      await nock.back("srv-env-custom.json", { before: beforeExpandSharedRefs });
       await expect(srv.serverEnvironment(await freshContext(), ["afc-frontend"])).resolves.toBeUndefined();
       expect(mockStatic.writeTextSync).toHaveBeenCalledTimes(1);
       expect(mockStatic.writeTextSync.mock.calls[0]).toMatchSnapshot();
@@ -67,7 +69,7 @@ describe("srv nock tests", () => {
 
   describe("srv cert", () => {
     test("default", async () => {
-      await nock.back("srv-cert-default.json");
+      await nock.back("srv-cert-default.json", { before: beforeExpandSharedRefs });
       await expect(srv.serverCertificates(await freshContext(), [])).resolves.toBeUndefined();
       expect(mockStatic.writeTextSync).toHaveBeenCalledTimes(2);
       expect(mockStatic.writeTextSync.mock.calls[0]).toMatchSnapshot();
@@ -76,7 +78,7 @@ describe("srv nock tests", () => {
     });
 
     test("custom instance 0", async () => {
-      await nock.back("srv-cert-custom.json");
+      await nock.back("srv-cert-custom.json", { before: beforeExpandSharedRefs });
       await expect(srv.serverCertificates(await freshContext(), ["afc-frontend", "0"])).resolves.toBeUndefined();
       expect(mockStatic.writeTextSync).toHaveBeenCalledTimes(2);
       expect(mockStatic.writeTextSync.mock.calls[0]).toMatchSnapshot();
@@ -85,7 +87,7 @@ describe("srv nock tests", () => {
     });
 
     test("custom instance 1", async () => {
-      await nock.back("srv-cert-custom.json");
+      await nock.back("srv-cert-custom.json", { before: beforeExpandSharedRefs });
       await expect(srv.serverCertificates(await freshContext(), ["afc-frontend", "1"])).resolves.toBeUndefined();
       expect(mockStatic.writeTextSync).toHaveBeenCalledTimes(2);
       expect(mockStatic.writeTextSync.mock.calls[0]).toMatchSnapshot();

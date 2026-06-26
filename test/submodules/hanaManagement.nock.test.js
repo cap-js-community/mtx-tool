@@ -11,6 +11,8 @@ const { outputFromLoggerPartitionFetch, anonymizeListTimestamps, collectRequestC
 nock.back.fixtures = pathlib.resolve(`${__dirname}/../../test-nock-record/__nock-fixtures__`);
 nock.back.setMode("lockdown");
 
+const { beforeExpandSharedRefs } = require("../../test-nock-record/util/sharedFixtures");
+
 jest.mock("../../src/shared/static", () => require("../__mocks/sharedNockPlayback/static"));
 
 const { Logger: MockLogger } = require("../../src/shared/logger");
@@ -65,7 +67,7 @@ describe("hdi nock tests", () => {
 
   describe("list", () => {
     test("list basic", async () => {
-      await nock.back("hdi-list.json");
+      await nock.back("hdi-list.json", { before: beforeExpandSharedRefs });
       const output = await hdi.hdiList(await freshContext(), [], [false, false]);
       expect(output).toMatchInlineSnapshot(`
         "#   tenant_id                             db_tenant_id                          host                                           schema                                       ready
@@ -109,7 +111,7 @@ describe("hdi nock tests", () => {
     });
 
     test("list timestamps", async () => {
-      await nock.back("hdi-list.json");
+      await nock.back("hdi-list.json", { before: beforeExpandSharedRefs });
       const output = await hdi.hdiList(await freshContext(), [], [true, false]);
       expect(anonymizeListTimestamps(output)).toMatchInlineSnapshot(`
         "#   tenant_id                             db_tenant_id                          host                                           schema                                       ready  created_on  updated_on
@@ -145,14 +147,14 @@ describe("hdi nock tests", () => {
     });
 
     test("list json", async () => {
-      await nock.back("hdi-list.json");
+      await nock.back("hdi-list.json", { before: beforeExpandSharedRefs });
       const output = await hdi.hdiList(await freshContext(), [], [true, true]);
       expect(output).toMatchSnapshot();
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
 
     test("list filtered basic", async () => {
-      await nock.back("hdi-list-filtered.json");
+      await nock.back("hdi-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await hdi.hdiList(await freshContext(), [testTenantId], [false, false]);
       expect(output).toMatchInlineSnapshot(`
         "tenant_id                             db_tenant_id                          host                                          schema                                      ready
@@ -170,7 +172,7 @@ describe("hdi nock tests", () => {
     });
 
     test("list filtered timestamps", async () => {
-      await nock.back("hdi-list-filtered.json");
+      await nock.back("hdi-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await hdi.hdiList(await freshContext(), [testTenantId], [true, false]);
       expect(anonymizeListTimestamps(output)).toMatchInlineSnapshot(`
         "tenant_id                             db_tenant_id                          host                                          schema                                      ready  created_on  updated_on
@@ -180,7 +182,7 @@ describe("hdi nock tests", () => {
     });
 
     test("list filtered json", async () => {
-      await nock.back("hdi-list-filtered.json");
+      await nock.back("hdi-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await hdi.hdiList(await freshContext(), [testTenantId], [true, true]);
       expect(output).toMatchSnapshot();
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
@@ -189,7 +191,7 @@ describe("hdi nock tests", () => {
 
   describe("long list", () => {
     test("long list basic", async () => {
-      await nock.back("hdi-long-list.json");
+      await nock.back("hdi-long-list.json", { before: beforeExpandSharedRefs });
       const output = await hdi.hdiLongList(await freshContext(), [], [false, false]);
       expect(output).toMatchSnapshot();
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
@@ -204,21 +206,21 @@ describe("hdi nock tests", () => {
     });
 
     test("long list revealed", async () => {
-      await nock.back("hdi-long-list.json");
+      await nock.back("hdi-long-list.json", { before: beforeExpandSharedRefs });
       const output = await hdi.hdiLongList(await freshContext(), [], [false, true]);
       expect(output).toMatchSnapshot();
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
 
     test("long list json", async () => {
-      await nock.back("hdi-long-list.json");
+      await nock.back("hdi-long-list.json", { before: beforeExpandSharedRefs });
       const output = await hdi.hdiLongList(await freshContext(), [], [true, true]);
       expect(output).toMatchSnapshot();
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
 
     test("long list filtered basic", async () => {
-      await nock.back("hdi-long-list-filtered.json");
+      await nock.back("hdi-long-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await hdi.hdiLongList(await freshContext(), [testTenantId], [false, false]);
       expect(output).toMatchSnapshot();
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
@@ -233,14 +235,14 @@ describe("hdi nock tests", () => {
     });
 
     test("long list filtered revealed", async () => {
-      await nock.back("hdi-long-list-filtered.json");
+      await nock.back("hdi-long-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await hdi.hdiLongList(await freshContext(), [testTenantId], [false, true]);
       expect(output).toMatchSnapshot();
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
 
     test("long list filtered json", async () => {
-      await nock.back("hdi-long-list-filtered.json");
+      await nock.back("hdi-long-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await hdi.hdiLongList(await freshContext(), [testTenantId], [true, true]);
       expect(output).toMatchSnapshot();
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
