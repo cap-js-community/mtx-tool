@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## v0.11.3 - tbd
 
+### CHANGED
+
+- core: service credentials are now retrieved through the cloud-foundry `service_credential_bindings` API instead of
+  reading `VCAP_SERVICES` from the app's environment. this is a meaningful step towards supporting service-keys in
+  addition to app bindings. it also means that whether `VCAP_SERVICES` is provided inline or via file no longer
+  matters for credential lookups, which removes the need for the workaround discussed in #140. note that
+  `srv --server-env` still reads the env directly and inherits whatever shape cloud-foundry exposes there.
+
+- core: cache window for cf app info was shortened from 12 hours to 4 hours.
+
+- hdi, svm: readonly list commands `--hdi-list`, `--hdi-long-list`, `--svm-list`, `--svm-long-list` now reuse the
+  persisted app-info cache.
+
 ## v0.11.2 - 2025-02-17
 
 ### ADDED
