@@ -81,6 +81,28 @@ const _writeShared = (ref, calls) => {
   fs.writeFileSync(file, JSON.stringify(calls, null, 4) + "\n");
 };
 
+// Semantic equality of two recorded nock calls. Ignores `rawHeaders` (which
+// carry per-recording noise like timestamps and request IDs) and compares only
+// the call identity + payload: scope, method, path, body, status, and response.
+// Used by collapseSharedRefs to verify a recorded run matches its canonical
+// shared file before substituting a sentinel; exported for any other consumer
+// that needs the same "is this the same call?" judgement.
+const _NOCK_CALL_IDENTITY_FIELDS = ["scope", "method", "path", "body", "status", "response"];
+const nockCallsEqual = (a, b) => {
+  if (a === b) {
+    return true;
+  }
+  if (!a || !b || typeof a !== "object" || typeof b !== "object") {
+    return false;
+  }
+  for (const field of _NOCK_CALL_IDENTITY_FIELDS) {
+    if (JSON.stringify(a[field]) !== JSON.stringify(b[field])) {
+      return false;
+    }
+  }
+  return true;
+};
+
 // Replace matching call(s) in a recorded fixture with $nockRef sentinel(s).
 // Only contiguous runs of matches collapse: a run of consecutive calls sharing
 // the same ref is folded into one sentinel. The sentinel records `count` (the
@@ -90,9 +112,9 @@ const _writeShared = (ref, calls) => {
 // relative to sentinel positions is preserved.
 //
 // The shared file for every encountered ref must already exist on disk — this
-// step does not write it. The run length must be a positive integer multiple
-// of the canonical length, otherwise the recording disagrees with the shared
-// library and we throw.
+// step does not write it. Each call in the recorded run is checked against the
+// corresponding canonical call via nockCallsEqual; on mismatch we throw, which
+// surfaces stale shared files when the upstream content has actually changed.
 const collapseSharedRefs = (calls) => {
   const result = [];
   let pendingRef = null;
@@ -107,6 +129,15 @@ const collapseSharedRefs = (calls) => {
         `$nockRef "${pendingRef}": recorded run of ${pendingRun.length} call(s) is not a multiple of ` +
           `the canonical shared sequence (${canonical.length} call(s))`
       );
+    }
+    for (let i = 0; i < pendingRun.length; i++) {
+      if (!nockCallsEqual(pendingRun[i], canonical[i % canonical.length])) {
+        throw new Error(
+          `$nockRef "${pendingRef}": recorded call at position ${i} differs from canonical ` +
+            `shared/${pendingRef}.json[${i % canonical.length}]. ` +
+            `If the upstream genuinely changed, update the shared file to match the fresh recording.`
+        );
+      }
     }
     result.push({
       [NOCK_REF_KEY]: pendingRef,
@@ -180,6 +211,7 @@ module.exports = {
   NOCK_REF_KEY,
   VARIANT_SEPARATOR,
   SHARED_ENTRIES,
+  nockCallsEqual,
   collapseSharedRefs,
   expandSharedRefs,
   beforeExpandSharedRefs,
