@@ -13,9 +13,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - core: service credentials are now retrieved through the cloud-foundry `service_credential_bindings` API instead of
   reading `VCAP_SERVICES` from the app's environment. this is a meaningful step towards supporting service-keys in
-  addition to app bindings. it also means that whether `VCAP_SERVICES` is provided inline or via file no longer
-  matters for credential lookups, which removes the need for the workaround discussed in #140. note that
-  `srv --server-env` still reads the env directly and inherits whatever shape cloud-foundry exposes there.
+  addition to app bindings. credential lookups no longer depend on whether `VCAP_SERVICES` is provided inline or
+  via file.
+
+- srv: `--server-env` now handles file-based `VCAP_SERVICES` (fixes #140).
 
 - core: cache window for cf app info was shortened from 12 hours to 4 hours.
 
