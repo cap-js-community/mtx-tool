@@ -1,0 +1,230 @@
+[
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/apps?space_guids=0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
+        "body": "",
+        "status": 200,
+        "response": {
+            "pagination": {
+                "total_results": 15,
+                "total_pages": 1,
+                "first": {
+                    "href": "https://api.cf.sap.hana.ondemand.com/v3/apps?page=1&per_page=50&space_guids=0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                },
+                "last": {
+                    "href": "https://api.cf.sap.hana.ondemand.com/v3/apps?page=1&per_page=50&space_guids=0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9"
+                },
+                "next": null,
+                "previous": null
+            },
+            "resources": [
+                {
+                    "guid": "f84d681e-7123-442f-b8ea-2c747c11e145",
+                    "name": "afc-backend",
+                    "lifecycle": {
+                        "data": {
+                            "buildpacks": [
+                                "https://github.com/cloudfoundry/nodejs-buildpack.git#v1.8.42"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "guid": "188569c2-8a80-4eb2-a80b-4aa58dd40c7b",
+                    "name": "afc-frontend",
+                    "lifecycle": {
+                        "data": {
+                            "buildpacks": [
+                                "https://github.com/cloudfoundry/nodejs-buildpack.git#v1.8.42"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "guid": "e4c44adf-7eb5-4717-8056-f3319bf28ab1",
+                    "name": "afc-maintenance-staged",
+                    "lifecycle": {
+                        "data": {
+                            "buildpacks": [
+                                "https://github.com/cloudfoundry/nginx-buildpack.git#v1.2.32"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "guid": "2e946a49-9b15-4b86-b10c-d659129cc048",
+                    "name": "afc-maintenance-live",
+                    "lifecycle": {
+                        "data": {
+                            "buildpacks": [
+                                "nginx_buildpack"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "guid": "5cccc504-4911-43ef-a531-31cbf2b89939",
+                    "name": "afc-mtx",
+                    "lifecycle": {
+                        "data": {
+                            "buildpacks": [
+                                "https://github.com/cloudfoundry/nodejs-buildpack.git#v1.8.42"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "guid": "58af95d6-983b-44a0-aef3-dfd58a0c3dce",
+                    "name": "afc-hana-monitoring",
+                    "lifecycle": {
+                        "data": {
+                            "buildpacks": [
+                                "nodejs_buildpack"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "guid": "c80cf645-459a-40d4-94d2-0f209a69886e",
+                    "name": "afc-backend-worker",
+                    "lifecycle": {
+                        "data": {
+                            "buildpacks": [
+                                "https://github.com/cloudfoundry/nodejs-buildpack.git#v1.8.42"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "guid": "e7934faa-b419-4643-9bca-13c4df79f64f",
+                    "name": "afc-system-data-collector",
+                    "lifecycle": {
+                        "data": {
+                            "buildpacks": [
+                                "https://github.com/cloudfoundry/nodejs-buildpack.git#v1.8.42"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "guid": "1d6f1e2f-abe8-42ab-9c77-4240ac1dec61",
+                    "name": "afc-abap-backend-emulator",
+                    "lifecycle": {
+                        "data": {
+                            "buildpacks": [
+                                "nodejs_buildpack"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "guid": "efefbbf6-df4a-48a9-9056-add75c3ba2e6",
+                    "name": "afc-api",
+                    "lifecycle": {
+                        "data": {
+                            "buildpacks": [
+                                "https://github.com/cloudfoundry/nodejs-buildpack.git#v1.8.42"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "guid": "a2eece29-efb8-4977-8ed5-0c79729cbb57",
+                    "name": "afc-abap-backend-emulator-dev",
+                    "lifecycle": {
+                        "data": {
+                            "buildpacks": [
+                                "nodejs_buildpack"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "guid": "10720f56-b09c-4a8e-8c72-55170ccd2fcd",
+                    "name": "afc-backend-isolation",
+                    "lifecycle": {
+                        "data": {
+                            "buildpacks": [
+                                "https://github.com/cloudfoundry/nodejs-buildpack.git#v1.8.42"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "guid": "5d976c86-b135-4070-98b2-286ff12c3356",
+                    "name": "afc-health-check",
+                    "lifecycle": {
+                        "data": {
+                            "buildpacks": [
+                                "https://github.com/cloudfoundry/apt-buildpack#v0.3.14",
+                                "https://github.com/cloudfoundry/nodejs-buildpack#v1.8.42"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "guid": "b5ba0ed4-3bf5-4893-b57c-814672a6843a",
+                    "name": "afc-cms",
+                    "lifecycle": {
+                        "data": {
+                            "buildpacks": [
+                                "https://github.com/cloudfoundry/nodejs-buildpack.git#v1.8.42"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "guid": "86e4b3b4-3cd8-4f8b-a381-457fc3a5b839",
+                    "name": "afc-admin-app",
+                    "lifecycle": {
+                        "data": {
+                            "buildpacks": [
+                                "nodejs_buildpack"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        "rawHeaders": [
+            "content-length",
+            "37182",
+            "content-type",
+            "application/json; charset=utf-8",
+            "date",
+            "Tue, 23 Jun 2026 09:35:17 GMT",
+            "referrer-policy",
+            "strict-origin-when-cross-origin",
+            "vary",
+            "Accept",
+            "x-b3-spanid",
+            "6e3be60b1de92a27",
+            "x-b3-traceid",
+            "3449f7fd41d743416e3be60b1de92a27",
+            "x-content-type-options",
+            "nosniff",
+            "x-download-options",
+            "noopen",
+            "x-frame-options",
+            "SAMEORIGIN",
+            "x-permitted-cross-domain-policies",
+            "none",
+            "x-ratelimit-limit",
+            "20000",
+            "x-ratelimit-remaining",
+            "18000",
+            "x-ratelimit-reset",
+            "1782208961",
+            "x-runtime",
+            "0.078680",
+            "x-vcap-request-id",
+            "3449f7fd-41d7-4341-6e3b-e60b1de92a27::087d3ae4-e5b8-437d-b2cd-b1ab113ec091",
+            "x-xss-protection",
+            "1; mode=block",
+            "strict-transport-security",
+            "max-age=31536000; includeSubDomains; preload;"
+        ],
+        "responseIsBinary": false
+    }
+]
