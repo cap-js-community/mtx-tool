@@ -64,7 +64,7 @@ const compareForUpdatedAtDesc = compareFor((a) => a.updated_at, true);
 const _formatOutput = (output) =>
   JSON.stringify(Array.isArray(output) && output.length === 1 ? output[0] : output, null, 2);
 
-const _hideSensitiveDataInBindingOrInstance = (entry) => {
+const _hideSensitiveDataInBinding = (entry) => {
   const fields = entry?.credentials ? Object.keys(entry.credentials) : [];
   for (const field of fields) {
     if (SENSITIVE_FIELD_MARKERS.some((marker) => field.includes(marker)) || SENSITIVE_FIELD_NAMES.includes(field)) {
@@ -207,7 +207,7 @@ const _requestBindings = async (
     }
   }
   if (!doReveal) {
-    bindings.forEach(_hideSensitiveDataInBindingOrInstance);
+    bindings.forEach(_hideSensitiveDataInBinding);
   }
   return bindings;
 };

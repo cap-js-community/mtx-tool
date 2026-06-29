@@ -7,8 +7,8 @@ const { request } = require("../shared/request");
 const { Logger } = require("../shared/logger");
 
 const TUNNEL_LOCAL_PORT = 30015;
-const HIDDEN_PASSWORD_TEXT = "*** show with --reveal ***";
-const SENSITIVE_CREDENTIAL_FIELDS = ["password", "hdi_password"];
+const SENSITIVE_FIELD_NAMES = ["password", "hdi_password"];
+const SENSITIVE_FIELD_HIDDEN_TEXT = "*** show with --reveal ***";
 const HDI_SHARED_SERVICE_OFFERING = "hana";
 const HDI_SHARED_SERVICE_PLAN = "hdi-shared";
 
@@ -16,15 +16,16 @@ const logger = Logger.getInstance();
 
 const isValidTenantId = (input) => input && /^[0-9a-z-_/]+$/i.test(input);
 
-const compareForServiceManagerTenantId = compareFor((a) => a.labels.tenant_id[0].toUpperCase());
+const compareForTenantId = compareFor((a) => a.labels.tenant_id[0].toUpperCase());
 
 const _formatOutput = (output) =>
   JSON.stringify(Array.isArray(output) && output.length === 1 ? output[0] : output, null, 2);
 
-const _hidePasswordsInBindingOrInstance = (entry) => {
-  for (let field of SENSITIVE_CREDENTIAL_FIELDS) {
-    if (entry?.credentials?.[field]) {
-      entry.credentials[field] = HIDDEN_PASSWORD_TEXT;
+const _hideSensitiveDataInBinding = (entry) => {
+  const fields = entry?.credentials ? Object.keys(entry.credentials) : [];
+  for (const field of fields) {
+    if (SENSITIVE_FIELD_NAMES.includes(field)) {
+      entry.credentials[field] = SENSITIVE_FIELD_HIDDEN_TEXT;
     }
   }
 };
@@ -63,7 +64,7 @@ const _getHdiSharedPlanId = makeOneTime(
   async (sm_url, token) => await _getServicePlanId(sm_url, token, HDI_SHARED_SERVICE_OFFERING, HDI_SHARED_SERVICE_PLAN)
 );
 
-const _hdiInstancesServiceManager = async (context, { filterTenantId, doEnsureTenantLabel = true } = {}) => {
+const _hdiInstances = async (context, { filterTenantId, doEnsureTenantLabel = true } = {}) => {
   const {
     cfBinding: { credentials },
   } = await context.getHdiInfo();
@@ -88,7 +89,7 @@ const _hdiInstancesServiceManager = async (context, { filterTenantId, doEnsureTe
   return instances;
 };
 
-const _hdiBindingsServiceManager = async (
+const _hdiBindings = async (
   context,
   { filterTenantId, doReveal = false, doAssertFoundSome = false, doEnsureTenantLabel = true } = {}
 ) => {
@@ -127,7 +128,7 @@ const _hdiBindingsServiceManager = async (
     }
   }
   if (!doReveal) {
-    bindings.forEach(_hidePasswordsInBindingOrInstance);
+    bindings.forEach(_hideSensitiveDataInBinding);
   }
   return bindings;
 };
@@ -150,7 +151,7 @@ const _hdiTunnelHanaCloudWarning = () => {
 
 const _hdiTunnel = async (context, filterTenantId, doReveal = false) => {
   const { cfSsh } = await context.getHdiInfo();
-  const bindings = await _hdiBindingsServiceManager(context, { filterTenantId, doReveal, doAssertFoundSome: true });
+  const bindings = await _hdiBindings(context, { filterTenantId, doReveal, doAssertFoundSome: true });
   assert(
     bindings.every((binding) => binding.credentials),
     "found binding without credentials for tenant %s",
@@ -230,10 +231,10 @@ const _getBindingsByInstance = (bindings) => {
   }, {});
 };
 
-const _hdiListServiceManager = async (context, { filterTenantId, doTimestamps, doJsonOutput } = {}) => {
+const _hdiList = async (context, { filterTenantId, doTimestamps, doJsonOutput } = {}) => {
   const [instances, bindings] = await Promise.all([
-    _hdiInstancesServiceManager(context, { filterTenantId }),
-    _hdiBindingsServiceManager(context, { filterTenantId }),
+    _hdiInstances(context, { filterTenantId }),
+    _hdiBindings(context, { filterTenantId }),
   ]);
 
   if (doJsonOutput) {
@@ -241,7 +242,7 @@ const _hdiListServiceManager = async (context, { filterTenantId, doTimestamps, d
   }
 
   const bindingsByInstance = _getBindingsByInstance(bindings);
-  instances.sort(compareForServiceManagerTenantId);
+  instances.sort(compareForTenantId);
 
   const doShowDbTenantColumn = bindings.some((binding) => binding.credentials?.tenantId);
   const headerRow = ["tenant_id", "host", "schema", "ready"];
@@ -265,12 +266,12 @@ const _hdiListServiceManager = async (context, { filterTenantId, doTimestamps, d
 };
 
 const hdiList = async (context, [filterTenantId], [doTimestamps, doJsonOutput]) =>
-  await _hdiListServiceManager(context, { filterTenantId, doTimestamps, doJsonOutput });
+  await _hdiList(context, { filterTenantId, doTimestamps, doJsonOutput });
 
-const _hdiLongListServiceManager = async (context, { filterTenantId, doJsonOutput, doReveal } = {}) => {
+const _hdiLongList = async (context, { filterTenantId, doJsonOutput, doReveal } = {}) => {
   const [instances, bindings] = await Promise.all([
-    _hdiInstancesServiceManager(context, { filterTenantId, doEnsureTenantLabel: false }),
-    _hdiBindingsServiceManager(context, { filterTenantId, doReveal, doEnsureTenantLabel: false }),
+    _hdiInstances(context, { filterTenantId, doEnsureTenantLabel: false }),
+    _hdiBindings(context, { filterTenantId, doReveal, doEnsureTenantLabel: false }),
   ]);
 
   if (doJsonOutput) {
@@ -288,7 +289,7 @@ ${_formatOutput(bindings)}
 };
 
 const hdiLongList = async (context, [filterTenantId], [doJsonOutput, doReveal]) =>
-  await _hdiLongListServiceManager(context, { filterTenantId, doJsonOutput, doReveal });
+  await _hdiLongList(context, { filterTenantId, doJsonOutput, doReveal });
 
 const hdiTunnelTenant = async (context, [tenantId], [doReveal]) => {
   assert(isValidTenantId(tenantId), `argument "${tenantId}" is not a valid hdi tenant id`);
