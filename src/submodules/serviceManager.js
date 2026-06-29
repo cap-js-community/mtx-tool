@@ -2,6 +2,9 @@
  * This is a wrapper for APIs of the service-manager
  * - https://api.sap.com/api/APIServiceManager/resource/Service_Instances
  * - https://api.sap.com/api/APIServiceManager/resource/Service_Bindings
+ *
+ * API docs for v2
+ * https://service-manager.cfapps.sap.hana.ondemand.com/v2/swagger/swaggerui/
  */
 "use strict";
 
