@@ -158,7 +158,7 @@ const _hdiBindings = async (
   let bindings = await _serviceManagerRequest(context, {
     pathname: "/v1/service_bindings",
     ..._getQuery([
-      // NOTE: service_plan_id is currently placed under labelQuery to match historical behavior; see B2
+      // NOTE: the service_plan_id field only exists on underlying instances. so we rely on the label being set here.
       { predicate: true, type: QUERY_TYPE.LABEL, key: "service_plan_id", value: servicePlanId },
       { predicate: filterTenantId, type: QUERY_TYPE.LABEL, key: "tenant_id", value: filterTenantId },
     ]),
