@@ -193,7 +193,7 @@ const _requestBindings = async (
     ]),
   });
   if (doEnsureTenantLabel) {
-    bindings = bindings.filter((instance) => instance.labels.tenant_id !== undefined);
+    bindings = bindings.filter((binding) => binding.labels.tenant_id !== undefined);
   }
   if (doAssertFoundSome) {
     if (filterTenantId) {
