@@ -13,7 +13,7 @@ const nock = require("nock");
 
 const { newContext } = require("../src/context");
 const cds = require("../src/submodules/capMultitenancy");
-const { anonymizeAndTrim } = require("./util/anonymizeAndTrim");
+const { trimAndAnonymize } = require("./util/trimAndAnonymize");
 
 nock.back.fixtures = pathlib.resolve(`${__dirname}/__nock-fixtures__`);
 nock.back.setMode("update");
@@ -33,42 +33,42 @@ describe("cds tests", () => {
   });
 
   test("cds list basic", async () => {
-    const { nockDone } = await nock.back("cds-list.json", { afterRecord: anonymizeAndTrim });
+    const { nockDone } = await nock.back("cds-list.json", { afterRecord: trimAndAnonymize });
     await cds.cdsList(await freshContext(), [], [false, false]);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
 
   test("cds list filtered", async () => {
-    const { nockDone } = await nock.back("cds-list-filtered.json", { afterRecord: anonymizeAndTrim });
+    const { nockDone } = await nock.back("cds-list-filtered.json", { afterRecord: trimAndAnonymize });
     await cds.cdsList(await freshContext(), [testTenantId], [false, false]);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
 
   test("cds long list basic", async () => {
-    const { nockDone } = await nock.back("cds-long-list.json", { afterRecord: anonymizeAndTrim });
+    const { nockDone } = await nock.back("cds-long-list.json", { afterRecord: trimAndAnonymize });
     await cds.cdsLongList(await freshContext(), []);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
 
   test("cds long list filtered", async () => {
-    const { nockDone } = await nock.back("cds-long-list-filtered.json", { afterRecord: anonymizeAndTrim });
+    const { nockDone } = await nock.back("cds-long-list-filtered.json", { afterRecord: trimAndAnonymize });
     await cds.cdsLongList(await freshContext(), [testTenantId]);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
 
   test("cds upgrade tenant and auto-undeploy", async () => {
-    const { nockDone } = await nock.back("cds-upgrade-tenant.json", { afterRecord: anonymizeAndTrim });
+    const { nockDone } = await nock.back("cds-upgrade-tenant.json", { afterRecord: trimAndAnonymize });
     await cds.cdsUpgradeTenant(await freshContext(), [testTenantId], [true]);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
 
   test("cds upgrade all", async () => {
-    const { nockDone } = await nock.back("cds-upgrade-all.json", { afterRecord: anonymizeAndTrim });
+    const { nockDone } = await nock.back("cds-upgrade-all.json", { afterRecord: trimAndAnonymize });
     await cds.cdsUpgradeAll(await freshContext(), null, [false, false]);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);

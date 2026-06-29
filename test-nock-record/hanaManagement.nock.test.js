@@ -5,7 +5,7 @@ const nock = require("nock");
 
 const { newContext } = require("../src/context");
 const hdi = require("../src/submodules/hanaManagement");
-const { anonymizeAndTrim } = require("./util/anonymizeAndTrim");
+const { trimAndAnonymize } = require("./util/trimAndAnonymize");
 
 nock.back.fixtures = pathlib.resolve(`${__dirname}/__nock-fixtures__`);
 nock.back.setMode("update");
@@ -22,33 +22,35 @@ const freshContext = async () => await newContext({ usePersistedCache: false, is
 
 describe("hdi nock", () => {
   afterEach(() => {
+    resetMakeOneTime(hdi._._requestOfferings);
+    resetMakeOneTime(hdi._._requestPlans);
     resetMakeOneTime(hdi._._getHdiSharedPlanId);
     nock.restore();
   });
 
   test("record hdi list basic", async () => {
-    const { nockDone } = await nock.back("hdi-list.json", { afterRecord: anonymizeAndTrim });
+    const { nockDone } = await nock.back("hdi-list.json", { afterRecord: trimAndAnonymize });
     await hdi.hdiList(await freshContext(), [], [false, false]);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
 
   test("record hdi list filtered", async () => {
-    const { nockDone } = await nock.back("hdi-list-filtered.json", { afterRecord: anonymizeAndTrim });
+    const { nockDone } = await nock.back("hdi-list-filtered.json", { afterRecord: trimAndAnonymize });
     await hdi.hdiList(await freshContext(), [testTenantId], [false, false]);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
 
   test("record hdi long list basic", async () => {
-    const { nockDone } = await nock.back("hdi-long-list.json", { afterRecord: anonymizeAndTrim });
+    const { nockDone } = await nock.back("hdi-long-list.json", { afterRecord: trimAndAnonymize });
     await hdi.hdiLongList(await freshContext(), [], [false, false]);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
 
   test("record hdi long list filtered", async () => {
-    const { nockDone } = await nock.back("hdi-long-list-filtered.json", { afterRecord: anonymizeAndTrim });
+    const { nockDone } = await nock.back("hdi-long-list-filtered.json", { afterRecord: trimAndAnonymize });
     await hdi.hdiLongList(await freshContext(), [testTenantId], [false, false]);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);

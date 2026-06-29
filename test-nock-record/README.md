@@ -15,7 +15,7 @@ test-nock-record/
     shared/<key>.json        canonical copies of payloads shared across fixtures
   __snapshots__/             jest snapshots for the recording tests
   util/
-    anonymizeAndTrim.js      record-side post-processor (afterRecord hook)
+    trimAndAnonymize.js      record-side post-processor (afterRecord hook)
     sharedFixtures.js        $nockRef collapse/expand + playback `before` hook
   <area>.nock.test.js        recording tests (run on demand, not in CI)
 ```
@@ -37,7 +37,7 @@ Recording rewrites the fixture every time, so a recording run is destructive. CI
 
 Some upstream responses are large and repeat across many fixtures. The clearest example: every test that touches an app pulls the full CF `/v3/service_plans?include=service_offering` catalogue (3 pages, ~510 KB after anonymization) via `_cfServiceInfoMaps` in `src/context.js`. Storing it once per fixture is wasteful, so we factor it out:
 
-1. On record, `anonymizeAndTrim` (the `afterRecord` hook) first trims known-large payloads down to the fields production code actually reads (e.g. service_plans → `guid`, `name`, the `service_offering` relationship), then runs `collapseSharedRefs`. That replaces each **contiguous run** of calls matching a `SHARED_ENTRIES` entry with a single sentinel at the position the run began:
+1. On record, `trimAndAnonymize` (the `afterRecord` hook) first trims known-large payloads down to the fields production code actually reads (e.g. service_plans → `guid`, `name`, the `service_offering` relationship), then runs `collapseSharedRefs`. That replaces each **contiguous run** of calls matching a `SHARED_ENTRIES` entry with a single sentinel at the position the run began:
 
    ```json
    { "$nockRef": "service_plans" }
@@ -53,13 +53,13 @@ Adding more shared payloads is a matter of dropping a new entry into `SHARED_ENT
 
 ## Anonymization
 
-`util/anonymizeAndTrim.js` strips credentials, hostnames, GUIDs that leak account info, etc. before the fixture lands on disk. It is hooked into every recording test via:
+`util/trimAndAnonymize.js` strips credentials, hostnames, GUIDs that leak account info, etc. before the fixture lands on disk. It is hooked into every recording test via:
 
 ```js
-const { nockDone } = await nock.back("foo.json", { afterRecord: anonymizeAndTrim });
+const { nockDone } = await nock.back("foo.json", { afterRecord: trimAndAnonymize });
 ```
 
-It dispatches on `(scope, path)` patterns and throws on an unmatched scope so that new upstream calls can't silently leak into a recording. When adding a new endpoint, extend the pattern table at the bottom of `anonymizeAndTrim.js`.
+It dispatches on `(scope, path)` patterns and throws on an unmatched scope so that new upstream calls can't silently leak into a recording. When adding a new endpoint, extend the pattern table at the bottom of `trimAndAnonymize.js`.
 
 The same module also applies semantic trims (e.g. the service_plans field reduction) before the $nockRef collapse step.
 

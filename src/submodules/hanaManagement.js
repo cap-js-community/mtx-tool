@@ -1,35 +1,48 @@
 "use strict";
 
-const { tableList, isPortFree, formatTimestampsWithRelativeDays, compareFor } = require("../shared/static");
+const packageInfo = require("../../package.json");
+const {
+  tableList,
+  isPortFree,
+  formatTimestampsWithRelativeDays,
+  compareFor,
+  clusterByKey,
+} = require("../shared/static");
 const { makeOneTime } = require("../shared/execution-control");
 const { assert } = require("../shared/error");
 const { request } = require("../shared/request");
 const { Logger } = require("../shared/logger");
 
 const TUNNEL_LOCAL_PORT = 30015;
-const HIDDEN_PASSWORD_TEXT = "*** show with --reveal ***";
-const SENSITIVE_CREDENTIAL_FIELDS = ["password", "hdi_password"];
+const SENSITIVE_FIELD_NAMES = ["password", "hdi_password"];
+const SENSITIVE_FIELD_HIDDEN_TEXT = "*** show with --reveal ***";
 const HDI_SHARED_SERVICE_OFFERING = "hana";
 const HDI_SHARED_SERVICE_PLAN = "hdi-shared";
+
+const QUERY_TYPE = {
+  FIELD: "fieldQuery",
+  LABEL: "labelQuery",
+};
 
 const logger = Logger.getInstance();
 
 const isValidTenantId = (input) => input && /^[0-9a-z-_/]+$/i.test(input);
 
-const compareForServiceManagerTenantId = compareFor((a) => a.labels.tenant_id[0].toUpperCase());
+const compareForTenantId = compareFor((a) => a.labels.tenant_id[0].toUpperCase());
 
 const _formatOutput = (output) =>
   JSON.stringify(Array.isArray(output) && output.length === 1 ? output[0] : output, null, 2);
 
-const _hidePasswordsInBindingOrInstance = (entry) => {
-  for (let field of SENSITIVE_CREDENTIAL_FIELDS) {
-    if (entry?.credentials?.[field]) {
-      entry.credentials[field] = HIDDEN_PASSWORD_TEXT;
+const _hideSensitiveDataInBinding = (entry) => {
+  const fields = entry?.credentials ? Object.keys(entry.credentials) : [];
+  for (const field of fields) {
+    if (SENSITIVE_FIELD_NAMES.includes(field)) {
+      entry.credentials[field] = SENSITIVE_FIELD_HIDDEN_TEXT;
     }
   }
 };
 
-const _getQuery = (filters) =>
+const _getQueryPart = (filters) =>
   Object.entries(filters)
     .reduce((acc, [key, value]) => {
       acc.push(`${key} eq '${value}'`);
@@ -37,97 +50,118 @@ const _getQuery = (filters) =>
     }, [])
     .join(" and ");
 
-const _getServicePlanId = async (sm_url, token, serviceOfferingName, servicePlanName) => {
-  const responseOfferings = await request({
-    url: sm_url,
-    pathname: "/v1/service_offerings",
-    query: { fieldQuery: _getQuery({ name: serviceOfferingName }) },
-    auth: { token },
-  });
-  const responseOfferingsData = (await responseOfferings.json()) || {};
-  const serviceOfferingId = responseOfferingsData.items?.[0]?.id;
-  assert(serviceOfferingId, `could not find service offering with name ${serviceOfferingName}`);
-  const responsePlans = await request({
-    url: sm_url,
-    pathname: "/v1/service_plans",
-    query: { fieldQuery: _getQuery({ service_offering_id: serviceOfferingId, name: servicePlanName }) },
-    auth: { token },
-  });
-  const responsePlansData = (await responsePlans.json()) || {};
-  const servicePlanId = responsePlansData.items?.[0]?.id;
-  assert(servicePlanId, `could not find service plan with name ${servicePlanName}`);
-  return servicePlanId;
+const _getQuery = (components) => {
+  const partMap = components.reduce((acc, { predicate, type, key, value }) => {
+    if (predicate) {
+      if (!Object.prototype.hasOwnProperty.call(acc, type)) {
+        acc[type] = { [key]: value };
+      } else {
+        acc[type][key] = value;
+      }
+    }
+    return acc;
+  }, {});
+  const parts = Object.entries(partMap);
+  return parts.length === 0
+    ? undefined
+    : parts.reduce(
+        (acc, [type, filters]) => {
+          acc["query"][type] = _getQueryPart(filters);
+          return acc;
+        },
+        { query: {} }
+      );
 };
 
-const _getHdiSharedPlanId = makeOneTime(
-  async (sm_url, token) => await _getServicePlanId(sm_url, token, HDI_SHARED_SERVICE_OFFERING, HDI_SHARED_SERVICE_PLAN)
-);
-
-const _hdiInstancesServiceManager = async (context, { filterTenantId, doEnsureTenantLabel = true } = {}) => {
+const _serviceManagerRequest = async (context, reqOptions = {}) => {
   const {
     cfBinding: { credentials },
   } = await context.getHdiInfo();
-  const { sm_url } = credentials;
-  const token = await context.getCachedUaaTokenFromCredentials(credentials);
-  const servicePlanId = await _getHdiSharedPlanId(sm_url, token);
-
+  const url = credentials.sm_url;
+  const auth = { token: await context.getCachedUaaTokenFromCredentials(credentials) };
   const response = await request({
-    url: sm_url,
-    pathname: "/v1/service_instances",
-    query: {
-      fieldQuery: _getQuery({ service_plan_id: servicePlanId }),
-      ...(filterTenantId && { labelQuery: _getQuery({ tenant_id: filterTenantId }) }),
+    url,
+    auth,
+    ...reqOptions,
+    headers: {
+      // NOTE: service-manager uses this client information for better consumption reporting and rate-limiting
+      "Client-Name": packageInfo.name,
+      "Client-Version": packageInfo.version,
+      ...reqOptions?.headers,
     },
-    auth: { token },
   });
-  const responseData = (await response.json()) || {};
-  let instances = responseData.items || [];
+
+  if (reqOptions.method) {
+    return response;
+  }
+  // NOTE: no method here means GET and all service endpoints we use have this structure
+  return (await response.json())?.items ?? [];
+};
+
+const _requestOfferings = makeOneTime(
+  async (context, { filterServiceOfferingName } = {}) =>
+    await _serviceManagerRequest(context, {
+      pathname: "/v1/service_offerings",
+      ..._getQuery([
+        { predicate: filterServiceOfferingName, type: QUERY_TYPE.FIELD, key: "name", value: filterServiceOfferingName },
+      ]),
+    })
+);
+
+const _requestPlans = makeOneTime(
+  async (context, { filterServiceOfferingId, filterServicePlanName } = {}) =>
+    await _serviceManagerRequest(context, {
+      pathname: "/v1/service_plans",
+      ..._getQuery([
+        {
+          predicate: filterServiceOfferingId,
+          type: QUERY_TYPE.FIELD,
+          key: "service_offering_id",
+          value: filterServiceOfferingId,
+        },
+        { predicate: filterServicePlanName, type: QUERY_TYPE.FIELD, key: "name", value: filterServicePlanName },
+      ]),
+    })
+);
+
+const _getHdiSharedPlanId = makeOneTime(async (context) => {
+  const [offering] = await _requestOfferings(context, { filterServiceOfferingName: HDI_SHARED_SERVICE_OFFERING });
+  assert(offering?.id, `could not find service offering with name ${HDI_SHARED_SERVICE_OFFERING}`);
+  const [plan] = await _requestPlans(context, {
+    filterServiceOfferingId: offering.id,
+    filterServicePlanName: HDI_SHARED_SERVICE_PLAN,
+  });
+  assert(plan?.id, `could not find service plan with name ${HDI_SHARED_SERVICE_PLAN}`);
+  return plan.id;
+});
+
+const _hdiInstances = async (context, { filterTenantId, doEnsureTenantLabel = true } = {}) => {
+  const servicePlanId = await _getHdiSharedPlanId(context);
+  let instances = await _serviceManagerRequest(context, {
+    pathname: "/v1/service_instances",
+    ..._getQuery([
+      { predicate: true, type: QUERY_TYPE.FIELD, key: "service_plan_id", value: servicePlanId },
+      { predicate: filterTenantId, type: QUERY_TYPE.LABEL, key: "tenant_id", value: filterTenantId },
+    ]),
+  });
   if (doEnsureTenantLabel) {
     instances = instances.filter((instance) => instance.labels.tenant_id !== undefined);
   }
   return instances;
 };
 
-const _hdiBindingsServiceManager = async (
-  context,
-  { filterTenantId, doReveal = false, doAssertFoundSome = false, doEnsureTenantLabel = true } = {}
-) => {
-  const {
-    cfBinding: { credentials },
-  } = await context.getHdiInfo();
-  const { sm_url } = credentials;
-  const token = await context.getCachedUaaTokenFromCredentials(credentials);
-  const servicePlanId = await _getHdiSharedPlanId(sm_url, token);
-
-  const getBindingsResponse = await request({
-    url: sm_url,
+// NOTE: service-manager has no way to filter bindings by the underlying instance's service_plan_id, so we fetch by
+//   tenant and rely on callers to intersect against hdi instances
+const _hdiBindings = async (context, { filterTenantId, doReveal = false, doEnsureTenantLabel = true } = {}) => {
+  let bindings = await _serviceManagerRequest(context, {
     pathname: "/v1/service_bindings",
-    query: {
-      labelQuery: _getQuery({
-        service_plan_id: servicePlanId,
-        ...(filterTenantId && { tenant_id: filterTenantId }),
-      }),
-    },
-    auth: { token },
+    ..._getQuery([{ predicate: filterTenantId, type: QUERY_TYPE.LABEL, key: "tenant_id", value: filterTenantId }]),
   });
-  const responseData = (await getBindingsResponse.json()) || {};
-  let bindings = responseData.items || [];
   if (doEnsureTenantLabel) {
-    bindings = bindings.filter((instance) => instance.labels.tenant_id !== undefined);
-  }
-  if (doAssertFoundSome) {
-    if (filterTenantId) {
-      assert(
-        Array.isArray(bindings) && bindings.length >= 1,
-        "could not find hdi service binding for tenant %s",
-        filterTenantId
-      );
-    } else {
-      assert(Array.isArray(bindings) && bindings.length >= 1, "could not find any hdi service bindings");
-    }
+    bindings = bindings.filter((binding) => binding.labels.tenant_id !== undefined);
   }
   if (!doReveal) {
-    bindings.forEach(_hidePasswordsInBindingOrInstance);
+    bindings.forEach(_hideSensitiveDataInBinding);
   }
   return bindings;
 };
@@ -148,9 +182,19 @@ const _hdiTunnelHanaCloudWarning = () => {
   );
 };
 
+const _filterBindingsForInstances = (bindings, instances) => {
+  const instanceIds = new Set(instances.map((instance) => instance.id));
+  return bindings.filter((binding) => instanceIds.has(binding.service_instance_id));
+};
+
 const _hdiTunnel = async (context, filterTenantId, doReveal = false) => {
   const { cfSsh } = await context.getHdiInfo();
-  const bindings = await _hdiBindingsServiceManager(context, { filterTenantId, doReveal, doAssertFoundSome: true });
+  const [instances, allBindings] = await Promise.all([
+    _hdiInstances(context, { filterTenantId }),
+    _hdiBindings(context, { filterTenantId, doReveal }),
+  ]);
+  const bindings = _filterBindingsForInstances(allBindings, instances);
+  assert(bindings.length >= 1, "could not find hdi service binding for tenant %s", filterTenantId);
   assert(
     bindings.every((binding) => binding.credentials),
     "found binding without credentials for tenant %s",
@@ -218,30 +262,19 @@ const _hdiTunnel = async (context, filterTenantId, doReveal = false) => {
   return cfSsh({ localPort, remotePort: port, remoteHostname: host });
 };
 
-const _getBindingsByInstance = (bindings) => {
-  return bindings.reduce((result, binding) => {
-    const instance_id = binding.service_instance_id;
-    if (result[instance_id]) {
-      result[instance_id].push(binding);
-    } else {
-      result[instance_id] = [binding];
-    }
-    return result;
-  }, {});
-};
-
-const _hdiListServiceManager = async (context, { filterTenantId, doTimestamps, doJsonOutput } = {}) => {
-  const [instances, bindings] = await Promise.all([
-    _hdiInstancesServiceManager(context, { filterTenantId }),
-    _hdiBindingsServiceManager(context, { filterTenantId }),
+const _hdiList = async (context, { filterTenantId, doTimestamps, doJsonOutput } = {}) => {
+  const [instances, allBindings] = await Promise.all([
+    _hdiInstances(context, { filterTenantId }),
+    _hdiBindings(context, { filterTenantId }),
   ]);
+  const bindings = _filterBindingsForInstances(allBindings, instances);
 
   if (doJsonOutput) {
     return { instances, bindings };
   }
 
-  const bindingsByInstance = _getBindingsByInstance(bindings);
-  instances.sort(compareForServiceManagerTenantId);
+  const bindingsByInstance = clusterByKey(bindings, "service_instance_id");
+  instances.sort(compareForTenantId);
 
   const doShowDbTenantColumn = bindings.some((binding) => binding.credentials?.tenantId);
   const headerRow = ["tenant_id", "host", "schema", "ready"];
@@ -265,13 +298,14 @@ const _hdiListServiceManager = async (context, { filterTenantId, doTimestamps, d
 };
 
 const hdiList = async (context, [filterTenantId], [doTimestamps, doJsonOutput]) =>
-  await _hdiListServiceManager(context, { filterTenantId, doTimestamps, doJsonOutput });
+  await _hdiList(context, { filterTenantId, doTimestamps, doJsonOutput });
 
-const _hdiLongListServiceManager = async (context, { filterTenantId, doJsonOutput, doReveal } = {}) => {
-  const [instances, bindings] = await Promise.all([
-    _hdiInstancesServiceManager(context, { filterTenantId, doEnsureTenantLabel: false }),
-    _hdiBindingsServiceManager(context, { filterTenantId, doReveal, doEnsureTenantLabel: false }),
+const _hdiLongList = async (context, { filterTenantId, doJsonOutput, doReveal } = {}) => {
+  const [instances, allBindings] = await Promise.all([
+    _hdiInstances(context, { filterTenantId, doEnsureTenantLabel: false }),
+    _hdiBindings(context, { filterTenantId, doReveal, doEnsureTenantLabel: false }),
   ]);
+  const bindings = _filterBindingsForInstances(allBindings, instances);
 
   if (doJsonOutput) {
     return { instances, bindings };
@@ -288,7 +322,7 @@ ${_formatOutput(bindings)}
 };
 
 const hdiLongList = async (context, [filterTenantId], [doJsonOutput, doReveal]) =>
-  await _hdiLongListServiceManager(context, { filterTenantId, doJsonOutput, doReveal });
+  await _hdiLongList(context, { filterTenantId, doJsonOutput, doReveal });
 
 const hdiTunnelTenant = async (context, [tenantId], [doReveal]) => {
   assert(isValidTenantId(tenantId), `argument "${tenantId}" is not a valid hdi tenant id`);
@@ -301,6 +335,8 @@ module.exports = {
   hdiTunnelTenant,
 
   _: {
+    _requestOfferings,
+    _requestPlans,
     _getHdiSharedPlanId,
   },
 };

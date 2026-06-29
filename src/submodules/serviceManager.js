@@ -2,6 +2,9 @@
  * This is a wrapper for APIs of the service-manager
  * - https://api.sap.com/api/APIServiceManager/resource/Service_Instances
  * - https://api.sap.com/api/APIServiceManager/resource/Service_Bindings
+ *
+ * API docs for v2
+ * https://service-manager.cfapps.sap.hana.ondemand.com/v2/swagger/swaggerui/
  */
 "use strict";
 
@@ -61,7 +64,7 @@ const compareForUpdatedAtDesc = compareFor((a) => a.updated_at, true);
 const _formatOutput = (output) =>
   JSON.stringify(Array.isArray(output) && output.length === 1 ? output[0] : output, null, 2);
 
-const _hideSensitiveDataInBindingOrInstance = (entry) => {
+const _hideSensitiveDataInBinding = (entry) => {
   const fields = entry?.credentials ? Object.keys(entry.credentials) : [];
   for (const field of fields) {
     if (SENSITIVE_FIELD_MARKERS.some((marker) => field.includes(marker)) || SENSITIVE_FIELD_NAMES.includes(field)) {
@@ -190,7 +193,7 @@ const _requestBindings = async (
     ]),
   });
   if (doEnsureTenantLabel) {
-    bindings = bindings.filter((instance) => instance.labels.tenant_id !== undefined);
+    bindings = bindings.filter((binding) => binding.labels.tenant_id !== undefined);
   }
   if (doAssertFoundSome) {
     if (filterTenantId) {
@@ -204,7 +207,7 @@ const _requestBindings = async (
     }
   }
   if (!doReveal) {
-    bindings.forEach(_hideSensitiveDataInBindingOrInstance);
+    bindings.forEach(_hideSensitiveDataInBinding);
   }
   return bindings;
 };
