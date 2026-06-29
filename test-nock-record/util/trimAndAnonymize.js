@@ -360,7 +360,7 @@ const trimCfRawHeaders = (call) => {
   return call;
 };
 
-const anonymizeAndTrim = (calls) => {
+const trimAndAnonymize = (calls) => {
   const processed = calls.map((call) => {
     // gunzip responses
     if (isGzippedCall(call)) {
@@ -487,5 +487,5 @@ const anonymizeAndTrim = (calls) => {
 };
 
 module.exports = {
-  anonymizeAndTrim,
+  trimAndAnonymize,
 };

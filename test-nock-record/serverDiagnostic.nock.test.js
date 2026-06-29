@@ -13,7 +13,7 @@ const nock = require("nock");
 
 const { newContext } = require("../src/context");
 const srv = require("../src/submodules/serverDiagnostic");
-const { anonymizeAndTrim } = require("./util/anonymizeAndTrim");
+const { trimAndAnonymize } = require("./util/trimAndAnonymize");
 
 nock.back.fixtures = pathlib.resolve(`${__dirname}/__nock-fixtures__`);
 nock.back.setMode("update");
@@ -31,28 +31,28 @@ describe("srv nock", () => {
   });
 
   test("record srv env default", async () => {
-    const { nockDone } = await nock.back("srv-env-default.json", { afterRecord: anonymizeAndTrim });
+    const { nockDone } = await nock.back("srv-env-default.json", { afterRecord: trimAndAnonymize });
     await srv.serverEnvironment(await freshContext(), []);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
 
   test("record srv env custom-app", async () => {
-    const { nockDone } = await nock.back("srv-env-custom.json", { afterRecord: anonymizeAndTrim });
+    const { nockDone } = await nock.back("srv-env-custom.json", { afterRecord: trimAndAnonymize });
     await srv.serverEnvironment(await freshContext(), ["afc-frontend"]);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
 
   test("record srv certificates default", async () => {
-    const { nockDone } = await nock.back("srv-cert-default.json", { afterRecord: anonymizeAndTrim });
+    const { nockDone } = await nock.back("srv-cert-default.json", { afterRecord: trimAndAnonymize });
     await srv.serverCertificates(await freshContext(), []);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
 
   test("record srv certificates custom", async () => {
-    const { nockDone } = await nock.back("srv-cert-custom.json", { afterRecord: anonymizeAndTrim });
+    const { nockDone } = await nock.back("srv-cert-custom.json", { afterRecord: trimAndAnonymize });
     await srv.serverCertificates(await freshContext(), ["afc-frontend", "0"]);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
