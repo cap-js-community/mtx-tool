@@ -22,6 +22,8 @@ const freshContext = async () => await newContext({ usePersistedCache: false, is
 
 describe("hdi nock", () => {
   afterEach(() => {
+    resetMakeOneTime(hdi._._requestOfferings);
+    resetMakeOneTime(hdi._._requestPlans);
     resetMakeOneTime(hdi._._getHdiSharedPlanId);
     nock.restore();
   });

@@ -47,49 +47,56 @@ const mockContext = {
 
 describe("hdi tests", () => {
   afterEach(() => {
+    resetMakeOneTime(hdi._._requestOfferings);
+    resetMakeOneTime(hdi._._requestPlans);
     resetMakeOneTime(hdi._._getHdiSharedPlanId);
   });
 
   test("hdi tunnel", async () => {
-    mockRequest.request.mockReturnValueOnce({
+    mockRequest.request.mockImplementation(async ({ pathname }) => ({
       async json() {
-        return { items: [{ id: "service-offering-id" }] };
+        switch (pathname) {
+          case "/v1/service_offerings":
+            return { items: [{ id: "service-offering-id" }] };
+          case "/v1/service_plans":
+            return { items: [{ id: "service-plan-id" }] };
+          case "/v1/service_instances":
+            return {
+              items: [
+                {
+                  id: "service-instance-id",
+                  labels: { tenant_id: [testTenantId] },
+                },
+              ],
+            };
+          case "/v1/service_bindings":
+            return {
+              items: [
+                {
+                  service_instance_id: "service-instance-id",
+                  credentials: {
+                    host: "host",
+                    port: "port",
+                    url: "jdbc:sap://host:port",
+                    user: "user",
+                    password: "password",
+                    schema: "schema",
+                    hdi_user: "hdi-user",
+                    hdi_password: "hdi-password",
+                  },
+                  labels: { tenant_id: [testTenantId] },
+                },
+              ],
+            };
+        }
       },
-    });
-    mockRequest.request.mockReturnValueOnce({
-      async json() {
-        return { items: [{ id: "service-plan-id" }] };
-      },
-    });
-    mockRequest.request.mockReturnValueOnce({
-      async json() {
-        return {
-          items: [
-            {
-              credentials: {
-                host: "host",
-                port: "port",
-                url: "jdbc:sap://host:port",
-                user: "user",
-                password: "password",
-                schema: "schema",
-                hdi_user: "hdi-user",
-                hdi_password: "hdi-password",
-              },
-              labels: {
-                tenant_id: [testTenantId],
-              },
-            },
-          ],
-        };
-      },
-    });
+    }));
     mockStatic.isPortFree.mockReturnValueOnce(true);
     mockCfSsh.mockReturnValueOnce();
 
     await expect(hdi.hdiTunnelTenant(mockContext, [testTenantId], [false])).resolves.toBeUndefined();
 
-    expect(mockRequest.request).toHaveBeenCalledTimes(3);
+    expect(mockRequest.request).toHaveBeenCalledTimes(4);
     expect(mockStatic.isPortFree).toHaveBeenCalledTimes(1);
     expect(mockCfSsh).toHaveBeenCalledTimes(1);
     expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
