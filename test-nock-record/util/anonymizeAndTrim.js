@@ -299,9 +299,65 @@ const trimCfProcessesCall = (call) => {
   return call;
 };
 
+// Trim a service-manager /v1/service_instances response. Production reads from
+// each instance: id, ready, service_plan_id, created_at, updated_at, and
+// labels (labels.tenant_id is checked, and the full labels object is cloned
+// into newly-created bindings in serviceManager.js).
+const trimServiceManagerInstancesCall = (call) => {
+  const response = call.response;
+  call.response = {
+    items: response.items.map((instance) => ({
+      id: instance.id,
+      ready: instance.ready,
+      service_plan_id: instance.service_plan_id,
+      created_at: instance.created_at,
+      updated_at: instance.updated_at,
+      labels: instance.labels,
+    })),
+  };
+  return call;
+};
+
+// Trim a service-manager /v1/service_bindings response. Production reads from
+// each binding: id, ready, service_instance_id, created_at, updated_at,
+// labels, and credentials (the credentials sub-object is kept intact since it
+// exercises _hideSensitiveDataInBinding redaction and is surfaced verbatim by
+// long-list commands).
+const trimServiceManagerBindingsCall = (call) => {
+  const response = call.response;
+  call.response = {
+    items: response.items.map((binding) => ({
+      id: binding.id,
+      ready: binding.ready,
+      service_instance_id: binding.service_instance_id,
+      created_at: binding.created_at,
+      updated_at: binding.updated_at,
+      labels: binding.labels,
+      credentials: binding.credentials,
+    })),
+  };
+  return call;
+};
+
 const isGzippedCall = (call) => {
   const contentEndcodingIndex = call.rawHeaders.findIndex((entry) => entry === "content-encoding");
   return contentEndcodingIndex === -1 ? false : call.rawHeaders[contentEndcodingIndex + 1] === "gzip";
+};
+
+// CF API responses carry ~37 lines of headers per call (ratelimit, trace ids,
+// security headers, vendor x-* headers, dates). None affect nock playback —
+// only content-type matters. Keep that, drop the rest. Applied to every
+// api.cf.*.hana.ondemand.com call regardless of path.
+const CF_KEPT_HEADERS = new Set(["content-type"]);
+const trimCfRawHeaders = (call) => {
+  const kept = [];
+  for (let i = 0; i < call.rawHeaders.length; i += 2) {
+    if (CF_KEPT_HEADERS.has(call.rawHeaders[i])) {
+      kept.push(call.rawHeaders[i], call.rawHeaders[i + 1]);
+    }
+  }
+  call.rawHeaders = kept;
+  return call;
 };
 
 const anonymizeAndTrim = (calls) => {
@@ -312,6 +368,37 @@ const anonymizeAndTrim = (calls) => {
       call.rawHeaders.splice(contentEndcodingIndex, 2);
       const buffer = gunzipSync(Buffer.concat(call.response.map((part) => Buffer.from(part, "hex"))));
       call.response = JSON.parse(buffer.toString());
+    }
+
+    // ##### CF-API /v3/apps/{guid}/env
+    // ##### CF-API /v3/service_credential_bindings (list with ?app_guids=)
+    // ##### CF-API /v3/service_credential_bindings/{guid}/details
+    // ##### CF-API /v3/apps?space_guids=, /v3/apps/{guid}/processes,
+    //              /v3/routes, /v3/service_plans
+    if (/https:\/\/api\.cf\.[a-z]+\.hana\.ondemand\.com:443/.test(call.scope)) {
+      call = trimCfRawHeaders(call);
+
+      if (/\/v3\/apps\/[0-9a-f-]+\/env/.test(call.path)) {
+        return anonymizeCfEnvCall(call);
+      }
+      if (/^\/v3\/service_credential_bindings\?app_guids=/.test(call.path)) {
+        return trimCfBindingListCall(call);
+      }
+      if (/\/v3\/service_credential_bindings/.test(call.path)) {
+        return anonymizeCfCredentialCall(call);
+      }
+      if (/^\/v3\/apps\?space_guids=/.test(call.path)) {
+        return trimCfAppsListCall(call);
+      }
+      if (/^\/v3\/apps\/[0-9a-f-]+\/processes/.test(call.path)) {
+        return trimCfProcessesCall(call);
+      }
+      if (/^\/v3\/routes/.test(call.path)) {
+        return trimCfRoutesCall(call);
+      }
+      if (/\/v3\/service_plans/.test(call.path)) {
+        return trimCfServicePlansCall(call);
+      }
     }
 
     // ##### UAA
@@ -325,36 +412,6 @@ const anonymizeAndTrim = (calls) => {
       return anonymizeUaaAuthCall(call);
     }
 
-    // ##### CF-API /v3/apps/{guid}/env
-    // "scope": "https://api.cf.sap.hana.ondemand.com:443",
-    // "path": "/v3/apps/188569c2-8a80-4eb2-a80b-4aa58dd40c7b/env",
-    if (
-      /https:\/\/api\.cf\.[a-z]+\.hana\.ondemand\.com:443/.test(call.scope) &&
-      /\/v3\/apps\/[0-9a-f-]+\/env/.test(call.path)
-    ) {
-      return anonymizeCfEnvCall(call);
-    }
-
-    // ##### CF-API /v3/service_credential_bindings (list with ?app_guids=)
-    // Trimmed to fields production reads — removes large links/metadata/
-    // last_operation churn so re-records stay stable.
-    if (
-      /https:\/\/api\.cf\.[a-z]+\.hana\.ondemand\.com:443/.test(call.scope) &&
-      /^\/v3\/service_credential_bindings\?app_guids=/.test(call.path)
-    ) {
-      return trimCfBindingListCall(call);
-    }
-
-    // ##### CF-API /v3/service_credential_bindings/{guid}/details
-    // "scope": "https://api.cf.sap.hana.ondemand.com:443",
-    // "path": "/v3/service_credential_bindings",
-    if (
-      /https:\/\/api\.cf\.[a-z]+\.hana\.ondemand\.com:443/.test(call.scope) &&
-      /\/v3\/service_credential_bindings/.test(call.path)
-    ) {
-      return anonymizeCfCredentialCall(call);
-    }
-
     // ##### SERVICE-MANAGER
     // "scope": "https://service-manager.cfapps.sap.hana.ondemand.com:443",
     // "path": "/v1/service_bindings",
@@ -365,6 +422,11 @@ const anonymizeAndTrim = (calls) => {
         /\/v1\/service_instances.*/.test(call.path) ||
         /\/v1\/service_bindings.*/.test(call.path))
     ) {
+      if (/\/v1\/service_instances.*/.test(call.path)) {
+        call = trimServiceManagerInstancesCall(call);
+      } else if (/\/v1\/service_bindings.*/.test(call.path)) {
+        call = trimServiceManagerBindingsCall(call);
+      }
       return anonymizeServiceManagerCall(call);
     }
 
@@ -406,24 +468,6 @@ const anonymizeAndTrim = (calls) => {
       /\/-\/cds\/saas-provisioning\//.test(call.path)
     ) {
       return anonymizeCdsProvisioningCall(call);
-    }
-
-    // ##### PASS/TRIM CF
-    // "scope": "https://api.cf.sap.hana.ondemand.com:443",
-    // "path": "/v3/apps", "/v3/routes", "/v3/service_plans"
-    if (/https:\/\/api\.cf\.[a-z]+\.hana\.ondemand\.com:443/.test(call.scope)) {
-      if (/^\/v3\/apps\?space_guids=/.test(call.path)) {
-        return trimCfAppsListCall(call);
-      }
-      if (/^\/v3\/apps\/[0-9a-f-]+\/processes/.test(call.path)) {
-        return trimCfProcessesCall(call);
-      }
-      if (/^\/v3\/routes/.test(call.path)) {
-        return trimCfRoutesCall(call);
-      }
-      if (/\/v3\/service_plans/.test(call.path)) {
-        return trimCfServicePlansCall(call);
-      }
     }
 
     // ##### PASS CDS
