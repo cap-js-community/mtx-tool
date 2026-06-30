@@ -151,6 +151,8 @@ const _requestPlans = makeOneTime(
   }
 );
 
+// NOTE: we rely on service brokers to implement usable:
+//   https://github.com/cloudfoundry/servicebroker/blob/v2.17/spec.md#service-broker-errors
 const _requestInstances = async (
   context,
   { filterTenantId, filterServicePlanId, doEnsureUsable = false, doEnsureTenantLabel = false } = {}
