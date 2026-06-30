@@ -3,17 +3,31 @@
 const packageInfo = require("../../package.json");
 const { resetMakeOneTime } = require("../../src/shared/execution-control");
 const mockRequest = require("../../src/shared/request");
-jest.mock("../../src/shared/request", () => {
-  const { RETRY_MODE } = jest.requireActual("../../src/shared/request");
-  return {
-    RETRY_MODE,
-    request: jest.fn(),
-  };
+jest.mock("../../src/shared/request", () => ({
+  request: jest.fn(),
+}));
+// NOTE: default fallback — POST/DELETE return 202 with Location header pointing to a succeeded operation
+mockRequest.request.mockImplementation(({ method, pathname }) => {
+  if (method === "POST" || method === "DELETE") {
+    return {
+      headers: { get: (h) => (h === "location" ? `${pathname}/operations/op-id` : null) },
+      json: () => ({}),
+    };
+  }
+  if (pathname?.includes("/operations/")) {
+    return { headers: { get: () => null }, json: () => ({ state: "succeeded" }) };
+  }
+  return mockItemsResponse([]);
 });
 
 const { Logger: MockLogger } = require("../../src/shared/logger");
 const mockLogger = MockLogger.getInstance();
 jest.mock("../../src/shared/logger", () => require("../__mocks/shared/logger"));
+
+jest.mock("../../src/shared/static", () => ({
+  ...jest.requireActual("../../src/shared/static"),
+  sleep: jest.fn(),
+}));
 
 const svm = require("../../src/submodules/serviceManager");
 const { outputFromLogger, collectRequestMockCalls } = require("../test-util/static");
@@ -66,7 +80,6 @@ const mockFilteredHanaContainerPlanResponse = mockItemsResponse([
 
 const mockInstanceFactory = (i) => ({
   id: `instance-id-${i}`,
-  ready: true,
   name: `instance-name-${i}`,
   service_plan_id: `plan-id-${i % 2}`,
   usable: true,
@@ -154,14 +167,18 @@ describe("svm tests", () => {
           "GET service-manager-url /v2/service_plans",
           "GET service-manager-url /v2/service_instances",
           "GET service-manager-url /v2/service_bindings",
-          "POST service-manager-url /v2/service_bindings { async: false }
+          "POST service-manager-url /v2/service_bindings
         '{"name":"xxx","service_instance_id":"instance-id-0","labels":{"instance_id":["instance-id-0"],"tenant_id":["tenant-id-0"],"service_plan_id":["plan-id-0"]}}'",
-          "POST service-manager-url /v2/service_bindings { async: false }
+          "POST service-manager-url /v2/service_bindings
         '{"name":"xxx","service_instance_id":"instance-id-1","labels":{"instance_id":["instance-id-1"],"tenant_id":["tenant-id-0"],"service_plan_id":["plan-id-1"]}}'",
-          "POST service-manager-url /v2/service_bindings { async: false }
+          "POST service-manager-url /v2/service_bindings
         '{"name":"xxx","service_instance_id":"instance-id-3","labels":{"instance_id":["instance-id-3"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-1"]}}'",
-          "POST service-manager-url /v2/service_bindings { async: false }
+          "POST service-manager-url /v2/service_bindings
         '{"name":"xxx","service_instance_id":"instance-id-4","labels":{"instance_id":["instance-id-4"],"tenant_id":["tenant-id-2"],"service_plan_id":["plan-id-0"]}}'",
+          "GET service-manager-url /v2/service_bindings/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/operations/op-id",
         ]
       `);
       expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
@@ -187,10 +204,12 @@ describe("svm tests", () => {
           "GET service-manager-url /v2/service_plans { service_offering_id: 'offering-id-0', name: 'myPlan' }",
           "GET service-manager-url /v2/service_instances { service_plan_id: 'plan-id-0' }",
           "GET service-manager-url /v2/service_bindings",
-          "POST service-manager-url /v2/service_bindings { async: false }
+          "POST service-manager-url /v2/service_bindings
         '{"name":"xxx","service_instance_id":"instance-id-0","labels":{"instance_id":["instance-id-0"],"tenant_id":["tenant-id-0"],"service_plan_id":["plan-id-0"]}}'",
-          "POST service-manager-url /v2/service_bindings { async: false }
+          "POST service-manager-url /v2/service_bindings
         '{"name":"xxx","service_instance_id":"instance-id-4","labels":{"instance_id":["instance-id-4"],"tenant_id":["tenant-id-2"],"service_plan_id":["plan-id-0"]}}'",
+          "GET service-manager-url /v2/service_bindings/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/operations/op-id",
         ]
       `);
       expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
@@ -218,24 +237,36 @@ describe("svm tests", () => {
           "GET service-manager-url /v2/service_plans",
           "GET service-manager-url /v2/service_instances",
           "GET service-manager-url /v2/service_bindings",
-          "POST service-manager-url /v2/service_bindings { async: false }
+          "POST service-manager-url /v2/service_bindings
         '{"name":"xxx","service_instance_id":"instance-id-0","labels":{"instance_id":["instance-id-0"],"tenant_id":["tenant-id-0"],"service_plan_id":["plan-id-0"]}}'",
-          "POST service-manager-url /v2/service_bindings { async: false }
+          "POST service-manager-url /v2/service_bindings
         '{"name":"xxx","service_instance_id":"instance-id-1","labels":{"instance_id":["instance-id-1"],"tenant_id":["tenant-id-0"],"service_plan_id":["plan-id-1"]}}'",
-          "POST service-manager-url /v2/service_bindings { async: false }
+          "POST service-manager-url /v2/service_bindings
         '{"name":"xxx","service_instance_id":"instance-id-2","labels":{"instance_id":["instance-id-2"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-0"]}}'",
-          "POST service-manager-url /v2/service_bindings { async: false }
+          "POST service-manager-url /v2/service_bindings
         '{"name":"xxx","service_instance_id":"instance-id-3","labels":{"instance_id":["instance-id-3"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-1"]}}'",
-          "POST service-manager-url /v2/service_bindings { async: false }
+          "POST service-manager-url /v2/service_bindings
         '{"name":"xxx","service_instance_id":"instance-id-4","labels":{"instance_id":["instance-id-4"],"tenant_id":["tenant-id-2"],"service_plan_id":["plan-id-0"]}}'",
-          "POST service-manager-url /v2/service_bindings { async: false }
+          "POST service-manager-url /v2/service_bindings
         '{"name":"xxx","service_instance_id":"instance-id-5","labels":{"instance_id":["instance-id-5"],"tenant_id":["tenant-id-2"],"service_plan_id":["plan-id-1"]}}'",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-0 { async: false }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-1 { async: false }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-2 { async: false }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-3 { async: false }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-4 { async: false }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-5 { async: false }",
+          "GET service-manager-url /v2/service_bindings/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/operations/op-id",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-0",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-1",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-2",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-3",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-4",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-5",
+          "GET service-manager-url /v2/service_bindings/binding-id-0/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/binding-id-1/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/binding-id-2/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/binding-id-3/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/binding-id-4/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/binding-id-5/operations/op-id",
         ]
       `);
       expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"refreshed 6 bindings"`);
@@ -259,15 +290,21 @@ describe("svm tests", () => {
           "GET service-manager-url /v2/service_plans { service_offering_id: 'offering-id-0', name: 'myPlan' }",
           "GET service-manager-url /v2/service_instances { service_plan_id: 'plan-id-0' }",
           "GET service-manager-url /v2/service_bindings",
-          "POST service-manager-url /v2/service_bindings { async: false }
+          "POST service-manager-url /v2/service_bindings
         '{"name":"xxx","service_instance_id":"instance-id-0","labels":{"instance_id":["instance-id-0"],"tenant_id":["tenant-id-0"],"managing_client_lib":["instance-manager-client-lib"],"service_plan_id":["plan-id-0"]}}'",
-          "POST service-manager-url /v2/service_bindings { async: false }
+          "POST service-manager-url /v2/service_bindings
         '{"name":"xxx","service_instance_id":"instance-id-2","labels":{"instance_id":["instance-id-2"],"tenant_id":["tenant-id-1"],"managing_client_lib":["instance-manager-client-lib"],"service_plan_id":["plan-id-0"]}}'",
-          "POST service-manager-url /v2/service_bindings { async: false }
+          "POST service-manager-url /v2/service_bindings
         '{"name":"xxx","service_instance_id":"instance-id-4","labels":{"instance_id":["instance-id-4"],"tenant_id":["tenant-id-2"],"managing_client_lib":["instance-manager-client-lib"],"service_plan_id":["plan-id-0"]}}'",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-0 { async: false }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-2 { async: false }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-4 { async: false }",
+          "GET service-manager-url /v2/service_bindings/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/operations/op-id",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-0",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-2",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-4",
+          "GET service-manager-url /v2/service_bindings/binding-id-0/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/binding-id-2/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/binding-id-4/operations/op-id",
         ]
       `);
       expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"refreshed 3 bindings"`);
@@ -289,12 +326,16 @@ describe("svm tests", () => {
           "GET service-manager-url /v2/service_plans",
           "GET service-manager-url /v2/service_instances { labels: 'tenant_id=tenant-id-1' }",
           "GET service-manager-url /v2/service_bindings { labels: 'tenant_id=tenant-id-1' }",
-          "POST service-manager-url /v2/service_bindings { async: false }
+          "POST service-manager-url /v2/service_bindings
         '{"name":"xxx","service_instance_id":"instance-id-2","labels":{"instance_id":["instance-id-2"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-0"]}}'",
-          "POST service-manager-url /v2/service_bindings { async: false }
+          "POST service-manager-url /v2/service_bindings
         '{"name":"xxx","service_instance_id":"instance-id-3","labels":{"instance_id":["instance-id-3"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-1"]}}'",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-2 { async: false }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-3 { async: false }",
+          "GET service-manager-url /v2/service_bindings/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/operations/op-id",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-2",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-3",
+          "GET service-manager-url /v2/service_bindings/binding-id-2/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/binding-id-3/operations/op-id",
         ]
       `);
       expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"refreshed 2 bindings"`);
@@ -320,9 +361,11 @@ describe("svm tests", () => {
           "GET service-manager-url /v2/service_plans { service_offering_id: 'offering-id-0', name: 'myPlan' }",
           "GET service-manager-url /v2/service_instances { service_plan_id: 'plan-id-0', labels: 'tenant_id=tenant-id-1' }",
           "GET service-manager-url /v2/service_bindings { labels: 'tenant_id=tenant-id-1' }",
-          "POST service-manager-url /v2/service_bindings { async: false }
+          "POST service-manager-url /v2/service_bindings
         '{"name":"xxx","service_instance_id":"instance-id-2","labels":{"instance_id":["instance-id-2"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-0"]}}'",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-2 { async: false }",
+          "GET service-manager-url /v2/service_bindings/operations/op-id",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-2",
+          "GET service-manager-url /v2/service_bindings/binding-id-2/operations/op-id",
         ]
       `);
       expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"refreshed 1 binding"`);
@@ -342,12 +385,18 @@ describe("svm tests", () => {
         [
           "GET service-manager-url /v2/service_instances",
           "GET service-manager-url /v2/service_bindings",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-0 { async: false }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-1 { async: false }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-2 { async: false }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-3 { async: false }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-4 { async: false }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-5 { async: false }",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-0",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-1",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-2",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-3",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-4",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-5",
+          "GET service-manager-url /v2/service_bindings/binding-id-0/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/binding-id-1/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/binding-id-2/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/binding-id-3/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/binding-id-4/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/binding-id-5/operations/op-id",
         ]
       `);
       expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"deleted 6 bindings"`);
@@ -369,9 +418,12 @@ describe("svm tests", () => {
           "GET service-manager-url /v2/service_plans { service_offering_id: 'offering-id-0', name: 'myPlan' }",
           "GET service-manager-url /v2/service_instances { service_plan_id: 'plan-id-0' }",
           "GET service-manager-url /v2/service_bindings",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-0 { async: false }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-2 { async: false }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-4 { async: false }",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-0",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-2",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-4",
+          "GET service-manager-url /v2/service_bindings/binding-id-0/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/binding-id-2/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/binding-id-4/operations/op-id",
         ]
       `);
       expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"deleted 3 bindings"`);
@@ -389,8 +441,10 @@ describe("svm tests", () => {
         [
           "GET service-manager-url /v2/service_instances { labels: 'tenant_id=tenant-id-1' }",
           "GET service-manager-url /v2/service_bindings { labels: 'tenant_id=tenant-id-1' }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-2 { async: false }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-3 { async: false }",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-2",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-3",
+          "GET service-manager-url /v2/service_bindings/binding-id-2/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/binding-id-3/operations/op-id",
         ]
       `);
       expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"deleted 2 bindings"`);
@@ -414,7 +468,8 @@ describe("svm tests", () => {
           "GET service-manager-url /v2/service_plans { service_offering_id: 'offering-id-0', name: 'myPlan' }",
           "GET service-manager-url /v2/service_instances { service_plan_id: 'plan-id-0', labels: 'tenant_id=tenant-id-1' }",
           "GET service-manager-url /v2/service_bindings { labels: 'tenant_id=tenant-id-1' }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-2 { async: false }",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-2",
+          "GET service-manager-url /v2/service_bindings/binding-id-2/operations/op-id",
         ]
       `);
       expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"deleted 1 binding"`);
@@ -436,18 +491,30 @@ describe("svm tests", () => {
         [
           "GET service-manager-url /v2/service_instances",
           "GET service-manager-url /v2/service_bindings",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-0 { async: false }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-1 { async: false }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-2 { async: false }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-3 { async: false }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-4 { async: false }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-5 { async: false }",
-          "DELETE service-manager-url /v2/service_instances/instance-id-0 { async: false }",
-          "DELETE service-manager-url /v2/service_instances/instance-id-1 { async: false }",
-          "DELETE service-manager-url /v2/service_instances/instance-id-2 { async: false }",
-          "DELETE service-manager-url /v2/service_instances/instance-id-3 { async: false }",
-          "DELETE service-manager-url /v2/service_instances/instance-id-4 { async: false }",
-          "DELETE service-manager-url /v2/service_instances/instance-id-5 { async: false }",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-0",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-1",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-2",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-3",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-4",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-5",
+          "GET service-manager-url /v2/service_bindings/binding-id-0/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/binding-id-1/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/binding-id-2/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/binding-id-3/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/binding-id-4/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/binding-id-5/operations/op-id",
+          "DELETE service-manager-url /v2/service_instances/instance-id-0",
+          "DELETE service-manager-url /v2/service_instances/instance-id-1",
+          "DELETE service-manager-url /v2/service_instances/instance-id-2",
+          "DELETE service-manager-url /v2/service_instances/instance-id-3",
+          "DELETE service-manager-url /v2/service_instances/instance-id-4",
+          "DELETE service-manager-url /v2/service_instances/instance-id-5",
+          "GET service-manager-url /v2/service_instances/instance-id-0/operations/op-id",
+          "GET service-manager-url /v2/service_instances/instance-id-1/operations/op-id",
+          "GET service-manager-url /v2/service_instances/instance-id-2/operations/op-id",
+          "GET service-manager-url /v2/service_instances/instance-id-3/operations/op-id",
+          "GET service-manager-url /v2/service_instances/instance-id-4/operations/op-id",
+          "GET service-manager-url /v2/service_instances/instance-id-5/operations/op-id",
         ]
       `);
       expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
@@ -474,12 +541,18 @@ describe("svm tests", () => {
           "GET service-manager-url /v2/service_plans { service_offering_id: 'offering-id-0', name: 'myPlan' }",
           "GET service-manager-url /v2/service_instances { service_plan_id: 'plan-id-0' }",
           "GET service-manager-url /v2/service_bindings",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-0 { async: false }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-2 { async: false }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-4 { async: false }",
-          "DELETE service-manager-url /v2/service_instances/instance-id-0 { async: false }",
-          "DELETE service-manager-url /v2/service_instances/instance-id-2 { async: false }",
-          "DELETE service-manager-url /v2/service_instances/instance-id-4 { async: false }",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-0",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-2",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-4",
+          "GET service-manager-url /v2/service_bindings/binding-id-0/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/binding-id-2/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/binding-id-4/operations/op-id",
+          "DELETE service-manager-url /v2/service_instances/instance-id-0",
+          "DELETE service-manager-url /v2/service_instances/instance-id-2",
+          "DELETE service-manager-url /v2/service_instances/instance-id-4",
+          "GET service-manager-url /v2/service_instances/instance-id-0/operations/op-id",
+          "GET service-manager-url /v2/service_instances/instance-id-2/operations/op-id",
+          "GET service-manager-url /v2/service_instances/instance-id-4/operations/op-id",
         ]
       `);
       expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
@@ -502,10 +575,14 @@ describe("svm tests", () => {
         [
           "GET service-manager-url /v2/service_instances { labels: 'tenant_id=tenant-id-1' }",
           "GET service-manager-url /v2/service_bindings { labels: 'tenant_id=tenant-id-1' }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-2 { async: false }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-3 { async: false }",
-          "DELETE service-manager-url /v2/service_instances/instance-id-2 { async: false }",
-          "DELETE service-manager-url /v2/service_instances/instance-id-3 { async: false }",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-2",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-3",
+          "GET service-manager-url /v2/service_bindings/binding-id-2/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/binding-id-3/operations/op-id",
+          "DELETE service-manager-url /v2/service_instances/instance-id-2",
+          "DELETE service-manager-url /v2/service_instances/instance-id-3",
+          "GET service-manager-url /v2/service_instances/instance-id-2/operations/op-id",
+          "GET service-manager-url /v2/service_instances/instance-id-3/operations/op-id",
         ]
       `);
       expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
@@ -534,8 +611,10 @@ describe("svm tests", () => {
           "GET service-manager-url /v2/service_plans { service_offering_id: 'offering-id-0', name: 'myPlan' }",
           "GET service-manager-url /v2/service_instances { service_plan_id: 'plan-id-0', labels: 'tenant_id=tenant-id-1' }",
           "GET service-manager-url /v2/service_bindings { labels: 'tenant_id=tenant-id-1' }",
-          "DELETE service-manager-url /v2/service_bindings/binding-id-2 { async: false }",
-          "DELETE service-manager-url /v2/service_instances/instance-id-2 { async: false }",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-2",
+          "GET service-manager-url /v2/service_bindings/binding-id-2/operations/op-id",
+          "DELETE service-manager-url /v2/service_instances/instance-id-2",
+          "GET service-manager-url /v2/service_instances/instance-id-2/operations/op-id",
         ]
       `);
       expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
