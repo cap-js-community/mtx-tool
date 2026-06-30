@@ -22,7 +22,7 @@ const {
   clusterByKey,
 } = require("../shared/static");
 const { makeOneTime } = require("../shared/execution-control");
-const { assert } = require("../shared/error");
+const { assert, fail } = require("../shared/error");
 const { request, RETRY_MODE } = require("../shared/request");
 const { Logger } = require("../shared/logger");
 const { limiter, FunnelQueue } = require("../shared/funnel");
@@ -98,13 +98,21 @@ const _getQuery = (components) => {
   return Object.keys(query).length > 0 ? { query } : undefined;
 };
 
+// NOTE: service-manager v2 paginates via a Link header: </path?page_token=x>; rel="next"
+const _parseLinkNextPageToken = (linkHeader) => {
+  if (!linkHeader) return undefined;
+  const match = /[<]([^>]+)[>]; rel="next"/.exec(linkHeader);
+  if (!match || !match[1]) return undefined;
+  return new URL(match[1], "http://x").searchParams.get("page_token");
+};
+
 const _serviceManagerRequest = async (context, reqOptions = {}) => {
   const {
     cfBinding: { credentials },
   } = await context.getHdiInfo();
   const url = credentials.sm_url;
   const auth = { token: await context.getCachedUaaTokenFromCredentials(credentials) };
-  const response = await request({
+  const baseOptions = {
     url,
     auth,
     ...reqOptions,
@@ -114,13 +122,29 @@ const _serviceManagerRequest = async (context, reqOptions = {}) => {
       "Client-Version": packageInfo.version,
       ...reqOptions?.headers,
     },
-  });
+  };
 
-  if (reqOptions.method) {
-    return response;
+  if ([undefined, "GET"].includes(reqOptions.method)) {
+    // NOTE: GET — accumulate pages until no Link rel="next" header
+    let items = [];
+    let pageToken;
+    do {
+      const response = await request({
+        ...baseOptions,
+        ...(pageToken && { query: { ...reqOptions.query, page_token: pageToken } }),
+      });
+      const data = await response.json();
+      items = items.concat(data?.items ?? []);
+      pageToken = _parseLinkNextPageToken(response.headers.get("link"));
+    } while (pageToken);
+    return items;
+  } else if (["POST", "DELETE"].includes(reqOptions.method)) {
+    // NOTE: POST and DELETE with async polling
+    // TODO async polling
+    return await request(baseOptions);
+  } else {
+    return fail("method %s not implemented for service-manager request", reqOptions.method);
   }
-  // NOTE: no method here means GET and all service endpoints we use have this structure
-  return (await response.json())?.items ?? [];
 };
 
 const _requestOfferings = makeOneTime(

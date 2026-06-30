@@ -45,42 +45,24 @@ const testServicePlanName = "myOffering:myPlan";
 const testServicePlanId = "plan-id-0";
 const testTenantId = "tenant-id-1";
 
-const mockOfferingResponse = {
-  json: () => ({
-    items: [
-      { id: `offering-id-0`, name: `myOffering` },
-      { id: `offering-id-1`, name: `otherOffering` },
-    ],
-  }),
-};
-const mockFilteredOfferingResponse = {
-  json: () => ({
-    items: [{ id: `offering-id-0`, name: `myOffering` }],
-  }),
-};
-const mockFilteredHanaContainerOfferingResponse = {
-  json: () => ({
-    items: [{ id: `offering-id-0`, name: `hana` }],
-  }),
-};
-const mockPlanResponse = {
-  json: () => ({
-    items: [
-      { id: `plan-id-0`, service_offering_id: `offering-id-0`, name: `myPlan` },
-      { id: `plan-id-1`, service_offering_id: `offering-id-1`, name: `otherPlan` },
-    ],
-  }),
-};
-const mockFilteredPlanResponse = {
-  json: () => ({
-    items: [{ id: `plan-id-0`, service_offering_id: `offering-id-0`, name: `myPlan` }],
-  }),
-};
-const mockFilteredHanaContainerPlanResponse = {
-  json: () => ({
-    items: [{ id: `plan-id-0`, service_offering_id: `offering-id-0`, name: `hdi-shared` }],
-  }),
-};
+const mockItemsResponse = (items) => ({ headers: { get: () => null }, json: () => ({ items }) });
+
+const mockOfferingResponse = mockItemsResponse([
+  { id: `offering-id-0`, name: `myOffering` },
+  { id: `offering-id-1`, name: `otherOffering` },
+]);
+const mockFilteredOfferingResponse = mockItemsResponse([{ id: `offering-id-0`, name: `myOffering` }]);
+const mockFilteredHanaContainerOfferingResponse = mockItemsResponse([{ id: `offering-id-0`, name: `hana` }]);
+const mockPlanResponse = mockItemsResponse([
+  { id: `plan-id-0`, service_offering_id: `offering-id-0`, name: `myPlan` },
+  { id: `plan-id-1`, service_offering_id: `offering-id-1`, name: `otherPlan` },
+]);
+const mockFilteredPlanResponse = mockItemsResponse([
+  { id: `plan-id-0`, service_offering_id: `offering-id-0`, name: `myPlan` },
+]);
+const mockFilteredHanaContainerPlanResponse = mockItemsResponse([
+  { id: `plan-id-0`, service_offering_id: `offering-id-0`, name: `hdi-shared` },
+]);
 
 const mockInstanceFactory = (i) => ({
   id: `instance-id-${i}`,
@@ -95,14 +77,13 @@ const mockInstanceFactory = (i) => ({
     tenant_id: [`tenant-id-${Math.floor(i / 2)}`],
   },
 });
-const mockInstanceResponse = (n, { isPlanFiltered = false, isTenantFiltered = false } = {}) => ({
-  json: () => ({
-    items: Array.from({ length: n })
+const mockInstanceResponse = (n, { isPlanFiltered = false, isTenantFiltered = false } = {}) =>
+  mockItemsResponse(
+    Array.from({ length: n })
       .map((_, i) => mockInstanceFactory(i))
       .filter((a) => !isPlanFiltered || a.service_plan_id === testServicePlanId)
-      .filter((a) => !isTenantFiltered || a.labels.tenant_id[0] === testTenantId),
-  }),
-});
+      .filter((a) => !isTenantFiltered || a.labels.tenant_id[0] === testTenantId)
+  );
 
 const mockBindingFactory = (i) => ({
   id: `binding-id-${i}`,
@@ -127,11 +108,7 @@ describe("svm tests", () => {
       mockRequest.request.mockReturnValueOnce(mockOfferingResponse);
       mockRequest.request.mockReturnValueOnce(mockPlanResponse);
       mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6));
-      mockRequest.request.mockReturnValueOnce({
-        json: () => ({
-          items: [mockBindingFactory(2), mockBindingFactory(5)],
-        }),
-      });
+      mockRequest.request.mockReturnValueOnce(mockItemsResponse([mockBindingFactory(2), mockBindingFactory(5)]));
 
       await expect(svm.serviceManagerList(mockContext, [], [false, false])).resolves.toBeDefined();
 
@@ -143,6 +120,24 @@ describe("svm tests", () => {
         ])
       );
     });
+
+    test("pagination accumulates across pages", async () => {
+      const page1 = {
+        headers: { get: (h) => (h === "link" ? '</v2/service_instances?page_token=p2>; rel="next"' : null) },
+        json: () => ({ items: [mockInstanceFactory(0), mockInstanceFactory(1)] }),
+      };
+      const page2 = {
+        headers: { get: () => null },
+        json: () => ({ items: [mockInstanceFactory(2), mockInstanceFactory(3)] }),
+      };
+      mockRequest.request.mockReturnValueOnce(page1);
+      mockRequest.request.mockReturnValueOnce(page2);
+      mockRequest.request.mockReturnValueOnce(mockItemsResponse([]));
+
+      const result = await svm.serviceManagerLongList(mockContext, [], [true, false]);
+      expect(result).toMatchSnapshot();
+      expect(mockRequest.request).toHaveBeenCalledTimes(3);
+    });
   });
 
   describe("svm repair bindings", () => {
@@ -150,11 +145,7 @@ describe("svm tests", () => {
       mockRequest.request.mockReturnValueOnce(mockOfferingResponse);
       mockRequest.request.mockReturnValueOnce(mockPlanResponse);
       mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6));
-      mockRequest.request.mockReturnValueOnce({
-        json: () => ({
-          items: [mockBindingFactory(2), mockBindingFactory(5)],
-        }),
-      });
+      mockRequest.request.mockReturnValueOnce(mockItemsResponse([mockBindingFactory(2), mockBindingFactory(5)]));
 
       expect(await svm.serviceManagerRepairBindings(mockContext, ["all-services"], [])).toBeUndefined();
       expect(collectRequestMockCallsStable(mockRequest.request)).toMatchInlineSnapshot(`
@@ -187,11 +178,7 @@ describe("svm tests", () => {
       mockRequest.request.mockReturnValueOnce(mockFilteredOfferingResponse);
       mockRequest.request.mockReturnValueOnce(mockFilteredPlanResponse);
       mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isPlanFiltered: true }));
-      mockRequest.request.mockReturnValueOnce({
-        json: () => ({
-          items: [mockBindingFactory(2)],
-        }),
-      });
+      mockRequest.request.mockReturnValueOnce(mockItemsResponse([mockBindingFactory(2)]));
 
       expect(await svm.serviceManagerRepairBindings(mockContext, [testServicePlanName], [])).toBeUndefined();
       expect(collectRequestMockCallsStable(mockRequest.request)).toMatchInlineSnapshot(`
@@ -220,11 +207,9 @@ describe("svm tests", () => {
       mockRequest.request.mockReturnValueOnce(mockOfferingResponse);
       mockRequest.request.mockReturnValueOnce(mockPlanResponse);
       mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6));
-      mockRequest.request.mockReturnValueOnce({
-        json: () => ({
-          items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
-        }),
-      });
+      mockRequest.request.mockReturnValueOnce(
+        mockItemsResponse(Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)))
+      );
 
       expect(await svm.serviceManagerRefreshBindings(mockContext, ["all-services", "all-tenants"], [])).toBeUndefined();
       expect(collectRequestMockCallsStable(mockRequest.request)).toMatchInlineSnapshot(`
@@ -261,11 +246,9 @@ describe("svm tests", () => {
       mockRequest.request.mockReturnValueOnce(mockFilteredHanaContainerOfferingResponse);
       mockRequest.request.mockReturnValueOnce(mockFilteredHanaContainerPlanResponse);
       mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isPlanFiltered: true }));
-      mockRequest.request.mockReturnValueOnce({
-        json: () => ({
-          items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
-        }),
-      });
+      mockRequest.request.mockReturnValueOnce(
+        mockItemsResponse(Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)))
+      );
 
       expect(
         await svm.serviceManagerRefreshBindings(mockContext, [testServicePlanName, "all-tenants"], [])
@@ -295,11 +278,9 @@ describe("svm tests", () => {
       mockRequest.request.mockReturnValueOnce(mockOfferingResponse);
       mockRequest.request.mockReturnValueOnce(mockPlanResponse);
       mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isTenantFiltered: true }));
-      mockRequest.request.mockReturnValueOnce({
-        json: () => ({
-          items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
-        }),
-      });
+      mockRequest.request.mockReturnValueOnce(
+        mockItemsResponse(Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)))
+      );
 
       expect(await svm.serviceManagerRefreshBindings(mockContext, ["all-services", testTenantId], [])).toBeUndefined();
       expect(collectRequestMockCallsStable(mockRequest.request)).toMatchInlineSnapshot(`
@@ -326,11 +307,9 @@ describe("svm tests", () => {
       mockRequest.request.mockReturnValueOnce(
         mockInstanceResponse(6, { isTenantFiltered: true, isPlanFiltered: true })
       );
-      mockRequest.request.mockReturnValueOnce({
-        json: () => ({
-          items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
-        }),
-      });
+      mockRequest.request.mockReturnValueOnce(
+        mockItemsResponse(Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)))
+      );
 
       expect(
         await svm.serviceManagerRefreshBindings(mockContext, [testServicePlanName, testTenantId], [])
@@ -354,11 +333,9 @@ describe("svm tests", () => {
   describe("svm delete bindings", () => {
     test("all-services all-tenants", async () => {
       mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6));
-      mockRequest.request.mockReturnValueOnce({
-        json: () => ({
-          items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
-        }),
-      });
+      mockRequest.request.mockReturnValueOnce(
+        mockItemsResponse(Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)))
+      );
 
       expect(await svm.serviceManagerDeleteBindings(mockContext, ["all-services", "all-tenants"])).toBeUndefined();
       expect(collectRequestMockCallsStable(mockRequest.request)).toMatchInlineSnapshot(`
@@ -381,11 +358,9 @@ describe("svm tests", () => {
       mockRequest.request.mockReturnValueOnce(mockFilteredOfferingResponse);
       mockRequest.request.mockReturnValueOnce(mockFilteredPlanResponse);
       mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isPlanFiltered: true }));
-      mockRequest.request.mockReturnValueOnce({
-        json: () => ({
-          items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
-        }),
-      });
+      mockRequest.request.mockReturnValueOnce(
+        mockItemsResponse(Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)))
+      );
 
       expect(await svm.serviceManagerDeleteBindings(mockContext, [testServicePlanName, "all-tenants"])).toBeUndefined();
       expect(collectRequestMockCallsStable(mockRequest.request)).toMatchInlineSnapshot(`
@@ -405,11 +380,9 @@ describe("svm tests", () => {
 
     test("all-services myTenant", async () => {
       mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isTenantFiltered: true }));
-      mockRequest.request.mockReturnValueOnce({
-        json: () => ({
-          items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
-        }),
-      });
+      mockRequest.request.mockReturnValueOnce(
+        mockItemsResponse(Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)))
+      );
 
       expect(await svm.serviceManagerDeleteBindings(mockContext, ["all-services", testTenantId])).toBeUndefined();
       expect(collectRequestMockCallsStable(mockRequest.request)).toMatchInlineSnapshot(`
@@ -430,11 +403,9 @@ describe("svm tests", () => {
       mockRequest.request.mockReturnValueOnce(
         mockInstanceResponse(6, { isTenantFiltered: true, isPlanFiltered: true })
       );
-      mockRequest.request.mockReturnValueOnce({
-        json: () => ({
-          items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
-        }),
-      });
+      mockRequest.request.mockReturnValueOnce(
+        mockItemsResponse(Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)))
+      );
 
       expect(await svm.serviceManagerDeleteBindings(mockContext, [testServicePlanName, testTenantId])).toBeUndefined();
       expect(collectRequestMockCallsStable(mockRequest.request)).toMatchInlineSnapshot(`
@@ -454,11 +425,9 @@ describe("svm tests", () => {
   describe("svm delete instances and bindings", () => {
     test("all-services all-tenants", async () => {
       mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6));
-      mockRequest.request.mockReturnValueOnce({
-        json: () => ({
-          items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
-        }),
-      });
+      mockRequest.request.mockReturnValueOnce(
+        mockItemsResponse(Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)))
+      );
 
       expect(
         await svm.serviceManagerDeleteInstancesAndBindings(mockContext, ["all-services", "all-tenants"])
@@ -492,11 +461,9 @@ describe("svm tests", () => {
       mockRequest.request.mockReturnValueOnce(mockFilteredOfferingResponse);
       mockRequest.request.mockReturnValueOnce(mockFilteredPlanResponse);
       mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isPlanFiltered: true }));
-      mockRequest.request.mockReturnValueOnce({
-        json: () => ({
-          items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
-        }),
-      });
+      mockRequest.request.mockReturnValueOnce(
+        mockItemsResponse(Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)))
+      );
 
       expect(
         await svm.serviceManagerDeleteInstancesAndBindings(mockContext, [testServicePlanName, "all-tenants"])
@@ -524,11 +491,9 @@ describe("svm tests", () => {
 
     test("all-services myTenant", async () => {
       mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isTenantFiltered: true }));
-      mockRequest.request.mockReturnValueOnce({
-        json: () => ({
-          items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
-        }),
-      });
+      mockRequest.request.mockReturnValueOnce(
+        mockItemsResponse(Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)))
+      );
 
       expect(
         await svm.serviceManagerDeleteInstancesAndBindings(mockContext, ["all-services", testTenantId])
@@ -556,11 +521,9 @@ describe("svm tests", () => {
       mockRequest.request.mockReturnValueOnce(
         mockInstanceResponse(6, { isTenantFiltered: true, isPlanFiltered: true })
       );
-      mockRequest.request.mockReturnValueOnce({
-        json: () => ({
-          items: Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)),
-        }),
-      });
+      mockRequest.request.mockReturnValueOnce(
+        mockItemsResponse(Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)))
+      );
 
       expect(
         await svm.serviceManagerDeleteInstancesAndBindings(mockContext, [testServicePlanName, testTenantId])
