@@ -20,18 +20,21 @@ const {
   randomString,
   indexByKey,
   clusterByKey,
+  sleep,
 } = require("../shared/static");
 const { makeOneTime } = require("../shared/execution-control");
 const { assert, fail } = require("../shared/error");
-const { request, RETRY_MODE } = require("../shared/request");
+const { request } = require("../shared/request");
 const { Logger } = require("../shared/logger");
 const { limiter, FunnelQueue } = require("../shared/funnel");
 
 const ENV = Object.freeze({
   SVM_CONCURRENCY: "MTX_SVM_CONCURRENCY",
+  SVM_POLL_FREQUENCY: "MTX_SVM_POLL_FREQUENCY",
 });
 
 const SERVICE_MANAGER_REQUEST_CONCURRENCY_FALLBACK = 6;
+const SERVICE_MANAGER_POLL_FREQUENCY_FALLBACK = 6000;
 const SERVICE_MANAGER_IDEAL_BINDING_COUNT = 1;
 const SERVICE_PLAN_ALL_IDENTIFIER = "all-services";
 const TENANT_ID_ALL_IDENTIFIER = "all-tenants";
@@ -61,6 +64,10 @@ const logger = Logger.getInstance();
 const svmRequestConcurrency = parseIntWithFallback(
   process.env[ENV.SVM_CONCURRENCY],
   SERVICE_MANAGER_REQUEST_CONCURRENCY_FALLBACK
+);
+const svmPollFrequency = parseIntWithFallback(
+  process.env[ENV.SVM_POLL_FREQUENCY],
+  SERVICE_MANAGER_POLL_FREQUENCY_FALLBACK
 );
 
 // NOTE: the tenant ids for service manager are not necessarily uuids, this is a much broader validator
@@ -106,13 +113,13 @@ const _parseLinkNextPageToken = (linkHeader) => {
   return new URL(match[1], "http://x").searchParams.get("page_token");
 };
 
-const _serviceManagerRequest = async (context, reqOptions = {}) => {
+const _serviceManagerRequestBase = async (context, reqOptions = {}) => {
   const {
     cfBinding: { credentials },
   } = await context.getHdiInfo();
   const url = credentials.sm_url;
   const auth = { token: await context.getCachedUaaTokenFromCredentials(credentials) };
-  const baseOptions = {
+  return await request({
     url,
     auth,
     ...reqOptions,
@@ -122,15 +129,17 @@ const _serviceManagerRequest = async (context, reqOptions = {}) => {
       "Client-Version": packageInfo.version,
       ...reqOptions?.headers,
     },
-  };
+  });
+};
 
+const _serviceManagerRequest = async (context, reqOptions = {}) => {
   if ([undefined, "GET"].includes(reqOptions.method)) {
     // NOTE: GET — accumulate pages until no Link rel="next" header
     let items = [];
     let pageToken;
     do {
-      const response = await request({
-        ...baseOptions,
+      const response = await _serviceManagerRequestBase(context, {
+        ...reqOptions,
         ...(pageToken && { query: { ...reqOptions.query, page_token: pageToken } }),
       });
       const data = await response.json();
@@ -139,9 +148,19 @@ const _serviceManagerRequest = async (context, reqOptions = {}) => {
     } while (pageToken);
     return items;
   } else if (["POST", "DELETE"].includes(reqOptions.method)) {
-    // NOTE: POST and DELETE with async polling
-    // TODO async polling
-    return await request(baseOptions);
+    const response = await _serviceManagerRequestBase(context, reqOptions);
+    const location = response.headers.get("location");
+    assert(location, "missing location header for polling from %s", reqOptions.pathname);
+    let operation;
+    do {
+      await sleep(svmPollFrequency);
+      const pollResponse = await _serviceManagerRequestBase(context, { pathname: location });
+      operation = await pollResponse.json();
+    } while (operation.state !== OPERATION_STATE.SUCCEEDED && operation.state !== OPERATION_STATE.FAILED);
+    if (operation.state === OPERATION_STATE.FAILED) {
+      const detail = operation.error?.description ?? operation.error?.broker_error?.description ?? "";
+      fail("service-manager operation failed for %s: %s", location, detail);
+    }
   } else {
     return fail("method %s not implemented for service-manager request", reqOptions.method);
   }
@@ -340,10 +359,8 @@ const _requestCreateBinding = async (
     .filter(([key]) => !["container_id", "subaccount_id"].includes(key))
     .reduce((acc, [key, value]) => ((acc[key] = value), acc), {});
   await _serviceManagerRequest(context, {
-    retryMode: RETRY_MODE.ALL_FAILED,
     method: "POST",
     pathname: `/v2/service_bindings`,
-    query: { async: false },
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       name,
@@ -356,10 +373,8 @@ const _requestCreateBinding = async (
 
 const _requestDeleteBinding = async (context, serviceBindingId) =>
   await _serviceManagerRequest(context, {
-    retryMode: RETRY_MODE.ALL_FAILED,
     method: "DELETE",
     pathname: `/v2/service_bindings/${serviceBindingId}`,
-    query: { async: false },
   });
 
 const _serviceManagerRepairBindings = async (context, { filterServicePlanId, parameters } = {}) => {
@@ -592,10 +607,8 @@ const serviceManagerDeleteBindings = async (context, [servicePlanName, tenantId]
 
 const _requestDeleteInstance = async (context, serviceInstanceId) =>
   await _serviceManagerRequest(context, {
-    retryMode: RETRY_MODE.ALL_FAILED,
     method: "DELETE",
     pathname: `/v2/service_instances/${serviceInstanceId}`,
-    query: { async: false },
   });
 
 const serviceManagerDeleteInstancesAndBindings = async (context, [servicePlanName, tenantId]) => {
