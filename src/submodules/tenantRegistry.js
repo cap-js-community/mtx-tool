@@ -297,10 +297,11 @@ const _callAndPollAndMarkInner = async (context, source, reqOptions) => {
     const initialResponse = await _call(context, source, reqOptions);
     assert(
       initialResponse.status === HTTP_ACCEPTED,
-      "got unexpected response code for polling from %s",
+      "got unexpected response code %i for polling from %s",
+      initialResponse.status,
       reqOptions.pathname
     );
-    const [location] = initialResponse.headers.raw().location;
+    const location = initialResponse.headers.get("location");
     assert(location, "missing location header for polling from %s", reqOptions.pathname);
 
     logger.info("polling subscription %s with interval %isec", location, regPollFrequency / 1000);

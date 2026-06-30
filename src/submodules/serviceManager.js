@@ -33,6 +33,8 @@ const ENV = Object.freeze({
   SVM_POLL_FREQUENCY: "MTX_SVM_POLL_FREQUENCY",
 });
 
+const HTTP_ACCEPTED = 202;
+
 const SERVICE_MANAGER_REQUEST_CONCURRENCY_FALLBACK = 6;
 const SERVICE_MANAGER_POLL_FREQUENCY_FALLBACK = 6000;
 const SERVICE_MANAGER_IDEAL_BINDING_COUNT = 1;
@@ -134,7 +136,7 @@ const _serviceManagerRequestBase = async (context, reqOptions = {}) => {
 
 const _serviceManagerRequest = async (context, reqOptions = {}) => {
   if ([undefined, "GET"].includes(reqOptions.method)) {
-    // NOTE: GET — accumulate pages until no Link rel="next" header
+    // NOTE: GET accumulate pages until no Link rel="next" header
     let items = [];
     let pageToken;
     do {
@@ -148,7 +150,14 @@ const _serviceManagerRequest = async (context, reqOptions = {}) => {
     } while (pageToken);
     return items;
   } else if (["POST", "DELETE"].includes(reqOptions.method)) {
+    // NOTE: POST and DELETE run polling
     const response = await _serviceManagerRequestBase(context, reqOptions);
+    assert(
+      response.status === HTTP_ACCEPTED,
+      "got unexpected response code %i for polling from %s",
+      response.status,
+      reqOptions.pathname
+    );
     const location = response.headers.get("location");
     assert(location, "missing location header for polling from %s", reqOptions.pathname);
     let operation;
