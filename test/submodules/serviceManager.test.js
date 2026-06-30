@@ -10,6 +10,7 @@ jest.mock("../../src/shared/request", () => ({
 mockRequest.request.mockImplementation(({ method, pathname }) => {
   if (method === "POST" || method === "DELETE") {
     return {
+      status: 202,
       headers: { get: (h) => (h === "location" ? `${pathname}/operations/op-id` : null) },
       json: () => ({}),
     };

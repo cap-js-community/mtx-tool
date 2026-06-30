@@ -302,7 +302,7 @@ const trimCfProcessesCall = (call) => {
 // Trim a service-manager /v1/service_instances response. Production reads from
 // each instance: id, ready, service_plan_id, created_at, updated_at, and
 // labels (labels.tenant_id is checked, and the full labels object is cloned
-// into newly-created bindings in serviceManager.js).
+// into newly-created bindings).
 const trimServiceManagerInstancesCall = (call) => {
   const response = call.response;
   call.response = {
@@ -329,6 +329,43 @@ const trimServiceManagerBindingsCall = (call) => {
     items: response.items.map((binding) => ({
       id: binding.id,
       ready: binding.ready,
+      service_instance_id: binding.service_instance_id,
+      created_at: binding.created_at,
+      updated_at: binding.updated_at,
+      labels: binding.labels,
+      credentials: binding.credentials,
+    })),
+  };
+  return call;
+};
+
+// Trim a service-manager /v2/service_instances response. Production reads from
+// each instance: id, usable, service_plan_id, created_at, updated_at, and
+// labels.
+const trimServiceManagerInstancesV2Call = (call) => {
+  const response = call.response;
+  call.response = {
+    items: response.items.map((instance) => ({
+      id: instance.id,
+      usable: instance.usable,
+      service_plan_id: instance.service_plan_id,
+      created_at: instance.created_at,
+      updated_at: instance.updated_at,
+      labels: instance.labels,
+    })),
+  };
+  return call;
+};
+
+// Trim a service-manager /v2/service_bindings response. Production reads from
+// each binding: id, last_operation.state, service_instance_id, created_at,
+// updated_at, labels, and credentials.
+const trimServiceManagerBindingsV2Call = (call) => {
+  const response = call.response;
+  call.response = {
+    items: response.items.map((binding) => ({
+      id: binding.id,
+      last_operation: binding.last_operation && { state: binding.last_operation.state },
       service_instance_id: binding.service_instance_id,
       created_at: binding.created_at,
       updated_at: binding.updated_at,
@@ -412,7 +449,7 @@ const trimAndAnonymize = (calls) => {
       return anonymizeUaaAuthCall(call);
     }
 
-    // ##### SERVICE-MANAGER
+    // ##### SERVICE-MANAGER v1
     // "scope": "https://service-manager.cfapps.sap.hana.ondemand.com:443",
     // "path": "/v1/service_bindings",
     if (
@@ -426,6 +463,25 @@ const trimAndAnonymize = (calls) => {
         call = trimServiceManagerInstancesCall(call);
       } else if (/\/v1\/service_bindings.*/.test(call.path)) {
         call = trimServiceManagerBindingsCall(call);
+      }
+      return anonymizeServiceManagerCall(call);
+    }
+
+    // ##### SERVICE-MANAGER v2
+    // "scope": "https://service-manager.cfapps.sap.hana.ondemand.com:443",
+    // "path": "/v2/service_bindings", or operation-polling paths like
+    //         "/v2/service_bindings/{id}/operations/{op_id}"
+    if (
+      /https:\/\/service-manager\.cfapps\.sap\.hana\.ondemand\.com:443/.test(call.scope) &&
+      /\/v2\/service_(?:offerings|plans|instances|bindings)/.test(call.path)
+    ) {
+      // NOTE: list endpoints expose `items` and benefit from field-trim; nested
+      //   paths (notably /.../operations/...) return single objects and are
+      //   only anonymized.
+      if (/\/v2\/service_instances(?:\?|$)/.test(call.path)) {
+        call = trimServiceManagerInstancesV2Call(call);
+      } else if (/\/v2\/service_bindings(?:\?|$)/.test(call.path)) {
+        call = trimServiceManagerBindingsV2Call(call);
       }
       return anonymizeServiceManagerCall(call);
     }
