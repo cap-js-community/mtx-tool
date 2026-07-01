@@ -33,6 +33,8 @@ describe("hdi nock tests", () => {
     resetMakeOneTime(hdi._._requestOfferings);
     resetMakeOneTime(hdi._._requestPlans);
     resetMakeOneTime(hdi._._getHdiSharedPlanId);
+    // eslint-disable-next-line jest/no-standalone-expect
+    expect(nock.pendingMocks()).toEqual([]);
     nock.cleanAll();
   });
 

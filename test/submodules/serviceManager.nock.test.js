@@ -32,6 +32,8 @@ describe("svm nock tests", () => {
     LogRequestId.reset();
     resetMakeOneTime(svm._._requestOfferings);
     resetMakeOneTime(svm._._requestPlans);
+    // eslint-disable-next-line jest/no-standalone-expect
+    expect(nock.pendingMocks()).toEqual([]);
     nock.cleanAll();
   });
 

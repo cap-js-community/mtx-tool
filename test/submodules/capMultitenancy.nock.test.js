@@ -29,6 +29,8 @@ const freshContext = async () => await newContext({ usePersistedCache: false, is
 describe("cds nock tests", () => {
   afterEach(() => {
     LogRequestId.reset();
+    // eslint-disable-next-line jest/no-standalone-expect
+    expect(nock.pendingMocks()).toEqual([]);
     nock.cleanAll();
   });
 
