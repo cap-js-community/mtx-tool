@@ -174,29 +174,68 @@ const anonymizeCdsProvisioningCall = (call) => {
   return call;
 };
 
+// NOTE: we want to save space on the fixtures for /v3/service_plans the recorded
+//   response is trimmed from ~100 plans.
+const CF_SERVICE_PLANS_WHITELIST = new Set([
+  "aicore:sap-internal",
+  "application-logs:standard",
+  "auditlog:oauth2",
+  "autoscaler:standard",
+  "business-logging:default",
+  "certificate-service:standard",
+  "connectivity:lite",
+  "destination:lite",
+  "dynatrace:environment",
+  "hana:hdi-shared",
+  "identity:application",
+  "malware-scanner:clamav",
+  "objectstore:standard",
+  "redis-cache:standard",
+  "service-manager:container",
+  "xsuaa:application",
+]);
+
 const trimCfServicePlansCall = (call) => {
   const response = call.response;
-  const trimmedResources = response.resources.map((plan) => ({
-    guid: plan.guid,
-    name: plan.name,
-    relationships: {
-      service_offering: {
-        data: { guid: plan?.relationships?.service_offering?.data?.guid },
+  const offeringNameByGuid = new Map();
+  if (response.included && Array.isArray(response.included.service_offerings)) {
+    for (const offering of response.included.service_offerings) {
+      offeringNameByGuid.set(offering.guid, offering.name);
+    }
+  }
+  const keptResources = [];
+  const keptOfferingGuids = new Set();
+  for (const plan of response.resources) {
+    const offeringGuid = plan?.relationships?.service_offering?.data?.guid;
+    const offeringName = offeringNameByGuid.get(offeringGuid);
+    if (!CF_SERVICE_PLANS_WHITELIST.has(`${offeringName}:${plan.name}`)) {
+      continue;
+    }
+    keptResources.push({
+      guid: plan.guid,
+      name: plan.name,
+      relationships: {
+        service_offering: {
+          data: { guid: offeringGuid },
+        },
       },
-    },
-  }));
+    });
+    keptOfferingGuids.add(offeringGuid);
+  }
   let trimmedIncluded;
   if (response.included && Array.isArray(response.included.service_offerings)) {
     trimmedIncluded = {
-      service_offerings: response.included.service_offerings.map((offering) => ({
-        guid: offering.guid,
-        name: offering.name,
-      })),
+      service_offerings: response.included.service_offerings
+        .filter((offering) => keptOfferingGuids.has(offering.guid))
+        .map((offering) => ({
+          guid: offering.guid,
+          name: offering.name,
+        })),
     };
   }
   call.response = {
     pagination: response.pagination,
-    resources: trimmedResources,
+    resources: keptResources,
     ...(trimmedIncluded && { included: trimmedIncluded }),
   };
   return call;
