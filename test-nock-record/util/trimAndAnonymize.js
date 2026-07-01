@@ -178,6 +178,7 @@ const anonymizeCdsProvisioningCall = (call) => {
 //   response is trimmed from ~100 plans.
 const CF_SERVICE_PLANS_WHITELIST = new Set([
   "aicore:sap-internal",
+  "alert-notification:business-notifications",
   "application-logs:standard",
   "auditlog:oauth2",
   "autoscaler:standard",
@@ -187,11 +188,17 @@ const CF_SERVICE_PLANS_WHITELIST = new Set([
   "destination:lite",
   "dynatrace:environment",
   "hana:hdi-shared",
+  "html5-apps-repo:app-runtime",
   "identity:application",
   "malware-scanner:clamav",
   "objectstore:standard",
+  "portal:standard",
   "redis-cache:standard",
+  "saas-registry:application",
   "service-manager:container",
+  "subscription-manager:provider",
+  "theming:standard",
+  "ui5-flexibility-keyuser:keyuser",
   "xsuaa:application",
 ]);
 
