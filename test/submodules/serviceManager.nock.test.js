@@ -55,14 +55,14 @@ describe("svm nock tests", () => {
     expect(collectRequestCount(require(`${nock.back.fixtures}/svm-long-list.json`))).toMatchInlineSnapshot(`
       {
         "GET https://api.cf.sap.hana.ondemand.com:443": 24,
-        "GET https://service-manager.cfapps.sap.hana.ondemand.com:443": 4,
+        "GET https://service-manager.cfapps.sap.hana.ondemand.com:443": 2,
         "POST https://skyfin.authentication.cert.sap.hana.ondemand.com:443": 1,
       }
     `);
     expect(collectRequestCount(require(`${nock.back.fixtures}/svm-long-list-filtered.json`))).toMatchInlineSnapshot(`
       {
         "GET https://api.cf.sap.hana.ondemand.com:443": 24,
-        "GET https://service-manager.cfapps.sap.hana.ondemand.com:443": 4,
+        "GET https://service-manager.cfapps.sap.hana.ondemand.com:443": 2,
         "POST https://skyfin.authentication.cert.sap.hana.ondemand.com:443": 1,
       }
     `);
