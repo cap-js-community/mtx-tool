@@ -43,14 +43,14 @@ describe("svm nock", () => {
 
   test("record svm long list basic", async () => {
     const { nockDone } = await nock.back("svm-long-list.json", { afterRecord: trimAndAnonymize });
-    await svm.serviceManagerList(await freshContext(), [], [false, false]);
+    await svm.serviceManagerLongList(await freshContext(), [], [false, false]);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
 
   test("record svm long list filtered", async () => {
     const { nockDone } = await nock.back("svm-long-list-filtered.json", { afterRecord: trimAndAnonymize });
-    await svm.serviceManagerList(await freshContext(), [testTenantId], [false, false]);
+    await svm.serviceManagerLongList(await freshContext(), [testTenantId], [false, false]);
     nockDone();
     expect(errorLoggerSpy).toHaveBeenCalledTimes(0);
   });
