@@ -102,7 +102,7 @@ describe("reg nock tests", () => {
 
   describe("reg list", () => {
     test("reg list basic", async () => {
-      const { nockDone } = await nock.back("reg-list.json", { before: beforeExpandSharedRefs });
+      await nock.back("reg-list.json", { before: beforeExpandSharedRefs });
       const output = await reg.registryListSubscriptions(await freshContext(), [], [false, false, false, false]);
       expect(output).toMatchInlineSnapshot(`
         "#   consumerTenantId                      subscriptionId                        globalAccountId                       subdomain                       appName      plan                  state       url                                                                 
@@ -140,11 +140,10 @@ describe("reg nock tests", () => {
         GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/subscription-manager/v1/subscriptions?appName=afc-dev-sms&size=200&page=1 200 OK (88ms)"
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
-      nockDone();
     });
 
     test("reg list timestamps", async () => {
-      const { nockDone } = await nock.back("reg-list.json", { before: beforeExpandSharedRefs });
+      await nock.back("reg-list.json", { before: beforeExpandSharedRefs });
       const output = await reg.registryListSubscriptions(await freshContext(), [], [true, false, false, false]);
       expect(anonymizeListTimestamps(output)).toMatchInlineSnapshot(`
         "#   consumerTenantId                      subscriptionId                        globalAccountId                       subdomain                       appName      plan                  state       url                                                                   created_on  updated_on
@@ -176,19 +175,17 @@ describe("reg nock tests", () => {
         26  fe2e319f-68cd-450f-8a02-d726dac64b35  6cc71fb4-be2f-4d0f-82f5-c385f1f1999d  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  sky-major-tom-fin               afc-dev      standard              SUBSCRIBED  https://sky-major-tom-fin.dev.eu10-canary.afc.cloud.sap               2025-12-02T12:41:56Z (x days ago)  2026-06-23T09:35:05Z (x days ago)  "
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
-      nockDone();
     });
 
     test("reg list json", async () => {
-      const { nockDone } = await nock.back("reg-list.json", { before: beforeExpandSharedRefs });
+      await nock.back("reg-list.json", { before: beforeExpandSharedRefs });
       const output = await reg.registryListSubscriptions(await freshContext(), [], [true, true, false, false]);
       expect(output).toMatchSnapshot();
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
-      nockDone();
     });
 
     test("reg list filtered basic", async () => {
-      const { nockDone } = await nock.back("reg-list-filtered.json", { before: beforeExpandSharedRefs });
+      await nock.back("reg-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await reg.registryListSubscriptions(
         await freshContext(),
         [testTenantId],
@@ -205,11 +202,10 @@ describe("reg nock tests", () => {
         GET https://saas-manager.mesh.cf.sap.hana.ondemand.com/subscription-manager/v1/subscriptions?appName=afc-dev-sms&app_tid=5ecc7413-2b7e-414a-9496-ad4a61f6cccf&size=200&page=1 200 OK (88ms)"
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
-      nockDone();
     });
 
     test("reg list filtered timestamps", async () => {
-      const { nockDone } = await nock.back("reg-list-filtered.json", { before: beforeExpandSharedRefs });
+      await nock.back("reg-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await reg.registryListSubscriptions(
         await freshContext(),
         [testTenantId],
@@ -220,11 +216,10 @@ describe("reg nock tests", () => {
         5ecc7413-2b7e-414a-9496-ad4a61f6cccf  07a3fb9e-8c5d-4126-9f4e-53218998c0d1  011b4e7a-43b5-4f63-819a-9b1e46ab23b6  skyfin-company  afc-dev-sms  standard  SUBSCRIBED  https://skyfin-company.dev.eu10-canary.afc.cloud.sap  2025-09-18T09:24:29Z (x days ago)  2026-06-23T09:33:10Z (x days ago)  "
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
-      nockDone();
     });
 
     test("reg list filtered json", async () => {
-      const { nockDone } = await nock.back("reg-list-filtered.json", { before: beforeExpandSharedRefs });
+      await nock.back("reg-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await reg.registryListSubscriptions(
         await freshContext(),
         [testTenantId],
@@ -232,13 +227,12 @@ describe("reg nock tests", () => {
       );
       expect(output).toMatchSnapshot();
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
-      nockDone();
     });
   });
 
   describe("reg long list", () => {
     test("reg long list basic/json", async () => {
-      const { nockDone } = await nock.back("reg-long-list.json", { before: beforeExpandSharedRefs });
+      await nock.back("reg-long-list.json", { before: beforeExpandSharedRefs });
       const output = await reg.registryLongListSubscriptions(await freshContext(), [], [false, false, false]);
       expect(output).toMatchSnapshot();
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
