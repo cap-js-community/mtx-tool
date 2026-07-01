@@ -1,0 +1,90 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`svm tests svm basics pagination accumulates across pages 1`] = `
+{
+  "bindings": [
+    {
+      "id": "instance-id-2",
+      "labels": {
+        "container_id": [
+          "container-id-2",
+        ],
+        "instance_id": [
+          "instance-id-2",
+        ],
+        "subaccount_id": [
+          "subaccount-id-2",
+        ],
+        "tenant_id": [
+          "tenant-id-1",
+        ],
+      },
+      "name": "instance-name-2",
+      "service_plan_id": "plan-id-0",
+      "usable": true,
+    },
+    {
+      "id": "instance-id-3",
+      "labels": {
+        "container_id": [
+          "container-id-3",
+        ],
+        "instance_id": [
+          "instance-id-3",
+        ],
+        "subaccount_id": [
+          "subaccount-id-3",
+        ],
+        "tenant_id": [
+          "tenant-id-1",
+        ],
+      },
+      "name": "instance-name-3",
+      "service_plan_id": "plan-id-1",
+      "usable": true,
+    },
+  ],
+  "instances": [
+    {
+      "id": "instance-id-0",
+      "labels": {
+        "container_id": [
+          "container-id-0",
+        ],
+        "instance_id": [
+          "instance-id-0",
+        ],
+        "subaccount_id": [
+          "subaccount-id-0",
+        ],
+        "tenant_id": [
+          "tenant-id-0",
+        ],
+      },
+      "name": "instance-name-0",
+      "service_plan_id": "plan-id-0",
+      "usable": true,
+    },
+    {
+      "id": "instance-id-1",
+      "labels": {
+        "container_id": [
+          "container-id-1",
+        ],
+        "instance_id": [
+          "instance-id-1",
+        ],
+        "subaccount_id": [
+          "subaccount-id-1",
+        ],
+        "tenant_id": [
+          "tenant-id-0",
+        ],
+      },
+      "name": "instance-name-1",
+      "service_plan_id": "plan-id-1",
+      "usable": true,
+    },
+  ],
+}
+`;

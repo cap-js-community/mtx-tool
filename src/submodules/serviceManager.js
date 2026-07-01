@@ -20,18 +20,23 @@ const {
   randomString,
   indexByKey,
   clusterByKey,
+  sleep,
 } = require("../shared/static");
 const { makeOneTime } = require("../shared/execution-control");
-const { assert } = require("../shared/error");
-const { request, RETRY_MODE } = require("../shared/request");
+const { assert, fail } = require("../shared/error");
+const { request } = require("../shared/request");
 const { Logger } = require("../shared/logger");
 const { limiter, FunnelQueue } = require("../shared/funnel");
 
 const ENV = Object.freeze({
   SVM_CONCURRENCY: "MTX_SVM_CONCURRENCY",
+  SVM_POLL_FREQUENCY: "MTX_SVM_POLL_FREQUENCY",
 });
 
+const HTTP_ACCEPTED = 202;
+
 const SERVICE_MANAGER_REQUEST_CONCURRENCY_FALLBACK = 6;
+const SERVICE_MANAGER_POLL_FREQUENCY_FALLBACK = 6000;
 const SERVICE_MANAGER_IDEAL_BINDING_COUNT = 1;
 const SERVICE_PLAN_ALL_IDENTIFIER = "all-services";
 const TENANT_ID_ALL_IDENTIFIER = "all-tenants";
@@ -40,9 +45,17 @@ const SENSITIVE_FIELD_MARKERS = ["password", "key"];
 const SENSITIVE_FIELD_HIDDEN_TEXT = "*** show with --reveal ***";
 
 const QUERY_TYPE = {
-  FIELD: "fieldQuery",
-  LABEL: "labelQuery",
+  FIELD: "field",
+  LABEL: "label",
 };
+
+const OPERATION_STATE = Object.freeze({
+  IN_PROGRESS: "in progress",
+  PENDING: "pending",
+  POLLING: "polling",
+  SUCCEEDED: "succeeded",
+  FAILED: "failed",
+});
 
 // NOTE: old versions of cap java relied on managing_client_lib label for hana containers
 const HANA_CONTAINER_OFFERING_PLAN_NAME = "hana:hdi-shared";
@@ -53,6 +66,10 @@ const logger = Logger.getInstance();
 const svmRequestConcurrency = parseIntWithFallback(
   process.env[ENV.SVM_CONCURRENCY],
   SERVICE_MANAGER_REQUEST_CONCURRENCY_FALLBACK
+);
+const svmPollFrequency = parseIntWithFallback(
+  process.env[ENV.SVM_POLL_FREQUENCY],
+  SERVICE_MANAGER_POLL_FREQUENCY_FALLBACK
 );
 
 // NOTE: the tenant ids for service manager are not necessarily uuids, this is a much broader validator
@@ -73,44 +90,38 @@ const _hideSensitiveDataInBinding = (entry) => {
   }
 };
 
-const _getQueryPart = (filters) =>
-  Object.entries(filters)
-    .reduce((acc, [key, value]) => {
-      acc.push(`${key} eq '${value}'`);
-      return acc;
-    }, [])
-    .join(" and ");
-
 const _getQuery = (components) => {
-  const partMap = components.reduce((acc, { predicate, type, key, value }) => {
-    if (predicate) {
-      if (!Object.prototype.hasOwnProperty.call(acc, type)) {
-        acc[type] = { [key]: value };
-      } else {
-        acc[type][key] = value;
-      }
+  const labels = [];
+  const query = {};
+  for (const { predicate, type, key, value } of components) {
+    if (!predicate) continue;
+    if (type === QUERY_TYPE.LABEL) {
+      labels.push(`${key}=${value}`);
+    } else {
+      query[key] = value;
     }
-    return acc;
-  }, {});
-  const parts = Object.entries(partMap);
-  return parts.length === 0
-    ? undefined
-    : parts.reduce(
-        (acc, [type, filters]) => {
-          acc["query"][type] = _getQueryPart(filters);
-          return acc;
-        },
-        { query: {} }
-      );
+  }
+  if (labels.length > 0) {
+    query.labels = labels.join(",");
+  }
+  return Object.keys(query).length > 0 ? { query } : undefined;
 };
 
-const _serviceManagerRequest = async (context, reqOptions = {}) => {
+// NOTE: service-manager v2 paginates via a Link header: </path?page_token=x>; rel="next"
+const _parseLinkNextPageToken = (linkHeader) => {
+  if (!linkHeader) return undefined;
+  const match = /[<]([^>]+)[>]; rel="next"/.exec(linkHeader);
+  if (!match || !match[1]) return undefined;
+  return new URL(match[1], "http://x").searchParams.get("page_token");
+};
+
+const _serviceManagerRequestBase = async (context, reqOptions = {}) => {
   const {
     cfBinding: { credentials },
   } = await context.getHdiInfo();
   const url = credentials.sm_url;
   const auth = { token: await context.getCachedUaaTokenFromCredentials(credentials) };
-  const response = await request({
+  return await request({
     url,
     auth,
     ...reqOptions,
@@ -121,18 +132,53 @@ const _serviceManagerRequest = async (context, reqOptions = {}) => {
       ...reqOptions?.headers,
     },
   });
+};
 
-  if (reqOptions.method) {
-    return response;
+const _serviceManagerRequest = async (context, reqOptions = {}) => {
+  if ([undefined, "GET"].includes(reqOptions.method)) {
+    // NOTE: GET accumulate pages until no Link rel="next" header
+    const pages = [];
+    let pageToken;
+    do {
+      const response = await _serviceManagerRequestBase(context, {
+        ...reqOptions,
+        ...(pageToken && { query: { ...reqOptions.query, page_token: pageToken } }),
+      });
+      const data = await response.json();
+      pages.push(data?.items ?? []);
+      pageToken = _parseLinkNextPageToken(response.headers.get("link"));
+    } while (pageToken);
+    return pages.flat();
+  } else if (["POST", "DELETE"].includes(reqOptions.method)) {
+    // NOTE: POST and DELETE run polling
+    const response = await _serviceManagerRequestBase(context, reqOptions);
+    assert(
+      response.status === HTTP_ACCEPTED,
+      "got unexpected response code %i for polling from %s",
+      response.status,
+      reqOptions.pathname
+    );
+    const location = response.headers.get("location");
+    assert(location, "missing location header for polling from %s", reqOptions.pathname);
+    let operation;
+    do {
+      await sleep(svmPollFrequency);
+      const pollResponse = await _serviceManagerRequestBase(context, { pathname: location });
+      operation = await pollResponse.json();
+    } while (operation.state !== OPERATION_STATE.SUCCEEDED && operation.state !== OPERATION_STATE.FAILED);
+    if (operation.state === OPERATION_STATE.FAILED) {
+      const detail = operation.error?.description ?? operation.error?.broker_error?.description ?? "";
+      fail("service-manager operation failed for %s: %s", location, detail);
+    }
+  } else {
+    return fail("method %s not implemented for service-manager request", reqOptions.method);
   }
-  // NOTE: no method here means GET and all service endpoints we use have this structure
-  return (await response.json())?.items ?? [];
 };
 
 const _requestOfferings = makeOneTime(
   async (context, { filterServiceOfferingName } = {}) =>
     await _serviceManagerRequest(context, {
-      pathname: "/v1/service_offerings",
+      pathname: "/v2/service_offerings",
       ..._getQuery([
         { predicate: filterServiceOfferingName, type: QUERY_TYPE.FIELD, key: "name", value: filterServiceOfferingName },
       ]),
@@ -142,7 +188,7 @@ const _requestOfferings = makeOneTime(
 const _requestPlans = makeOneTime(
   async (context, { filterServicePlanId, filterServiceOfferingId, filterServicePlanName } = {}) => {
     return await _serviceManagerRequest(context, {
-      pathname: "/v1/service_plans",
+      pathname: "/v2/service_plans",
       ..._getQuery([
         { predicate: filterServicePlanId, type: QUERY_TYPE.FIELD, key: "id", value: filterServicePlanId },
         {
@@ -157,18 +203,22 @@ const _requestPlans = makeOneTime(
   }
 );
 
+// NOTE: we rely on service brokers to implement usable:
+//   https://github.com/cloudfoundry/servicebroker/blob/v2.17/spec.md#service-broker-errors
 const _requestInstances = async (
   context,
-  { filterTenantId, filterServicePlanId, doEnsureReady = false, doEnsureTenantLabel = false } = {}
+  { filterTenantId, filterServicePlanId, doEnsureUsable = false, doEnsureTenantLabel = false } = {}
 ) => {
   let instances = await _serviceManagerRequest(context, {
-    pathname: "/v1/service_instances",
+    pathname: "/v2/service_instances",
     ..._getQuery([
-      { predicate: doEnsureReady, type: QUERY_TYPE.FIELD, key: "ready", value: true },
       { predicate: filterServicePlanId, type: QUERY_TYPE.FIELD, key: "service_plan_id", value: filterServicePlanId },
       { predicate: filterTenantId, type: QUERY_TYPE.LABEL, key: "tenant_id", value: filterTenantId },
     ]),
   });
+  if (doEnsureUsable) {
+    instances = instances.filter((instance) => instance.usable);
+  }
   if (doEnsureTenantLabel) {
     instances = instances.filter((instance) => instance.labels.tenant_id !== undefined);
   }
@@ -177,20 +227,11 @@ const _requestInstances = async (
 
 const _requestBindings = async (
   context,
-  {
-    filterTenantId,
-    doEnsureReady = false,
-    doEnsureTenantLabel = false,
-    doAssertFoundSome = false,
-    doReveal = false,
-  } = {}
+  { filterTenantId, doEnsureTenantLabel = false, doAssertFoundSome = false, doReveal = false } = {}
 ) => {
   let bindings = await _serviceManagerRequest(context, {
-    pathname: "/v1/service_bindings",
-    ..._getQuery([
-      { predicate: doEnsureReady, type: QUERY_TYPE.FIELD, key: "ready", value: true },
-      { predicate: filterTenantId, type: QUERY_TYPE.LABEL, key: "tenant_id", value: filterTenantId },
-    ]),
+    pathname: "/v2/service_bindings",
+    ..._getQuery([{ predicate: filterTenantId, type: QUERY_TYPE.LABEL, key: "tenant_id", value: filterTenantId }]),
   });
   if (doEnsureTenantLabel) {
     bindings = bindings.filter((binding) => binding.labels.tenant_id !== undefined);
@@ -244,11 +285,10 @@ const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJs
     "tenant_id",
     "service_plan",
     "instance_id",
-    "ready",
+    "usable",
     ...(doTimestamps ? ["created_on", "updated_on"] : []),
     "",
     "binding_id",
-    "ready",
     ...(doTimestamps ? ["created_on", "updated_on"] : []),
   ];
   const table = [headerRow];
@@ -264,13 +304,12 @@ const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJs
           instance.labels.tenant_id[0],
           servicePlanNameById[instance.service_plan_id],
           instance.id,
-          instance.ready,
+          instance.usable,
           ...(doTimestamps
             ? formatTimestampsWithRelativeDays([instance.created_at, instance.updated_at], nowDate)
             : []),
           connectorPiece(instanceBindings.length, index),
           binding.id,
-          binding.ready,
           ...(doTimestamps ? formatTimestampsWithRelativeDays([binding.created_at, binding.updated_at], nowDate) : []),
         ]);
       }
@@ -279,7 +318,7 @@ const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJs
         instance.labels.tenant_id[0],
         servicePlanNameById[instance.service_plan_id],
         instance.id,
-        instance.ready,
+        instance.usable,
         ...(doTimestamps ? formatTimestampsWithRelativeDays([instance.created_at, instance.updated_at], nowDate) : []),
         connectorPiece(0, 0),
       ]);
@@ -329,10 +368,8 @@ const _requestCreateBinding = async (
     .filter(([key]) => !["container_id", "subaccount_id"].includes(key))
     .reduce((acc, [key, value]) => ((acc[key] = value), acc), {});
   await _serviceManagerRequest(context, {
-    retryMode: RETRY_MODE.ALL_FAILED,
     method: "POST",
-    pathname: `/v1/service_bindings`,
-    query: { async: false },
+    pathname: `/v2/service_bindings`,
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       name,
@@ -345,17 +382,15 @@ const _requestCreateBinding = async (
 
 const _requestDeleteBinding = async (context, serviceBindingId) =>
   await _serviceManagerRequest(context, {
-    retryMode: RETRY_MODE.ALL_FAILED,
     method: "DELETE",
-    pathname: `/v1/service_bindings/${serviceBindingId}`,
-    query: { async: false },
+    pathname: `/v2/service_bindings/${serviceBindingId}`,
   });
 
 const _serviceManagerRepairBindings = async (context, { filterServicePlanId, parameters } = {}) => {
   const [offerings, plans, instances, bindings] = await Promise.all([
     _requestOfferings(context),
     _requestPlans(context, { filterServicePlanId }),
-    _requestInstances(context, { filterServicePlanId, doEnsureReady: true, doEnsureTenantLabel: true }),
+    _requestInstances(context, { filterServicePlanId, doEnsureUsable: true, doEnsureTenantLabel: true }),
     _requestBindings(context),
   ]);
 
@@ -370,9 +405,14 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
     const servicePlanName = servicePlanNameById[instance.service_plan_id];
     const instanceBindings = bindingsByInstance[instance.id] ?? [];
 
-    const [readyBindings, unreadyBindings] = partition(instanceBindings, (binding) => binding.ready);
-    if (readyBindings.length < SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
-      const missingBindingCount = SERVICE_MANAGER_IDEAL_BINDING_COUNT - instanceBindings.length;
+    // NOTE: we want to cleanup unusable bindings here. we assume non-succeeded bindings are failed.
+    // TODO: validate that this assumption makes sense in practice.
+    const [succeededBindings, failedBindings] = partition(
+      instanceBindings,
+      (binding) => binding.last_operation?.state === OPERATION_STATE.SUCCEEDED
+    );
+    if (succeededBindings.length < SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
+      const missingBindingCount = SERVICE_MANAGER_IDEAL_BINDING_COUNT - succeededBindings.length;
       for (let i = 0; i < missingBindingCount; i++) {
         const newLabels = {
           ...instance.labels,
@@ -392,8 +432,8 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
           servicePlanName
         );
       });
-    } else if (readyBindings.length > SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
-      const ambivalentBindings = readyBindings.slice(1);
+    } else if (succeededBindings.length > SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
+      const ambivalentBindings = succeededBindings.slice(1);
       for (const ambivalentBinding of ambivalentBindings) {
         changeQueue.enqueue(async () => await _requestDeleteBinding(context, ambivalentBinding.id));
       }
@@ -407,15 +447,15 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
         );
       });
     }
-    if (unreadyBindings.length > 0) {
-      for (const unreadyBinding of unreadyBindings) {
-        changeQueue.enqueue(async () => await _requestDeleteBinding(context, unreadyBinding.id));
+    if (failedBindings.length > 0) {
+      for (const failedBinding of failedBindings) {
+        changeQueue.enqueue(async () => await _requestDeleteBinding(context, failedBinding.id));
       }
       changeQueue.milestone().then(() => {
         logger.info(
-          "deleted %i unready binding%s for tenant %s plan %s",
-          unreadyBindings.length,
-          unreadyBindings.length === 1 ? "" : "s",
+          "deleted %i failed binding%s for tenant %s plan %s",
+          failedBindings.length,
+          failedBindings.length === 1 ? "" : "s",
           tenantId,
           servicePlanName
         );
@@ -471,7 +511,12 @@ const _serviceManagerFreshBindings = async (
   const [offerings, plans, instances, bindings] = await Promise.all([
     _requestOfferings(context),
     _requestPlans(context, { filterServicePlanId }),
-    _requestInstances(context, { filterTenantId, filterServicePlanId, doEnsureReady: true, doEnsureTenantLabel: true }),
+    _requestInstances(context, {
+      filterTenantId,
+      filterServicePlanId,
+      doEnsureUsable: true,
+      doEnsureTenantLabel: true,
+    }),
     _requestBindings(context, { filterTenantId }),
   ]);
 
@@ -571,10 +616,8 @@ const serviceManagerDeleteBindings = async (context, [servicePlanName, tenantId]
 
 const _requestDeleteInstance = async (context, serviceInstanceId) =>
   await _serviceManagerRequest(context, {
-    retryMode: RETRY_MODE.ALL_FAILED,
     method: "DELETE",
-    pathname: `/v1/service_instances/${serviceInstanceId}`,
-    query: { async: false },
+    pathname: `/v2/service_instances/${serviceInstanceId}`,
   });
 
 const serviceManagerDeleteInstancesAndBindings = async (context, [servicePlanName, tenantId]) => {

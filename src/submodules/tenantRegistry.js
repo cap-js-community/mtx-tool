@@ -128,7 +128,7 @@ const _getSubscriptionsPage = async (context, source, { filterTenantId, size, pa
 };
 
 const _getSubscriptions = async (context, source, { filterTenantId }) => {
-  let subscriptions = [];
+  const pages = [];
   let page = 1;
   while (true) {
     const response = await _getSubscriptionsPage(context, source, {
@@ -136,10 +136,10 @@ const _getSubscriptions = async (context, source, { filterTenantId }) => {
       size: REGISTRY_PAGE_SIZE,
       page: page++,
     });
-    const { subscriptions: pageSubscriptions, morePages } = await response.json();
-    subscriptions = subscriptions.concat(pageSubscriptions);
+    const { subscriptions, morePages } = await response.json();
+    pages.push(subscriptions);
     if (!morePages) {
-      return subscriptions;
+      return pages.flat();
     }
   }
 };
@@ -297,10 +297,11 @@ const _callAndPollAndMarkInner = async (context, source, reqOptions) => {
     const initialResponse = await _call(context, source, reqOptions);
     assert(
       initialResponse.status === HTTP_ACCEPTED,
-      "got unexpected response code for polling from %s",
+      "got unexpected response code %i for polling from %s",
+      initialResponse.status,
       reqOptions.pathname
     );
-    const [location] = initialResponse.headers.raw().location;
+    const location = initialResponse.headers.get("location");
     assert(location, "missing location header for polling from %s", reqOptions.pathname);
 
     logger.info("polling subscription %s with interval %isec", location, regPollFrequency / 1000);

@@ -137,11 +137,7 @@ const initialUpdateResponseFactorySms = () => (options) => {
   return {
     status: 202,
     statusText: "Accepted",
-    headers: {
-      raw: () => ({
-        location: [`/subscription-manager/v1/subscriptions/${jobId}`],
-      }),
-    },
+    headers: new Headers([["location", `/subscription-manager/v1/subscriptions/${jobId}`]]),
   };
 };
 
@@ -153,11 +149,7 @@ const initialUpdateResponseFactoryReg = () => (options) => {
     status: 202,
     statusText: "Accepted",
     text: async () => `Job for update subscription of application: appId and tenant: ${tenantId}, was created`,
-    headers: {
-      raw: () => ({
-        location: [`/api/v2.0/jobs/${jobId}`],
-      }),
-    },
+    headers: new Headers([["location", `/api/v2.0/jobs/${jobId}`]]),
   };
 };
 

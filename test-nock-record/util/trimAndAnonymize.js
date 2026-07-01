@@ -1,6 +1,7 @@
 "use strict";
 
 const { format } = require("util");
+const { createHash } = require("crypto");
 const { gunzipSync } = require("zlib");
 
 const { collapseSharedRefs } = require("./sharedFixtures");
@@ -12,6 +13,10 @@ const anonymizeUaaAuthCall = (call) => {
 };
 
 const _anonymizeTransform = (nodePath) => nodePath.join("-");
+
+// NOTE: clientid needs special handling because it is used as a cache key
+const _anonymizeClientIdTransform = (nodePath, value) =>
+  [nodePath, [createHash("md5").update(value).digest("hex").slice(0, 8)]].flat().join("-");
 
 const _urlTransform = (nodePath, value) => {
   value = value.trim();
@@ -48,13 +53,16 @@ const _urlTransform = (nodePath, value) => {
 
 const sensitiveFieldTransforms = [
   {
+    matcher: (nodePath, key) => key.toLocaleLowerCase() === "clientid",
+    transform: _anonymizeClientIdTransform,
+  },
+  {
     matcher: (nodePath, key) => {
       const lowerKey = key.toLocaleLowerCase();
       return (
         ["key", "secret", "user", "pass", "token"].some((part) => lowerKey.includes(part)) ||
         [
           "certificate",
-          "clientid",
           "clientsecret",
           "schema",
           "host",
@@ -166,29 +174,75 @@ const anonymizeCdsProvisioningCall = (call) => {
   return call;
 };
 
+// NOTE: we want to save space on the fixtures for /v3/service_plans the recorded
+//   response is trimmed from ~100 plans.
+const CF_SERVICE_PLANS_WHITELIST = new Set([
+  "aicore:sap-internal",
+  "alert-notification:business-notifications",
+  "application-logs:standard",
+  "auditlog:oauth2",
+  "autoscaler:standard",
+  "business-logging:default",
+  "certificate-service:standard",
+  "connectivity:lite",
+  "destination:lite",
+  "dynatrace:environment",
+  "hana:hdi-shared",
+  "html5-apps-repo:app-runtime",
+  "identity:application",
+  "malware-scanner:clamav",
+  "objectstore:standard",
+  "portal:standard",
+  "redis-cache:standard",
+  "saas-registry:application",
+  "service-manager:container",
+  "subscription-manager:provider",
+  "theming:standard",
+  "ui5-flexibility-keyuser:keyuser",
+  "xsuaa:application",
+]);
+
 const trimCfServicePlansCall = (call) => {
   const response = call.response;
-  const trimmedResources = response.resources.map((plan) => ({
-    guid: plan.guid,
-    name: plan.name,
-    relationships: {
-      service_offering: {
-        data: { guid: plan?.relationships?.service_offering?.data?.guid },
+  const offeringNameByGuid = new Map();
+  if (response.included && Array.isArray(response.included.service_offerings)) {
+    for (const offering of response.included.service_offerings) {
+      offeringNameByGuid.set(offering.guid, offering.name);
+    }
+  }
+  const keptResources = [];
+  const keptOfferingGuids = new Set();
+  for (const plan of response.resources) {
+    const offeringGuid = plan?.relationships?.service_offering?.data?.guid;
+    const offeringName = offeringNameByGuid.get(offeringGuid);
+    if (!CF_SERVICE_PLANS_WHITELIST.has(`${offeringName}:${plan.name}`)) {
+      continue;
+    }
+    keptResources.push({
+      guid: plan.guid,
+      name: plan.name,
+      relationships: {
+        service_offering: {
+          data: { guid: offeringGuid },
+        },
       },
-    },
-  }));
+    });
+    keptOfferingGuids.add(offeringGuid);
+  }
   let trimmedIncluded;
   if (response.included && Array.isArray(response.included.service_offerings)) {
     trimmedIncluded = {
-      service_offerings: response.included.service_offerings.map((offering) => ({
-        guid: offering.guid,
-        name: offering.name,
-      })),
+      service_offerings: response.included.service_offerings
+        .filter((offering) => keptOfferingGuids.has(offering.guid))
+        .map((offering) => ({
+          guid: offering.guid,
+          name: offering.name,
+        })),
     };
   }
   call.response = {
     pagination: response.pagination,
-    resources: trimmedResources,
+    resources: keptResources,
     ...(trimmedIncluded && { included: trimmedIncluded }),
   };
   return call;
@@ -302,7 +356,7 @@ const trimCfProcessesCall = (call) => {
 // Trim a service-manager /v1/service_instances response. Production reads from
 // each instance: id, ready, service_plan_id, created_at, updated_at, and
 // labels (labels.tenant_id is checked, and the full labels object is cloned
-// into newly-created bindings in serviceManager.js).
+// into newly-created bindings).
 const trimServiceManagerInstancesCall = (call) => {
   const response = call.response;
   call.response = {
@@ -329,6 +383,43 @@ const trimServiceManagerBindingsCall = (call) => {
     items: response.items.map((binding) => ({
       id: binding.id,
       ready: binding.ready,
+      service_instance_id: binding.service_instance_id,
+      created_at: binding.created_at,
+      updated_at: binding.updated_at,
+      labels: binding.labels,
+      credentials: binding.credentials,
+    })),
+  };
+  return call;
+};
+
+// Trim a service-manager /v2/service_instances response. Production reads from
+// each instance: id, usable, service_plan_id, created_at, updated_at, and
+// labels.
+const trimServiceManagerInstancesV2Call = (call) => {
+  const response = call.response;
+  call.response = {
+    items: response.items.map((instance) => ({
+      id: instance.id,
+      usable: instance.usable,
+      service_plan_id: instance.service_plan_id,
+      created_at: instance.created_at,
+      updated_at: instance.updated_at,
+      labels: instance.labels,
+    })),
+  };
+  return call;
+};
+
+// Trim a service-manager /v2/service_bindings response. Production reads from
+// each binding: id, last_operation.state, service_instance_id, created_at,
+// updated_at, labels, and credentials.
+const trimServiceManagerBindingsV2Call = (call) => {
+  const response = call.response;
+  call.response = {
+    items: response.items.map((binding) => ({
+      id: binding.id,
+      last_operation: binding.last_operation && { state: binding.last_operation.state },
       service_instance_id: binding.service_instance_id,
       created_at: binding.created_at,
       updated_at: binding.updated_at,
@@ -412,7 +503,7 @@ const trimAndAnonymize = (calls) => {
       return anonymizeUaaAuthCall(call);
     }
 
-    // ##### SERVICE-MANAGER
+    // ##### SERVICE-MANAGER v1
     // "scope": "https://service-manager.cfapps.sap.hana.ondemand.com:443",
     // "path": "/v1/service_bindings",
     if (
@@ -426,6 +517,25 @@ const trimAndAnonymize = (calls) => {
         call = trimServiceManagerInstancesCall(call);
       } else if (/\/v1\/service_bindings.*/.test(call.path)) {
         call = trimServiceManagerBindingsCall(call);
+      }
+      return anonymizeServiceManagerCall(call);
+    }
+
+    // ##### SERVICE-MANAGER v2
+    // "scope": "https://service-manager.cfapps.sap.hana.ondemand.com:443",
+    // "path": "/v2/service_bindings", or operation-polling paths like
+    //         "/v2/service_bindings/{id}/operations/{op_id}"
+    if (
+      /https:\/\/service-manager\.cfapps\.sap\.hana\.ondemand\.com:443/.test(call.scope) &&
+      /\/v2\/service_(?:offerings|plans|instances|bindings)/.test(call.path)
+    ) {
+      // NOTE: list endpoints expose `items` and benefit from field-trim; nested
+      //   paths (notably /.../operations/...) return single objects and are
+      //   only anonymized.
+      if (/\/v2\/service_instances(?:\?|$)/.test(call.path)) {
+        call = trimServiceManagerInstancesV2Call(call);
+      } else if (/\/v2\/service_bindings(?:\?|$)/.test(call.path)) {
+        call = trimServiceManagerBindingsV2Call(call);
       }
       return anonymizeServiceManagerCall(call);
     }
