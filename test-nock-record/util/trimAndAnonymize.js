@@ -1,6 +1,7 @@
 "use strict";
 
 const { format } = require("util");
+const { createHash } = require("crypto");
 const { gunzipSync } = require("zlib");
 
 const { collapseSharedRefs } = require("./sharedFixtures");
@@ -12,6 +13,10 @@ const anonymizeUaaAuthCall = (call) => {
 };
 
 const _anonymizeTransform = (nodePath) => nodePath.join("-");
+
+// NOTE: clientid needs special handling because it is used as a cache key
+const _anonymizeClientIdTransform = (nodePath, value) =>
+  [nodePath, [createHash("md5").update(value).digest("hex").slice(0, 8)]].flat().join("-");
 
 const _urlTransform = (nodePath, value) => {
   value = value.trim();
@@ -48,13 +53,16 @@ const _urlTransform = (nodePath, value) => {
 
 const sensitiveFieldTransforms = [
   {
+    matcher: (nodePath, key) => key.toLocaleLowerCase() === "clientid",
+    transform: _anonymizeClientIdTransform,
+  },
+  {
     matcher: (nodePath, key) => {
       const lowerKey = key.toLocaleLowerCase();
       return (
         ["key", "secret", "user", "pass", "token"].some((part) => lowerKey.includes(part)) ||
         [
           "certificate",
-          "clientid",
           "clientsecret",
           "schema",
           "host",
