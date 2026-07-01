@@ -11,12 +11,12 @@ mockRequest.request.mockImplementation(({ method, pathname }) => {
   if (method === "POST" || method === "DELETE") {
     return {
       status: 202,
-      headers: { get: (h) => (h === "location" ? `${pathname}/operations/op-id` : null) },
+      headers: new Headers([["location", `${pathname}/operations/op-id`]]),
       json: () => ({}),
     };
   }
   if (pathname?.includes("/operations/")) {
-    return { headers: { get: () => null }, json: () => ({ state: "succeeded" }) };
+    return { headers: new Headers(), json: () => ({ state: "succeeded" }) };
   }
   return mockItemsResponse([]);
 });
@@ -60,7 +60,7 @@ const testServicePlanName = "myOffering:myPlan";
 const testServicePlanId = "plan-id-0";
 const testTenantId = "tenant-id-1";
 
-const mockItemsResponse = (items) => ({ headers: { get: () => null }, json: () => ({ items }) });
+const mockItemsResponse = (items) => ({ headers: new Headers(), json: () => ({ items }) });
 
 const mockOfferingResponse = mockItemsResponse([
   { id: `offering-id-0`, name: `myOffering` },
@@ -137,11 +137,11 @@ describe("svm tests", () => {
 
     test("pagination accumulates across pages", async () => {
       const page1 = {
-        headers: { get: (h) => (h === "link" ? '</v2/service_instances?page_token=p2>; rel="next"' : null) },
+        headers: new Headers([["link", '</v2/service_instances?page_token=p2>; rel="next"']]),
         json: () => ({ items: [mockInstanceFactory(0), mockInstanceFactory(1)] }),
       };
       const page2 = {
-        headers: { get: () => null },
+        headers: new Headers(),
         json: () => ({ items: [mockInstanceFactory(2), mockInstanceFactory(3)] }),
       };
       mockRequest.request.mockReturnValueOnce(page1);
