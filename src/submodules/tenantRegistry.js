@@ -128,7 +128,7 @@ const _getSubscriptionsPage = async (context, source, { filterTenantId, size, pa
 };
 
 const _getSubscriptions = async (context, source, { filterTenantId }) => {
-  let subscriptions = [];
+  const pages = [];
   let page = 1;
   while (true) {
     const response = await _getSubscriptionsPage(context, source, {
@@ -136,10 +136,10 @@ const _getSubscriptions = async (context, source, { filterTenantId }) => {
       size: REGISTRY_PAGE_SIZE,
       page: page++,
     });
-    const { subscriptions: pageSubscriptions, morePages } = await response.json();
-    subscriptions = subscriptions.concat(pageSubscriptions);
+    const { subscriptions, morePages } = await response.json();
+    pages.push(subscriptions);
     if (!morePages) {
-      return subscriptions;
+      return pages.flat();
     }
   }
 };

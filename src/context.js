@@ -90,14 +90,15 @@ const _cfRequest = async (cfInfo, urlOrPath) => {
 };
 
 const _cfRequestPaged = async (cfInfo, urlOrPath) => {
-  const result = { resources: [], included: [] };
+  const resourcePages = [];
+  const includedPages = [];
   while (true) {
     const { pagination, resources, included } = await _cfRequest(cfInfo, urlOrPath);
     if (resources) {
-      result.resources = result.resources.concat(resources);
+      resourcePages.push(resources);
     }
     if (included) {
-      result.included = result.included.concat(included);
+      includedPages.push(included);
     }
     if (pagination && pagination.next && pagination.next.href) {
       urlOrPath = pagination.next.href;
@@ -105,6 +106,7 @@ const _cfRequestPaged = async (cfInfo, urlOrPath) => {
       break;
     }
   }
+  const result = { resources: resourcePages.flat(), included: includedPages.flat() };
   return result;
 };
 
