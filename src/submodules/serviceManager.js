@@ -412,7 +412,7 @@ const _serviceManagerRepairBindings = async (context, { filterServicePlanId, par
       (binding) => binding.last_operation?.state === OPERATION_STATE.SUCCEEDED
     );
     if (succeededBindings.length < SERVICE_MANAGER_IDEAL_BINDING_COUNT) {
-      const missingBindingCount = SERVICE_MANAGER_IDEAL_BINDING_COUNT - instanceBindings.length;
+      const missingBindingCount = SERVICE_MANAGER_IDEAL_BINDING_COUNT - succeededBindings.length;
       for (let i = 0; i < missingBindingCount; i++) {
         const newLabels = {
           ...instance.labels,
