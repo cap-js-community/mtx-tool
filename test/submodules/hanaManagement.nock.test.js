@@ -33,7 +33,7 @@ describe("hdi nock tests", () => {
     resetMakeOneTime(hdi._._requestOfferings);
     resetMakeOneTime(hdi._._requestPlans);
     resetMakeOneTime(hdi._._getHdiSharedPlanId);
-    nock.restore();
+    nock.cleanAll();
   });
 
   test("request count", async () => {
@@ -69,7 +69,7 @@ describe("hdi nock tests", () => {
 
   describe("list", () => {
     test("list basic", async () => {
-      await nock.back("hdi-list.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("hdi-list.json", { before: beforeExpandSharedRefs });
       const output = await hdi.hdiList(await freshContext(), [], [false, false]);
       expect(output).toMatchInlineSnapshot(`
         "#   tenant_id                             db_tenant_id                          host                                           schema                                       ready
@@ -110,10 +110,11 @@ describe("hdi nock tests", () => {
         GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_plans?fieldQuery=service_offering_id+eq+'8c3922c9-fcbd-469e-9393-2d941400f2c1'+and+name+eq+'hdi-shared' 200 OK (88ms)"
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      nockDone();
     });
 
     test("list timestamps", async () => {
-      await nock.back("hdi-list.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("hdi-list.json", { before: beforeExpandSharedRefs });
       const output = await hdi.hdiList(await freshContext(), [], [true, false]);
       expect(anonymizeListTimestamps(output)).toMatchInlineSnapshot(`
         "#   tenant_id                             db_tenant_id                          host                                           schema                                       ready  created_on  updated_on
@@ -146,17 +147,19 @@ describe("hdi nock tests", () => {
         27  t0                                    6e96ba0f-d345-43ef-a5be-b7d0de85d58b  service-manager-items-3-credentials-host:443   service-manager-items-3-credentials-schema   true   2023-01-30T20:19:09Z (x days ago)  2024-02-07T11:36:53Z (x days ago)  "
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      nockDone();
     });
 
     test("list json", async () => {
-      await nock.back("hdi-list.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("hdi-list.json", { before: beforeExpandSharedRefs });
       const output = await hdi.hdiList(await freshContext(), [], [true, true]);
       expect(output).toMatchSnapshot();
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      nockDone();
     });
 
     test("list filtered basic", async () => {
-      await nock.back("hdi-list-filtered.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("hdi-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await hdi.hdiList(await freshContext(), [testTenantId], [false, false]);
       expect(output).toMatchInlineSnapshot(`
         "tenant_id                             db_tenant_id                          host                                          schema                                      ready
@@ -171,29 +174,32 @@ describe("hdi nock tests", () => {
         GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_plans?fieldQuery=service_offering_id+eq+'8c3922c9-fcbd-469e-9393-2d941400f2c1'+and+name+eq+'hdi-shared' 200 OK (88ms)"
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      nockDone();
     });
 
     test("list filtered timestamps", async () => {
-      await nock.back("hdi-list-filtered.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("hdi-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await hdi.hdiList(await freshContext(), [testTenantId], [true, false]);
       expect(anonymizeListTimestamps(output)).toMatchInlineSnapshot(`
         "tenant_id                             db_tenant_id                          host                                          schema                                      ready  created_on  updated_on
         5ecc7413-2b7e-414a-9496-ad4a61f6cccf  cd0dd852-4045-4bff-82b5-909d0948c6fb  service-manager-items-0-credentials-host:443  service-manager-items-0-credentials-schema  true   2022-04-26T18:05:44Z (x days ago)  2024-02-07T11:36:53Z (x days ago)  "
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      nockDone();
     });
 
     test("list filtered json", async () => {
-      await nock.back("hdi-list-filtered.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("hdi-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await hdi.hdiList(await freshContext(), [testTenantId], [true, true]);
       expect(output).toMatchSnapshot();
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      nockDone();
     });
   });
 
   describe("long list", () => {
     test("long list basic", async () => {
-      await nock.back("hdi-long-list.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("hdi-long-list.json", { before: beforeExpandSharedRefs });
       const output = await hdi.hdiLongList(await freshContext(), [], [false, false]);
       expect(output).toMatchSnapshot();
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
@@ -205,24 +211,27 @@ describe("hdi nock tests", () => {
         GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_plans?fieldQuery=service_offering_id+eq+'8c3922c9-fcbd-469e-9393-2d941400f2c1'+and+name+eq+'hdi-shared' 200 OK (88ms)"
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      nockDone();
     });
 
     test("long list revealed", async () => {
-      await nock.back("hdi-long-list.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("hdi-long-list.json", { before: beforeExpandSharedRefs });
       const output = await hdi.hdiLongList(await freshContext(), [], [false, true]);
       expect(output).toMatchSnapshot();
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      nockDone();
     });
 
     test("long list json", async () => {
-      await nock.back("hdi-long-list.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("hdi-long-list.json", { before: beforeExpandSharedRefs });
       const output = await hdi.hdiLongList(await freshContext(), [], [true, true]);
       expect(output).toMatchSnapshot();
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      nockDone();
     });
 
     test("long list filtered basic", async () => {
-      await nock.back("hdi-long-list-filtered.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("hdi-long-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await hdi.hdiLongList(await freshContext(), [testTenantId], [false, false]);
       expect(output).toMatchSnapshot();
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
@@ -234,20 +243,23 @@ describe("hdi nock tests", () => {
         GET https://service-manager.cfapps.sap.hana.ondemand.com/v1/service_plans?fieldQuery=service_offering_id+eq+'8c3922c9-fcbd-469e-9393-2d941400f2c1'+and+name+eq+'hdi-shared' 200 OK (88ms)"
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      nockDone();
     });
 
     test("long list filtered revealed", async () => {
-      await nock.back("hdi-long-list-filtered.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("hdi-long-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await hdi.hdiLongList(await freshContext(), [testTenantId], [false, true]);
       expect(output).toMatchSnapshot();
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      nockDone();
     });
 
     test("long list filtered json", async () => {
-      await nock.back("hdi-long-list-filtered.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("hdi-long-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await hdi.hdiLongList(await freshContext(), [testTenantId], [true, true]);
       expect(output).toMatchSnapshot();
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      nockDone();
     });
   });
 });

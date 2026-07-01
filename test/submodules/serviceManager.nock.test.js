@@ -32,7 +32,7 @@ describe("svm nock tests", () => {
     LogRequestId.reset();
     resetMakeOneTime(svm._._requestOfferings);
     resetMakeOneTime(svm._._requestPlans);
-    nock.restore();
+    nock.cleanAll();
   });
 
   test("request count", async () => {
@@ -68,7 +68,7 @@ describe("svm nock tests", () => {
 
   describe("list", () => {
     test("list basic", async () => {
-      await nock.back("svm-list.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("svm-list.json", { before: beforeExpandSharedRefs });
       const output = await svm.serviceManagerList(await freshContext(), [], [false, false]);
       expect(output).toMatchInlineSnapshot(`
         "#   tenant_id                             service_plan          instance_id                           usable       binding_id                          
@@ -138,10 +138,11 @@ describe("svm nock tests", () => {
         GET https://service-manager.cfapps.sap.hana.ondemand.com/v2/service_plans 200 OK (88ms)"
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      nockDone();
     });
 
     test("list timestamps", async () => {
-      await nock.back("svm-list.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("svm-list.json", { before: beforeExpandSharedRefs });
       const output = await svm.serviceManagerList(await freshContext(), [], [true, false]);
       expect(anonymizeListTimestamps(output)).toMatchInlineSnapshot(`
         "#   tenant_id                             service_plan          instance_id                           usable  created_on  updated_onbinding_id                            created_on  updated_on
@@ -203,17 +204,19 @@ describe("svm nock tests", () => {
         56  t0                                    hana:hdi-shared       6e96ba0f-d345-43ef-a5be-b7d0de85d58b  true    2023-01-30T20:19:09Z (x days ago)  2023-01-30T20:19:09Z (x days ago)  ---  6b6a252b-fa87-478d-924f-3310557b82d5  2026-06-30T01:02:01Z (x days ago)  2026-06-30T01:02:11Z (x days ago)  "
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      nockDone();
     });
 
     test("list json", async () => {
-      await nock.back("svm-list.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("svm-list.json", { before: beforeExpandSharedRefs });
       const output = await svm.serviceManagerList(await freshContext(), [], [true, true]);
       expect(output).toMatchSnapshot();
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      nockDone();
     });
 
     test("list filtered basic", async () => {
-      await nock.back("svm-list-filtered.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("svm-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await svm.serviceManagerList(await freshContext(), [testTenantId], [false, false]);
       expect(output).toMatchInlineSnapshot(`
         "tenant_id                             service_plan          instance_id                           usable       binding_id                          
@@ -229,10 +232,11 @@ describe("svm nock tests", () => {
         GET https://service-manager.cfapps.sap.hana.ondemand.com/v2/service_plans 200 OK (88ms)"
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      nockDone();
     });
 
     test("list filtered timestamps", async () => {
-      await nock.back("svm-list-filtered.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("svm-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await svm.serviceManagerList(await freshContext(), [testTenantId], [true, false]);
       expect(anonymizeListTimestamps(output)).toMatchInlineSnapshot(`
         "tenant_id                             service_plan          instance_id                           usable  created_on  updated_onbinding_id                            created_on  updated_on
@@ -240,19 +244,21 @@ describe("svm nock tests", () => {
         5ecc7413-2b7e-414a-9496-ad4a61f6cccf  objectstore:standard  61d42c22-f100-419b-83d9-f0d7caeeca57  true    2024-06-26T09:03:37Z (x days ago)  2024-06-26T09:03:37Z (x days ago)  ---  ba448bef-a29c-48fc-b638-596e42420258  2026-06-30T01:02:06Z (x days ago)  2026-06-30T01:02:07Z (x days ago)  "
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      nockDone();
     });
 
     test("list filtered json", async () => {
-      await nock.back("svm-list-filtered.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("svm-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await svm.serviceManagerList(await freshContext(), [testTenantId], [true, true]);
       expect(output).toMatchSnapshot();
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      nockDone();
     });
   });
 
   describe("long list", () => {
     test("long list basic", async () => {
-      await nock.back("svm-long-list.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("svm-long-list.json", { before: beforeExpandSharedRefs });
       const output = await svm.serviceManagerLongList(await freshContext(), [], [false, false]);
       expect(output).toMatchSnapshot();
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
@@ -262,24 +268,27 @@ describe("svm nock tests", () => {
         GET https://service-manager.cfapps.sap.hana.ondemand.com/v2/service_instances 200 OK (88ms)"
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      nockDone();
     });
 
     test("long list revealed", async () => {
-      await nock.back("svm-long-list.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("svm-long-list.json", { before: beforeExpandSharedRefs });
       const output = await svm.serviceManagerLongList(await freshContext(), [], [false, true]);
       expect(output).toMatchSnapshot();
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      nockDone();
     });
 
     test("long list json", async () => {
-      await nock.back("svm-long-list.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("svm-long-list.json", { before: beforeExpandSharedRefs });
       const output = await svm.serviceManagerLongList(await freshContext(), [], [true, true]);
       expect(output).toMatchSnapshot();
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      nockDone();
     });
 
     test("long list filtered basic", async () => {
-      await nock.back("svm-long-list-filtered.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("svm-long-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await svm.serviceManagerLongList(await freshContext(), [testTenantId], [false, false]);
       expect(output).toMatchSnapshot();
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
@@ -289,10 +298,11 @@ describe("svm nock tests", () => {
         GET https://service-manager.cfapps.sap.hana.ondemand.com/v2/service_instances?labels=tenant_id%3D5ecc7413-2b7e-414a-9496-ad4a61f6cccf 200 OK (88ms)"
       `);
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      nockDone();
     });
 
     test("long list filtered revealed", async () => {
-      await nock.back("svm-long-list-filtered.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("svm-long-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await svm.serviceManagerLongList(await freshContext(), [testTenantId], [false, true]);
       expect(output).toMatchSnapshot();
       expect(mockLogger.error).toHaveBeenCalledTimes(0);

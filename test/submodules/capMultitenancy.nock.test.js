@@ -29,7 +29,7 @@ const freshContext = async () => await newContext({ usePersistedCache: false, is
 describe("cds nock tests", () => {
   afterEach(() => {
     LogRequestId.reset();
-    nock.restore();
+    nock.cleanAll();
   });
 
   test("request count", async () => {
@@ -81,7 +81,7 @@ describe("cds nock tests", () => {
 
   describe("cds list", () => {
     test("cds list basic", async () => {
-      await nock.back("cds-list.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("cds-list.json", { before: beforeExpandSharedRefs });
       const output = await cds.cdsList(await freshContext(), [], [false, false]);
       expect(output).toMatchInlineSnapshot(`
         "#   tenantId                              subdomain                       appName      eventType
@@ -118,10 +118,11 @@ describe("cds nock tests", () => {
         GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/saas-provisioning/tenant 200 OK (88ms)"
       `);
       expect(mockLogger.error.mock.calls).toHaveLength(0);
+      nockDone();
     });
 
     test("cds list timestamped", async () => {
-      await nock.back("cds-list.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("cds-list.json", { before: beforeExpandSharedRefs });
       const output = await cds.cdsList(await freshContext(), [], [true, false]);
       expect(anonymizeListTimestamps(output)).toMatchInlineSnapshot(`
         "#   tenantId                              subdomain                       appName      eventType  created_on  updated_on
@@ -153,17 +154,19 @@ describe("cds nock tests", () => {
         26  fe2e319f-68cd-450f-8a02-d726dac64b35  sky-major-tom-fin               afc-dev      CREATE     2025-12-02T12:48:37Z (x days ago)  2025-12-02T12:48:37Z (x days ago)  "
       `);
       expect(mockLogger.error.mock.calls).toHaveLength(0);
+      nockDone();
     });
 
     test("cds list json", async () => {
-      await nock.back("cds-list.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("cds-list.json", { before: beforeExpandSharedRefs });
       const output = await cds.cdsList(await freshContext(), [], [false, true]);
       expect(output).toMatchSnapshot();
       expect(mockLogger.error.mock.calls).toHaveLength(0);
+      nockDone();
     });
 
     test("cds list filtered basic", async () => {
-      await nock.back("cds-list-filtered.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("cds-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await cds.cdsList(await freshContext(), [testTenantId], [false, false]);
       expect(output).toMatchInlineSnapshot(`
         "tenantId                              subdomain       appName      eventType
@@ -175,29 +178,32 @@ describe("cds nock tests", () => {
         GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/saas-provisioning/tenant/5ecc7413-2b7e-414a-9496-ad4a61f6cccf 200 OK (88ms)"
       `);
       expect(mockLogger.error.mock.calls).toHaveLength(0);
+      nockDone();
     });
 
     test("cds list filtered timestamped", async () => {
-      await nock.back("cds-list-filtered.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("cds-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await cds.cdsList(await freshContext(), [testTenantId], [true, false]);
       expect(anonymizeListTimestamps(output)).toMatchInlineSnapshot(`
         "tenantId                              subdomain       appName      eventType  created_on  updated_on
         5ecc7413-2b7e-414a-9496-ad4a61f6cccf  skyfin-company  afc-dev-sms  CREATE                 2025-09-18T09:24:38Z (x days ago)  "
       `);
       expect(mockLogger.error.mock.calls).toHaveLength(0);
+      nockDone();
     });
 
     test("cds list filtered json", async () => {
-      await nock.back("cds-list-filtered.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("cds-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await cds.cdsList(await freshContext(), [testTenantId], [false, true]);
       expect(output).toMatchSnapshot();
       expect(mockLogger.error.mock.calls).toHaveLength(0);
+      nockDone();
     });
   });
 
   describe("cds long list", () => {
     test("cds long list basic/json", async () => {
-      await nock.back("cds-long-list.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("cds-long-list.json", { before: beforeExpandSharedRefs });
       const output = await cds.cdsLongList(await freshContext(), []);
       expect(output).toMatchSnapshot();
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
@@ -206,10 +212,11 @@ describe("cds nock tests", () => {
         GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/saas-provisioning/tenant 200 OK (88ms)"
       `);
       expect(mockLogger.error.mock.calls).toHaveLength(0);
+      nockDone();
     });
 
     test("cds long list filtered basic/json", async () => {
-      await nock.back("cds-long-list-filtered.json", { before: beforeExpandSharedRefs });
+      const { nockDone } = await nock.back("cds-long-list-filtered.json", { before: beforeExpandSharedRefs });
       const output = await cds.cdsLongList(await freshContext(), [testTenantId]);
       expect(output).toMatchSnapshot();
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
@@ -218,11 +225,12 @@ describe("cds nock tests", () => {
         GET https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/saas-provisioning/tenant/5ecc7413-2b7e-414a-9496-ad4a61f6cccf 200 OK (88ms)"
       `);
       expect(mockLogger.error.mock.calls).toHaveLength(0);
+      nockDone();
     });
   });
 
   test("cds upgrade tenant and auto-upgrade", async () => {
-    await nock.back("cds-upgrade-tenant.json", { before: beforeExpandSharedRefs });
+    const { nockDone } = await nock.back("cds-upgrade-tenant.json", { before: beforeExpandSharedRefs });
     expect(await cds.cdsUpgradeTenant(await freshContext(), [testTenantId], [true])).toBeUndefined();
     expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
@@ -235,10 +243,11 @@ describe("cds nock tests", () => {
       POST https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/saas-provisioning/upgrade 202 Accepted (88ms)"
     `);
     expect(mockLogger.error.mock.calls).toHaveLength(0);
+    nockDone();
   });
 
   test("cds upgrade all", async () => {
-    await nock.back("cds-upgrade-all.json", { before: beforeExpandSharedRefs });
+    const { nockDone } = await nock.back("cds-upgrade-all.json", { before: beforeExpandSharedRefs });
     expect(await cds.cdsUpgradeAll(await freshContext(), null, [false, false])).toBeUndefined();
     expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
@@ -276,5 +285,6 @@ describe("cds nock tests", () => {
       POST https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com/-/cds/saas-provisioning/upgrade 202 Accepted (88ms)"
     `);
     expect(mockLogger.error.mock.calls).toHaveLength(0);
+    nockDone();
   });
 });
