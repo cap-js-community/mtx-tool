@@ -137,7 +137,7 @@ const _serviceManagerRequestBase = async (context, reqOptions = {}) => {
 const _serviceManagerRequest = async (context, reqOptions = {}) => {
   if ([undefined, "GET"].includes(reqOptions.method)) {
     // NOTE: GET accumulate pages until no Link rel="next" header
-    let items = [];
+    const pages = [];
     let pageToken;
     do {
       const response = await _serviceManagerRequestBase(context, {
@@ -145,10 +145,10 @@ const _serviceManagerRequest = async (context, reqOptions = {}) => {
         ...(pageToken && { query: { ...reqOptions.query, page_token: pageToken } }),
       });
       const data = await response.json();
-      items = items.concat(data?.items ?? []);
+      pages.push(data?.items ?? []);
       pageToken = _parseLinkNextPageToken(response.headers.get("link"));
     } while (pageToken);
-    return items;
+    return pages.flat();
   } else if (["POST", "DELETE"].includes(reqOptions.method)) {
     // NOTE: POST and DELETE run polling
     const response = await _serviceManagerRequestBase(context, reqOptions);
