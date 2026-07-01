@@ -8,7 +8,7 @@
 // reason. Instead, we store one canonical copy in __nock-fixtures__/shared/<ref>.json
 // and reference it from per-test fixtures with a top-level sentinel call:
 //
-//   { "$nockRef": "cf-service-plans", "count": 3, "repetition": 1 }
+//   { "$nockRef": "cf-apps-list", "count": 1, "repetition": 1 }
 //
 // `count` is the length of the canonical sequence stored in shared/<ref>.json.
 // `repetition` is how many times that sequence appeared contiguously in the
@@ -42,15 +42,9 @@ const NOCK_REF_KEY = "$nockRef";
 const VARIANT_SEPARATOR = "--";
 
 const _CF_API_SCOPE = /https:\/\/api\.cf\.[a-z]+\.hana\.ondemand\.com:443/;
-const _CF_SERVICE_PLANS_PATH = /^\/v3\/service_plans(\?|$)/;
 const _CF_APPS_LIST_PATH = /^\/v3\/apps\?space_guids=/;
 
 const SHARED_ENTRIES = [
-  {
-    key: "cf-service-plans",
-    matcher: (call) =>
-      _CF_API_SCOPE.test(call.scope) && call.method === "GET" && _CF_SERVICE_PLANS_PATH.test(call.path),
-  },
   {
     key: "cf-apps-list",
     matcher: (call) => _CF_API_SCOPE.test(call.scope) && call.method === "GET" && _CF_APPS_LIST_PATH.test(call.path),
