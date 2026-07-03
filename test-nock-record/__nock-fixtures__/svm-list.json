@@ -7,6 +7,68 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
+        "path": "/v3/routes?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&include=domain",
+        "body": "",
+        "status": 200,
+        "response": {
+            "pagination": {
+                "total_results": 2,
+                "total_pages": 1,
+                "first": {
+                    "href": "https://api.cf.sap.hana.ondemand.com/v3/routes?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&include=domain&page=1&per_page=50"
+                },
+                "last": {
+                    "href": "https://api.cf.sap.hana.ondemand.com/v3/routes?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&include=domain&page=1&per_page=50"
+                },
+                "next": null,
+                "previous": null
+            },
+            "resources": [
+                {
+                    "guid": "819b3465-aa66-4ade-b29e-35530951b66e",
+                    "host": "skyfin-dev-afc-backend",
+                    "relationships": {
+                        "domain": {
+                            "data": {
+                                "guid": "9aa474f9-3f82-4967-a2e1-dfe0cd155064"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "91d1705b-ce16-47e9-b556-bf7abc554f09",
+                    "host": "skyfin-dev-afc-backend",
+                    "relationships": {
+                        "domain": {
+                            "data": {
+                                "guid": "3352296c-1b56-4b87-869f-cf310a917d14"
+                            }
+                        }
+                    }
+                }
+            ],
+            "included": {
+                "domains": [
+                    {
+                        "guid": "9aa474f9-3f82-4967-a2e1-dfe0cd155064",
+                        "name": "cfapps.sap.hana.ondemand.com"
+                    },
+                    {
+                        "guid": "3352296c-1b56-4b87-869f-cf310a917d14",
+                        "name": "mesh.cf.sap.hana.ondemand.com"
+                    }
+                ]
+            }
+        },
+        "rawHeaders": [
+            "content-type",
+            "application/json; charset=utf-8"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
         "path": "/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/processes",
         "body": "",
         "status": 200,
@@ -68,21 +130,9 @@
                     }
                 },
                 {
-                    "guid": "4e72bf71-c8a5-4110-aa49-4e20dc07ba35",
-                    "created_at": "2026-06-30T20:00:25Z",
-                    "updated_at": "2026-06-30T20:00:25Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "9f484b06-5918-4c1c-9ae1-aa2faa351469"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "c34f69b6-e633-452d-947a-73649874d065",
-                    "created_at": "2026-06-30T20:00:26Z",
-                    "updated_at": "2026-06-30T20:00:26Z",
+                    "guid": "abaa4031-8d0b-498a-a81a-4cdf2b4ea840",
+                    "created_at": "2026-07-02T19:56:11Z",
+                    "updated_at": "2026-07-02T19:56:11Z",
                     "relationships": {
                         "service_instance": {
                             "data": {
@@ -92,9 +142,9 @@
                     }
                 },
                 {
-                    "guid": "440d38ca-b54f-4f2f-ab9d-e9d073e5dd6f",
-                    "created_at": "2026-06-30T20:00:30Z",
-                    "updated_at": "2026-06-30T20:00:30Z",
+                    "guid": "3cfc2183-0ec7-4048-b488-4f0cfe4051c3",
+                    "created_at": "2026-07-02T19:56:11Z",
+                    "updated_at": "2026-07-02T19:56:11Z",
                     "relationships": {
                         "service_instance": {
                             "data": {
@@ -104,93 +154,21 @@
                     }
                 },
                 {
-                    "guid": "f092eb3e-ece7-43fd-b4d8-687139e8598c",
-                    "created_at": "2026-06-30T20:00:33Z",
-                    "updated_at": "2026-06-30T20:00:35Z",
+                    "guid": "15132739-4ee6-40cb-b89a-5f77d4d4398e",
+                    "created_at": "2026-07-02T19:56:12Z",
+                    "updated_at": "2026-07-02T19:56:12Z",
                     "relationships": {
                         "service_instance": {
                             "data": {
-                                "guid": "e188bf3f-4e52-4c14-ba89-3d05eaeeeff2"
+                                "guid": "9f484b06-5918-4c1c-9ae1-aa2faa351469"
                             }
                         }
                     }
                 },
                 {
-                    "guid": "42fad5cf-a5c6-4632-9d75-1ee6f40b2fa2",
-                    "created_at": "2026-06-30T20:00:33Z",
-                    "updated_at": "2026-06-30T20:00:37Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "e020b20a-eb23-4475-91ec-d525f8738fd7"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "8af34d2d-fa7a-42e0-90e3-5077e97ea320",
-                    "created_at": "2026-06-30T20:00:33Z",
-                    "updated_at": "2026-06-30T20:00:35Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "0c94f0c1-db0a-495d-b385-4a44a87fc398"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "86a4757d-982e-44d7-876a-cb1ae548ae81",
-                    "created_at": "2026-06-30T20:00:33Z",
-                    "updated_at": "2026-06-30T20:00:36Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "51ddd18b-5a78-418e-8f41-9a4c518650ec"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "94fe292c-6acc-4717-b25d-97ed5aa2202a",
-                    "created_at": "2026-06-30T20:00:34Z",
-                    "updated_at": "2026-06-30T20:00:35Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "bc85eb47-2b47-4544-b1de-821d11137d24"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "57d99719-d788-46e0-acc9-477601465f0d",
-                    "created_at": "2026-06-30T20:00:34Z",
-                    "updated_at": "2026-06-30T20:00:35Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "43c89fea-a7e1-4781-a446-eca57e3748b5"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "155efd4c-338d-4d5c-9a8a-ef23420dd1ec",
-                    "created_at": "2026-06-30T20:00:34Z",
-                    "updated_at": "2026-06-30T20:00:36Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "d2761c94-ee8f-47a8-8570-166d28321df3"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "2e37cd11-8a67-44b0-b398-51777ad9c9ab",
-                    "created_at": "2026-06-30T20:00:34Z",
-                    "updated_at": "2026-06-30T20:00:36Z",
+                    "guid": "60b9e5d8-cff8-42e0-8c23-c8771560c3bf",
+                    "created_at": "2026-07-02T19:56:16Z",
+                    "updated_at": "2026-07-02T19:56:17Z",
                     "relationships": {
                         "service_instance": {
                             "data": {
@@ -200,21 +178,33 @@
                     }
                 },
                 {
-                    "guid": "ec748240-ebc6-44da-bcf4-4729d762771e",
-                    "created_at": "2026-06-30T20:00:34Z",
-                    "updated_at": "2026-06-30T20:00:34Z",
+                    "guid": "fe21207f-261b-498c-8fc3-c90891f51f34",
+                    "created_at": "2026-07-02T19:56:16Z",
+                    "updated_at": "2026-07-02T19:56:18Z",
                     "relationships": {
                         "service_instance": {
                             "data": {
-                                "guid": "393a971c-77c1-4930-a373-f7345e2b2527"
+                                "guid": "e020b20a-eb23-4475-91ec-d525f8738fd7"
                             }
                         }
                     }
                 },
                 {
-                    "guid": "2aafe7ea-fc6e-4e4a-b86e-424e841618ad",
-                    "created_at": "2026-06-30T20:00:34Z",
-                    "updated_at": "2026-06-30T20:00:35Z",
+                    "guid": "fe469c73-ced4-41b0-9c4d-91ae6020e5af",
+                    "created_at": "2026-07-02T19:56:16Z",
+                    "updated_at": "2026-07-02T19:56:18Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "4828618c-730b-4686-80f2-8e7045cb6e97",
+                    "created_at": "2026-07-02T19:56:16Z",
+                    "updated_at": "2026-07-02T19:56:17Z",
                     "relationships": {
                         "service_instance": {
                             "data": {
@@ -224,21 +214,57 @@
                     }
                 },
                 {
-                    "guid": "e519181d-750f-4588-b4f6-8fee219b8345",
-                    "created_at": "2026-06-30T20:00:34Z",
-                    "updated_at": "2026-06-30T20:00:37Z",
+                    "guid": "aef90914-db52-4a3a-a843-a19b8a67b720",
+                    "created_at": "2026-07-02T19:56:16Z",
+                    "updated_at": "2026-07-02T19:56:16Z",
                     "relationships": {
                         "service_instance": {
                             "data": {
-                                "guid": "b37ed912-457a-43da-856c-20ded42fd748"
+                                "guid": "393a971c-77c1-4930-a373-f7345e2b2527"
                             }
                         }
                     }
                 },
                 {
-                    "guid": "ca503bf1-ae28-498a-ac1e-a06f46e98dc9",
-                    "created_at": "2026-06-30T20:00:44Z",
-                    "updated_at": "2026-06-30T20:00:47Z",
+                    "guid": "cb734f7d-fc24-4a19-9164-fc7f754d5b40",
+                    "created_at": "2026-07-02T19:56:16Z",
+                    "updated_at": "2026-07-02T19:56:17Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "43c89fea-a7e1-4781-a446-eca57e3748b5"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "1a30a75e-6659-4403-8d9a-f7fab562fcb9",
+                    "created_at": "2026-07-02T19:56:26Z",
+                    "updated_at": "2026-07-02T19:56:27Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "0c94f0c1-db0a-495d-b385-4a44a87fc398"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "905fe682-c070-4caa-912e-83739099719c",
+                    "created_at": "2026-07-02T19:56:26Z",
+                    "updated_at": "2026-07-02T19:56:27Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "bc85eb47-2b47-4544-b1de-821d11137d24"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "522a3fff-6e41-4bb2-98f6-aa1da0712d57",
+                    "created_at": "2026-07-02T19:56:26Z",
+                    "updated_at": "2026-07-02T19:56:29Z",
                     "relationships": {
                         "service_instance": {
                             "data": {
@@ -248,9 +274,45 @@
                     }
                 },
                 {
-                    "guid": "ee92992e-55cc-4212-8ac2-4c4e269f710d",
-                    "created_at": "2026-06-30T20:00:55Z",
-                    "updated_at": "2026-06-30T20:01:08Z",
+                    "guid": "7e1b25ca-50a4-4d2d-adb4-67c37a46e054",
+                    "created_at": "2026-07-02T19:56:26Z",
+                    "updated_at": "2026-07-02T19:56:27Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "e188bf3f-4e52-4c14-ba89-3d05eaeeeff2"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "1a18691f-1c88-41e5-9d46-f1d07dbcf6d9",
+                    "created_at": "2026-07-02T19:56:26Z",
+                    "updated_at": "2026-07-02T19:56:27Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "b37ed912-457a-43da-856c-20ded42fd748"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "fc511d2a-6903-4d4c-bd51-1beb565b7b82",
+                    "created_at": "2026-07-02T19:56:26Z",
+                    "updated_at": "2026-07-02T19:56:27Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "d2761c94-ee8f-47a8-8570-166d28321df3"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "e76890a2-e6fe-4dbe-afbe-19199efa9df6",
+                    "created_at": "2026-07-02T19:56:37Z",
+                    "updated_at": "2026-07-02T19:56:44Z",
                     "relationships": {
                         "service_instance": {
                             "data": {
@@ -542,6 +604,17 @@
                     }
                 },
                 {
+                    "guid": "9a933c31-d8a5-4308-a9be-8a9646ea0e10",
+                    "name": "application",
+                    "relationships": {
+                        "service_offering": {
+                            "data": {
+                                "guid": "d2ff128b-e1a8-45f7-828a-24be6173db7b"
+                            }
+                        }
+                    }
+                },
+                {
                     "guid": "e227245e-0412-4a41-9873-494515103d0b",
                     "name": "standard",
                     "relationships": {
@@ -564,12 +637,34 @@
                     }
                 },
                 {
+                    "guid": "74b88153-e9ad-4f5f-b2df-3a65923c1a80",
+                    "name": "app-runtime",
+                    "relationships": {
+                        "service_offering": {
+                            "data": {
+                                "guid": "73210b64-6f92-4a16-bd1c-401f00cbe597"
+                            }
+                        }
+                    }
+                },
+                {
                     "guid": "9aacc9b5-dde9-4c24-8f07-33f078cdc6b3",
                     "name": "default",
                     "relationships": {
                         "service_offering": {
                             "data": {
                                 "guid": "2b98a1a8-2f57-4fc5-8b39-f957f6b1bbe9"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "6e0487a4-87f6-445c-a334-7f780f0468da",
+                    "name": "standard",
+                    "relationships": {
+                        "service_offering": {
+                            "data": {
+                                "guid": "62483b8a-a24d-4f85-a863-7f126c9c0c28"
                             }
                         }
                     }
@@ -586,6 +681,17 @@
                     }
                 },
                 {
+                    "guid": "c8e82a1a-4d99-4d95-9da9-464a3d7ea010",
+                    "name": "standard",
+                    "relationships": {
+                        "service_offering": {
+                            "data": {
+                                "guid": "15566d61-6481-4ed4-bf1f-19b4ff27ff29"
+                            }
+                        }
+                    }
+                },
+                {
                     "guid": "971fa652-ab16-4c6a-8a42-ebbf2b4ca351",
                     "name": "standard",
                     "relationships": {
@@ -597,12 +703,34 @@
                     }
                 },
                 {
+                    "guid": "f715a402-c1da-44b5-8a4c-04f294bf4132",
+                    "name": "keyuser",
+                    "relationships": {
+                        "service_offering": {
+                            "data": {
+                                "guid": "d7ac2ec8-63b2-440e-984c-0f89413997ac"
+                            }
+                        }
+                    }
+                },
+                {
                     "guid": "0a7957b8-5478-4d8a-917f-374a53b52355",
                     "name": "oauth2",
                     "relationships": {
                         "service_offering": {
                             "data": {
                                 "guid": "d5a22bb7-795f-4c80-ba65-32c54743447a"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "2aef18a7-a8d1-4c9a-9e35-8ad6b64af97d",
+                    "name": "provider",
+                    "relationships": {
+                        "service_offering": {
+                            "data": {
+                                "guid": "49e39dca-8f86-4c1c-81e5-c1cf19b9f029"
                             }
                         }
                     }
@@ -650,82 +778,44 @@
                         "name": "destination"
                     },
                     {
+                        "guid": "d2ff128b-e1a8-45f7-828a-24be6173db7b",
+                        "name": "saas-registry"
+                    },
+                    {
+                        "guid": "73210b64-6f92-4a16-bd1c-401f00cbe597",
+                        "name": "html5-apps-repo"
+                    },
+                    {
                         "guid": "2b98a1a8-2f57-4fc5-8b39-f957f6b1bbe9",
                         "name": "business-logging"
+                    },
+                    {
+                        "guid": "62483b8a-a24d-4f85-a863-7f126c9c0c28",
+                        "name": "portal"
                     },
                     {
                         "guid": "0715cc04-0801-42f5-84ca-4aa8125acbab",
                         "name": "malware-scanner"
                     },
                     {
+                        "guid": "15566d61-6481-4ed4-bf1f-19b4ff27ff29",
+                        "name": "theming"
+                    },
+                    {
                         "guid": "c1dab744-73a5-4b1f-bbf2-a7c06f445582",
                         "name": "certificate-service"
                     },
                     {
-                        "guid": "8df9a6e6-3b86-4b92-9044-df0eb223451e",
-                        "name": "service-manager"
-                    }
-                ]
-            }
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json; charset=utf-8"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://api.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v3/routes?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&include=domain",
-        "body": "",
-        "status": 200,
-        "response": {
-            "pagination": {
-                "total_results": 2,
-                "total_pages": 1,
-                "first": {
-                    "href": "https://api.cf.sap.hana.ondemand.com/v3/routes?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&include=domain&page=1&per_page=50"
-                },
-                "last": {
-                    "href": "https://api.cf.sap.hana.ondemand.com/v3/routes?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&include=domain&page=1&per_page=50"
-                },
-                "next": null,
-                "previous": null
-            },
-            "resources": [
-                {
-                    "guid": "819b3465-aa66-4ade-b29e-35530951b66e",
-                    "host": "skyfin-dev-afc-backend",
-                    "relationships": {
-                        "domain": {
-                            "data": {
-                                "guid": "9aa474f9-3f82-4967-a2e1-dfe0cd155064"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "91d1705b-ce16-47e9-b556-bf7abc554f09",
-                    "host": "skyfin-dev-afc-backend",
-                    "relationships": {
-                        "domain": {
-                            "data": {
-                                "guid": "3352296c-1b56-4b87-869f-cf310a917d14"
-                            }
-                        }
-                    }
-                }
-            ],
-            "included": {
-                "domains": [
-                    {
-                        "guid": "9aa474f9-3f82-4967-a2e1-dfe0cd155064",
-                        "name": "cfapps.sap.hana.ondemand.com"
+                        "guid": "d7ac2ec8-63b2-440e-984c-0f89413997ac",
+                        "name": "ui5-flexibility-keyuser"
                     },
                     {
-                        "guid": "3352296c-1b56-4b87-869f-cf310a917d14",
-                        "name": "mesh.cf.sap.hana.ondemand.com"
+                        "guid": "8df9a6e6-3b86-4b92-9044-df0eb223451e",
+                        "name": "service-manager"
+                    },
+                    {
+                        "guid": "49e39dca-8f86-4c1c-81e5-c1cf19b9f029",
+                        "name": "subscription-manager"
                     }
                 ]
             }
@@ -805,6 +895,17 @@
                     }
                 },
                 {
+                    "guid": "c60b2cdd-3137-49da-b035-a80ae9090b76",
+                    "name": "business-notifications",
+                    "relationships": {
+                        "service_offering": {
+                            "data": {
+                                "guid": "8b070f17-3c89-4ec3-b5f5-d4fde193e8fd"
+                            }
+                        }
+                    }
+                },
+                {
                     "guid": "2f5efc6d-36b2-48df-9d3c-12767764ee7e",
                     "name": "sap-internal",
                     "relationships": {
@@ -821,6 +922,10 @@
                     {
                         "guid": "d0ae76d8-57ff-403b-83b4-7f69eaba8421",
                         "name": "objectstore"
+                    },
+                    {
+                        "guid": "8b070f17-3c89-4ec3-b5f5-d4fde193e8fd",
+                        "name": "alert-notification"
                     },
                     {
                         "guid": "32c22518-565f-4815-adf3-96c5e45321e6",
@@ -901,15 +1006,12 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/4e72bf71-c8a5-4110-aa49-4e20dc07ba35/details",
+        "path": "/v3/service_credential_bindings/3cfc2183-0ec7-4048-b488-4f0cfe4051c3/details",
         "body": "",
         "status": 200,
         "response": {
-            "credentials": {
-                "pass": "cf-credentials-credentials-pass",
-                "user": "cf-credentials-credentials-user"
-            },
-            "syslog_drain_url": ""
+            "credentials": {},
+            "syslog_drain_url": "https://cf-credentials-syslog_drain_url-username:cf-credentials-syslog_drain_url-password@ingest-sf-068034bc-13cf-4be3-9589-3a751c760bea.cls-01.cloud.logs.services.sap.hana.ondemand.com/cfsyslog"
         },
         "rawHeaders": [
             "content-type",
@@ -920,7 +1022,7 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/c34f69b6-e633-452d-947a-73649874d065/details",
+        "path": "/v3/service_credential_bindings/abaa4031-8d0b-498a-a81a-4cdf2b4ea840/details",
         "body": "",
         "status": 200,
         "response": {
@@ -963,31 +1065,38 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/42fad5cf-a5c6-4632-9d75-1ee6f40b2fa2/details",
+        "path": "/v3/service_credential_bindings/15132739-4ee6-40cb-b89a-5f77d4d4398e/details",
         "body": "",
         "status": 200,
         "response": {
             "credentials": {
-                "tenantmode": "shared",
-                "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
-                "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                "clientid": "cf-credentials-credentials-clientid-8168a434",
-                "credential-type": "x509",
-                "clientx509enabled": false,
-                "xsappname": "afc-dev!t5874",
-                "certificate": "cf-credentials-credentials-certificate",
-                "serviceInstanceId": "e020b20a-eb23-4475-91ec-d525f8738fd7",
+                "pass": "cf-credentials-credentials-pass",
+                "user": "cf-credentials-credentials-user"
+            },
+            "syslog_drain_url": ""
+        },
+        "rawHeaders": [
+            "content-type",
+            "application/json; charset=utf-8"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/service_credential_bindings/fe469c73-ced4-41b0-9c4d-91ae6020e5af/details",
+        "body": "",
+        "status": 200,
+        "response": {
+            "credentials": {
+                "sm_url": "https://service-manager.cfapps.sap.hana.ondemand.com/",
                 "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
-                "uaadomain": "authentication.sap.hana.ondemand.com",
-                "verificationkey": "cf-credentials-credentials-verificationkey",
-                "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
                 "certurl": "https://skyfin.authentication.cert.sap.hana.ondemand.com/",
-                "identityzone": "skyfin",
-                "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                "certificate-pinning": true,
-                "key": "cf-credentials-credentials-key"
+                "clientid": "cf-credentials-credentials-clientid-612fd251",
+                "xsappname": "51ddd18b-5a78-418e-8f41-9a4c518650ec!b5874|service-manager!b4065",
+                "certificate": "cf-credentials-credentials-certificate",
+                "key": "cf-credentials-credentials-key",
+                "uaadomain": "authentication.sap.hana.ondemand.com"
             }
         },
         "rawHeaders": [
@@ -999,7 +1108,89 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/8af34d2d-fa7a-42e0-90e3-5077e97ea320/details",
+        "path": "/v3/service_credential_bindings/aef90914-db52-4a3a-a843-a19b8a67b720/details",
+        "body": "",
+        "status": 200,
+        "response": {
+            "credentials": {}
+        },
+        "rawHeaders": [
+            "content-type",
+            "application/json; charset=utf-8"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/service_credential_bindings/4828618c-730b-4686-80f2-8e7045cb6e97/details",
+        "body": "",
+        "status": 200,
+        "response": {
+            "credentials": {
+                "serviceurls": {
+                    "AI_API_URL": "https://api.ai.internalprod.eu-central-1.aws.ml.hana.ondemand.com/"
+                },
+                "appname": "cff72d89-f0b9-4c3d-b1e4-6e26bc874eaf!b5874|xsuaa_std!b77089",
+                "clientid": "cf-credentials-credentials-clientid-563267fd",
+                "clientsecret": "cf-credentials-credentials-clientsecret",
+                "identityzone": "skyfin",
+                "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                "credential-type": "binding-secret",
+                "token-type": [
+                    "cf-credentials-credentials-token-type-0"
+                ]
+            }
+        },
+        "rawHeaders": [
+            "content-type",
+            "application/json; charset=utf-8"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/service_credential_bindings/cb734f7d-fc24-4a19-9164-fc7f754d5b40/details",
+        "body": "",
+        "status": 200,
+        "response": {
+            "credentials": {
+                "tenantmode": "dedicated",
+                "token-type": [
+                    "cf-credentials-credentials-token-type-0"
+                ],
+                "clientid": "cf-credentials-credentials-clientid-f71016a7",
+                "token_service_domain": "cf-credentials-credentials-token_service_domain",
+                "credential-type": "binding-secret",
+                "token_service_url": "cf-credentials-credentials-token_service_url",
+                "xsappname": "clone43c89feaa7e14781a446eca57e3748b5!b5874|connectivity!b137",
+                "onpremise_proxy_ldap_port": "20001",
+                "onpremise_socks5_proxy_port": "20004",
+                "clientsecret": "cf-credentials-credentials-clientsecret",
+                "onpremise_proxy_http_port": "20003",
+                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                "onpremise_proxy_host": "connectivityproxy.internal.cf.sap.hana.ondemand.com",
+                "uaadomain": "authentication.sap.hana.ondemand.com",
+                "onpremise_proxy_port": "20003",
+                "verificationkey": "cf-credentials-credentials-verificationkey",
+                "identityzone": "skyfin",
+                "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                "onpremise_proxy_rfc_port": "20001",
+                "region_configuration_id": "cf-eu10-canary"
+            }
+        },
+        "rawHeaders": [
+            "content-type",
+            "application/json; charset=utf-8"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/service_credential_bindings/1a30a75e-6659-4403-8d9a-f7fab562fcb9/details",
         "body": "",
         "status": 200,
         "response": {
@@ -1024,31 +1215,7 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/86a4757d-982e-44d7-876a-cb1ae548ae81/details",
-        "body": "",
-        "status": 200,
-        "response": {
-            "credentials": {
-                "sm_url": "https://service-manager.cfapps.sap.hana.ondemand.com/",
-                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
-                "certurl": "https://skyfin.authentication.cert.sap.hana.ondemand.com/",
-                "clientid": "cf-credentials-credentials-clientid-612fd251",
-                "xsappname": "51ddd18b-5a78-418e-8f41-9a4c518650ec!b5874|service-manager!b4065",
-                "certificate": "cf-credentials-credentials-certificate",
-                "key": "cf-credentials-credentials-key",
-                "uaadomain": "authentication.sap.hana.ondemand.com"
-            }
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json; charset=utf-8"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://api.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v3/service_credential_bindings/94fe292c-6acc-4717-b25d-97ed5aa2202a/details",
+        "path": "/v3/service_credential_bindings/905fe682-c070-4caa-912e-83739099719c/details",
         "body": "",
         "status": 200,
         "response": {
@@ -1088,225 +1255,7 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/57d99719-d788-46e0-acc9-477601465f0d/details",
-        "body": "",
-        "status": 200,
-        "response": {
-            "credentials": {
-                "tenantmode": "dedicated",
-                "token-type": [
-                    "cf-credentials-credentials-token-type-0"
-                ],
-                "clientid": "cf-credentials-credentials-clientid-f71016a7",
-                "token_service_domain": "cf-credentials-credentials-token_service_domain",
-                "credential-type": "binding-secret",
-                "token_service_url": "cf-credentials-credentials-token_service_url",
-                "xsappname": "clone43c89feaa7e14781a446eca57e3748b5!b5874|connectivity!b137",
-                "onpremise_proxy_ldap_port": "20001",
-                "onpremise_socks5_proxy_port": "20004",
-                "clientsecret": "cf-credentials-credentials-clientsecret",
-                "onpremise_proxy_http_port": "20003",
-                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
-                "onpremise_proxy_host": "connectivityproxy.internal.cf.sap.hana.ondemand.com",
-                "uaadomain": "authentication.sap.hana.ondemand.com",
-                "onpremise_proxy_port": "20003",
-                "verificationkey": "cf-credentials-credentials-verificationkey",
-                "identityzone": "skyfin",
-                "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                "onpremise_proxy_rfc_port": "20001",
-                "region_configuration_id": "cf-eu10-canary"
-            }
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json; charset=utf-8"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://api.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v3/service_credential_bindings/2e37cd11-8a67-44b0-b398-51777ad9c9ab/details",
-        "body": "",
-        "status": 200,
-        "response": {
-            "credentials": {
-                "tenantmode": "dedicated",
-                "token-type": [
-                    "cf-credentials-credentials-token-type-0"
-                ],
-                "clientid": "cf-credentials-credentials-clientid-d8a263ca",
-                "credential-type": "binding-secret",
-                "xsappname": "clone05ed02605f01499ab0772a3cafc5eac3!b5874|destination-xsappname!b433",
-                "clientsecret": "cf-credentials-credentials-clientsecret",
-                "uri": "https://destination-configuration.cfapps.sap.hana.ondemand.com/",
-                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
-                "uaadomain": "authentication.sap.hana.ondemand.com",
-                "instanceid": "05ed0260-5f01-499a-b077-2a3cafc5eac3",
-                "verificationkey": "cf-credentials-credentials-verificationkey",
-                "identityzone": "skyfin",
-                "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
-            }
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json; charset=utf-8"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://api.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v3/service_credential_bindings/155efd4c-338d-4d5c-9a8a-ef23420dd1ec/details",
-        "body": "",
-        "status": 200,
-        "response": {
-            "credentials": {
-                "vendor": "SAP",
-                "url": "https://api.auditlog.cf.sap.hana.ondemand.com/",
-                "uaa": {
-                    "tenantmode": "dedicated",
-                    "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
-                    "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                    "credential-type": "binding-secret",
-                    "clientid": "cf-credentials-credentials-uaa-clientid-69cb97bf",
-                    "xsappname": "d2761c94-ee8f-47a8-8570-166d28321df3!b5874|auditlog!b4",
-                    "clientsecret": "cf-credentials-credentials-uaa-clientsecret",
-                    "serviceInstanceId": "d2761c94-ee8f-47a8-8570-166d28321df3",
-                    "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
-                    "uaadomain": "authentication.sap.hana.ondemand.com",
-                    "verificationkey": "cf-credentials-credentials-uaa-verificationkey",
-                    "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
-                    "identityzone": "skyfin",
-                    "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                    "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                    "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
-                }
-            }
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json; charset=utf-8"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://api.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v3/service_credential_bindings/ec748240-ebc6-44da-bcf4-4729d762771e/details",
-        "body": "",
-        "status": 200,
-        "response": {
-            "credentials": {}
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json; charset=utf-8"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://api.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v3/service_credential_bindings/440d38ca-b54f-4f2f-ab9d-e9d073e5dd6f/details",
-        "body": "",
-        "status": 200,
-        "response": {
-            "credentials": {},
-            "syslog_drain_url": "https://cf-credentials-syslog_drain_url-username:cf-credentials-syslog_drain_url-password@ingest-sf-068034bc-13cf-4be3-9589-3a751c760bea.cls-01.cloud.logs.services.sap.hana.ondemand.com/cfsyslog"
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json; charset=utf-8"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://api.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v3/service_credential_bindings/2aafe7ea-fc6e-4e4a-b86e-424e841618ad/details",
-        "body": "",
-        "status": 200,
-        "response": {
-            "credentials": {
-                "serviceurls": {
-                    "AI_API_URL": "https://api.ai.internalprod.eu-central-1.aws.ml.hana.ondemand.com/"
-                },
-                "appname": "cff72d89-f0b9-4c3d-b1e4-6e26bc874eaf!b5874|xsuaa_std!b77089",
-                "clientid": "cf-credentials-credentials-clientid-563267fd",
-                "clientsecret": "cf-credentials-credentials-clientsecret",
-                "identityzone": "skyfin",
-                "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
-                "credential-type": "binding-secret",
-                "token-type": [
-                    "cf-credentials-credentials-token-type-0"
-                ]
-            }
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json; charset=utf-8"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://api.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v3/service_credential_bindings/ee92992e-55cc-4212-8ac2-4c4e269f710d/details",
-        "body": "",
-        "status": 200,
-        "response": {
-            "credentials": {
-                "btp-tenant-api": "https://api.authentication.sap.hana.ondemand.com",
-                "app_tid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                "clientid": "cf-credentials-credentials-clientid-ea7419d4",
-                "credential-type": "X509_GENERATED",
-                "certificate": "cf-credentials-credentials-certificate",
-                "domains": [
-                    "accounts400.ondemand.com",
-                    "accounts400.cloud.sap"
-                ],
-                "end_session_endpoint": "https://awdsp8ef4.accounts400.ondemand.com/oauth2/logout",
-                "url": "https://awdsp8ef4.accounts400.ondemand.com/",
-                "authorization_endpoint": "https://awdsp8ef4.accounts400.ondemand.com/oauth2/authorize",
-                "certificate_expires_at": "2026-09-28T20:01:01Z",
-                "domain": "accounts400.ondemand.com",
-                "key": "cf-credentials-credentials-key"
-            }
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json; charset=utf-8"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://api.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v3/service_credential_bindings/e519181d-750f-4588-b4f6-8fee219b8345/details",
-        "body": "",
-        "status": 200,
-        "response": {
-            "credentials": {
-                "apitoken": "cf-credentials-credentials-apitoken",
-                "apiurl": "https://canary.eu10.apm.services.cloud.sap/e/99479865-a86b-4792-a740-fc62388b3496/api",
-                "environmentid": "99479865-a86b-4792-a740-fc62388b3496",
-                "ingest_apitoken": "cf-credentials-credentials-ingest_apitoken",
-                "skiperrors": "true",
-                "token_expiry": "cf-credentials-credentials-token_expiry"
-            }
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json; charset=utf-8"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://api.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v3/service_credential_bindings/ca503bf1-ae28-498a-ac1e-a06f46e98dc9/details",
+        "path": "/v3/service_credential_bindings/522a3fff-6e41-4bb2-98f6-aa1da0712d57/details",
         "body": "",
         "status": 200,
         "response": {
@@ -1369,7 +1318,7 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/f092eb3e-ece7-43fd-b4d8-687139e8598c/details",
+        "path": "/v3/service_credential_bindings/7e1b25ca-50a4-4d2d-adb4-67c37a46e054/details",
         "body": "",
         "status": 200,
         "response": {
@@ -1389,6 +1338,162 @@
         "responseIsBinary": false
     },
     {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/service_credential_bindings/1a18691f-1c88-41e5-9d46-f1d07dbcf6d9/details",
+        "body": "",
+        "status": 200,
+        "response": {
+            "credentials": {
+                "apitoken": "cf-credentials-credentials-apitoken",
+                "apiurl": "https://canary.eu10.apm.services.cloud.sap/e/99479865-a86b-4792-a740-fc62388b3496/api",
+                "environmentid": "99479865-a86b-4792-a740-fc62388b3496",
+                "ingest_apitoken": "cf-credentials-credentials-ingest_apitoken",
+                "skiperrors": "true",
+                "token_expiry": "cf-credentials-credentials-token_expiry"
+            }
+        },
+        "rawHeaders": [
+            "content-type",
+            "application/json; charset=utf-8"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/service_credential_bindings/fc511d2a-6903-4d4c-bd51-1beb565b7b82/details",
+        "body": "",
+        "status": 200,
+        "response": {
+            "credentials": {
+                "vendor": "SAP",
+                "url": "https://api.auditlog.cf.sap.hana.ondemand.com/",
+                "uaa": {
+                    "tenantmode": "dedicated",
+                    "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
+                    "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                    "credential-type": "binding-secret",
+                    "clientid": "cf-credentials-credentials-uaa-clientid-69cb97bf",
+                    "xsappname": "d2761c94-ee8f-47a8-8570-166d28321df3!b5874|auditlog!b4",
+                    "clientsecret": "cf-credentials-credentials-uaa-clientsecret",
+                    "serviceInstanceId": "d2761c94-ee8f-47a8-8570-166d28321df3",
+                    "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                    "uaadomain": "authentication.sap.hana.ondemand.com",
+                    "verificationkey": "cf-credentials-credentials-uaa-verificationkey",
+                    "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
+                    "identityzone": "skyfin",
+                    "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                    "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                    "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+                }
+            }
+        },
+        "rawHeaders": [
+            "content-type",
+            "application/json; charset=utf-8"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/service_credential_bindings/e76890a2-e6fe-4dbe-afbe-19199efa9df6/details",
+        "body": "",
+        "status": 200,
+        "response": {
+            "credentials": {
+                "btp-tenant-api": "https://api.authentication.sap.hana.ondemand.com",
+                "app_tid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                "clientid": "cf-credentials-credentials-clientid-ea7419d4",
+                "credential-type": "X509_GENERATED",
+                "certificate": "cf-credentials-credentials-certificate",
+                "domains": [
+                    "accounts400.ondemand.com",
+                    "accounts400.cloud.sap"
+                ],
+                "end_session_endpoint": "https://awdsp8ef4.accounts400.ondemand.com/oauth2/logout",
+                "url": "https://awdsp8ef4.accounts400.ondemand.com/",
+                "authorization_endpoint": "https://awdsp8ef4.accounts400.ondemand.com/oauth2/authorize",
+                "certificate_expires_at": "2026-09-30T19:56:41Z",
+                "domain": "accounts400.ondemand.com",
+                "key": "cf-credentials-credentials-key"
+            }
+        },
+        "rawHeaders": [
+            "content-type",
+            "application/json; charset=utf-8"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/service_credential_bindings/fe21207f-261b-498c-8fc3-c90891f51f34/details",
+        "body": "",
+        "status": 200,
+        "response": {
+            "credentials": {
+                "tenantmode": "shared",
+                "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
+                "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                "clientid": "cf-credentials-credentials-clientid-8168a434",
+                "credential-type": "x509",
+                "clientx509enabled": false,
+                "xsappname": "afc-dev!t5874",
+                "certificate": "cf-credentials-credentials-certificate",
+                "serviceInstanceId": "e020b20a-eb23-4475-91ec-d525f8738fd7",
+                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                "uaadomain": "authentication.sap.hana.ondemand.com",
+                "verificationkey": "cf-credentials-credentials-verificationkey",
+                "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
+                "certurl": "https://skyfin.authentication.cert.sap.hana.ondemand.com/",
+                "identityzone": "skyfin",
+                "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                "certificate-pinning": true,
+                "key": "cf-credentials-credentials-key"
+            }
+        },
+        "rawHeaders": [
+            "content-type",
+            "application/json; charset=utf-8"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/service_credential_bindings/60b9e5d8-cff8-42e0-8c23-c8771560c3bf/details",
+        "body": "",
+        "status": 200,
+        "response": {
+            "credentials": {
+                "tenantmode": "dedicated",
+                "token-type": [
+                    "cf-credentials-credentials-token-type-0"
+                ],
+                "clientid": "cf-credentials-credentials-clientid-d8a263ca",
+                "credential-type": "binding-secret",
+                "xsappname": "clone05ed02605f01499ab0772a3cafc5eac3!b5874|destination-xsappname!b433",
+                "clientsecret": "cf-credentials-credentials-clientsecret",
+                "uri": "https://destination-configuration.cfapps.sap.hana.ondemand.com/",
+                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                "uaadomain": "authentication.sap.hana.ondemand.com",
+                "instanceid": "05ed0260-5f01-499a-b077-2a3cafc5eac3",
+                "verificationkey": "cf-credentials-credentials-verificationkey",
+                "identityzone": "skyfin",
+                "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+            }
+        },
+        "rawHeaders": [
+            "content-type",
+            "application/json; charset=utf-8"
+        ],
+        "responseIsBinary": false
+    },
+    {
         "scope": "https://skyfin.authentication.cert.sap.hana.ondemand.com:443",
         "method": "POST",
         "path": "/oauth/token",
@@ -1398,7 +1503,7 @@
             "token_type": "bearer",
             "expires_in": 1799,
             "scope": "service-manager!b4065.scopes.container uaa.resource service-manager!b4065.subaccount.service_instance.manage service-manager!b4065.subaccount.service_binding.manage service-manager!b4065.subaccount.service_plan.read service-manager!b4065.subaccount.service_binding.read service-manager!b4065.subaccount.service_offering.read service-manager!b4065.subaccount.service_instance.read",
-            "jti": "1b34389c31ef40c383253a80495bb999"
+            "jti": "15bd6d24d0ad42d4a23a8514228604e3"
         },
         "rawHeaders": [
             "cache-control",
@@ -1406,7 +1511,7 @@
             "content-type",
             "application/json",
             "date",
-            "Wed, 01 Jul 2026 13:50:00 GMT",
+            "Fri, 03 Jul 2026 13:15:44 GMT",
             "pragma",
             "no-cache",
             "server",
@@ -1416,7 +1521,7 @@
             "x-frame-options",
             "DENY",
             "x-vcap-request-id",
-            "be881415-0e97-42a0-583f-826576b6c603",
+            "4833e3d6-96fa-4fbd-5cb5-596925348f17",
             "x-xss-protection",
             "1; mode=block",
             "transfer-encoding",
@@ -1425,6 +1530,689 @@
             "max-age=31536000; includeSubDomains; preload;",
             "connection",
             "close"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://service-manager.cfapps.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v2/service_offerings",
+        "body": "",
+        "status": 200,
+        "response": {
+            "items": [
+                {
+                    "id": "4879da6d-661e-46bd-9c24-abd3acd6e618",
+                    "name": "xfs-runtime",
+                    "description": "Build, run, and manage your cloud extensions in a fully-managed environment",
+                    "broker_id": "179d56f5-bc86-4d7d-a273-ebe6a89ef9b6",
+                    "bindable": true,
+                    "plan_updateable": true,
+                    "allow_context_updates": false,
+                    "created_at": "2019-10-15T12:38:21Z",
+                    "updated_at": "2025-01-05T13:54:51Z",
+                    "tags": [
+                        "extensions",
+                        "extension-factory-service",
+                        "xfs-runtime",
+                        "xfs-runtime-sandbox"
+                    ]
+                },
+                {
+                    "id": "cb387899-8e7f-4bcd-8c99-dcc2372cbae5",
+                    "name": "objectstore",
+                    "description": "Highly available, distributed and eventually consistent objectstore.",
+                    "broker_id": "ba825381-13b7-4d3f-91b2-c034f88889f7",
+                    "bindable": true,
+                    "plan_updateable": true,
+                    "allow_context_updates": false,
+                    "created_at": "2019-08-21T11:47:06Z",
+                    "updated_at": "2026-07-03T10:35:04Z",
+                    "tags": [
+                        "blobStore",
+                        "objectStore"
+                    ]
+                },
+                {
+                    "id": "7cd0e186-41a7-4593-b725-8a9db333e329",
+                    "name": "destination",
+                    "description": "Provides a secure and reliable access to destination and certificate configurations",
+                    "broker_id": "52b0057d-bd1f-469b-9dfe-87da314888bc",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2019-06-26T13:41:56Z",
+                    "updated_at": "2026-07-03T11:46:40Z",
+                    "tags": [
+                        "destination",
+                        "conn",
+                        "connsvc"
+                    ]
+                },
+                {
+                    "id": "a3199d59-3fdc-41f5-a258-8ea36ff26762",
+                    "name": "xsuaa",
+                    "description": "Manage application authorizations and trust to identity providers.",
+                    "broker_id": "fb8e7037-0c56-405f-8110-187ef9d39273",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2019-06-26T13:51:49Z",
+                    "updated_at": "2026-07-03T10:52:08Z",
+                    "tags": [
+                        "xsuaa"
+                    ]
+                },
+                {
+                    "id": "a9e63f8f-aa4c-4e36-9666-380e362dfb50",
+                    "name": "auditlog-management",
+                    "description": "Retrieve logs and change retention",
+                    "broker_id": "63609100-37ee-4d36-bc58-6ccc4702b737",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2019-08-21T11:52:06Z",
+                    "updated_at": "2026-07-03T10:36:39Z"
+                },
+                {
+                    "id": "87d5e9c2-c003-4480-8f6b-2b9a4e1e78d9",
+                    "name": "autoscaler",
+                    "description": "Automatically increase or decrease the number of application instances based on a policy you define.",
+                    "broker_id": "0fd04247-ef4e-486c-b69c-30e93aec0499",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2019-05-14T18:41:14Z",
+                    "updated_at": "2026-07-03T10:42:31Z",
+                    "tags": [
+                        "autoscaler",
+                        "app-autoscaler",
+                        "cf-autoscaler"
+                    ]
+                },
+                {
+                    "id": "69d7739b-c266-4558-af07-83206a266d81",
+                    "name": "alert-notification",
+                    "description": "Service that exposes platform events and offers APIs for producing/consuming custom events",
+                    "broker_id": "58bd056e-9d23-4404-a6a3-0b363e2b226f",
+                    "bindable": true,
+                    "plan_updateable": true,
+                    "allow_context_updates": false,
+                    "created_at": "2019-10-03T13:46:21Z",
+                    "updated_at": "2025-12-16T11:06:09Z"
+                },
+                {
+                    "id": "62a5b9d4-70e5-4178-96d3-78744cb31676",
+                    "name": "INFRA",
+                    "description": "Configure and expose your application under your own domain.",
+                    "broker_id": "43047516-9107-473e-98e6-11f0f869a19c",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2019-08-21T19:44:18Z",
+                    "updated_at": "2026-07-03T10:57:01Z"
+                },
+                {
+                    "id": "55266952-638d-48ca-b0ea-3899803c35f6",
+                    "name": "feature-flags",
+                    "description": "Feature Flags service for controlling feature rollout",
+                    "broker_id": "da5c6b34-c4b0-4843-a59a-3291f01b04ac",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2019-05-15T08:10:32Z",
+                    "updated_at": "2026-07-03T10:27:42Z",
+                    "tags": [
+                        "feature-flags"
+                    ]
+                },
+                {
+                    "id": "f3882070-0930-4fb7-9222-afa2739d232c",
+                    "name": "certificate-service",
+                    "description": "Get client certificates from SAP Cloud certification authorities.",
+                    "broker_id": "a5fe83a2-0299-47ab-bac1-0f5984ef8f05",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2019-10-04T09:52:00Z",
+                    "updated_at": "2026-07-03T10:41:42Z"
+                },
+                {
+                    "id": "bc217a47-4ae6-4aa4-95d0-2330e224830b",
+                    "name": "ui5-flexibility-design-and-configuration",
+                    "description": "UI5 Flexibility Design and Configuration",
+                    "broker_id": "3d7ba292-3960-4337-9c86-e1c4fb037aa3",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2019-10-25T10:26:49Z",
+                    "updated_at": "2025-12-16T11:06:35Z",
+                    "tags": [
+                        "flex-design-and-configuration"
+                    ]
+                },
+                {
+                    "id": "3022ea04-82f1-4d97-ae8e-7e6b4216dec9",
+                    "name": "theming",
+                    "description": "Provides theming infrastructure.",
+                    "broker_id": "5b0bf616-e5c3-492f-871a-834f9ccaec5a",
+                    "bindable": true,
+                    "plan_updateable": true,
+                    "allow_context_updates": false,
+                    "created_at": "2019-10-29T13:03:18Z",
+                    "updated_at": "2025-12-16T11:06:50Z",
+                    "tags": [
+                        "sap-theming"
+                    ]
+                },
+                {
+                    "id": "ca8fcb9d-addc-456a-8343-6ac3795ea5bd",
+                    "name": "ui5-flexibility-keyuser",
+                    "description": "Add UI adaptation to your UI5 applications.",
+                    "broker_id": "18e697c6-e45c-488c-b500-9d5fbbbe0dfb",
+                    "bindable": true,
+                    "plan_updateable": true,
+                    "allow_context_updates": false,
+                    "created_at": "2019-11-13T08:50:53Z",
+                    "updated_at": "2026-04-27T13:05:33Z",
+                    "tags": [
+                        "flex-keyuser"
+                    ]
+                },
+                {
+                    "id": "fbe13474-1ac1-4500-bdec-49688cd2e1fa",
+                    "name": "data-intelligence",
+                    "description": "Orchestrate, refine, enrich, apply intelligence on your governed data across your entire distributed data landscape.",
+                    "broker_id": "8d5af2c9-ac81-4748-8b68-6fe3c9bab637",
+                    "bindable": false,
+                    "plan_updateable": true,
+                    "allow_context_updates": false,
+                    "created_at": "2019-11-14T18:05:45Z",
+                    "updated_at": "2025-12-16T11:07:20Z"
+                },
+                {
+                    "id": "e9851a58-4075-41b1-9ad0-64a2b22bfa44",
+                    "name": "auditlog",
+                    "description": "Broker for Audit Log Service in CF",
+                    "broker_id": "258868d0-bf8e-4237-82a7-e5375ccee896",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2019-11-14T19:40:10Z",
+                    "updated_at": "2026-07-03T10:27:37Z",
+                    "tags": [
+                        "auditlog",
+                        "audit log",
+                        "cf"
+                    ]
+                },
+                {
+                    "id": "705c6f6b-7235-4b70-a349-7604afbf182a",
+                    "name": "ui5-flexibility-personalization",
+                    "description": "UI5 Flexibility Personalization Service",
+                    "broker_id": "05436bcd-3820-45a1-9808-63ade3892511",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2019-11-19T10:56:35Z",
+                    "updated_at": "2025-12-16T11:07:29Z",
+                    "tags": [
+                        "flex-personalization"
+                    ]
+                },
+                {
+                    "id": "b2bafd44-7aad-485a-a05d-b13348b66568",
+                    "name": "hana-cloud",
+                    "description": "Leverage the in-memory data processing capabilities of SAP HANA in the cloud as one simple gateway to all data.",
+                    "broker_id": "fd8dcfba-d8cf-4414-9c40-47de8f5e82ef",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2019-11-20T06:13:24Z",
+                    "updated_at": "2026-07-03T10:57:28Z",
+                    "tags": [
+                        "hana",
+                        "in-memory",
+                        "relational"
+                    ]
+                },
+                {
+                    "id": "2d96f013-a2bc-43b9-9b66-6ed3701d2291",
+                    "name": "business-logging",
+                    "description": "Log your cloud application flow from a business perspective.",
+                    "broker_id": "e7146444-eae0-45e9-a6b1-269ff560e789",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2019-11-27T09:42:05Z",
+                    "updated_at": "2025-12-16T11:07:40Z",
+                    "tags": [
+                        "business-logging",
+                        "logging",
+                        "com.sap.appbasic.businesslogs",
+                        "comsapappbasicbusinesslogs"
+                    ]
+                },
+                {
+                    "id": "63dfdee2-9c27-4c71-abed-d47f301e779e",
+                    "name": "metering-service",
+                    "description": "Record usage data for commercial purposes like billing, charging, and resource planning.",
+                    "broker_id": "f1d9421f-7a57-4ef6-b563-d4fc5b2ded0b",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2019-12-11T15:04:25Z",
+                    "updated_at": "2026-07-02T08:37:57Z",
+                    "tags": [
+                        "metering",
+                        "reporting"
+                    ]
+                },
+                {
+                    "id": "9290da27-364f-4845-9919-2c88ab54696c",
+                    "name": "html5-apps-repo",
+                    "description": "Enables storage of HTML5 applications and provides runtime environment for HTML5 applications.",
+                    "broker_id": "783f875c-90ed-488a-9dcb-01d834a1e8ac",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2019-12-11T15:05:40Z",
+                    "updated_at": "2026-07-03T10:34:56Z",
+                    "tags": [
+                        "html5appsrepo",
+                        "html5-apps-repo-rt",
+                        "html5-apps-rt",
+                        "html5-apps-repo-dt",
+                        "html5-apps-dt"
+                    ]
+                },
+                {
+                    "id": "a2f16297-f274-4684-b472-4339c2425374",
+                    "name": "portal",
+                    "description": "Create SAP Fiori Launchpad sites for employees, customers, and partners.",
+                    "broker_id": "599d89d9-5f77-4bd4-bd74-927883df7e46",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2019-12-31T07:40:52Z",
+                    "updated_at": "2026-03-26T13:57:34Z",
+                    "tags": [
+                        "cp",
+                        "portal",
+                        "portal-service"
+                    ]
+                },
+                {
+                    "id": "45c7d7de-f351-4efe-b9c5-3e2ef1d28ed0",
+                    "name": "cis",
+                    "description": "Manage the control plane, account model, and product resources in SAP BTP using supported API interfaces.",
+                    "broker_id": "418485c1-fcb6-4da7-b5c0-86d844a0cb38",
+                    "bindable": true,
+                    "plan_updateable": true,
+                    "allow_context_updates": false,
+                    "created_at": "2020-01-09T10:55:56Z",
+                    "updated_at": "2026-07-03T10:41:47Z"
+                },
+                {
+                    "id": "c6ac414b-f5d3-4052-aa96-133d187a3e26",
+                    "name": "lps-service",
+                    "description": "Service for integrating with LPS Service",
+                    "broker_id": "418485c1-fcb6-4da7-b5c0-86d844a0cb38",
+                    "bindable": true,
+                    "plan_updateable": true,
+                    "allow_context_updates": false,
+                    "created_at": "2020-01-09T10:55:56Z",
+                    "updated_at": "2026-07-03T10:41:47Z",
+                    "tags": [
+                        "lps",
+                        "service"
+                    ]
+                },
+                {
+                    "id": "6b701bb8-fadc-4eb7-8bfa-b0d36da9cbcd",
+                    "name": "saas-registry",
+                    "description": "Service for application providers to register multitenant applications and services",
+                    "broker_id": "b04d6291-81a1-41a2-a554-df089ff388ef",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2020-01-09T12:48:55Z",
+                    "updated_at": "2026-07-03T10:30:11Z",
+                    "tags": [
+                        "SaaS"
+                    ]
+                },
+                {
+                    "id": "ecfd5925-e2a7-434d-8ade-7f4cbf428580",
+                    "name": "print",
+                    "description": "Manage print queues, connect print clients and monitor print status",
+                    "broker_id": "0ae5dd9a-f18e-4007-b710-9802ffd2ee27",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2020-01-16T01:17:55Z",
+                    "updated_at": "2025-12-16T11:10:11Z",
+                    "tags": [
+                        "Print",
+                        "Output Management",
+                        "com.sap.print.mpq"
+                    ]
+                },
+                {
+                    "id": "1002f293-7986-4ea0-ad0f-1627343bc8b2",
+                    "name": "malware-scanner",
+                    "description": "Scan single files for threats, via HTTP",
+                    "broker_id": "1a4ff702-7cf7-4356-9462-f8025074f1a3",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2020-01-22T17:06:05Z",
+                    "updated_at": "2026-07-03T10:27:47Z"
+                },
+                {
+                    "id": "1144b9b1-78d7-4a71-be9c-9ec55e090327",
+                    "name": "service-manager",
+                    "description": "The central registry for service brokers and platforms in SAP Business Technology Platform",
+                    "broker_id": "884b3555-4d3a-40c9-8fe3-ee86cabf3743",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2020-01-22T17:06:11Z",
+                    "updated_at": "2026-07-03T10:25:53Z"
+                },
+                {
+                    "id": "555e85f8-ea98-4378-82fc-fad56e1140cf",
+                    "name": "subscription-manager",
+                    "description": "Service to manage multitenant applications and services.",
+                    "broker_id": "b04d6291-81a1-41a2-a554-df089ff388ef",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2020-02-05T11:43:24Z",
+                    "updated_at": "2026-07-03T10:30:11Z",
+                    "tags": [
+                        "SaaS"
+                    ]
+                },
+                {
+                    "id": "7cfa5111-9ff4-4ae5-8d58-8e26a7fb2301",
+                    "name": "devhubservice",
+                    "description": "Expose your data and processes as APIs for omni-channel consumption and manage the lifecycle of those APIs.",
+                    "broker_id": "c1b537ad-5b71-4ed6-b484-745b3ccf8408",
+                    "bindable": true,
+                    "plan_updateable": true,
+                    "allow_context_updates": false,
+                    "created_at": "2020-02-11T06:40:14Z",
+                    "updated_at": "2022-08-10T11:12:42Z",
+                    "tags": [
+                        "Devhub",
+                        "Devhub Hybrid",
+                        "developer hub"
+                    ]
+                },
+                {
+                    "id": "ff3ae809-d4a4-4fe8-b3e7-089543ced087",
+                    "name": "one-mds",
+                    "description": "Service for master data integration",
+                    "broker_id": "acf689f0-9cde-411a-aa78-bb7ac829d0af",
+                    "bindable": true,
+                    "plan_updateable": true,
+                    "allow_context_updates": false,
+                    "created_at": "2020-03-02T12:09:39Z",
+                    "updated_at": "2025-12-16T11:12:49Z"
+                },
+                {
+                    "id": "6a8b3009-5d7a-48b0-b844-371092187938",
+                    "name": "connectivity",
+                    "description": "Establishes a secure and reliable connectivity between cloud applications and on-premise systems.",
+                    "broker_id": "4bf2eafd-54dd-4965-bb72-5085cf5fcf9e",
+                    "bindable": true,
+                    "plan_updateable": true,
+                    "allow_context_updates": false,
+                    "created_at": "2020-03-18T18:07:19Z",
+                    "updated_at": "2026-07-03T11:23:19Z",
+                    "tags": [
+                        "connectivity",
+                        "conn",
+                        "connsvc"
+                    ]
+                },
+                {
+                    "id": "8c3922c9-fcbd-469e-9393-2d941400f2c1",
+                    "name": "hana",
+                    "description": "Manage schemas and HDI containers on an existing SAP HANA database.",
+                    "broker_id": "d6bbbbc4-a28f-4ae0-bfc8-bc6db48a290b",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2020-04-01T18:39:15Z",
+                    "updated_at": "2026-06-29T13:14:55Z",
+                    "tags": [
+                        "hana",
+                        "database",
+                        "relational"
+                    ]
+                },
+                {
+                    "id": "841a7884-27c5-4ab9-9a96-f18a391d4d7d",
+                    "name": "postgresql-db",
+                    "description": "PostgreSQL service on SAP BTP",
+                    "broker_id": "0947618d-b2e9-4ff2-b357-71858d5c04ca",
+                    "bindable": true,
+                    "plan_updateable": true,
+                    "allow_context_updates": false,
+                    "created_at": "2020-04-02T10:15:38Z",
+                    "updated_at": "2026-07-03T11:54:35Z",
+                    "tags": [
+                        "relational",
+                        "database"
+                    ]
+                },
+                {
+                    "id": "d84536d8-5af2-4f2b-9116-7243632b2a29",
+                    "name": "redis-cache",
+                    "description": "Redis Cache service on SAP BTP",
+                    "broker_id": "f8335877-f46f-4c12-b3b6-599b36b63ded",
+                    "bindable": true,
+                    "plan_updateable": true,
+                    "allow_context_updates": false,
+                    "created_at": "2020-04-02T10:33:19Z",
+                    "updated_at": "2026-07-03T11:55:10Z",
+                    "tags": [
+                        "cache"
+                    ]
+                },
+                {
+                    "id": "56c47bd9-2bb2-4fa8-9e12-0db01a720e45",
+                    "name": "credstore",
+                    "description": "Secure repository for credentials, cryptographic keys and certificates.",
+                    "broker_id": "8b7f45ac-4cc6-4761-81f5-553b57df0f46",
+                    "bindable": true,
+                    "plan_updateable": true,
+                    "allow_context_updates": false,
+                    "created_at": "2020-06-04T09:36:33Z",
+                    "updated_at": "2025-12-16T11:15:14Z",
+                    "tags": [
+                        "credstore",
+                        "securestore",
+                        "keystore",
+                        "credentials"
+                    ]
+                },
+                {
+                    "id": "74a36c35-2971-4519-b864-46c520d0a2c4",
+                    "name": "application-logs",
+                    "description": "Create, store, access, and analyze application logs.",
+                    "broker_id": "81dc0cee-e1dc-420b-aff0-7c1f61664383",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2020-06-24T17:51:56Z",
+                    "updated_at": "2026-07-03T10:55:13Z"
+                },
+                {
+                    "id": "41e4ca5b-dce1-4370-a15c-937a310dd8d8",
+                    "name": "dynatrace",
+                    "description": "Create a Dynatrace environment and monitor your cloud applications and services.",
+                    "broker_id": "2dc27401-f84d-4ed5-b330-41e508e9fd6e",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2020-06-25T09:08:57Z",
+                    "updated_at": "2025-12-16T11:15:32Z",
+                    "tags": [
+                        "dynatrace"
+                    ]
+                },
+                {
+                    "id": "45b72f94-e761-4c37-85f1-2806416ed7be",
+                    "name": "cloud-logging",
+                    "description": "Store and analyze application logs, metrics, and traces based on OpenSearch.",
+                    "broker_id": "d9378dcd-8a21-4986-9f1d-4a3004e4cfd0",
+                    "bindable": true,
+                    "plan_updateable": true,
+                    "allow_context_updates": false,
+                    "created_at": "2020-06-25T18:15:48Z",
+                    "updated_at": "2026-03-02T13:00:11Z",
+                    "tags": [
+                        "Cloud Logging"
+                    ]
+                },
+                {
+                    "id": "2a9bc237-184f-4567-aa60-bb8e197bd036",
+                    "name": "content-agent",
+                    "description": "Content Agent allows you to assemble the content into MTAR and export it to the transport queue.",
+                    "broker_id": "b9cabece-caae-4fb8-9049-83a647f6ce60",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2020-07-29T13:52:22Z",
+                    "updated_at": "2025-12-16T11:15:56Z"
+                },
+                {
+                    "id": "dbd8bd1d-025f-4874-b7c3-459258f226c2",
+                    "name": "one-inbox-service",
+                    "description": "Integrate all tasks into a central solution.",
+                    "broker_id": "51ec0c29-60a7-4df1-acac-f0bf0a854242",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2020-09-04T07:27:10Z",
+                    "updated_at": "2025-12-16T11:16:19Z"
+                },
+                {
+                    "id": "6b78519d-120e-4ee1-808d-d40d25c3911e",
+                    "name": "auditlog-api",
+                    "description": "[DEPRECATED] Auditlog API",
+                    "broker_id": "3c722c53-6586-4366-93c5-f85786289d0e",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2020-09-04T12:13:03Z",
+                    "updated_at": "2025-07-30T11:21:42Z"
+                },
+                {
+                    "id": "b518cc1f-8523-4331-b7a1-d6f196854b05",
+                    "name": "identity",
+                    "description": "Cloud Identity Services",
+                    "broker_id": "39235c3d-849a-4925-a8e7-45c0343c8cac",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2020-10-28T11:53:29Z",
+                    "updated_at": "2025-12-16T11:17:54Z"
+                },
+                {
+                    "id": "1fc1d2d5-c8c6-440f-867f-46066f706c0b",
+                    "name": "aicore",
+                    "description": "Service for AI applications to train and deploy ML models",
+                    "broker_id": "9a2b7498-d322-4026-b92e-18ad016d7d80",
+                    "bindable": true,
+                    "plan_updateable": true,
+                    "allow_context_updates": false,
+                    "created_at": "2020-12-10T13:25:21Z",
+                    "updated_at": "2025-12-16T11:19:29Z"
+                },
+                {
+                    "id": "8b1c568e-597c-4bea-affd-9b50f977e851",
+                    "name": "build-workzone-standard",
+                    "description": "Establish integration with other services.",
+                    "broker_id": "599d89d9-5f77-4bd4-bd74-927883df7e46",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2021-01-20T23:40:30Z",
+                    "updated_at": "2026-03-26T13:57:34Z",
+                    "tags": [
+                        "cp",
+                        "launchpad",
+                        "build-workzone-standard"
+                    ]
+                },
+                {
+                    "id": "0e7be7e8-dd7c-4adb-aedf-1841cecd78a0",
+                    "name": "process-automation-service",
+                    "description": "Automate processes and tasks without requiring any coding skills",
+                    "broker_id": "29602b82-8516-4a71-96b8-dddc6d7dd22f",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2021-12-31T09:51:53Z",
+                    "updated_at": "2026-04-23T14:46:11Z",
+                    "tags": [
+                        "process",
+                        "automation"
+                    ]
+                },
+                {
+                    "id": "ac5bd5b0-6cf8-4a7b-a6e0-2a7fd24ff882",
+                    "name": "eventmesh-sap2sap-internal",
+                    "description": "Used for event-based integration between SAP cloud applications and SAP BTP-based applications.",
+                    "broker_id": "44718754-15c7-42c1-9369-c0dd986c0d48",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2022-12-16T16:39:27Z",
+                    "updated_at": "2025-12-16T11:27:53Z"
+                },
+                {
+                    "id": "358eb2bc-ed3d-412f-80a3-0c4736425ec0",
+                    "name": "azure-openai-service-demo",
+                    "description": "Azure OpenAI Service Demo",
+                    "broker_id": "09fd2a45-6e2f-483b-9add-9c592526bb23",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2023-02-14T11:53:41Z",
+                    "updated_at": "2025-12-16T11:28:24Z"
+                }
+            ]
+        },
+        "rawHeaders": [
+            "content-security-policy",
+            "default-src 'none'; frame-ancestors 'none'; object-src 'none';",
+            "content-type",
+            "application/json; charset=utf-8",
+            "date",
+            "Fri, 03 Jul 2026 13:15:44 GMT",
+            "vary",
+            "Accept-Encoding",
+            "x-content-type-options",
+            "nosniff",
+            "x-correlation-id",
+            "4c724dd2-fb15-4dc3-7f19-f868bcc4067f",
+            "x-ratelimit-limit",
+            "5",
+            "x-ratelimit-remaining",
+            "4",
+            "x-request-id",
+            "4c724dd2-fb15-4dc3-7f19-f868bcc4067f",
+            "x-vcap-request-id",
+            "4c724dd2-fb15-4dc3-7f19-f868bcc4067f",
+            "transfer-encoding",
+            "chunked",
+            "strict-transport-security",
+            "max-age=31536000; includeSubDomains; preload;"
         ],
         "responseIsBinary": false
     },
@@ -1442,7 +2230,7 @@
                     "description": "Feature Flags service standard plan",
                     "service_offering_id": "55266952-638d-48ca-b0ea-3899803c35f6",
                     "created_at": "2019-05-15T08:10:32Z",
-                    "updated_at": "2026-07-01T10:51:29Z"
+                    "updated_at": "2026-07-03T10:27:42Z"
                 },
                 {
                     "id": "3d060e37-4fed-4095-8a3f-eebecfc39423",
@@ -1450,7 +2238,7 @@
                     "description": "Default plan for Auditlog API",
                     "service_offering_id": "a9e63f8f-aa4c-4e36-9666-380e362dfb50",
                     "created_at": "2019-08-21T11:52:06Z",
-                    "updated_at": "2026-07-01T10:57:16Z"
+                    "updated_at": "2026-07-03T10:36:39Z"
                 },
                 {
                     "id": "ab7f984c-468f-460c-8c82-52e9f198a977",
@@ -1458,7 +2246,7 @@
                     "description": "Feature Flags service development plan (for non-productive usage)",
                     "service_offering_id": "55266952-638d-48ca-b0ea-3899803c35f6",
                     "created_at": "2019-05-15T08:10:32Z",
-                    "updated_at": "2026-07-01T10:51:29Z"
+                    "updated_at": "2026-07-03T10:27:42Z"
                 },
                 {
                     "id": "b732cc50-ec80-45de-8818-e39a1a547900",
@@ -1466,7 +2254,7 @@
                     "description": "Custom Domain",
                     "service_offering_id": "62a5b9d4-70e5-4178-96d3-78744cb31676",
                     "created_at": "2019-08-21T19:44:18Z",
-                    "updated_at": "2026-07-01T11:30:55Z"
+                    "updated_at": "2026-07-03T10:57:01Z"
                 },
                 {
                     "id": "e0fcd4df-13ab-4c16-9415-d9db3072accb",
@@ -1474,7 +2262,7 @@
                     "description": "This plan allows ten scaling rules and ten schedules per policy document",
                     "service_offering_id": "87d5e9c2-c003-4480-8f6b-2b9a4e1e78d9",
                     "created_at": "2019-05-14T18:41:14Z",
-                    "updated_at": "2026-07-01T11:05:20Z"
+                    "updated_at": "2026-07-03T10:42:31Z"
                 },
                 {
                     "id": "89ae3076-9c50-4c86-a917-7953c2e75cf2",
@@ -1482,7 +2270,7 @@
                     "description": "Read and manage destination configurations (including related certificates) on account and service instance levels with auto-retrieving and caching of auth tokens",
                     "service_offering_id": "7cd0e186-41a7-4593-b725-8a9db333e329",
                     "created_at": "2019-06-26T13:41:56Z",
-                    "updated_at": "2026-07-01T12:06:00Z"
+                    "updated_at": "2026-07-03T11:46:40Z"
                 },
                 {
                     "id": "037e7df6-5843-4174-9cb4-69a1f9a4da7e",
@@ -1491,7 +2279,7 @@
                     "service_offering_id": "a3199d59-3fdc-41f5-a258-8ea36ff26762",
                     "bindable": true,
                     "created_at": "2019-06-26T13:51:49Z",
-                    "updated_at": "2026-07-01T11:29:07Z"
+                    "updated_at": "2026-07-03T10:52:08Z"
                 },
                 {
                     "id": "a5d01348-cf28-4be4-9d04-27df2ffdf72f",
@@ -1499,7 +2287,7 @@
                     "description": "Access to standard profile",
                     "service_offering_id": "f3882070-0930-4fb7-9222-afa2739d232c",
                     "created_at": "2019-10-04T09:52:00Z",
-                    "updated_at": "2026-07-01T11:10:05Z"
+                    "updated_at": "2026-07-03T10:41:42Z"
                 },
                 {
                     "id": "d22c69bd-0770-4701-a9fd-9afaa93316b8",
@@ -1508,7 +2296,7 @@
                     "service_offering_id": "a3199d59-3fdc-41f5-a258-8ea36ff26762",
                     "bindable": true,
                     "created_at": "2019-06-26T13:51:49Z",
-                    "updated_at": "2026-07-01T11:29:07Z"
+                    "updated_at": "2026-07-03T10:52:08Z"
                 },
                 {
                     "id": "bb769fcb-c8b9-4612-beac-18be9743a3b7",
@@ -1517,7 +2305,7 @@
                     "service_offering_id": "a3199d59-3fdc-41f5-a258-8ea36ff26762",
                     "bindable": true,
                     "created_at": "2019-06-26T13:51:49Z",
-                    "updated_at": "2026-07-01T11:29:07Z"
+                    "updated_at": "2026-07-03T10:52:08Z"
                 },
                 {
                     "id": "51f2dd79-216b-4d9e-b743-f9df43a84a17",
@@ -1526,7 +2314,7 @@
                     "service_offering_id": "a3199d59-3fdc-41f5-a258-8ea36ff26762",
                     "bindable": true,
                     "created_at": "2019-06-26T13:51:49Z",
-                    "updated_at": "2026-07-01T11:29:07Z"
+                    "updated_at": "2026-07-03T10:52:08Z"
                 },
                 {
                     "id": "3e1ad851-bbd1-435e-b18c-0428c4548142",
@@ -1559,7 +2347,7 @@
                     "description": "STANDARD plan for the audit log service usage. Basic authentication is used for creating audit logs.",
                     "service_offering_id": "e9851a58-4075-41b1-9ad0-64a2b22bfa44",
                     "created_at": "2019-11-14T19:40:10Z",
-                    "updated_at": "2026-07-01T10:47:22Z"
+                    "updated_at": "2026-07-03T10:27:37Z"
                 },
                 {
                     "id": "1f962378-f4a8-415a-9485-21e749129ba6",
@@ -1568,7 +2356,7 @@
                     "service_offering_id": "e9851a58-4075-41b1-9ad0-64a2b22bfa44",
                     "bindable": true,
                     "created_at": "2019-11-14T19:40:10Z",
-                    "updated_at": "2026-07-01T10:47:22Z"
+                    "updated_at": "2026-07-03T10:27:37Z"
                 },
                 {
                     "id": "23cf07dd-af92-4369-b1c5-a5a14db0eac9",
@@ -1584,7 +2372,7 @@
                     "description": "SAP HANA in-memory database",
                     "service_offering_id": "b2bafd44-7aad-485a-a05d-b13348b66568",
                     "created_at": "2019-11-20T06:13:24Z",
-                    "updated_at": "2026-07-01T12:04:35Z"
+                    "updated_at": "2026-07-03T10:57:28Z"
                 },
                 {
                     "id": "b13413cf-9aeb-452f-a376-466977617425",
@@ -1600,7 +2388,7 @@
                     "description": "Enables the end-to-end story of reporting usage information for productive commercial purposes",
                     "service_offering_id": "63dfdee2-9c27-4c71-abed-d47f301e779e",
                     "created_at": "2019-12-11T15:04:25Z",
-                    "updated_at": "2026-06-29T13:13:12Z"
+                    "updated_at": "2026-07-02T08:37:57Z"
                 },
                 {
                     "id": "8e132977-eed4-43ea-9ce9-5b6164c3f9a3",
@@ -1608,7 +2396,7 @@
                     "description": "Provides a sandbox-like environment that can be used as a playground, to ensure that your application code is 'wired' successfully",
                     "service_offering_id": "63dfdee2-9c27-4c71-abed-d47f301e779e",
                     "created_at": "2019-12-11T15:04:25Z",
-                    "updated_at": "2026-06-29T13:13:12Z"
+                    "updated_at": "2026-07-02T08:37:57Z"
                 },
                 {
                     "id": "5e1af504-8530-4768-b92a-9458b194103e",
@@ -1617,7 +2405,7 @@
                     "service_offering_id": "9290da27-364f-4845-9919-2c88ab54696c",
                     "bindable": true,
                     "created_at": "2019-12-11T15:05:40Z",
-                    "updated_at": "2026-07-01T11:00:14Z"
+                    "updated_at": "2026-07-03T10:34:56Z"
                 },
                 {
                     "id": "34d8a752-4a75-426c-9042-9a67e7c2d0c4",
@@ -1626,7 +2414,7 @@
                     "service_offering_id": "9290da27-364f-4845-9919-2c88ab54696c",
                     "bindable": true,
                     "created_at": "2019-12-11T15:05:40Z",
-                    "updated_at": "2026-07-01T11:00:14Z"
+                    "updated_at": "2026-07-03T10:34:56Z"
                 },
                 {
                     "id": "5ae3dd56-897d-4d8f-92e7-3a53836714d7",
@@ -1642,7 +2430,7 @@
                     "description": "Service plan for using Cloud Management APIs to manage your environments and subscriptions to multitenant applications.",
                     "service_offering_id": "45c7d7de-f351-4efe-b9c5-3e2ef1d28ed0",
                     "created_at": "2020-01-09T10:55:56Z",
-                    "updated_at": "2026-07-01T11:13:19Z"
+                    "updated_at": "2026-07-03T10:41:47Z"
                 },
                 {
                     "id": "448b8df8-6468-4d46-b90f-a427fc928db4",
@@ -1650,7 +2438,7 @@
                     "description": "This plan binding will be used by brokers for retrieving resources from resource providers.",
                     "service_offering_id": "c6ac414b-f5d3-4052-aa96-133d187a3e26",
                     "created_at": "2020-01-09T10:55:56Z",
-                    "updated_at": "2026-07-01T11:13:19Z"
+                    "updated_at": "2026-07-03T10:41:47Z"
                 },
                 {
                     "id": "8ff7358a-d5d3-451a-96ab-ddd401de6db6",
@@ -1658,7 +2446,7 @@
                     "description": "This plan binding will register application as LPS client for consuming lps apis",
                     "service_offering_id": "c6ac414b-f5d3-4052-aa96-133d187a3e26",
                     "created_at": "2020-01-09T10:55:56Z",
-                    "updated_at": "2026-07-01T11:13:19Z"
+                    "updated_at": "2026-07-03T10:41:47Z"
                 },
                 {
                     "id": "c6b00951-6a1b-4881-94eb-7f43776d7740",
@@ -1667,7 +2455,7 @@
                     "service_offering_id": "6b701bb8-fadc-4eb7-8bfa-b0d36da9cbcd",
                     "bindable": true,
                     "created_at": "2020-01-09T12:48:55Z",
-                    "updated_at": "2026-07-01T10:51:45Z"
+                    "updated_at": "2026-07-03T10:30:11Z"
                 },
                 {
                     "id": "204a2546-ff8b-4b8b-8f1e-f8e172f81ebc",
@@ -1676,7 +2464,7 @@
                     "service_offering_id": "6b701bb8-fadc-4eb7-8bfa-b0d36da9cbcd",
                     "bindable": true,
                     "created_at": "2020-01-09T12:48:55Z",
-                    "updated_at": "2026-07-01T10:51:45Z"
+                    "updated_at": "2026-07-03T10:30:11Z"
                 },
                 {
                     "id": "3d7e0db0-a462-4696-844e-10fb318748dd",
@@ -1693,7 +2481,7 @@
                     "description": "synchronous scanning with ClamAV",
                     "service_offering_id": "1002f293-7986-4ea0-ad0f-1627343bc8b2",
                     "created_at": "2020-01-22T17:06:05Z",
-                    "updated_at": "2026-07-01T10:51:48Z"
+                    "updated_at": "2026-07-03T10:27:47Z"
                 },
                 {
                     "id": "ca8adb0e-d560-41aa-bf63-12ec2af02035",
@@ -1701,7 +2489,7 @@
                     "description": "Allows management of resources in the subaccount in which the service instance of this plan was created. This includes managing service instances, bindings and subaccount-scoped platforms.",
                     "service_offering_id": "1144b9b1-78d7-4a71-be9c-9ec55e090327",
                     "created_at": "2020-01-22T17:06:11Z",
-                    "updated_at": "2026-07-01T10:49:27Z"
+                    "updated_at": "2026-07-03T10:25:53Z"
                 },
                 {
                     "id": "2453b5dd-4115-4058-9959-86629c9b0004",
@@ -1709,7 +2497,7 @@
                     "description": "Allows read-only access to the resources in the subaccount in which the service instance was created. This includes reading service instances, bindings and subaccount-scoped platforms.",
                     "service_offering_id": "1144b9b1-78d7-4a71-be9c-9ec55e090327",
                     "created_at": "2020-01-22T17:06:11Z",
-                    "updated_at": "2026-07-01T10:49:27Z"
+                    "updated_at": "2026-07-03T10:25:53Z"
                 },
                 {
                     "id": "e2efb5f1-2dc3-4cc7-8d18-e927b424545a",
@@ -1718,7 +2506,7 @@
                     "service_offering_id": "555e85f8-ea98-4378-82fc-fad56e1140cf",
                     "bindable": true,
                     "created_at": "2020-02-05T11:43:24Z",
-                    "updated_at": "2026-07-01T10:51:45Z"
+                    "updated_at": "2026-07-03T10:30:12Z"
                 },
                 {
                     "id": "f20f664b-fc8d-4883-a661-5d77120ad3f9",
@@ -1735,7 +2523,7 @@
                     "service_offering_id": "1144b9b1-78d7-4a71-be9c-9ec55e090327",
                     "plan_updateable": true,
                     "created_at": "2020-03-03T10:09:40Z",
-                    "updated_at": "2026-07-01T10:49:27Z"
+                    "updated_at": "2026-07-03T10:25:53Z"
                 },
                 {
                     "id": "39a86e4a-e43e-483e-9cd5-1c7a81840e75",
@@ -1743,7 +2531,7 @@
                     "description": "Establish secure connections to on-premise systems through SAP Cloud Connector",
                     "service_offering_id": "6a8b3009-5d7a-48b0-b844-371092187938",
                     "created_at": "2020-03-18T18:07:19Z",
-                    "updated_at": "2026-07-01T11:51:07Z"
+                    "updated_at": "2026-07-03T11:23:19Z"
                 },
                 {
                     "id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
@@ -1769,7 +2557,7 @@
                     "bindable": true,
                     "plan_updateable": false,
                     "created_at": "2020-04-02T10:15:38Z",
-                    "updated_at": "2026-07-01T12:14:27Z"
+                    "updated_at": "2026-07-03T11:54:35Z"
                 },
                 {
                     "id": "2a8ca639-eaec-487e-ae37-a5629d90e239",
@@ -1778,7 +2566,7 @@
                     "service_offering_id": "d84536d8-5af2-4f2b-9116-7243632b2a29",
                     "plan_updateable": false,
                     "created_at": "2020-04-02T10:33:19Z",
-                    "updated_at": "2026-07-01T12:15:24Z"
+                    "updated_at": "2026-07-03T11:55:10Z"
                 },
                 {
                     "id": "3e65c3e0-fbd1-4446-9255-82c06c68cdeb",
@@ -1787,7 +2575,7 @@
                     "service_offering_id": "d84536d8-5af2-4f2b-9116-7243632b2a29",
                     "plan_updateable": false,
                     "created_at": "2020-04-02T10:33:19Z",
-                    "updated_at": "2026-07-01T12:15:24Z"
+                    "updated_at": "2026-07-03T11:55:10Z"
                 },
                 {
                     "id": "6790fa19-2b46-46bd-921a-ffa16c416814",
@@ -1811,7 +2599,7 @@
                     "description": "Free offering for development purposes",
                     "service_offering_id": "74a36c35-2971-4519-b864-46c520d0a2c4",
                     "created_at": "2020-06-24T17:51:56Z",
-                    "updated_at": "2026-07-01T11:29:28Z"
+                    "updated_at": "2026-07-03T10:55:13Z"
                 },
                 {
                     "id": "37ab87cd-2272-4540-a0b3-60725641c7fd",
@@ -1819,7 +2607,7 @@
                     "description": "Standard plan for productive usage",
                     "service_offering_id": "74a36c35-2971-4519-b864-46c520d0a2c4",
                     "created_at": "2020-06-24T17:51:56Z",
-                    "updated_at": "2026-07-01T11:29:28Z"
+                    "updated_at": "2026-07-03T10:55:13Z"
                 },
                 {
                     "id": "c319c834-f943-4008-8834-ac1f9b664eae",
@@ -1903,7 +2691,7 @@
                     "description": "Provides an object store space in form of a bucket or a container depending upon the underlying hyperscaler",
                     "service_offering_id": "cb387899-8e7f-4bcd-8c99-dcc2372cbae5",
                     "created_at": "2021-01-18T14:04:18Z",
-                    "updated_at": "2026-07-01T11:02:30Z"
+                    "updated_at": "2026-07-03T10:35:04Z"
                 },
                 {
                     "id": "66ab8555-d8ab-4b36-8715-f2b0cc743516",
@@ -1927,7 +2715,7 @@
                     "description": "Allows users to create and manage Cloud Automation resources in a global account",
                     "service_offering_id": "45c7d7de-f351-4efe-b9c5-3e2ef1d28ed0",
                     "created_at": "2022-09-15T09:35:54Z",
-                    "updated_at": "2026-07-01T11:13:19Z"
+                    "updated_at": "2026-07-03T10:41:47Z"
                 },
                 {
                     "id": "22e64d32-177f-4b24-8e32-3c86a5c05311",
@@ -1959,7 +2747,7 @@
                     "description": "Enable Unified-Metering Account capabilities for SAP BTP applications",
                     "service_offering_id": "63dfdee2-9c27-4c71-abed-d47f301e779e",
                     "created_at": "2023-06-07T09:27:59Z",
-                    "updated_at": "2026-06-29T13:13:12Z"
+                    "updated_at": "2026-07-02T08:37:57Z"
                 },
                 {
                     "id": "d8750aae-cdb0-4212-a2f4-74f384520e3d",
@@ -1967,7 +2755,7 @@
                     "description": "Allows service providers to view service instances of their services across all subaccounts.",
                     "service_offering_id": "1144b9b1-78d7-4a71-be9c-9ec55e090327",
                     "created_at": "2023-07-20T04:03:18Z",
-                    "updated_at": "2026-07-01T10:49:27Z"
+                    "updated_at": "2026-07-03T10:25:53Z"
                 },
                 {
                     "id": "d1691b89-5fe6-4a70-9d5c-ffdc40c28afc",
@@ -1985,21 +2773,21 @@
             "content-type",
             "application/json; charset=utf-8",
             "date",
-            "Wed, 01 Jul 2026 13:50:00 GMT",
+            "Fri, 03 Jul 2026 13:15:44 GMT",
             "vary",
             "Accept-Encoding",
             "x-content-type-options",
             "nosniff",
             "x-correlation-id",
-            "9c70960f-7a20-4190-6e20-3c075c019590",
+            "6c7117aa-77b1-477f-57e2-9201a10f8f61",
             "x-ratelimit-limit",
             "5",
             "x-ratelimit-remaining",
             "4",
             "x-request-id",
-            "9c70960f-7a20-4190-6e20-3c075c019590",
+            "6c7117aa-77b1-477f-57e2-9201a10f8f61",
             "x-vcap-request-id",
-            "9c70960f-7a20-4190-6e20-3c075c019590",
+            "6c7117aa-77b1-477f-57e2-9201a10f8f61",
             "transfer-encoding",
             "chunked",
             "strict-transport-security",
@@ -3064,704 +3852,21 @@
             "content-type",
             "application/json; charset=utf-8",
             "date",
-            "Wed, 01 Jul 2026 13:50:00 GMT",
+            "Fri, 03 Jul 2026 13:15:44 GMT",
             "vary",
             "Accept-Encoding",
             "x-content-type-options",
             "nosniff",
             "x-correlation-id",
-            "631d53fb-f775-4925-7cd9-f4ab4deb919a",
+            "c6682496-8364-4e23-55b3-7b3dd5c39486",
             "x-ratelimit-limit",
             "5",
             "x-ratelimit-remaining",
             "4",
             "x-request-id",
-            "631d53fb-f775-4925-7cd9-f4ab4deb919a",
+            "c6682496-8364-4e23-55b3-7b3dd5c39486",
             "x-vcap-request-id",
-            "631d53fb-f775-4925-7cd9-f4ab4deb919a",
-            "transfer-encoding",
-            "chunked",
-            "strict-transport-security",
-            "max-age=31536000; includeSubDomains; preload;"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://service-manager.cfapps.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v2/service_offerings",
-        "body": "",
-        "status": 200,
-        "response": {
-            "items": [
-                {
-                    "id": "4879da6d-661e-46bd-9c24-abd3acd6e618",
-                    "name": "xfs-runtime",
-                    "description": "Build, run, and manage your cloud extensions in a fully-managed environment",
-                    "broker_id": "179d56f5-bc86-4d7d-a273-ebe6a89ef9b6",
-                    "bindable": true,
-                    "plan_updateable": true,
-                    "allow_context_updates": false,
-                    "created_at": "2019-10-15T12:38:21Z",
-                    "updated_at": "2025-01-05T13:54:51Z",
-                    "tags": [
-                        "extensions",
-                        "extension-factory-service",
-                        "xfs-runtime",
-                        "xfs-runtime-sandbox"
-                    ]
-                },
-                {
-                    "id": "cb387899-8e7f-4bcd-8c99-dcc2372cbae5",
-                    "name": "objectstore",
-                    "description": "Highly available, distributed and eventually consistent objectstore.",
-                    "broker_id": "ba825381-13b7-4d3f-91b2-c034f88889f7",
-                    "bindable": true,
-                    "plan_updateable": true,
-                    "allow_context_updates": false,
-                    "created_at": "2019-08-21T11:47:06Z",
-                    "updated_at": "2026-07-01T11:02:30Z",
-                    "tags": [
-                        "blobStore",
-                        "objectStore"
-                    ]
-                },
-                {
-                    "id": "7cd0e186-41a7-4593-b725-8a9db333e329",
-                    "name": "destination",
-                    "description": "Provides a secure and reliable access to destination and certificate configurations",
-                    "broker_id": "52b0057d-bd1f-469b-9dfe-87da314888bc",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2019-06-26T13:41:56Z",
-                    "updated_at": "2026-07-01T12:06:00Z",
-                    "tags": [
-                        "destination",
-                        "conn",
-                        "connsvc"
-                    ]
-                },
-                {
-                    "id": "a3199d59-3fdc-41f5-a258-8ea36ff26762",
-                    "name": "xsuaa",
-                    "description": "Manage application authorizations and trust to identity providers.",
-                    "broker_id": "fb8e7037-0c56-405f-8110-187ef9d39273",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2019-06-26T13:51:49Z",
-                    "updated_at": "2026-07-01T11:29:07Z",
-                    "tags": [
-                        "xsuaa"
-                    ]
-                },
-                {
-                    "id": "a9e63f8f-aa4c-4e36-9666-380e362dfb50",
-                    "name": "auditlog-management",
-                    "description": "Retrieve logs and change retention",
-                    "broker_id": "63609100-37ee-4d36-bc58-6ccc4702b737",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2019-08-21T11:52:06Z",
-                    "updated_at": "2026-07-01T10:57:16Z"
-                },
-                {
-                    "id": "87d5e9c2-c003-4480-8f6b-2b9a4e1e78d9",
-                    "name": "autoscaler",
-                    "description": "Automatically increase or decrease the number of application instances based on a policy you define.",
-                    "broker_id": "0fd04247-ef4e-486c-b69c-30e93aec0499",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2019-05-14T18:41:14Z",
-                    "updated_at": "2026-07-01T11:05:20Z",
-                    "tags": [
-                        "autoscaler",
-                        "app-autoscaler",
-                        "cf-autoscaler"
-                    ]
-                },
-                {
-                    "id": "69d7739b-c266-4558-af07-83206a266d81",
-                    "name": "alert-notification",
-                    "description": "Service that exposes platform events and offers APIs for producing/consuming custom events",
-                    "broker_id": "58bd056e-9d23-4404-a6a3-0b363e2b226f",
-                    "bindable": true,
-                    "plan_updateable": true,
-                    "allow_context_updates": false,
-                    "created_at": "2019-10-03T13:46:21Z",
-                    "updated_at": "2025-12-16T11:06:09Z"
-                },
-                {
-                    "id": "62a5b9d4-70e5-4178-96d3-78744cb31676",
-                    "name": "INFRA",
-                    "description": "Configure and expose your application under your own domain.",
-                    "broker_id": "43047516-9107-473e-98e6-11f0f869a19c",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2019-08-21T19:44:18Z",
-                    "updated_at": "2026-07-01T11:30:55Z"
-                },
-                {
-                    "id": "55266952-638d-48ca-b0ea-3899803c35f6",
-                    "name": "feature-flags",
-                    "description": "Feature Flags service for controlling feature rollout",
-                    "broker_id": "da5c6b34-c4b0-4843-a59a-3291f01b04ac",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2019-05-15T08:10:32Z",
-                    "updated_at": "2026-07-01T10:51:29Z",
-                    "tags": [
-                        "feature-flags"
-                    ]
-                },
-                {
-                    "id": "f3882070-0930-4fb7-9222-afa2739d232c",
-                    "name": "certificate-service",
-                    "description": "Get client certificates from SAP Cloud certification authorities.",
-                    "broker_id": "a5fe83a2-0299-47ab-bac1-0f5984ef8f05",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2019-10-04T09:52:00Z",
-                    "updated_at": "2026-07-01T11:10:05Z"
-                },
-                {
-                    "id": "bc217a47-4ae6-4aa4-95d0-2330e224830b",
-                    "name": "ui5-flexibility-design-and-configuration",
-                    "description": "UI5 Flexibility Design and Configuration",
-                    "broker_id": "3d7ba292-3960-4337-9c86-e1c4fb037aa3",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2019-10-25T10:26:49Z",
-                    "updated_at": "2025-12-16T11:06:35Z",
-                    "tags": [
-                        "flex-design-and-configuration"
-                    ]
-                },
-                {
-                    "id": "3022ea04-82f1-4d97-ae8e-7e6b4216dec9",
-                    "name": "theming",
-                    "description": "Provides theming infrastructure.",
-                    "broker_id": "5b0bf616-e5c3-492f-871a-834f9ccaec5a",
-                    "bindable": true,
-                    "plan_updateable": true,
-                    "allow_context_updates": false,
-                    "created_at": "2019-10-29T13:03:18Z",
-                    "updated_at": "2025-12-16T11:06:50Z",
-                    "tags": [
-                        "sap-theming"
-                    ]
-                },
-                {
-                    "id": "ca8fcb9d-addc-456a-8343-6ac3795ea5bd",
-                    "name": "ui5-flexibility-keyuser",
-                    "description": "Add UI adaptation to your UI5 applications.",
-                    "broker_id": "18e697c6-e45c-488c-b500-9d5fbbbe0dfb",
-                    "bindable": true,
-                    "plan_updateable": true,
-                    "allow_context_updates": false,
-                    "created_at": "2019-11-13T08:50:53Z",
-                    "updated_at": "2026-04-27T13:05:33Z",
-                    "tags": [
-                        "flex-keyuser"
-                    ]
-                },
-                {
-                    "id": "fbe13474-1ac1-4500-bdec-49688cd2e1fa",
-                    "name": "data-intelligence",
-                    "description": "Orchestrate, refine, enrich, apply intelligence on your governed data across your entire distributed data landscape.",
-                    "broker_id": "8d5af2c9-ac81-4748-8b68-6fe3c9bab637",
-                    "bindable": false,
-                    "plan_updateable": true,
-                    "allow_context_updates": false,
-                    "created_at": "2019-11-14T18:05:45Z",
-                    "updated_at": "2025-12-16T11:07:20Z"
-                },
-                {
-                    "id": "e9851a58-4075-41b1-9ad0-64a2b22bfa44",
-                    "name": "auditlog",
-                    "description": "Broker for Audit Log Service in CF",
-                    "broker_id": "258868d0-bf8e-4237-82a7-e5375ccee896",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2019-11-14T19:40:10Z",
-                    "updated_at": "2026-07-01T10:47:22Z",
-                    "tags": [
-                        "auditlog",
-                        "audit log",
-                        "cf"
-                    ]
-                },
-                {
-                    "id": "705c6f6b-7235-4b70-a349-7604afbf182a",
-                    "name": "ui5-flexibility-personalization",
-                    "description": "UI5 Flexibility Personalization Service",
-                    "broker_id": "05436bcd-3820-45a1-9808-63ade3892511",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2019-11-19T10:56:35Z",
-                    "updated_at": "2025-12-16T11:07:29Z",
-                    "tags": [
-                        "flex-personalization"
-                    ]
-                },
-                {
-                    "id": "b2bafd44-7aad-485a-a05d-b13348b66568",
-                    "name": "hana-cloud",
-                    "description": "Leverage the in-memory data processing capabilities of SAP HANA in the cloud as one simple gateway to all data.",
-                    "broker_id": "fd8dcfba-d8cf-4414-9c40-47de8f5e82ef",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2019-11-20T06:13:24Z",
-                    "updated_at": "2026-07-01T12:04:35Z",
-                    "tags": [
-                        "hana",
-                        "in-memory",
-                        "relational"
-                    ]
-                },
-                {
-                    "id": "2d96f013-a2bc-43b9-9b66-6ed3701d2291",
-                    "name": "business-logging",
-                    "description": "Log your cloud application flow from a business perspective.",
-                    "broker_id": "e7146444-eae0-45e9-a6b1-269ff560e789",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2019-11-27T09:42:05Z",
-                    "updated_at": "2025-12-16T11:07:40Z",
-                    "tags": [
-                        "business-logging",
-                        "logging",
-                        "com.sap.appbasic.businesslogs",
-                        "comsapappbasicbusinesslogs"
-                    ]
-                },
-                {
-                    "id": "63dfdee2-9c27-4c71-abed-d47f301e779e",
-                    "name": "metering-service",
-                    "description": "Record usage data for commercial purposes like billing, charging, and resource planning.",
-                    "broker_id": "f1d9421f-7a57-4ef6-b563-d4fc5b2ded0b",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2019-12-11T15:04:25Z",
-                    "updated_at": "2026-06-29T13:13:12Z",
-                    "tags": [
-                        "metering",
-                        "reporting"
-                    ]
-                },
-                {
-                    "id": "9290da27-364f-4845-9919-2c88ab54696c",
-                    "name": "html5-apps-repo",
-                    "description": "Enables storage of HTML5 applications and provides runtime environment for HTML5 applications.",
-                    "broker_id": "783f875c-90ed-488a-9dcb-01d834a1e8ac",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2019-12-11T15:05:40Z",
-                    "updated_at": "2026-07-01T11:00:14Z",
-                    "tags": [
-                        "html5appsrepo",
-                        "html5-apps-repo-rt",
-                        "html5-apps-rt",
-                        "html5-apps-repo-dt",
-                        "html5-apps-dt"
-                    ]
-                },
-                {
-                    "id": "a2f16297-f274-4684-b472-4339c2425374",
-                    "name": "portal",
-                    "description": "Create SAP Fiori Launchpad sites for employees, customers, and partners.",
-                    "broker_id": "599d89d9-5f77-4bd4-bd74-927883df7e46",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2019-12-31T07:40:52Z",
-                    "updated_at": "2026-03-26T13:57:34Z",
-                    "tags": [
-                        "cp",
-                        "portal",
-                        "portal-service"
-                    ]
-                },
-                {
-                    "id": "45c7d7de-f351-4efe-b9c5-3e2ef1d28ed0",
-                    "name": "cis",
-                    "description": "Manage the control plane, account model, and product resources in SAP BTP using supported API interfaces.",
-                    "broker_id": "418485c1-fcb6-4da7-b5c0-86d844a0cb38",
-                    "bindable": true,
-                    "plan_updateable": true,
-                    "allow_context_updates": false,
-                    "created_at": "2020-01-09T10:55:56Z",
-                    "updated_at": "2026-07-01T11:13:19Z"
-                },
-                {
-                    "id": "c6ac414b-f5d3-4052-aa96-133d187a3e26",
-                    "name": "lps-service",
-                    "description": "Service for integrating with LPS Service",
-                    "broker_id": "418485c1-fcb6-4da7-b5c0-86d844a0cb38",
-                    "bindable": true,
-                    "plan_updateable": true,
-                    "allow_context_updates": false,
-                    "created_at": "2020-01-09T10:55:56Z",
-                    "updated_at": "2026-07-01T11:13:19Z",
-                    "tags": [
-                        "lps",
-                        "service"
-                    ]
-                },
-                {
-                    "id": "6b701bb8-fadc-4eb7-8bfa-b0d36da9cbcd",
-                    "name": "saas-registry",
-                    "description": "Service for application providers to register multitenant applications and services",
-                    "broker_id": "b04d6291-81a1-41a2-a554-df089ff388ef",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2020-01-09T12:48:55Z",
-                    "updated_at": "2026-07-01T10:51:45Z",
-                    "tags": [
-                        "SaaS"
-                    ]
-                },
-                {
-                    "id": "ecfd5925-e2a7-434d-8ade-7f4cbf428580",
-                    "name": "print",
-                    "description": "Manage print queues, connect print clients and monitor print status",
-                    "broker_id": "0ae5dd9a-f18e-4007-b710-9802ffd2ee27",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2020-01-16T01:17:55Z",
-                    "updated_at": "2025-12-16T11:10:11Z",
-                    "tags": [
-                        "Print",
-                        "Output Management",
-                        "com.sap.print.mpq"
-                    ]
-                },
-                {
-                    "id": "1002f293-7986-4ea0-ad0f-1627343bc8b2",
-                    "name": "malware-scanner",
-                    "description": "Scan single files for threats, via HTTP",
-                    "broker_id": "1a4ff702-7cf7-4356-9462-f8025074f1a3",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2020-01-22T17:06:05Z",
-                    "updated_at": "2026-07-01T10:51:48Z"
-                },
-                {
-                    "id": "1144b9b1-78d7-4a71-be9c-9ec55e090327",
-                    "name": "service-manager",
-                    "description": "The central registry for service brokers and platforms in SAP Business Technology Platform",
-                    "broker_id": "884b3555-4d3a-40c9-8fe3-ee86cabf3743",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2020-01-22T17:06:11Z",
-                    "updated_at": "2026-07-01T10:49:27Z"
-                },
-                {
-                    "id": "555e85f8-ea98-4378-82fc-fad56e1140cf",
-                    "name": "subscription-manager",
-                    "description": "Service to manage multitenant applications and services.",
-                    "broker_id": "b04d6291-81a1-41a2-a554-df089ff388ef",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2020-02-05T11:43:24Z",
-                    "updated_at": "2026-07-01T10:51:45Z",
-                    "tags": [
-                        "SaaS"
-                    ]
-                },
-                {
-                    "id": "7cfa5111-9ff4-4ae5-8d58-8e26a7fb2301",
-                    "name": "devhubservice",
-                    "description": "Expose your data and processes as APIs for omni-channel consumption and manage the lifecycle of those APIs.",
-                    "broker_id": "c1b537ad-5b71-4ed6-b484-745b3ccf8408",
-                    "bindable": true,
-                    "plan_updateable": true,
-                    "allow_context_updates": false,
-                    "created_at": "2020-02-11T06:40:14Z",
-                    "updated_at": "2022-08-10T11:12:42Z",
-                    "tags": [
-                        "Devhub",
-                        "Devhub Hybrid",
-                        "developer hub"
-                    ]
-                },
-                {
-                    "id": "ff3ae809-d4a4-4fe8-b3e7-089543ced087",
-                    "name": "one-mds",
-                    "description": "Service for master data integration",
-                    "broker_id": "acf689f0-9cde-411a-aa78-bb7ac829d0af",
-                    "bindable": true,
-                    "plan_updateable": true,
-                    "allow_context_updates": false,
-                    "created_at": "2020-03-02T12:09:39Z",
-                    "updated_at": "2025-12-16T11:12:49Z"
-                },
-                {
-                    "id": "6a8b3009-5d7a-48b0-b844-371092187938",
-                    "name": "connectivity",
-                    "description": "Establishes a secure and reliable connectivity between cloud applications and on-premise systems.",
-                    "broker_id": "4bf2eafd-54dd-4965-bb72-5085cf5fcf9e",
-                    "bindable": true,
-                    "plan_updateable": true,
-                    "allow_context_updates": false,
-                    "created_at": "2020-03-18T18:07:19Z",
-                    "updated_at": "2026-07-01T11:51:07Z",
-                    "tags": [
-                        "connectivity",
-                        "conn",
-                        "connsvc"
-                    ]
-                },
-                {
-                    "id": "8c3922c9-fcbd-469e-9393-2d941400f2c1",
-                    "name": "hana",
-                    "description": "Manage schemas and HDI containers on an existing SAP HANA database.",
-                    "broker_id": "d6bbbbc4-a28f-4ae0-bfc8-bc6db48a290b",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2020-04-01T18:39:15Z",
-                    "updated_at": "2026-06-29T13:14:55Z",
-                    "tags": [
-                        "hana",
-                        "database",
-                        "relational"
-                    ]
-                },
-                {
-                    "id": "841a7884-27c5-4ab9-9a96-f18a391d4d7d",
-                    "name": "postgresql-db",
-                    "description": "PostgreSQL service on SAP BTP",
-                    "broker_id": "0947618d-b2e9-4ff2-b357-71858d5c04ca",
-                    "bindable": true,
-                    "plan_updateable": true,
-                    "allow_context_updates": false,
-                    "created_at": "2020-04-02T10:15:38Z",
-                    "updated_at": "2026-07-01T12:14:27Z",
-                    "tags": [
-                        "relational",
-                        "database"
-                    ]
-                },
-                {
-                    "id": "d84536d8-5af2-4f2b-9116-7243632b2a29",
-                    "name": "redis-cache",
-                    "description": "Redis Cache service on SAP BTP",
-                    "broker_id": "f8335877-f46f-4c12-b3b6-599b36b63ded",
-                    "bindable": true,
-                    "plan_updateable": true,
-                    "allow_context_updates": false,
-                    "created_at": "2020-04-02T10:33:19Z",
-                    "updated_at": "2026-07-01T12:15:24Z",
-                    "tags": [
-                        "cache"
-                    ]
-                },
-                {
-                    "id": "56c47bd9-2bb2-4fa8-9e12-0db01a720e45",
-                    "name": "credstore",
-                    "description": "Secure repository for credentials, cryptographic keys and certificates.",
-                    "broker_id": "8b7f45ac-4cc6-4761-81f5-553b57df0f46",
-                    "bindable": true,
-                    "plan_updateable": true,
-                    "allow_context_updates": false,
-                    "created_at": "2020-06-04T09:36:33Z",
-                    "updated_at": "2025-12-16T11:15:14Z",
-                    "tags": [
-                        "credstore",
-                        "securestore",
-                        "keystore",
-                        "credentials"
-                    ]
-                },
-                {
-                    "id": "74a36c35-2971-4519-b864-46c520d0a2c4",
-                    "name": "application-logs",
-                    "description": "Create, store, access, and analyze application logs.",
-                    "broker_id": "81dc0cee-e1dc-420b-aff0-7c1f61664383",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2020-06-24T17:51:56Z",
-                    "updated_at": "2026-07-01T11:29:28Z"
-                },
-                {
-                    "id": "41e4ca5b-dce1-4370-a15c-937a310dd8d8",
-                    "name": "dynatrace",
-                    "description": "Create a Dynatrace environment and monitor your cloud applications and services.",
-                    "broker_id": "2dc27401-f84d-4ed5-b330-41e508e9fd6e",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2020-06-25T09:08:57Z",
-                    "updated_at": "2025-12-16T11:15:32Z",
-                    "tags": [
-                        "dynatrace"
-                    ]
-                },
-                {
-                    "id": "45b72f94-e761-4c37-85f1-2806416ed7be",
-                    "name": "cloud-logging",
-                    "description": "Store and analyze application logs, metrics, and traces based on OpenSearch.",
-                    "broker_id": "d9378dcd-8a21-4986-9f1d-4a3004e4cfd0",
-                    "bindable": true,
-                    "plan_updateable": true,
-                    "allow_context_updates": false,
-                    "created_at": "2020-06-25T18:15:48Z",
-                    "updated_at": "2026-03-02T13:00:11Z",
-                    "tags": [
-                        "Cloud Logging"
-                    ]
-                },
-                {
-                    "id": "2a9bc237-184f-4567-aa60-bb8e197bd036",
-                    "name": "content-agent",
-                    "description": "Content Agent allows you to assemble the content into MTAR and export it to the transport queue.",
-                    "broker_id": "b9cabece-caae-4fb8-9049-83a647f6ce60",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2020-07-29T13:52:22Z",
-                    "updated_at": "2025-12-16T11:15:56Z"
-                },
-                {
-                    "id": "dbd8bd1d-025f-4874-b7c3-459258f226c2",
-                    "name": "one-inbox-service",
-                    "description": "Integrate all tasks into a central solution.",
-                    "broker_id": "51ec0c29-60a7-4df1-acac-f0bf0a854242",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2020-09-04T07:27:10Z",
-                    "updated_at": "2025-12-16T11:16:19Z"
-                },
-                {
-                    "id": "6b78519d-120e-4ee1-808d-d40d25c3911e",
-                    "name": "auditlog-api",
-                    "description": "[DEPRECATED] Auditlog API",
-                    "broker_id": "3c722c53-6586-4366-93c5-f85786289d0e",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2020-09-04T12:13:03Z",
-                    "updated_at": "2025-07-30T11:21:42Z"
-                },
-                {
-                    "id": "b518cc1f-8523-4331-b7a1-d6f196854b05",
-                    "name": "identity",
-                    "description": "Cloud Identity Services",
-                    "broker_id": "39235c3d-849a-4925-a8e7-45c0343c8cac",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2020-10-28T11:53:29Z",
-                    "updated_at": "2025-12-16T11:17:54Z"
-                },
-                {
-                    "id": "1fc1d2d5-c8c6-440f-867f-46066f706c0b",
-                    "name": "aicore",
-                    "description": "Service for AI applications to train and deploy ML models",
-                    "broker_id": "9a2b7498-d322-4026-b92e-18ad016d7d80",
-                    "bindable": true,
-                    "plan_updateable": true,
-                    "allow_context_updates": false,
-                    "created_at": "2020-12-10T13:25:21Z",
-                    "updated_at": "2025-12-16T11:19:29Z"
-                },
-                {
-                    "id": "8b1c568e-597c-4bea-affd-9b50f977e851",
-                    "name": "build-workzone-standard",
-                    "description": "Establish integration with other services.",
-                    "broker_id": "599d89d9-5f77-4bd4-bd74-927883df7e46",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2021-01-20T23:40:30Z",
-                    "updated_at": "2026-03-26T13:57:34Z",
-                    "tags": [
-                        "cp",
-                        "launchpad",
-                        "build-workzone-standard"
-                    ]
-                },
-                {
-                    "id": "0e7be7e8-dd7c-4adb-aedf-1841cecd78a0",
-                    "name": "process-automation-service",
-                    "description": "Automate processes and tasks without requiring any coding skills",
-                    "broker_id": "29602b82-8516-4a71-96b8-dddc6d7dd22f",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2021-12-31T09:51:53Z",
-                    "updated_at": "2026-04-23T14:46:11Z",
-                    "tags": [
-                        "process",
-                        "automation"
-                    ]
-                },
-                {
-                    "id": "ac5bd5b0-6cf8-4a7b-a6e0-2a7fd24ff882",
-                    "name": "eventmesh-sap2sap-internal",
-                    "description": "Used for event-based integration between SAP cloud applications and SAP BTP-based applications.",
-                    "broker_id": "44718754-15c7-42c1-9369-c0dd986c0d48",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2022-12-16T16:39:27Z",
-                    "updated_at": "2025-12-16T11:27:53Z"
-                },
-                {
-                    "id": "358eb2bc-ed3d-412f-80a3-0c4736425ec0",
-                    "name": "azure-openai-service-demo",
-                    "description": "Azure OpenAI Service Demo",
-                    "broker_id": "09fd2a45-6e2f-483b-9add-9c592526bb23",
-                    "bindable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "created_at": "2023-02-14T11:53:41Z",
-                    "updated_at": "2025-12-16T11:28:24Z"
-                }
-            ]
-        },
-        "rawHeaders": [
-            "content-security-policy",
-            "default-src 'none'; frame-ancestors 'none'; object-src 'none';",
-            "content-type",
-            "application/json; charset=utf-8",
-            "date",
-            "Wed, 01 Jul 2026 13:50:00 GMT",
-            "vary",
-            "Accept-Encoding",
-            "x-content-type-options",
-            "nosniff",
-            "x-correlation-id",
-            "b686cb92-df9a-47f6-4703-26893f7abb6d",
-            "x-ratelimit-limit",
-            "5",
-            "x-ratelimit-remaining",
-            "4",
-            "x-request-id",
-            "b686cb92-df9a-47f6-4703-26893f7abb6d",
-            "x-vcap-request-id",
-            "b686cb92-df9a-47f6-4703-26893f7abb6d",
+            "c6682496-8364-4e23-55b3-7b3dd5c39486",
             "transfer-encoding",
             "chunked",
             "strict-transport-security",
@@ -5826,21 +5931,21 @@
             "content-type",
             "application/json",
             "date",
-            "Wed, 01 Jul 2026 13:50:00 GMT",
+            "Fri, 03 Jul 2026 13:15:44 GMT",
             "vary",
             "Accept-Encoding",
             "x-content-type-options",
             "nosniff",
             "x-correlation-id",
-            "ef9045a0-b7cf-45c5-5caf-d559cdd9c61e",
+            "9bd4588a-177f-4fd0-6e97-ed97c947ff95",
             "x-ratelimit-limit",
             "5",
             "x-ratelimit-remaining",
             "4",
             "x-request-id",
-            "ef9045a0-b7cf-45c5-5caf-d559cdd9c61e",
+            "9bd4588a-177f-4fd0-6e97-ed97c947ff95",
             "x-vcap-request-id",
-            "ef9045a0-b7cf-45c5-5caf-d559cdd9c61e",
+            "9bd4588a-177f-4fd0-6e97-ed97c947ff95",
             "transfer-encoding",
             "chunked",
             "strict-transport-security",
