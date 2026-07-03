@@ -1,7 +1,7 @@
 "use strict";
 
 const packageInfo = require("../../package.json");
-const { parseIntWithFallback, sleep } = require("./static");
+const { parseIntWithFallback, randomString, sleep } = require("./static");
 const { assert, fail } = require("./error");
 const { request } = require("./request");
 const { makeOneTime } = require("./execution-control");
@@ -171,12 +171,6 @@ class ServiceManager {
     return plan.id;
   }
 
-  async #coercePlanId({ planId, offeringName, planName }) {
-    if (planId) return planId;
-    if (offeringName || planName) return await this.resolvePlanId({ offeringName, planName });
-    return fail("could not resolve a service plan: pass planId or offeringName+planName");
-  }
-
   async getInstances({ filterTenantId, filterPlanId, doEnsureUsable = false, doEnsureTenantLabel = false } = {}) {
     let instances = await this.#requestPaginatedGet({
       pathname: "/v2/service_instances",
@@ -229,9 +223,8 @@ class ServiceManager {
     return bindings;
   }
 
-  async createInstance({ name, planId, offeringName, planName, tenantId, parameters, labels: extraLabels } = {}) {
-    assert(name, "createInstance requires name");
-    const resolvedPlanId = await this.#coercePlanId({ planId, offeringName, planName });
+  async createInstance(planId, { name = randomString(32), tenantId, parameters, labels: extraLabels } = {}) {
+    assert(planId, "createInstance requires planId");
     const labels = {
       ...(tenantId && { tenant_id: [tenantId] }),
       ...extraLabels,
@@ -242,23 +235,22 @@ class ServiceManager {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         name,
-        service_plan_id: resolvedPlanId,
+        service_plan_id: planId,
         ...(Object.keys(labels).length > 0 && { labels }),
         ...(parameters && { parameters }),
       }),
     });
   }
 
-  async createBinding({ name, instanceId, planId, offeringName, planName, labels: extraLabels, parameters } = {}) {
-    assert(name, "createBinding requires name");
+  async createBinding(instanceId, planId, { name = randomString(32), labels: extraLabels, parameters } = {}) {
     assert(instanceId, "createBinding requires instanceId");
+    assert(planId, "createBinding requires planId");
     // NOTE: cds-mtxs relies on the service_plan_id label
-    const resolvedPlanId = await this.#coercePlanId({ planId, offeringName, planName });
     // NOTE: service-manager sets the container_id and subaccount_id itself and will block requests that set these
     const labels = Object.fromEntries(
       Object.entries({
         ...extraLabels,
-        service_plan_id: [resolvedPlanId],
+        service_plan_id: [planId],
       }).filter(([key]) => !["container_id", "subaccount_id"].includes(key))
     );
     return await this.#requestWithPolling({
