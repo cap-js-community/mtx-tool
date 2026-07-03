@@ -4,7 +4,7 @@ const packageInfo = require("../../package.json");
 const { parseIntWithFallback, sleep } = require("./static");
 const { assert, fail } = require("./error");
 const { request } = require("./request");
-const { Logger } = require("./logger");
+const { makeOneTime } = require("./execution-control");
 
 const ENV = Object.freeze({
   SVM_POLL_FREQUENCY: "MTX_SVM_POLL_FREQUENCY",
@@ -28,8 +28,6 @@ const pollFrequency = parseIntWithFallback(
   process.env[ENV.SVM_POLL_FREQUENCY],
   SERVICE_MANAGER_POLL_FREQUENCY_FALLBACK
 );
-
-const logger = Logger.getInstance();
 
 // NOTE: v2 encodes multiple label filters as one comma-separated `labels` query param
 //   (e.g. `labels=tenant_id=abc,service_plan_id=xyz`) and non-label filters as plain query params.
@@ -64,8 +62,6 @@ class ServiceManager {
   #clientName;
   #clientVersion;
   #pollFrequency;
-  #offeringsCache;
-  #plansCache;
 
   constructor({ credentials, getToken } = {}) {
     assert(credentials?.sm_url, "ServiceManager requires credentials with sm_url");
@@ -75,8 +71,6 @@ class ServiceManager {
     this.#clientName = packageInfo.name;
     this.#clientVersion = packageInfo.version;
     this.#pollFrequency = pollFrequency;
-    this.#offeringsCache = new Map();
-    this.#plansCache = new Map();
   }
 
   async #requestBase(reqOptions = {}) {
@@ -131,43 +125,34 @@ class ServiceManager {
     return operation;
   }
 
-  async #cachedGet(cache, cacheKey, reqOptions) {
-    if (!cache.has(cacheKey)) {
-      cache.set(
-        cacheKey,
-        this.#requestPaginatedGet(reqOptions).catch((err) => {
-          cache.delete(cacheKey);
-          throw err;
-        })
-      );
-    }
-    return await cache.get(cacheKey);
-  }
+  #getOfferingsUnfiltered = makeOneTime(
+    async () => await this.#requestPaginatedGet({ pathname: "/v2/service_offerings" })
+  );
 
   async getOfferings({ filterOfferingName } = {}) {
-    const cacheKey = JSON.stringify({ filterOfferingName: filterOfferingName ?? null });
-    return await this.#cachedGet(this.#offeringsCache, cacheKey, {
-      pathname: "/v2/service_offerings",
-      ..._buildQuery([
-        { predicate: filterOfferingName, type: QUERY_TYPE.FIELD, key: "name", value: filterOfferingName },
-      ]),
-    });
+    if (filterOfferingName) {
+      return await this.#requestPaginatedGet({
+        pathname: "/v2/service_offerings",
+        ..._buildQuery([{ predicate: true, type: QUERY_TYPE.FIELD, key: "name", value: filterOfferingName }]),
+      });
+    }
+    return await this.#getOfferingsUnfiltered();
   }
 
+  #getPlansUnfiltered = makeOneTime(async () => await this.#requestPaginatedGet({ pathname: "/v2/service_plans" }));
+
   async getPlans({ filterPlanId, filterOfferingId, filterPlanName } = {}) {
-    const cacheKey = JSON.stringify({
-      filterPlanId: filterPlanId ?? null,
-      filterOfferingId: filterOfferingId ?? null,
-      filterPlanName: filterPlanName ?? null,
-    });
-    return await this.#cachedGet(this.#plansCache, cacheKey, {
-      pathname: "/v2/service_plans",
-      ..._buildQuery([
-        { predicate: filterPlanId, type: QUERY_TYPE.FIELD, key: "id", value: filterPlanId },
-        { predicate: filterOfferingId, type: QUERY_TYPE.FIELD, key: "service_offering_id", value: filterOfferingId },
-        { predicate: filterPlanName, type: QUERY_TYPE.FIELD, key: "name", value: filterPlanName },
-      ]),
-    });
+    if (filterPlanId || filterOfferingId || filterPlanName) {
+      return await this.#requestPaginatedGet({
+        pathname: "/v2/service_plans",
+        ..._buildQuery([
+          { predicate: filterPlanId, type: QUERY_TYPE.FIELD, key: "id", value: filterPlanId },
+          { predicate: filterOfferingId, type: QUERY_TYPE.FIELD, key: "service_offering_id", value: filterOfferingId },
+          { predicate: filterPlanName, type: QUERY_TYPE.FIELD, key: "name", value: filterPlanName },
+        ]),
+      });
+    }
+    return await this.#getPlansUnfiltered();
   }
 
   async resolvePlanId({ offeringName, planName }) {
@@ -270,7 +255,6 @@ class ServiceManager {
 module.exports = {
   ServiceManager,
   _: {
-    logger,
     _buildQuery,
     _parseLinkNextPageToken,
   },
