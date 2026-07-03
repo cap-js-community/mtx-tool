@@ -14,6 +14,10 @@ const HTTP_ACCEPTED = 202;
 
 const SERVICE_MANAGER_POLL_FREQUENCY_FALLBACK = 6000;
 
+const SENSITIVE_FIELD_NAMES = ["uri"];
+const SENSITIVE_FIELD_MARKERS = ["password", "key"];
+const SENSITIVE_FIELD_HIDDEN_TEXT = "*** show with --reveal ***";
+
 const QUERY_TYPE = Object.freeze({
   FIELD: "field",
   LABEL: "label",
@@ -28,33 +32,6 @@ const pollFrequency = parseIntWithFallback(
   process.env[ENV.SVM_POLL_FREQUENCY],
   SERVICE_MANAGER_POLL_FREQUENCY_FALLBACK
 );
-
-// NOTE: v2 encodes multiple label filters as one comma-separated `labels` query param
-//   (e.g. `labels=tenant_id=abc,service_plan_id=xyz`) and non-label filters as plain query params.
-const _buildQuery = (components) => {
-  const labels = [];
-  const query = {};
-  for (const { predicate, type, key, value } of components) {
-    if (!predicate) continue;
-    if (type === QUERY_TYPE.LABEL) {
-      labels.push(`${key}=${value}`);
-    } else {
-      query[key] = value;
-    }
-  }
-  if (labels.length > 0) {
-    query.labels = labels.join(",");
-  }
-  return Object.keys(query).length > 0 ? { query } : undefined;
-};
-
-// NOTE: service-manager v2 paginates via a Link header: </path?page_token=x>; rel="next"
-const _parseLinkNextPageToken = (linkHeader) => {
-  if (!linkHeader) return undefined;
-  const match = /[<]([^>]+)[>]; rel="next"/.exec(linkHeader);
-  if (!match || !match[1]) return undefined;
-  return new URL(match[1], "http://x").searchParams.get("page_token");
-};
 
 class ServiceManager {
   #credentials;
@@ -73,6 +50,25 @@ class ServiceManager {
     this.#pollFrequency = pollFrequency;
   }
 
+  // NOTE: v2 encodes multiple label filters as one comma-separated `labels` query param
+  //   (e.g. `labels=tenant_id=abc,service_plan_id=xyz`) and non-label filters as plain query params.
+  static #buildQuery(components) {
+    const labels = [];
+    const query = {};
+    for (const { predicate, type, key, value } of components) {
+      if (!predicate) continue;
+      if (type === QUERY_TYPE.LABEL) {
+        labels.push(`${key}=${value}`);
+      } else {
+        query[key] = value;
+      }
+    }
+    if (labels.length > 0) {
+      query.labels = labels.join(",");
+    }
+    return Object.keys(query).length > 0 ? { query } : undefined;
+  }
+
   async #requestBase(reqOptions = {}) {
     return await request({
       url: this.#credentials.sm_url,
@@ -87,6 +83,14 @@ class ServiceManager {
     });
   }
 
+  // NOTE: service-manager v2 paginates via a Link header: </path?page_token=x>; rel="next"
+  static #parseLinkNextPageToken(linkHeader) {
+    if (!linkHeader) return undefined;
+    const match = /[<]([^>]+)[>]; rel="next"/.exec(linkHeader);
+    if (!match || !match[1]) return undefined;
+    return new URL(match[1], "http://x").searchParams.get("page_token");
+  }
+
   async #requestPaginatedGet(reqOptions) {
     const pages = [];
     let pageToken;
@@ -97,7 +101,7 @@ class ServiceManager {
       });
       const data = await response.json();
       pages.push(data?.items ?? []);
-      pageToken = _parseLinkNextPageToken(response.headers.get("link"));
+      pageToken = ServiceManager.#parseLinkNextPageToken(response.headers.get("link"));
     } while (pageToken);
     return pages.flat();
   }
@@ -133,7 +137,9 @@ class ServiceManager {
     if (filterOfferingName) {
       return await this.#requestPaginatedGet({
         pathname: "/v2/service_offerings",
-        ..._buildQuery([{ predicate: true, type: QUERY_TYPE.FIELD, key: "name", value: filterOfferingName }]),
+        ...ServiceManager.#buildQuery([
+          { predicate: true, type: QUERY_TYPE.FIELD, key: "name", value: filterOfferingName },
+        ]),
       });
     }
     return await this.#getOfferingsUnfiltered();
@@ -145,7 +151,7 @@ class ServiceManager {
     if (filterPlanId || filterOfferingId || filterPlanName) {
       return await this.#requestPaginatedGet({
         pathname: "/v2/service_plans",
-        ..._buildQuery([
+        ...ServiceManager.#buildQuery([
           { predicate: filterPlanId, type: QUERY_TYPE.FIELD, key: "id", value: filterPlanId },
           { predicate: filterOfferingId, type: QUERY_TYPE.FIELD, key: "service_offering_id", value: filterOfferingId },
           { predicate: filterPlanName, type: QUERY_TYPE.FIELD, key: "name", value: filterPlanName },
@@ -171,21 +177,56 @@ class ServiceManager {
     return fail("could not resolve a service plan: pass planId or offeringName+planName");
   }
 
-  async getInstances({ filterTenantId, filterPlanId } = {}) {
-    return await this.#requestPaginatedGet({
+  async getInstances({ filterTenantId, filterPlanId, doEnsureUsable = false, doEnsureTenantLabel = false } = {}) {
+    let instances = await this.#requestPaginatedGet({
       pathname: "/v2/service_instances",
-      ..._buildQuery([
+      ...ServiceManager.#buildQuery([
         { predicate: filterPlanId, type: QUERY_TYPE.FIELD, key: "service_plan_id", value: filterPlanId },
         { predicate: filterTenantId, type: QUERY_TYPE.LABEL, key: "tenant_id", value: filterTenantId },
       ]),
     });
+    if (doEnsureUsable) {
+      // NOTE: we rely on service brokers to implement usable:
+      //   https://github.com/cloudfoundry/servicebroker/blob/v2.17/spec.md#service-broker-errors
+      instances = instances.filter((instance) => instance.usable);
+    }
+    if (doEnsureTenantLabel) {
+      instances = instances.filter((instance) => instance.labels.tenant_id !== undefined);
+    }
+    return instances;
   }
 
-  async getBindings({ filterTenantId } = {}) {
-    return await this.#requestPaginatedGet({
+  static #hideSensitiveDataInBinding(binding) {
+    const fields = binding?.credentials ? Object.keys(binding.credentials) : [];
+    for (const field of fields) {
+      if (SENSITIVE_FIELD_MARKERS.some((marker) => field.includes(marker)) || SENSITIVE_FIELD_NAMES.includes(field)) {
+        binding.credentials[field] = SENSITIVE_FIELD_HIDDEN_TEXT;
+      }
+    }
+  }
+
+  async getBindings({ filterTenantId, doEnsureTenantLabel = false, doAssertFoundSome = false, doReveal = false } = {}) {
+    let bindings = await this.#requestPaginatedGet({
       pathname: "/v2/service_bindings",
-      ..._buildQuery([{ predicate: filterTenantId, type: QUERY_TYPE.LABEL, key: "tenant_id", value: filterTenantId }]),
+      ...ServiceManager.#buildQuery([
+        { predicate: filterTenantId, type: QUERY_TYPE.LABEL, key: "tenant_id", value: filterTenantId },
+      ]),
     });
+    if (doEnsureTenantLabel) {
+      bindings = bindings.filter((binding) => binding.labels.tenant_id !== undefined);
+    }
+    if (doAssertFoundSome) {
+      assert(
+        bindings.length >= 1,
+        filterTenantId
+          ? `could not find service binding for tenant ${filterTenantId}`
+          : "could not find any service bindings"
+      );
+    }
+    if (!doReveal) {
+      bindings.forEach(ServiceManager.#hideSensitiveDataInBinding);
+    }
+    return bindings;
   }
 
   async createInstance({ name, planId, offeringName, planName, tenantId, parameters, labels: extraLabels } = {}) {
@@ -251,9 +292,6 @@ class ServiceManager {
 }
 
 module.exports = {
+  OPERATION_STATE,
   ServiceManager,
-  _: {
-    _buildQuery,
-    _parseLinkNextPageToken,
-  },
 };
