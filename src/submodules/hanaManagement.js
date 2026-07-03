@@ -165,7 +165,7 @@ const _hdiList = async (context, { filterTenantId, doTimestamps, doJsonOutput } 
   instances.sort(compareForTenantId);
 
   const doShowDbTenantColumn = bindings.some((binding) => binding.credentials?.tenantId);
-  const headerRow = ["tenant_id", "host", "schema", "ready"];
+  const headerRow = ["tenant_id", "host", "schema", "usable"];
   doShowDbTenantColumn && headerRow.splice(1, 0, "db_tenant_id");
   doTimestamps && headerRow.push("created_on", "updated_on");
   const nowDate = new Date();
@@ -175,7 +175,7 @@ const _hdiList = async (context, { filterTenantId, doTimestamps, doJsonOutput } 
       instance.labels.tenant_id[0],
       binding ? binding.credentials?.host + ":" + binding.credentials?.port : "missing binding",
       binding ? binding.credentials?.schema : "",
-      binding ? instance.ready && binding.ready : "",
+      instance.usable,
     ];
     doShowDbTenantColumn && row.splice(1, 0, instance.id);
     doTimestamps && row.push(...formatTimestampsWithRelativeDays([instance.created_at, instance.updated_at], nowDate));
