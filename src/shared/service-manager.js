@@ -168,15 +168,14 @@ class ServiceManager {
   async #coercePlanId({ planId, offeringName, planName }) {
     if (planId) return planId;
     if (offeringName || planName) return await this.resolvePlanId({ offeringName, planName });
-    return undefined;
+    return fail("could not resolve a service plan: pass planId or offeringName+planName");
   }
 
-  async getInstances({ filterTenantId, filterPlanId, offeringName, planName } = {}) {
-    const resolvedPlanId = await this.#coercePlanId({ planId: filterPlanId, offeringName, planName });
+  async getInstances({ filterTenantId, filterPlanId } = {}) {
     return await this.#requestPaginatedGet({
       pathname: "/v2/service_instances",
       ..._buildQuery([
-        { predicate: resolvedPlanId, type: QUERY_TYPE.FIELD, key: "service_plan_id", value: resolvedPlanId },
+        { predicate: filterPlanId, type: QUERY_TYPE.FIELD, key: "service_plan_id", value: filterPlanId },
         { predicate: filterTenantId, type: QUERY_TYPE.LABEL, key: "tenant_id", value: filterTenantId },
       ]),
     });
@@ -192,7 +191,6 @@ class ServiceManager {
   async createInstance({ name, planId, offeringName, planName, tenantId, parameters, labels: extraLabels } = {}) {
     assert(name, "createInstance requires name");
     const resolvedPlanId = await this.#coercePlanId({ planId, offeringName, planName });
-    assert(resolvedPlanId, "createInstance requires planId or offeringName+planName");
     const labels = {
       ...(tenantId && { tenant_id: [tenantId] }),
       ...extraLabels,
@@ -213,13 +211,13 @@ class ServiceManager {
   async createBinding({ name, instanceId, planId, offeringName, planName, labels: extraLabels, parameters } = {}) {
     assert(name, "createBinding requires name");
     assert(instanceId, "createBinding requires instanceId");
-    // NOTE: cds-mtxs relies on service_plan_id label; resolve it if the caller did not pass a labels bag with one
+    // NOTE: cds-mtxs relies on the service_plan_id label
     const resolvedPlanId = await this.#coercePlanId({ planId, offeringName, planName });
     // NOTE: service-manager sets the container_id and subaccount_id itself and will block requests that set these
     const labels = Object.fromEntries(
       Object.entries({
         ...extraLabels,
-        ...(resolvedPlanId && { service_plan_id: [resolvedPlanId] }),
+        service_plan_id: [resolvedPlanId],
       }).filter(([key]) => !["container_id", "subaccount_id"].includes(key))
     );
     return await this.#requestWithPolling({
