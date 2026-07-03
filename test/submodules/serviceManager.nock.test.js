@@ -30,8 +30,7 @@ const freshContext = async () => await newContext({ usePersistedCache: false, is
 describe("svm nock tests", () => {
   afterEach(() => {
     LogRequestId.reset();
-    resetMakeOneTime(svm._._requestOfferings);
-    resetMakeOneTime(svm._._requestPlans);
+    resetMakeOneTime(svm._._getServiceManager);
     // eslint-disable-next-line jest/no-standalone-expect
     expect(nock.pendingMocks()).toEqual([]);
     nock.cleanAll();
