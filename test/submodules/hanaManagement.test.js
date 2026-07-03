@@ -47,20 +47,20 @@ const mockContext = {
 
 describe("hdi tests", () => {
   afterEach(() => {
-    resetMakeOneTime(hdi._._requestOfferings);
-    resetMakeOneTime(hdi._._requestPlans);
+    resetMakeOneTime(hdi._._getServiceManager);
     resetMakeOneTime(hdi._._getHdiSharedPlanId);
   });
 
   test("hdi tunnel", async () => {
     mockRequest.request.mockImplementation(async ({ pathname }) => ({
+      headers: new Headers(),
       async json() {
         switch (pathname) {
-          case "/v1/service_offerings":
+          case "/v2/service_offerings":
             return { items: [{ id: "service-offering-id" }] };
-          case "/v1/service_plans":
+          case "/v2/service_plans":
             return { items: [{ id: "service-plan-id" }] };
-          case "/v1/service_instances":
+          case "/v2/service_instances":
             return {
               items: [
                 {
@@ -69,7 +69,7 @@ describe("hdi tests", () => {
                 },
               ],
             };
-          case "/v1/service_bindings":
+          case "/v2/service_bindings":
             return {
               items: [
                 {
