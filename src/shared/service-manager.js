@@ -161,14 +161,14 @@ class ServiceManager {
     return await this.#getPlansUnfiltered();
   }
 
-  async resolvePlanId({ offeringName, planName }) {
-    assert(offeringName, "resolvePlanId requires offeringName");
-    assert(planName, "resolvePlanId requires planName");
+  async getPlanInfo(offeringName, planName) {
+    assert(offeringName, "getPlanInfo requires offeringName");
+    assert(planName, "getPlanInfo requires planName");
     const [offering] = await this.getOfferings({ filterOfferingName: offeringName });
     assert(offering?.id, `could not find service offering "${offeringName}"`);
     const [plan] = await this.getPlans({ filterOfferingId: offering.id, filterPlanName: planName });
     assert(plan?.id, `could not find service plan "${planName}" within offering "${offeringName}"`);
-    return plan.id;
+    return { offeringId: offering.id, offeringName, planId: plan.id, planName };
   }
 
   async getInstances({ filterTenantId, filterPlanId, doEnsureUsable = false, doEnsureTenantLabel = false } = {}) {
