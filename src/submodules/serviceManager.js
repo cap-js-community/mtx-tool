@@ -167,11 +167,8 @@ ${_formatOutput(bindings)}
 const serviceManagerLongList = async (context, [filterTenantId], [doJsonOutput, doReveal]) =>
   await _serviceManagerLongList(context, { filterTenantId, doJsonOutput, doReveal });
 
-const _resolveServicePlanNameMap = (planInfo, offerings, plans) => {
-  if (planInfo) {
-    return { [planInfo.planId]: `${planInfo.offeringName}:${planInfo.planName}` };
-  }
-  return _indexPlanFullNameById(offerings, plans);
+const _indexPlanFullNameByIdFromPlanInfo = (planInfo) => {
+  return { [planInfo.planId]: `${planInfo.offeringName}:${planInfo.planName}` };
 };
 
 const _serviceManagerRepairBindings = async (context, { planInfo, parameters } = {}) => {
@@ -183,7 +180,9 @@ const _serviceManagerRepairBindings = async (context, { planInfo, parameters } =
     svm.getInstances({ filterPlanId, doEnsureUsable: true, doEnsureTenantLabel: true }),
     svm.getBindings(),
   ]);
-  const planFullNameById = _resolveServicePlanNameMap(planInfo, offerings, plans);
+  const planFullNameById = planInfo
+    ? _indexPlanFullNameByIdFromPlanInfo(planInfo)
+    : _indexPlanFullNameById(offerings, plans);
 
   instances.sort(compareForTenantId);
   bindings.sort(compareForUpdatedAtDesc);
@@ -304,7 +303,9 @@ const _serviceManagerFreshBindings = async (
     }),
     svm.getBindings({ filterTenantId }),
   ]);
-  const planFullNameById = _resolveServicePlanNameMap(planInfo, offerings, plans);
+  const planFullNameById = planInfo
+    ? _indexPlanFullNameByIdFromPlanInfo(planInfo)
+    : _indexPlanFullNameById(offerings, plans);
 
   bindings.sort(compareForUpdatedAtDesc);
   const bindingsByInstance = clusterByKey(bindings, "service_instance_id");
