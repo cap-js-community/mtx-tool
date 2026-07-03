@@ -104,7 +104,7 @@ describe("hdi nock tests", () => {
       `);
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-
+        
         GET https://service-manager.cfapps.sap.hana.ondemand.com/v2/service_bindings 200 OK (88ms)
         GET https://service-manager.cfapps.sap.hana.ondemand.com/v2/service_instances?service_plan_id=1b702f36-bd66-4fad-b4d8-75cf0a0b8347 200 OK (88ms)
         GET https://service-manager.cfapps.sap.hana.ondemand.com/v2/service_offerings?name=hana 200 OK (88ms)
@@ -165,7 +165,7 @@ describe("hdi nock tests", () => {
       `);
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-
+        
         GET https://service-manager.cfapps.sap.hana.ondemand.com/v2/service_bindings?labels=tenant_id%3D5ecc7413-2b7e-414a-9496-ad4a61f6cccf 200 OK (88ms)
         GET https://service-manager.cfapps.sap.hana.ondemand.com/v2/service_instances?service_plan_id=1b702f36-bd66-4fad-b4d8-75cf0a0b8347&labels=tenant_id%3D5ecc7413-2b7e-414a-9496-ad4a61f6cccf 200 OK (88ms)
         GET https://service-manager.cfapps.sap.hana.ondemand.com/v2/service_offerings?name=hana 200 OK (88ms)
@@ -199,7 +199,7 @@ describe("hdi nock tests", () => {
       expect(output).toMatchSnapshot();
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-
+        
         GET https://service-manager.cfapps.sap.hana.ondemand.com/v2/service_bindings 200 OK (88ms)
         GET https://service-manager.cfapps.sap.hana.ondemand.com/v2/service_instances?service_plan_id=1b702f36-bd66-4fad-b4d8-75cf0a0b8347 200 OK (88ms)
         GET https://service-manager.cfapps.sap.hana.ondemand.com/v2/service_offerings?name=hana 200 OK (88ms)
@@ -228,7 +228,7 @@ describe("hdi nock tests", () => {
       expect(output).toMatchSnapshot();
       expect(outputFromLoggerPartitionFetch(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "targeting cf api https://api.cf.sap.hana.ondemand.com / org "skyfin" / space "dev"
-
+        
         GET https://service-manager.cfapps.sap.hana.ondemand.com/v2/service_bindings?labels=tenant_id%3D5ecc7413-2b7e-414a-9496-ad4a61f6cccf 200 OK (88ms)
         GET https://service-manager.cfapps.sap.hana.ondemand.com/v2/service_instances?service_plan_id=1b702f36-bd66-4fad-b4d8-75cf0a0b8347&labels=tenant_id%3D5ecc7413-2b7e-414a-9496-ad4a61f6cccf 200 OK (88ms)
         GET https://service-manager.cfapps.sap.hana.ondemand.com/v2/service_offerings?name=hana 200 OK (88ms)
