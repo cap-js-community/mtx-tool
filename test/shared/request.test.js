@@ -16,7 +16,7 @@ jest.mock("../../src/shared/static", () => ({
 const {
   request,
   RETRY_MODE,
-  _: { LogRequestId },
+  _: { LogRequestId, _parseRetryAfter },
 } = require("../../src/shared/request");
 
 const { outputFromLogger, MockHeaders } = require("../test-util/static");
@@ -338,5 +338,107 @@ describe("request tests", () => {
     expect(outputFromLoggerWithTimestamps(mockLogger.info.mock.calls)).toMatchInlineSnapshot(
       `"GET https://fake-server.com/path 200 OK (88ms)"`
     );
+  });
+
+  describe("_parseRetryAfter", () => {
+    // NOTE: pinned "now" so HTTP-date cases stay deterministic
+    const nowMs = Date.parse("2026-01-01T00:00:00Z");
+    const secondsInFuture = (n) => new Date(nowMs + n * 1000).toUTCString();
+
+    test.each([
+      ["integer seconds", "10", 10_000],
+      ["integer seconds with surrounding whitespace", "  30  ", 30_000],
+      ["http-date in the future", secondsInFuture(45), 45_000],
+      ["cap enforced on huge integer", "99999", 5 * 60 * 1000],
+      ["cap enforced on far-future http-date", secondsInFuture(60 * 60), 5 * 60 * 1000],
+    ])("valid: %s", (_desc, input, expected) => {
+      expect(_parseRetryAfter(input, nowMs)).toBe(expected);
+    });
+
+    test.each([
+      ["undefined", undefined],
+      ["null", null],
+      ["number instead of string", 10],
+      ["empty string", ""],
+      ["only whitespace", "   "],
+      ["zero seconds", "0"],
+      ["negative-looking (not delta-seconds per RFC, falls to date parse)", "-5"],
+      ["garbage", "soon"],
+      ["http-date in the past", "Wed, 21 Oct 1970 07:28:00 GMT"],
+      ["http-date exactly now", new Date(nowMs).toUTCString()],
+    ])("invalid: %s", (_desc, input) => {
+      expect(_parseRetryAfter(input, nowMs)).toBeNull();
+    });
+  });
+
+  test("Retry-After header overrides fixed backoff on 429", async () => {
+    mockStatic.sleep.mockClear();
+    const withRetryAfter = (value) => ({
+      ...baseTooManyRequestsResponse,
+      headers: new Headers([["Retry-After", value]]),
+    });
+    mockFetchLib.mockReturnValueOnce(withRetryAfter("3"));
+    mockFetchLib.mockReturnValueOnce(withRetryAfter("7"));
+    mockFetchLib.mockReturnValueOnce(baseOkResponse);
+
+    await request({ url: "https://fake-server.com", pathname: "/path" });
+
+    expect(mockStatic.sleep.mock.calls).toMatchInlineSnapshot(`
+      [
+        [
+          3000,
+        ],
+        [
+          7000,
+        ],
+      ]
+    `);
+    expect(outputFromLoggerWithTimestamps(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
+      "[req-01 1/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 3sec
+      [req-01 2/5] GET https://fake-server.com/path 429 Too Many Requests (88ms) retrying in 7sec
+      [req-01 3/5] GET https://fake-server.com/path 200 OK (88ms)"
+    `);
+  });
+
+  test("invalid Retry-After falls back to fixed backoff", async () => {
+    mockStatic.sleep.mockClear();
+    const withRetryAfter = (value) => ({
+      ...baseTooManyRequestsResponse,
+      headers: new Headers([["Retry-After", value]]),
+    });
+    mockFetchLib.mockReturnValueOnce(withRetryAfter("garbage"));
+    mockFetchLib.mockReturnValueOnce(withRetryAfter(""));
+    mockFetchLib.mockReturnValueOnce(baseOkResponse);
+
+    await request({ url: "https://fake-server.com", pathname: "/path" });
+
+    expect(mockStatic.sleep.mock.calls).toMatchInlineSnapshot(`
+      [
+        [
+          6000,
+        ],
+        [
+          12000,
+        ],
+      ]
+    `);
+  });
+
+  test("Retry-After is not consulted when we would not retry", async () => {
+    mockStatic.sleep.mockClear();
+    const bad500WithRetryAfter = {
+      ...baseBadRequestResponse,
+      status: 500,
+      statusText: "Internal Server Error",
+      headers: new Headers([["Retry-After", "120"]]),
+    };
+    const headerGetSpy = jest.spyOn(bad500WithRetryAfter.headers, "get");
+    mockFetchLib.mockReturnValueOnce(bad500WithRetryAfter);
+
+    // NOTE: retryMode TOO_MANY_REQUESTS stops on 500 (not 429), so no retry and no header lookup
+    await expect(request({ url: "https://fake-server.com", pathname: "/path" })).rejects.toBeDefined();
+
+    expect(mockStatic.sleep).not.toHaveBeenCalled();
+    expect(headerGetSpy).not.toHaveBeenCalledWith("Retry-After");
   });
 });

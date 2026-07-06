@@ -8,10 +8,13 @@ const { fail } = require("./error");
 const { Logger } = require("./logger");
 
 const HTTP_TOO_MANY_REQUESTS = 429;
-// NOTE: These times add up to 90sec in total and give an exponential falloff
-const RETRY_POLL_FREQUENCIES = [6000, 12000, 24000, 48000];
-const RETRY_STOP_MARKER = -1;
-const RETRY_SLEEP_TIMES = [].concat(RETRY_POLL_FREQUENCIES, [RETRY_STOP_MARKER]);
+// NOTE: With 5 attempts and 6sec base, the times add up to 90sec in total.
+//   the final attempt is always stopped and does not add the associated sleep time.
+const RETRY_SLEEP_BASE = 6000;
+const RETRY_MAX_ATTEMPTS = 5;
+const RETRY_AFTER_HEADER = "Retry-After";
+// NOTE: cap Retry-After to keep a misbehaving server from stalling us indefinitely
+const RETRY_AFTER_MAX_MS = 5 * 60 * 1000;
 
 const ENV = Object.freeze({
   CORRELATION: "MTX_CORRELATION",
@@ -52,6 +55,41 @@ const _doStopRetry = (mode, response) => {
       throw new Error("unknown retry mode");
   }
 };
+
+const _retryFixedSleepTime = (attempt) => RETRY_SLEEP_BASE * Math.pow(2, attempt);
+
+// Parse a Retry-After header value per RFC 9110 / MDN: either a non-negative integer
+// number of seconds (delta-seconds), or an HTTP-date. Returns milliseconds to wait,
+// or null when absent, malformed, non-positive, or beyond RETRY_AFTER_MAX_MS.
+const _parseRetryAfter = (headerValue, nowMs = Date.now()) => {
+  if (typeof headerValue !== "string") {
+    return null;
+  }
+  const trimmed = headerValue.trim();
+  if (!trimmed) {
+    return null;
+  }
+  let waitMs;
+  if (/^\d+$/.test(trimmed)) {
+    const seconds = Number(trimmed);
+    if (!Number.isFinite(seconds) || seconds <= 0) {
+      return null;
+    }
+    waitMs = seconds * 1000;
+  } else {
+    const dateMs = Date.parse(trimmed);
+    if (!Number.isFinite(dateMs)) {
+      return null;
+    }
+    waitMs = dateMs - nowMs;
+    if (waitMs <= 0) {
+      return null;
+    }
+  }
+  return Math.min(waitMs, RETRY_AFTER_MAX_MS);
+};
+
+const _getRetryHeaderSleepTime = (response) => _parseRetryAfter(response.headers?.get?.(RETRY_AFTER_HEADER));
 
 class LogRequestId {
   static #id = 0;
@@ -152,22 +190,28 @@ const _request = async ({
 
   let response;
   let logRequestId;
-  for (const [attempt, sleepTime] of RETRY_SLEEP_TIMES.entries()) {
+  for (let attempt = 0; attempt < RETRY_MAX_ATTEMPTS; attempt++) {
     const startTime = Date.now();
     response = await fetchlib(_url, _options);
     const responseTime = Date.now() - startTime;
-    const doStopRetry = sleepTime === RETRY_STOP_MARKER || _doStopRetry(retryMode, response);
+
+    const isLastAttempt = attempt === RETRY_MAX_ATTEMPTS - 1;
+    const doStopRetry = _doStopRetry(retryMode, response) || isLastAttempt;
+    const retryHeaderSleepTime = doStopRetry ? null : _getRetryHeaderSleepTime(response);
+    const retryFixedSleepTime = doStopRetry ? null : _retryFixedSleepTime(attempt);
+    const sleepTime = retryHeaderSleepTime ?? retryFixedSleepTime;
     if (logged) {
       const doLogAttempt = attempt > 0 || !doStopRetry;
       const correlationHeader = CORRELATION_HEADERS_RECEIVER_PRECEDENCE.find((header) => response.headers.has(header));
       logRequestId ??= doLogAttempt && LogRequestId.next();
+      const retryLogPart = doStopRetry ? [] : [`retrying in ${sleepTime / 1000}sec`];
       const logParts = [
-        ...(doLogAttempt ? [`[req-${logRequestId} ${attempt + 1}/${RETRY_SLEEP_TIMES.length}]`] : []),
+        ...(doLogAttempt ? [`[req-${logRequestId} ${attempt + 1}/${RETRY_MAX_ATTEMPTS}]`] : []),
         `${_method} ${decodeURI(_url.href)} ${response.status} ${response.statusText}`,
         ...(showCorrelation
           ? [`(${responseTime}ms, ${correlationHeader}: ${response.headers.get(correlationHeader)})`]
           : [`(${responseTime}ms)`]),
-        ...(doStopRetry ? [] : [`retrying in ${sleepTime / 1000}sec`]),
+        ...retryLogPart,
       ];
       logger.info(logParts.join(" "));
     }
@@ -196,5 +240,6 @@ module.exports = {
   request,
   _: {
     LogRequestId,
+    _parseRetryAfter,
   },
 };
