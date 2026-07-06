@@ -204,13 +204,7 @@ const _request = async ({
       const doLogAttempt = attempt > 0 || !doStopRetry;
       const correlationHeader = CORRELATION_HEADERS_RECEIVER_PRECEDENCE.find((header) => response.headers.has(header));
       logRequestId ??= doLogAttempt && LogRequestId.next();
-      const retryLogPart = doStopRetry
-        ? []
-        : [
-            retryHeaderSleepTime !== null
-              ? `retrying in ${sleepTime / 1000}sec (Retry-After)`
-              : `retrying in ${sleepTime / 1000}sec`,
-          ];
+      const retryLogPart = doStopRetry ? [] : [`retrying in ${sleepTime / 1000}sec`];
       const logParts = [
         ...(doLogAttempt ? [`[req-${logRequestId} ${attempt + 1}/${RETRY_MAX_ATTEMPTS}]`] : []),
         `${_method} ${decodeURI(_url.href)} ${response.status} ${response.statusText}`,
