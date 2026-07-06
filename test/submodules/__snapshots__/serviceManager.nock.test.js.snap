@@ -59,6 +59,9 @@ exports[`svm nock tests list list filtered json 1`] = `
           "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
         ],
       },
+      "last_operation": {
+        "updated_at": "2024-02-07T11:36:53Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2022-04-26T18:05:44Z",
       "usable": true,
@@ -116,6 +119,9 @@ exports[`svm nock tests list list filtered json 1`] = `
         "tenant_id": [
           "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2024-07-12T20:16:01Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2024-06-26T09:03:37Z",
@@ -184,6 +190,9 @@ exports[`svm nock tests list list json 1`] = `
           "0de2abab-9030-4524-9940-e5b37ac75d92",
         ],
       },
+      "last_operation": {
+        "updated_at": "2025-04-04T07:46:02Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2025-04-04T07:45:52Z",
       "usable": true,
@@ -241,6 +250,9 @@ exports[`svm nock tests list list json 1`] = `
         "tenant_id": [
           "0de2abab-9030-4524-9940-e5b37ac75d92",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2025-04-04T07:50:19Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2025-04-04T07:49:33Z",
@@ -302,6 +314,9 @@ exports[`svm nock tests list list json 1`] = `
           "116b3ac3-6d84-4ed5-81be-0af4464a09b6",
         ],
       },
+      "last_operation": {
+        "updated_at": "2025-10-27T13:43:40Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2025-10-27T13:43:30Z",
       "usable": true,
@@ -353,6 +368,9 @@ exports[`svm nock tests list list json 1`] = `
         "tenant_id": [
           "116b3ac3-6d84-4ed5-81be-0af4464a09b6",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2025-10-29T09:18:59Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2025-10-29T09:18:13Z",
@@ -414,6 +432,9 @@ exports[`svm nock tests list list json 1`] = `
           "1bbe07b0-4de1-4cdb-830d-49b0ddf20b53",
         ],
       },
+      "last_operation": {
+        "updated_at": "2025-09-19T08:54:15Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2025-09-19T08:54:05Z",
       "usable": true,
@@ -465,6 +486,9 @@ exports[`svm nock tests list list json 1`] = `
         "tenant_id": [
           "1bbe07b0-4de1-4cdb-830d-49b0ddf20b53",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2025-10-29T09:23:56Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2025-10-29T09:22:49Z",
@@ -526,6 +550,9 @@ exports[`svm nock tests list list json 1`] = `
           "1cc0aa7f-f77e-4038-9ab0-48ae43ed3c7a",
         ],
       },
+      "last_operation": {
+        "updated_at": "2026-04-17T16:18:26Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2026-04-17T16:18:11Z",
       "usable": true,
@@ -578,6 +605,9 @@ exports[`svm nock tests list list json 1`] = `
           "1cc0aa7f-f77e-4038-9ab0-48ae43ed3c7a",
         ],
       },
+      "last_operation": {
+        "updated_at": "2026-04-17T16:23:41Z",
+      },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2026-04-17T16:22:45Z",
       "usable": true,
@@ -629,6 +659,9 @@ exports[`svm nock tests list list json 1`] = `
         "tenant_id": [
           "3af21e38-10cc-45e3-976f-1463f1d63879",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2026-01-15T09:23:48Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2026-01-15T09:23:02Z",
@@ -690,6 +723,9 @@ exports[`svm nock tests list list json 1`] = `
           "4c0909b1-a84e-4763-a26e-532fdb9e40fa",
         ],
       },
+      "last_operation": {
+        "updated_at": "2024-02-07T11:36:53Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2023-09-05T14:19:48Z",
       "usable": true,
@@ -747,6 +783,9 @@ exports[`svm nock tests list list json 1`] = `
         "tenant_id": [
           "4c0909b1-a84e-4763-a26e-532fdb9e40fa",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2024-07-12T20:17:01Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2024-06-21T06:50:45Z",
@@ -808,6 +847,9 @@ exports[`svm nock tests list list json 1`] = `
           "524ffdf2-8174-4b70-bc10-36bf458ab360",
         ],
       },
+      "last_operation": {
+        "updated_at": "2026-05-18T11:04:39Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2026-05-18T11:04:24Z",
       "usable": true,
@@ -859,6 +901,9 @@ exports[`svm nock tests list list json 1`] = `
         "tenant_id": [
           "524ffdf2-8174-4b70-bc10-36bf458ab360",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2026-05-18T11:10:04Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2026-05-18T11:09:08Z",
@@ -920,6 +965,9 @@ exports[`svm nock tests list list json 1`] = `
           "5ca3a561-93c7-4ce1-a911-ad9923120381",
         ],
       },
+      "last_operation": {
+        "updated_at": "2026-06-19T09:38:38Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2026-06-19T09:38:23Z",
       "usable": true,
@@ -971,6 +1019,9 @@ exports[`svm nock tests list list json 1`] = `
         "tenant_id": [
           "5ca3a561-93c7-4ce1-a911-ad9923120381",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2026-06-19T09:43:56Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2026-06-19T09:42:59Z",
@@ -1032,6 +1083,9 @@ exports[`svm nock tests list list json 1`] = `
           "5d5ebba0-e1b9-44c3-989e-f274438c91ec",
         ],
       },
+      "last_operation": {
+        "updated_at": "2026-06-08T05:32:54Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2026-06-08T05:32:39Z",
       "usable": true,
@@ -1083,6 +1137,9 @@ exports[`svm nock tests list list json 1`] = `
         "tenant_id": [
           "5d5ebba0-e1b9-44c3-989e-f274438c91ec",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2026-06-08T05:38:18Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2026-06-08T05:37:22Z",
@@ -1144,6 +1201,9 @@ exports[`svm nock tests list list json 1`] = `
           "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
         ],
       },
+      "last_operation": {
+        "updated_at": "2024-02-07T11:36:53Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2022-04-26T18:05:44Z",
       "usable": true,
@@ -1201,6 +1261,9 @@ exports[`svm nock tests list list json 1`] = `
         "tenant_id": [
           "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2024-07-12T20:16:01Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2024-06-26T09:03:37Z",
@@ -1262,6 +1325,9 @@ exports[`svm nock tests list list json 1`] = `
           "663d2938-be50-44ab-92ca-538855eb594f",
         ],
       },
+      "last_operation": {
+        "updated_at": "2024-09-11T07:33:35Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2024-09-11T07:33:25Z",
       "usable": true,
@@ -1319,6 +1385,9 @@ exports[`svm nock tests list list json 1`] = `
         "tenant_id": [
           "663d2938-be50-44ab-92ca-538855eb594f",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2024-09-11T07:38:07Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2024-09-11T07:37:20Z",
@@ -1380,6 +1449,9 @@ exports[`svm nock tests list list json 1`] = `
           "73675fb3-0298-4cf3-8f86-a78c18392193",
         ],
       },
+      "last_operation": {
+        "updated_at": "2025-05-22T12:08:38Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2025-05-22T12:08:28Z",
       "usable": true,
@@ -1437,6 +1509,9 @@ exports[`svm nock tests list list json 1`] = `
         "tenant_id": [
           "73675fb3-0298-4cf3-8f86-a78c18392193",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2025-05-22T12:13:02Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2025-05-22T12:12:16Z",
@@ -1498,6 +1573,9 @@ exports[`svm nock tests list list json 1`] = `
           "79604d57-3933-4a66-81c2-a022413ec11d",
         ],
       },
+      "last_operation": {
+        "updated_at": "2026-01-15T10:43:51Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2026-01-15T10:43:40Z",
       "usable": true,
@@ -1549,6 +1627,9 @@ exports[`svm nock tests list list json 1`] = `
         "tenant_id": [
           "79604d57-3933-4a66-81c2-a022413ec11d",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2026-01-15T10:48:41Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2026-01-15T10:47:52Z",
@@ -1610,6 +1691,9 @@ exports[`svm nock tests list list json 1`] = `
           "86ab464d-5770-46b4-b93d-292c1416c453",
         ],
       },
+      "last_operation": {
+        "updated_at": "2025-09-23T14:24:27Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2025-09-23T14:24:15Z",
       "usable": true,
@@ -1661,6 +1745,9 @@ exports[`svm nock tests list list json 1`] = `
         "tenant_id": [
           "86ab464d-5770-46b4-b93d-292c1416c453",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2025-10-29T09:24:11Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2025-10-29T09:22:49Z",
@@ -1722,6 +1809,9 @@ exports[`svm nock tests list list json 1`] = `
           "899887a3-46a1-4370-b69a-d615f7420f08",
         ],
       },
+      "last_operation": {
+        "updated_at": "2026-05-20T05:23:32Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2026-05-20T05:23:16Z",
       "usable": true,
@@ -1773,6 +1863,9 @@ exports[`svm nock tests list list json 1`] = `
         "tenant_id": [
           "899887a3-46a1-4370-b69a-d615f7420f08",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2026-05-20T05:28:45Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2026-05-20T05:27:49Z",
@@ -1834,6 +1927,9 @@ exports[`svm nock tests list list json 1`] = `
           "97b55bf7-a906-42ab-9176-3e86762dcdb7",
         ],
       },
+      "last_operation": {
+        "updated_at": "2026-03-12T14:51:01Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2026-03-12T14:50:46Z",
       "usable": true,
@@ -1885,6 +1981,9 @@ exports[`svm nock tests list list json 1`] = `
         "tenant_id": [
           "97b55bf7-a906-42ab-9176-3e86762dcdb7",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2026-03-12T14:56:27Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2026-03-12T14:55:10Z",
@@ -1946,6 +2045,9 @@ exports[`svm nock tests list list json 1`] = `
           "9c418100-6318-4e8a-b4b2-1114f4f44aef",
         ],
       },
+      "last_operation": {
+        "updated_at": "2024-11-27T06:50:32Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2024-11-27T06:50:22Z",
       "usable": true,
@@ -2004,6 +2106,9 @@ exports[`svm nock tests list list json 1`] = `
           "9c418100-6318-4e8a-b4b2-1114f4f44aef",
         ],
       },
+      "last_operation": {
+        "updated_at": "2024-11-27T06:55:27Z",
+      },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2024-11-27T06:54:41Z",
       "usable": true,
@@ -2055,6 +2160,9 @@ exports[`svm nock tests list list json 1`] = `
         "tenant_id": [
           "ad91dbba-5c90-436d-8cd8-63b3fb88cf6a",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2025-12-11T03:44:07Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2025-12-11T03:43:21Z",
@@ -2116,6 +2224,9 @@ exports[`svm nock tests list list json 1`] = `
           "ae2dc112-9745-4f5e-8feb-79ebdc0094bd",
         ],
       },
+      "last_operation": {
+        "updated_at": "2024-07-05T11:20:04Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2024-07-05T11:19:53Z",
       "usable": true,
@@ -2174,6 +2285,9 @@ exports[`svm nock tests list list json 1`] = `
           "ae2dc112-9745-4f5e-8feb-79ebdc0094bd",
         ],
       },
+      "last_operation": {
+        "updated_at": "2024-07-12T20:17:33Z",
+      },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2024-07-05T20:24:38Z",
       "usable": true,
@@ -2225,6 +2339,9 @@ exports[`svm nock tests list list json 1`] = `
         "tenant_id": [
           "b46f4c09-e46e-432b-b837-0aad96d145f9",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2025-12-19T02:15:58Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2025-12-19T02:15:12Z",
@@ -2286,6 +2403,9 @@ exports[`svm nock tests list list json 1`] = `
           "b46f4c09-e46e-432b-b837-0aad96d145f9",
         ],
       },
+      "last_operation": {
+        "updated_at": "2025-12-22T02:16:04Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2025-12-22T02:15:53Z",
       "usable": true,
@@ -2346,6 +2466,9 @@ exports[`svm nock tests list list json 1`] = `
           "ba22b06c-b55f-4940-ae38-b92a5928c8a5",
         ],
       },
+      "last_operation": {
+        "updated_at": "2025-09-25T10:04:03Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2025-09-25T10:03:52Z",
       "usable": true,
@@ -2397,6 +2520,9 @@ exports[`svm nock tests list list json 1`] = `
         "tenant_id": [
           "ba22b06c-b55f-4940-ae38-b92a5928c8a5",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2025-10-29T09:23:36Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2025-10-29T09:22:49Z",
@@ -2458,6 +2584,9 @@ exports[`svm nock tests list list json 1`] = `
           "be884689-aad4-486e-b556-23fdcf266f6d",
         ],
       },
+      "last_operation": {
+        "updated_at": "2024-12-09T03:50:32Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2024-12-09T03:50:22Z",
       "usable": true,
@@ -2515,6 +2644,9 @@ exports[`svm nock tests list list json 1`] = `
         "tenant_id": [
           "be884689-aad4-486e-b556-23fdcf266f6d",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2024-12-09T03:55:31Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2024-12-09T03:54:45Z",
@@ -2576,6 +2708,9 @@ exports[`svm nock tests list list json 1`] = `
           "cb9158ce-f8fd-441b-b443-17219e8f79fa",
         ],
       },
+      "last_operation": {
+        "updated_at": "2024-02-07T11:36:53Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2022-09-05T12:11:41Z",
       "usable": true,
@@ -2633,6 +2768,9 @@ exports[`svm nock tests list list json 1`] = `
         "tenant_id": [
           "cb9158ce-f8fd-441b-b443-17219e8f79fa",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2024-07-12T20:16:30Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2024-06-21T06:11:31Z",
@@ -2694,6 +2832,9 @@ exports[`svm nock tests list list json 1`] = `
           "cf528063-6a43-4bf2-8ccc-ca4e6d75d88e",
         ],
       },
+      "last_operation": {
+        "updated_at": "2024-03-19T16:53:33Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2024-03-19T16:53:23Z",
       "usable": true,
@@ -2751,6 +2892,9 @@ exports[`svm nock tests list list json 1`] = `
         "tenant_id": [
           "cf528063-6a43-4bf2-8ccc-ca4e6d75d88e",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2024-07-12T20:15:28Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2024-06-19T10:16:54Z",
@@ -2812,6 +2956,9 @@ exports[`svm nock tests list list json 1`] = `
           "d91fb749-a148-479f-b29d-71b1b6a9309d",
         ],
       },
+      "last_operation": {
+        "updated_at": "2025-05-22T12:27:14Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2025-05-22T12:27:03Z",
       "usable": true,
@@ -2869,6 +3016,9 @@ exports[`svm nock tests list list json 1`] = `
         "tenant_id": [
           "d91fb749-a148-479f-b29d-71b1b6a9309d",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2025-05-22T12:31:33Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2025-05-22T12:30:47Z",
@@ -2930,6 +3080,9 @@ exports[`svm nock tests list list json 1`] = `
           "e0cdfa19-1d01-48b5-bc78-cb4785b20bc6",
         ],
       },
+      "last_operation": {
+        "updated_at": "2026-05-19T14:36:19Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2026-05-19T14:36:04Z",
       "usable": true,
@@ -2981,6 +3134,9 @@ exports[`svm nock tests list list json 1`] = `
         "tenant_id": [
           "e0cdfa19-1d01-48b5-bc78-cb4785b20bc6",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2026-05-19T14:41:26Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2026-05-19T14:40:28Z",
@@ -3042,6 +3198,9 @@ exports[`svm nock tests list list json 1`] = `
           "ed99fc2a-b367-4fc6-8918-5547e2e655a7",
         ],
       },
+      "last_operation": {
+        "updated_at": "2025-11-27T08:36:08Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2025-11-27T08:35:57Z",
       "usable": true,
@@ -3093,6 +3252,9 @@ exports[`svm nock tests list list json 1`] = `
         "tenant_id": [
           "ed99fc2a-b367-4fc6-8918-5547e2e655a7",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2025-11-27T08:40:59Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2025-11-27T08:40:12Z",
@@ -3154,6 +3316,9 @@ exports[`svm nock tests list list json 1`] = `
           "fe2e319f-68cd-450f-8a02-d726dac64b35",
         ],
       },
+      "last_operation": {
+        "updated_at": "2025-12-02T12:44:14Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2025-12-02T12:44:02Z",
       "usable": true,
@@ -3206,6 +3371,9 @@ exports[`svm nock tests list list json 1`] = `
           "fe2e319f-68cd-450f-8a02-d726dac64b35",
         ],
       },
+      "last_operation": {
+        "updated_at": "2025-12-02T12:49:25Z",
+      },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2025-12-02T12:48:39Z",
       "usable": true,
@@ -3257,6 +3425,9 @@ exports[`svm nock tests list list json 1`] = `
         "tenant_id": [
           "ffc185ec-3f22-48d5-9940-102ec4e62411",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2026-01-15T10:12:43Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2026-01-15T10:11:57Z",
@@ -3318,6 +3489,9 @@ exports[`svm nock tests list list json 1`] = `
           "t0",
         ],
       },
+      "last_operation": {
+        "updated_at": "2024-02-07T11:36:53Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2023-01-30T20:19:09Z",
       "usable": true,
@@ -3333,6 +3507,9 @@ exports[`svm nock tests long list long list basic 1`] = `
 [
   {
     "id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
+    "last_operation": {
+      "updated_at": "2024-02-07T11:36:53Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2022-04-26T18:05:44Z",
@@ -3351,6 +3528,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "42ff43bd-14a7-41f7-b903-259235c1abcb",
+    "last_operation": {
+      "updated_at": "2024-02-07T11:36:53Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2022-09-05T12:11:41Z",
@@ -3369,6 +3549,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "6e96ba0f-d345-43ef-a5be-b7d0de85d58b",
+    "last_operation": {
+      "updated_at": "2024-02-07T11:36:53Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2023-01-30T20:19:09Z",
@@ -3387,6 +3570,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "8a633bdf-bd76-43ee-8414-74f8095a05c3",
+    "last_operation": {
+      "updated_at": "2024-02-07T11:36:53Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2023-09-05T14:19:48Z",
@@ -3405,6 +3591,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "fe81e5b0-6526-4237-95a4-19268049f779",
+    "last_operation": {
+      "updated_at": "2024-03-19T16:53:33Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2024-03-19T16:53:23Z",
@@ -3423,6 +3612,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "af9af05c-808b-4ada-a775-6c78854ad466",
+    "last_operation": {
+      "updated_at": "2024-07-12T20:15:28Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2024-06-19T10:16:54Z",
@@ -3444,6 +3636,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "ce93990a-885f-482b-a3e4-f5b55fa65e77",
+    "last_operation": {
+      "updated_at": "2024-07-12T20:16:30Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2024-06-21T06:11:31Z",
@@ -3465,6 +3660,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "ca87508f-b17a-4f9e-84c5-8b974eec9488",
+    "last_operation": {
+      "updated_at": "2024-07-12T20:17:01Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2024-06-21T06:50:45Z",
@@ -3486,6 +3684,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "61d42c22-f100-419b-83d9-f0d7caeeca57",
+    "last_operation": {
+      "updated_at": "2024-07-12T20:16:01Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2024-06-26T09:03:37Z",
@@ -3507,6 +3708,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "8dbac1ec-7127-4bda-86a4-0ff02cfefd8d",
+    "last_operation": {
+      "updated_at": "2024-07-05T11:20:04Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2024-07-05T11:19:53Z",
@@ -3525,6 +3729,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "a66e6ae9-72dd-4689-851a-f2b33bfb8ff9",
+    "last_operation": {
+      "updated_at": "2024-07-12T20:17:33Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2024-07-05T20:24:38Z",
@@ -3546,6 +3753,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "9915f7de-1cbd-447d-a315-35825f68be69",
+    "last_operation": {
+      "updated_at": "2024-09-11T07:33:35Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2024-09-11T07:33:25Z",
@@ -3564,6 +3774,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "25c4c0ca-a01a-4534-bf34-842fb6e27c71",
+    "last_operation": {
+      "updated_at": "2024-09-11T07:38:07Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2024-09-11T07:37:20Z",
@@ -3585,6 +3798,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "c1626f78-e2de-47ab-8674-efe747db2fe3",
+    "last_operation": {
+      "updated_at": "2024-11-27T06:50:32Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2024-11-27T06:50:22Z",
@@ -3603,6 +3819,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "164c212e-b0e9-4ec9-9259-3abbd753cb21",
+    "last_operation": {
+      "updated_at": "2024-11-27T06:55:27Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2024-11-27T06:54:41Z",
@@ -3624,6 +3843,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "875d3ddf-1ede-41e1-b8af-134e418427a3",
+    "last_operation": {
+      "updated_at": "2024-12-09T03:50:32Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2024-12-09T03:50:22Z",
@@ -3642,6 +3864,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "f92f8e3e-f813-46b1-9846-c582de2b7982",
+    "last_operation": {
+      "updated_at": "2024-12-09T03:55:31Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2024-12-09T03:54:45Z",
@@ -3663,6 +3888,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "ea6bfebc-a2a7-4a0f-b893-c970face3cd6",
+    "last_operation": {
+      "updated_at": "2025-04-04T07:46:02Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2025-04-04T07:45:52Z",
@@ -3681,6 +3909,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "899f36fe-1bf3-4d95-8ae3-cdd4722c2832",
+    "last_operation": {
+      "updated_at": "2025-04-04T07:50:19Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2025-04-04T07:49:33Z",
@@ -3702,6 +3933,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "852bb033-afab-49d0-b827-4a3f32abe9ba",
+    "last_operation": {
+      "updated_at": "2025-05-22T12:08:38Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2025-05-22T12:08:28Z",
@@ -3720,6 +3954,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "66654db4-834b-4ae5-9a53-0e0fbabd42d1",
+    "last_operation": {
+      "updated_at": "2025-05-22T12:13:02Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2025-05-22T12:12:16Z",
@@ -3741,6 +3978,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "9e954752-5a2d-45fa-a809-e9707cedf2e5",
+    "last_operation": {
+      "updated_at": "2025-05-22T12:27:14Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2025-05-22T12:27:03Z",
@@ -3759,6 +3999,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "57944233-590b-416d-93fd-399cabcb30b8",
+    "last_operation": {
+      "updated_at": "2025-05-22T12:31:33Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2025-05-22T12:30:47Z",
@@ -3780,6 +4023,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "7758e957-e3a9-418f-9e2b-50bd492cefa6",
+    "last_operation": {
+      "updated_at": "2025-09-19T08:54:15Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2025-09-19T08:54:05Z",
@@ -3798,6 +4044,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "2e5b16d4-5379-47b5-a03d-d749777dadae",
+    "last_operation": {
+      "updated_at": "2025-09-23T14:24:27Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2025-09-23T14:24:15Z",
@@ -3816,6 +4065,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "67a22c54-b5b7-4b96-bea1-0a2d38999def",
+    "last_operation": {
+      "updated_at": "2025-09-25T10:04:03Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2025-09-25T10:03:52Z",
@@ -3834,6 +4086,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "56c535b2-bc3a-44f5-96c8-3ae1054f455c",
+    "last_operation": {
+      "updated_at": "2025-10-27T13:43:40Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2025-10-27T13:43:30Z",
@@ -3852,6 +4107,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "adcba256-b5ef-4e7d-b8c5-5ea5e9c808f9",
+    "last_operation": {
+      "updated_at": "2025-10-29T09:18:59Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2025-10-29T09:18:13Z",
@@ -3870,6 +4128,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "54699da7-b092-4e4b-9429-b0df4770c2b2",
+    "last_operation": {
+      "updated_at": "2025-10-29T09:24:11Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2025-10-29T09:22:49Z",
@@ -3888,6 +4149,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "2db8caf7-fcac-4b9d-abf2-38683639d2b1",
+    "last_operation": {
+      "updated_at": "2025-10-29T09:23:36Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2025-10-29T09:22:49Z",
@@ -3906,6 +4170,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "c18d7de5-195f-4967-8470-3a6438a23e24",
+    "last_operation": {
+      "updated_at": "2025-10-29T09:23:56Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2025-10-29T09:22:49Z",
@@ -3924,6 +4191,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "a56a9023-fe64-43ba-991d-50ed9395f2e8",
+    "last_operation": {
+      "updated_at": "2025-11-27T08:36:08Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2025-11-27T08:35:57Z",
@@ -3942,6 +4212,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "66da3e8b-eee4-456b-8aac-750c797c6d6d",
+    "last_operation": {
+      "updated_at": "2025-11-27T08:40:59Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2025-11-27T08:40:12Z",
@@ -3960,6 +4233,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "639793df-096a-470b-8ef1-c7aec9bd048f",
+    "last_operation": {
+      "updated_at": "2025-12-02T12:44:14Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2025-12-02T12:44:02Z",
@@ -3978,6 +4254,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "9e57fd34-309e-4ce2-9603-8371372d6c80",
+    "last_operation": {
+      "updated_at": "2025-12-02T12:49:25Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2025-12-02T12:48:39Z",
@@ -3996,6 +4275,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "500011f3-9dd7-483b-bcc6-b9a87bc27fbe",
+    "last_operation": {
+      "updated_at": "2025-12-11T03:44:07Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2025-12-11T03:43:21Z",
@@ -4014,6 +4296,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "2240055d-5306-43e7-a0c2-8623eff8e538",
+    "last_operation": {
+      "updated_at": "2025-12-19T02:15:58Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2025-12-19T02:15:12Z",
@@ -4032,6 +4317,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "3e0696d7-6669-40ce-8bde-8eb71b227b15",
+    "last_operation": {
+      "updated_at": "2025-12-22T02:16:04Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2025-12-22T02:15:53Z",
@@ -4050,6 +4338,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "5b846327-36b7-4c55-b0fb-88abb38f23dc",
+    "last_operation": {
+      "updated_at": "2026-01-15T09:23:48Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2026-01-15T09:23:02Z",
@@ -4068,6 +4359,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "12fac650-6d22-4759-bb28-5e23628bbd8b",
+    "last_operation": {
+      "updated_at": "2026-01-15T10:12:43Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2026-01-15T10:11:57Z",
@@ -4086,6 +4380,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "1c61ab20-0ab1-41ce-8ae4-b7269d9513a4",
+    "last_operation": {
+      "updated_at": "2026-01-15T10:43:51Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2026-01-15T10:43:40Z",
@@ -4104,6 +4401,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "411fac3d-9b5c-4fec-93ba-59fbc905c6cf",
+    "last_operation": {
+      "updated_at": "2026-01-15T10:48:41Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2026-01-15T10:47:52Z",
@@ -4122,6 +4422,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "eaf48f15-7d72-4a5b-8833-96a4b04dba8f",
+    "last_operation": {
+      "updated_at": "2026-03-12T14:51:01Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2026-03-12T14:50:46Z",
@@ -4140,6 +4443,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "db86c471-92f6-458e-973c-a3d2e4329bf9",
+    "last_operation": {
+      "updated_at": "2026-03-12T14:56:27Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2026-03-12T14:55:10Z",
@@ -4158,6 +4464,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "1d031371-1b20-4363-b1f9-473d21e6dd2a",
+    "last_operation": {
+      "updated_at": "2026-04-17T16:18:26Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2026-04-17T16:18:11Z",
@@ -4176,6 +4485,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "5f503f0c-cf58-4c40-9c77-c2688d95b43d",
+    "last_operation": {
+      "updated_at": "2026-04-17T16:23:41Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2026-04-17T16:22:45Z",
@@ -4194,6 +4506,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "a1d78a19-0f96-4ac4-bd31-d532f1d68f92",
+    "last_operation": {
+      "updated_at": "2026-05-18T11:04:39Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2026-05-18T11:04:24Z",
@@ -4212,6 +4527,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "62a446e2-f529-4969-8194-fb26cb6117f4",
+    "last_operation": {
+      "updated_at": "2026-05-18T11:10:04Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2026-05-18T11:09:08Z",
@@ -4230,6 +4548,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "9be55a43-72bd-41b5-b33e-3aeb1f432ce0",
+    "last_operation": {
+      "updated_at": "2026-05-19T14:36:19Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2026-05-19T14:36:04Z",
@@ -4248,6 +4569,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "6c0e4f10-5c61-4830-8ac2-2be2d8947747",
+    "last_operation": {
+      "updated_at": "2026-05-19T14:41:26Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2026-05-19T14:40:28Z",
@@ -4266,6 +4590,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "6430d626-937c-47db-a961-e38f52c17ba0",
+    "last_operation": {
+      "updated_at": "2026-05-20T05:23:32Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2026-05-20T05:23:16Z",
@@ -4284,6 +4611,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "7ba9df5d-29c9-42a6-aff1-4dab737e0448",
+    "last_operation": {
+      "updated_at": "2026-05-20T05:28:45Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2026-05-20T05:27:49Z",
@@ -4302,6 +4632,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "e9215dad-0d24-4bb5-a91b-e6e7ef7ed7d9",
+    "last_operation": {
+      "updated_at": "2026-06-08T05:32:54Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2026-06-08T05:32:39Z",
@@ -4320,6 +4653,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "b5dea6b1-d41e-476c-ba2d-01e277887e7f",
+    "last_operation": {
+      "updated_at": "2026-06-08T05:38:18Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2026-06-08T05:37:22Z",
@@ -4338,6 +4674,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "70e48010-a730-4e88-b1b0-6fab23adad01",
+    "last_operation": {
+      "updated_at": "2026-06-19T09:38:38Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2026-06-19T09:38:23Z",
@@ -4356,6 +4695,9 @@ exports[`svm nock tests long list long list basic 1`] = `
   },
   {
     "id": "806ce3f6-dd9c-4196-bb27-a730c7c24c26",
+    "last_operation": {
+      "updated_at": "2026-06-19T09:43:56Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2026-06-19T09:42:59Z",
@@ -6429,6 +6771,9 @@ exports[`svm nock tests long list long list filtered basic 1`] = `
 [
   {
     "id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
+    "last_operation": {
+      "updated_at": "2024-02-07T11:36:53Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2022-04-26T18:05:44Z",
@@ -6447,6 +6792,9 @@ exports[`svm nock tests long list long list filtered basic 1`] = `
   },
   {
     "id": "61d42c22-f100-419b-83d9-f0d7caeeca57",
+    "last_operation": {
+      "updated_at": "2024-07-12T20:16:01Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2024-06-26T09:03:37Z",
@@ -6644,6 +6992,9 @@ exports[`svm nock tests long list long list filtered json 1`] = `
           "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
         ],
       },
+      "last_operation": {
+        "updated_at": "2024-02-07T11:36:53Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2022-04-26T18:05:44Z",
       "usable": true,
@@ -6665,6 +7016,9 @@ exports[`svm nock tests long list long list filtered json 1`] = `
           "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
         ],
       },
+      "last_operation": {
+        "updated_at": "2024-07-12T20:16:01Z",
+      },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2024-06-26T09:03:37Z",
       "usable": true,
@@ -6680,6 +7034,9 @@ exports[`svm nock tests long list long list filtered revealed 1`] = `
 [
   {
     "id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
+    "last_operation": {
+      "updated_at": "2024-02-07T11:36:53Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2022-04-26T18:05:44Z",
@@ -6698,6 +7055,9 @@ exports[`svm nock tests long list long list filtered revealed 1`] = `
   },
   {
     "id": "61d42c22-f100-419b-83d9-f0d7caeeca57",
+    "last_operation": {
+      "updated_at": "2024-07-12T20:16:01Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2024-06-26T09:03:37Z",
@@ -8861,6 +9221,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
         ],
       },
+      "last_operation": {
+        "updated_at": "2024-02-07T11:36:53Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2022-04-26T18:05:44Z",
       "usable": true,
@@ -8878,6 +9241,9 @@ exports[`svm nock tests long list long list json 1`] = `
         "tenant_id": [
           "cb9158ce-f8fd-441b-b443-17219e8f79fa",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2024-02-07T11:36:53Z",
       },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2022-09-05T12:11:41Z",
@@ -8897,6 +9263,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "t0",
         ],
       },
+      "last_operation": {
+        "updated_at": "2024-02-07T11:36:53Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2023-01-30T20:19:09Z",
       "usable": true,
@@ -8915,6 +9284,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "4c0909b1-a84e-4763-a26e-532fdb9e40fa",
         ],
       },
+      "last_operation": {
+        "updated_at": "2024-02-07T11:36:53Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2023-09-05T14:19:48Z",
       "usable": true,
@@ -8932,6 +9304,9 @@ exports[`svm nock tests long list long list json 1`] = `
         "tenant_id": [
           "cf528063-6a43-4bf2-8ccc-ca4e6d75d88e",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2024-03-19T16:53:33Z",
       },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2024-03-19T16:53:23Z",
@@ -8954,6 +9329,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "cf528063-6a43-4bf2-8ccc-ca4e6d75d88e",
         ],
       },
+      "last_operation": {
+        "updated_at": "2024-07-12T20:15:28Z",
+      },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2024-06-19T10:16:54Z",
       "usable": true,
@@ -8974,6 +9352,9 @@ exports[`svm nock tests long list long list json 1`] = `
         "tenant_id": [
           "cb9158ce-f8fd-441b-b443-17219e8f79fa",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2024-07-12T20:16:30Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2024-06-21T06:11:31Z",
@@ -8996,6 +9377,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "4c0909b1-a84e-4763-a26e-532fdb9e40fa",
         ],
       },
+      "last_operation": {
+        "updated_at": "2024-07-12T20:17:01Z",
+      },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2024-06-21T06:50:45Z",
       "usable": true,
@@ -9017,6 +9401,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
         ],
       },
+      "last_operation": {
+        "updated_at": "2024-07-12T20:16:01Z",
+      },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2024-06-26T09:03:37Z",
       "usable": true,
@@ -9034,6 +9421,9 @@ exports[`svm nock tests long list long list json 1`] = `
         "tenant_id": [
           "ae2dc112-9745-4f5e-8feb-79ebdc0094bd",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2024-07-05T11:20:04Z",
       },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2024-07-05T11:19:53Z",
@@ -9056,6 +9446,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "ae2dc112-9745-4f5e-8feb-79ebdc0094bd",
         ],
       },
+      "last_operation": {
+        "updated_at": "2024-07-12T20:17:33Z",
+      },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2024-07-05T20:24:38Z",
       "usable": true,
@@ -9073,6 +9466,9 @@ exports[`svm nock tests long list long list json 1`] = `
         "tenant_id": [
           "663d2938-be50-44ab-92ca-538855eb594f",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2024-09-11T07:33:35Z",
       },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2024-09-11T07:33:25Z",
@@ -9095,6 +9491,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "663d2938-be50-44ab-92ca-538855eb594f",
         ],
       },
+      "last_operation": {
+        "updated_at": "2024-09-11T07:38:07Z",
+      },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2024-09-11T07:37:20Z",
       "usable": true,
@@ -9112,6 +9511,9 @@ exports[`svm nock tests long list long list json 1`] = `
         "tenant_id": [
           "9c418100-6318-4e8a-b4b2-1114f4f44aef",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2024-11-27T06:50:32Z",
       },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2024-11-27T06:50:22Z",
@@ -9134,6 +9536,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "9c418100-6318-4e8a-b4b2-1114f4f44aef",
         ],
       },
+      "last_operation": {
+        "updated_at": "2024-11-27T06:55:27Z",
+      },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2024-11-27T06:54:41Z",
       "usable": true,
@@ -9151,6 +9556,9 @@ exports[`svm nock tests long list long list json 1`] = `
         "tenant_id": [
           "be884689-aad4-486e-b556-23fdcf266f6d",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2024-12-09T03:50:32Z",
       },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2024-12-09T03:50:22Z",
@@ -9173,6 +9581,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "be884689-aad4-486e-b556-23fdcf266f6d",
         ],
       },
+      "last_operation": {
+        "updated_at": "2024-12-09T03:55:31Z",
+      },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2024-12-09T03:54:45Z",
       "usable": true,
@@ -9190,6 +9601,9 @@ exports[`svm nock tests long list long list json 1`] = `
         "tenant_id": [
           "0de2abab-9030-4524-9940-e5b37ac75d92",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2025-04-04T07:46:02Z",
       },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2025-04-04T07:45:52Z",
@@ -9212,6 +9626,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "0de2abab-9030-4524-9940-e5b37ac75d92",
         ],
       },
+      "last_operation": {
+        "updated_at": "2025-04-04T07:50:19Z",
+      },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2025-04-04T07:49:33Z",
       "usable": true,
@@ -9229,6 +9646,9 @@ exports[`svm nock tests long list long list json 1`] = `
         "tenant_id": [
           "73675fb3-0298-4cf3-8f86-a78c18392193",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2025-05-22T12:08:38Z",
       },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2025-05-22T12:08:28Z",
@@ -9251,6 +9671,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "73675fb3-0298-4cf3-8f86-a78c18392193",
         ],
       },
+      "last_operation": {
+        "updated_at": "2025-05-22T12:13:02Z",
+      },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2025-05-22T12:12:16Z",
       "usable": true,
@@ -9268,6 +9691,9 @@ exports[`svm nock tests long list long list json 1`] = `
         "tenant_id": [
           "d91fb749-a148-479f-b29d-71b1b6a9309d",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2025-05-22T12:27:14Z",
       },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2025-05-22T12:27:03Z",
@@ -9290,6 +9716,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "d91fb749-a148-479f-b29d-71b1b6a9309d",
         ],
       },
+      "last_operation": {
+        "updated_at": "2025-05-22T12:31:33Z",
+      },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2025-05-22T12:30:47Z",
       "usable": true,
@@ -9307,6 +9736,9 @@ exports[`svm nock tests long list long list json 1`] = `
         "tenant_id": [
           "1bbe07b0-4de1-4cdb-830d-49b0ddf20b53",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2025-09-19T08:54:15Z",
       },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2025-09-19T08:54:05Z",
@@ -9326,6 +9758,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "86ab464d-5770-46b4-b93d-292c1416c453",
         ],
       },
+      "last_operation": {
+        "updated_at": "2025-09-23T14:24:27Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2025-09-23T14:24:15Z",
       "usable": true,
@@ -9343,6 +9778,9 @@ exports[`svm nock tests long list long list json 1`] = `
         "tenant_id": [
           "ba22b06c-b55f-4940-ae38-b92a5928c8a5",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2025-09-25T10:04:03Z",
       },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2025-09-25T10:03:52Z",
@@ -9362,6 +9800,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "116b3ac3-6d84-4ed5-81be-0af4464a09b6",
         ],
       },
+      "last_operation": {
+        "updated_at": "2025-10-27T13:43:40Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2025-10-27T13:43:30Z",
       "usable": true,
@@ -9379,6 +9820,9 @@ exports[`svm nock tests long list long list json 1`] = `
         "tenant_id": [
           "116b3ac3-6d84-4ed5-81be-0af4464a09b6",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2025-10-29T09:18:59Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2025-10-29T09:18:13Z",
@@ -9398,6 +9842,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "86ab464d-5770-46b4-b93d-292c1416c453",
         ],
       },
+      "last_operation": {
+        "updated_at": "2025-10-29T09:24:11Z",
+      },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2025-10-29T09:22:49Z",
       "usable": true,
@@ -9415,6 +9862,9 @@ exports[`svm nock tests long list long list json 1`] = `
         "tenant_id": [
           "ba22b06c-b55f-4940-ae38-b92a5928c8a5",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2025-10-29T09:23:36Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2025-10-29T09:22:49Z",
@@ -9434,6 +9884,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "1bbe07b0-4de1-4cdb-830d-49b0ddf20b53",
         ],
       },
+      "last_operation": {
+        "updated_at": "2025-10-29T09:23:56Z",
+      },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2025-10-29T09:22:49Z",
       "usable": true,
@@ -9451,6 +9904,9 @@ exports[`svm nock tests long list long list json 1`] = `
         "tenant_id": [
           "ed99fc2a-b367-4fc6-8918-5547e2e655a7",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2025-11-27T08:36:08Z",
       },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2025-11-27T08:35:57Z",
@@ -9470,6 +9926,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "ed99fc2a-b367-4fc6-8918-5547e2e655a7",
         ],
       },
+      "last_operation": {
+        "updated_at": "2025-11-27T08:40:59Z",
+      },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2025-11-27T08:40:12Z",
       "usable": true,
@@ -9487,6 +9946,9 @@ exports[`svm nock tests long list long list json 1`] = `
         "tenant_id": [
           "fe2e319f-68cd-450f-8a02-d726dac64b35",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2025-12-02T12:44:14Z",
       },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2025-12-02T12:44:02Z",
@@ -9506,6 +9968,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "fe2e319f-68cd-450f-8a02-d726dac64b35",
         ],
       },
+      "last_operation": {
+        "updated_at": "2025-12-02T12:49:25Z",
+      },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2025-12-02T12:48:39Z",
       "usable": true,
@@ -9523,6 +9988,9 @@ exports[`svm nock tests long list long list json 1`] = `
         "tenant_id": [
           "ad91dbba-5c90-436d-8cd8-63b3fb88cf6a",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2025-12-11T03:44:07Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2025-12-11T03:43:21Z",
@@ -9542,6 +10010,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "b46f4c09-e46e-432b-b837-0aad96d145f9",
         ],
       },
+      "last_operation": {
+        "updated_at": "2025-12-19T02:15:58Z",
+      },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2025-12-19T02:15:12Z",
       "usable": true,
@@ -9559,6 +10030,9 @@ exports[`svm nock tests long list long list json 1`] = `
         "tenant_id": [
           "b46f4c09-e46e-432b-b837-0aad96d145f9",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2025-12-22T02:16:04Z",
       },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2025-12-22T02:15:53Z",
@@ -9578,6 +10052,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "3af21e38-10cc-45e3-976f-1463f1d63879",
         ],
       },
+      "last_operation": {
+        "updated_at": "2026-01-15T09:23:48Z",
+      },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2026-01-15T09:23:02Z",
       "usable": true,
@@ -9595,6 +10072,9 @@ exports[`svm nock tests long list long list json 1`] = `
         "tenant_id": [
           "ffc185ec-3f22-48d5-9940-102ec4e62411",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2026-01-15T10:12:43Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2026-01-15T10:11:57Z",
@@ -9614,6 +10094,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "79604d57-3933-4a66-81c2-a022413ec11d",
         ],
       },
+      "last_operation": {
+        "updated_at": "2026-01-15T10:43:51Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2026-01-15T10:43:40Z",
       "usable": true,
@@ -9631,6 +10114,9 @@ exports[`svm nock tests long list long list json 1`] = `
         "tenant_id": [
           "79604d57-3933-4a66-81c2-a022413ec11d",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2026-01-15T10:48:41Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2026-01-15T10:47:52Z",
@@ -9650,6 +10136,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "97b55bf7-a906-42ab-9176-3e86762dcdb7",
         ],
       },
+      "last_operation": {
+        "updated_at": "2026-03-12T14:51:01Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2026-03-12T14:50:46Z",
       "usable": true,
@@ -9667,6 +10156,9 @@ exports[`svm nock tests long list long list json 1`] = `
         "tenant_id": [
           "97b55bf7-a906-42ab-9176-3e86762dcdb7",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2026-03-12T14:56:27Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2026-03-12T14:55:10Z",
@@ -9686,6 +10178,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "1cc0aa7f-f77e-4038-9ab0-48ae43ed3c7a",
         ],
       },
+      "last_operation": {
+        "updated_at": "2026-04-17T16:18:26Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2026-04-17T16:18:11Z",
       "usable": true,
@@ -9703,6 +10198,9 @@ exports[`svm nock tests long list long list json 1`] = `
         "tenant_id": [
           "1cc0aa7f-f77e-4038-9ab0-48ae43ed3c7a",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2026-04-17T16:23:41Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2026-04-17T16:22:45Z",
@@ -9722,6 +10220,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "524ffdf2-8174-4b70-bc10-36bf458ab360",
         ],
       },
+      "last_operation": {
+        "updated_at": "2026-05-18T11:04:39Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2026-05-18T11:04:24Z",
       "usable": true,
@@ -9739,6 +10240,9 @@ exports[`svm nock tests long list long list json 1`] = `
         "tenant_id": [
           "524ffdf2-8174-4b70-bc10-36bf458ab360",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2026-05-18T11:10:04Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2026-05-18T11:09:08Z",
@@ -9758,6 +10262,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "e0cdfa19-1d01-48b5-bc78-cb4785b20bc6",
         ],
       },
+      "last_operation": {
+        "updated_at": "2026-05-19T14:36:19Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2026-05-19T14:36:04Z",
       "usable": true,
@@ -9775,6 +10282,9 @@ exports[`svm nock tests long list long list json 1`] = `
         "tenant_id": [
           "e0cdfa19-1d01-48b5-bc78-cb4785b20bc6",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2026-05-19T14:41:26Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2026-05-19T14:40:28Z",
@@ -9794,6 +10304,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "899887a3-46a1-4370-b69a-d615f7420f08",
         ],
       },
+      "last_operation": {
+        "updated_at": "2026-05-20T05:23:32Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2026-05-20T05:23:16Z",
       "usable": true,
@@ -9811,6 +10324,9 @@ exports[`svm nock tests long list long list json 1`] = `
         "tenant_id": [
           "899887a3-46a1-4370-b69a-d615f7420f08",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2026-05-20T05:28:45Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2026-05-20T05:27:49Z",
@@ -9830,6 +10346,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "5d5ebba0-e1b9-44c3-989e-f274438c91ec",
         ],
       },
+      "last_operation": {
+        "updated_at": "2026-06-08T05:32:54Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2026-06-08T05:32:39Z",
       "usable": true,
@@ -9847,6 +10366,9 @@ exports[`svm nock tests long list long list json 1`] = `
         "tenant_id": [
           "5d5ebba0-e1b9-44c3-989e-f274438c91ec",
         ],
+      },
+      "last_operation": {
+        "updated_at": "2026-06-08T05:38:18Z",
       },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2026-06-08T05:37:22Z",
@@ -9866,6 +10388,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "5ca3a561-93c7-4ce1-a911-ad9923120381",
         ],
       },
+      "last_operation": {
+        "updated_at": "2026-06-19T09:38:38Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
       "updated_at": "2026-06-19T09:38:23Z",
       "usable": true,
@@ -9884,6 +10409,9 @@ exports[`svm nock tests long list long list json 1`] = `
           "5ca3a561-93c7-4ce1-a911-ad9923120381",
         ],
       },
+      "last_operation": {
+        "updated_at": "2026-06-19T09:43:56Z",
+      },
       "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
       "updated_at": "2026-06-19T09:42:59Z",
       "usable": true,
@@ -9899,6 +10427,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
 [
   {
     "id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
+    "last_operation": {
+      "updated_at": "2024-02-07T11:36:53Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2022-04-26T18:05:44Z",
@@ -9917,6 +10448,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "42ff43bd-14a7-41f7-b903-259235c1abcb",
+    "last_operation": {
+      "updated_at": "2024-02-07T11:36:53Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2022-09-05T12:11:41Z",
@@ -9935,6 +10469,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "6e96ba0f-d345-43ef-a5be-b7d0de85d58b",
+    "last_operation": {
+      "updated_at": "2024-02-07T11:36:53Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2023-01-30T20:19:09Z",
@@ -9953,6 +10490,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "8a633bdf-bd76-43ee-8414-74f8095a05c3",
+    "last_operation": {
+      "updated_at": "2024-02-07T11:36:53Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2023-09-05T14:19:48Z",
@@ -9971,6 +10511,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "fe81e5b0-6526-4237-95a4-19268049f779",
+    "last_operation": {
+      "updated_at": "2024-03-19T16:53:33Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2024-03-19T16:53:23Z",
@@ -9989,6 +10532,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "af9af05c-808b-4ada-a775-6c78854ad466",
+    "last_operation": {
+      "updated_at": "2024-07-12T20:15:28Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2024-06-19T10:16:54Z",
@@ -10010,6 +10556,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "ce93990a-885f-482b-a3e4-f5b55fa65e77",
+    "last_operation": {
+      "updated_at": "2024-07-12T20:16:30Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2024-06-21T06:11:31Z",
@@ -10031,6 +10580,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "ca87508f-b17a-4f9e-84c5-8b974eec9488",
+    "last_operation": {
+      "updated_at": "2024-07-12T20:17:01Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2024-06-21T06:50:45Z",
@@ -10052,6 +10604,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "61d42c22-f100-419b-83d9-f0d7caeeca57",
+    "last_operation": {
+      "updated_at": "2024-07-12T20:16:01Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2024-06-26T09:03:37Z",
@@ -10073,6 +10628,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "8dbac1ec-7127-4bda-86a4-0ff02cfefd8d",
+    "last_operation": {
+      "updated_at": "2024-07-05T11:20:04Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2024-07-05T11:19:53Z",
@@ -10091,6 +10649,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "a66e6ae9-72dd-4689-851a-f2b33bfb8ff9",
+    "last_operation": {
+      "updated_at": "2024-07-12T20:17:33Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2024-07-05T20:24:38Z",
@@ -10112,6 +10673,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "9915f7de-1cbd-447d-a315-35825f68be69",
+    "last_operation": {
+      "updated_at": "2024-09-11T07:33:35Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2024-09-11T07:33:25Z",
@@ -10130,6 +10694,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "25c4c0ca-a01a-4534-bf34-842fb6e27c71",
+    "last_operation": {
+      "updated_at": "2024-09-11T07:38:07Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2024-09-11T07:37:20Z",
@@ -10151,6 +10718,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "c1626f78-e2de-47ab-8674-efe747db2fe3",
+    "last_operation": {
+      "updated_at": "2024-11-27T06:50:32Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2024-11-27T06:50:22Z",
@@ -10169,6 +10739,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "164c212e-b0e9-4ec9-9259-3abbd753cb21",
+    "last_operation": {
+      "updated_at": "2024-11-27T06:55:27Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2024-11-27T06:54:41Z",
@@ -10190,6 +10763,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "875d3ddf-1ede-41e1-b8af-134e418427a3",
+    "last_operation": {
+      "updated_at": "2024-12-09T03:50:32Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2024-12-09T03:50:22Z",
@@ -10208,6 +10784,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "f92f8e3e-f813-46b1-9846-c582de2b7982",
+    "last_operation": {
+      "updated_at": "2024-12-09T03:55:31Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2024-12-09T03:54:45Z",
@@ -10229,6 +10808,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "ea6bfebc-a2a7-4a0f-b893-c970face3cd6",
+    "last_operation": {
+      "updated_at": "2025-04-04T07:46:02Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2025-04-04T07:45:52Z",
@@ -10247,6 +10829,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "899f36fe-1bf3-4d95-8ae3-cdd4722c2832",
+    "last_operation": {
+      "updated_at": "2025-04-04T07:50:19Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2025-04-04T07:49:33Z",
@@ -10268,6 +10853,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "852bb033-afab-49d0-b827-4a3f32abe9ba",
+    "last_operation": {
+      "updated_at": "2025-05-22T12:08:38Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2025-05-22T12:08:28Z",
@@ -10286,6 +10874,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "66654db4-834b-4ae5-9a53-0e0fbabd42d1",
+    "last_operation": {
+      "updated_at": "2025-05-22T12:13:02Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2025-05-22T12:12:16Z",
@@ -10307,6 +10898,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "9e954752-5a2d-45fa-a809-e9707cedf2e5",
+    "last_operation": {
+      "updated_at": "2025-05-22T12:27:14Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2025-05-22T12:27:03Z",
@@ -10325,6 +10919,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "57944233-590b-416d-93fd-399cabcb30b8",
+    "last_operation": {
+      "updated_at": "2025-05-22T12:31:33Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2025-05-22T12:30:47Z",
@@ -10346,6 +10943,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "7758e957-e3a9-418f-9e2b-50bd492cefa6",
+    "last_operation": {
+      "updated_at": "2025-09-19T08:54:15Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2025-09-19T08:54:05Z",
@@ -10364,6 +10964,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "2e5b16d4-5379-47b5-a03d-d749777dadae",
+    "last_operation": {
+      "updated_at": "2025-09-23T14:24:27Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2025-09-23T14:24:15Z",
@@ -10382,6 +10985,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "67a22c54-b5b7-4b96-bea1-0a2d38999def",
+    "last_operation": {
+      "updated_at": "2025-09-25T10:04:03Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2025-09-25T10:03:52Z",
@@ -10400,6 +11006,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "56c535b2-bc3a-44f5-96c8-3ae1054f455c",
+    "last_operation": {
+      "updated_at": "2025-10-27T13:43:40Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2025-10-27T13:43:30Z",
@@ -10418,6 +11027,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "adcba256-b5ef-4e7d-b8c5-5ea5e9c808f9",
+    "last_operation": {
+      "updated_at": "2025-10-29T09:18:59Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2025-10-29T09:18:13Z",
@@ -10436,6 +11048,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "54699da7-b092-4e4b-9429-b0df4770c2b2",
+    "last_operation": {
+      "updated_at": "2025-10-29T09:24:11Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2025-10-29T09:22:49Z",
@@ -10454,6 +11069,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "2db8caf7-fcac-4b9d-abf2-38683639d2b1",
+    "last_operation": {
+      "updated_at": "2025-10-29T09:23:36Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2025-10-29T09:22:49Z",
@@ -10472,6 +11090,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "c18d7de5-195f-4967-8470-3a6438a23e24",
+    "last_operation": {
+      "updated_at": "2025-10-29T09:23:56Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2025-10-29T09:22:49Z",
@@ -10490,6 +11111,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "a56a9023-fe64-43ba-991d-50ed9395f2e8",
+    "last_operation": {
+      "updated_at": "2025-11-27T08:36:08Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2025-11-27T08:35:57Z",
@@ -10508,6 +11132,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "66da3e8b-eee4-456b-8aac-750c797c6d6d",
+    "last_operation": {
+      "updated_at": "2025-11-27T08:40:59Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2025-11-27T08:40:12Z",
@@ -10526,6 +11153,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "639793df-096a-470b-8ef1-c7aec9bd048f",
+    "last_operation": {
+      "updated_at": "2025-12-02T12:44:14Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2025-12-02T12:44:02Z",
@@ -10544,6 +11174,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "9e57fd34-309e-4ce2-9603-8371372d6c80",
+    "last_operation": {
+      "updated_at": "2025-12-02T12:49:25Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2025-12-02T12:48:39Z",
@@ -10562,6 +11195,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "500011f3-9dd7-483b-bcc6-b9a87bc27fbe",
+    "last_operation": {
+      "updated_at": "2025-12-11T03:44:07Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2025-12-11T03:43:21Z",
@@ -10580,6 +11216,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "2240055d-5306-43e7-a0c2-8623eff8e538",
+    "last_operation": {
+      "updated_at": "2025-12-19T02:15:58Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2025-12-19T02:15:12Z",
@@ -10598,6 +11237,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "3e0696d7-6669-40ce-8bde-8eb71b227b15",
+    "last_operation": {
+      "updated_at": "2025-12-22T02:16:04Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2025-12-22T02:15:53Z",
@@ -10616,6 +11258,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "5b846327-36b7-4c55-b0fb-88abb38f23dc",
+    "last_operation": {
+      "updated_at": "2026-01-15T09:23:48Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2026-01-15T09:23:02Z",
@@ -10634,6 +11279,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "12fac650-6d22-4759-bb28-5e23628bbd8b",
+    "last_operation": {
+      "updated_at": "2026-01-15T10:12:43Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2026-01-15T10:11:57Z",
@@ -10652,6 +11300,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "1c61ab20-0ab1-41ce-8ae4-b7269d9513a4",
+    "last_operation": {
+      "updated_at": "2026-01-15T10:43:51Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2026-01-15T10:43:40Z",
@@ -10670,6 +11321,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "411fac3d-9b5c-4fec-93ba-59fbc905c6cf",
+    "last_operation": {
+      "updated_at": "2026-01-15T10:48:41Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2026-01-15T10:47:52Z",
@@ -10688,6 +11342,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "eaf48f15-7d72-4a5b-8833-96a4b04dba8f",
+    "last_operation": {
+      "updated_at": "2026-03-12T14:51:01Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2026-03-12T14:50:46Z",
@@ -10706,6 +11363,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "db86c471-92f6-458e-973c-a3d2e4329bf9",
+    "last_operation": {
+      "updated_at": "2026-03-12T14:56:27Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2026-03-12T14:55:10Z",
@@ -10724,6 +11384,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "1d031371-1b20-4363-b1f9-473d21e6dd2a",
+    "last_operation": {
+      "updated_at": "2026-04-17T16:18:26Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2026-04-17T16:18:11Z",
@@ -10742,6 +11405,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "5f503f0c-cf58-4c40-9c77-c2688d95b43d",
+    "last_operation": {
+      "updated_at": "2026-04-17T16:23:41Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2026-04-17T16:22:45Z",
@@ -10760,6 +11426,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "a1d78a19-0f96-4ac4-bd31-d532f1d68f92",
+    "last_operation": {
+      "updated_at": "2026-05-18T11:04:39Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2026-05-18T11:04:24Z",
@@ -10778,6 +11447,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "62a446e2-f529-4969-8194-fb26cb6117f4",
+    "last_operation": {
+      "updated_at": "2026-05-18T11:10:04Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2026-05-18T11:09:08Z",
@@ -10796,6 +11468,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "9be55a43-72bd-41b5-b33e-3aeb1f432ce0",
+    "last_operation": {
+      "updated_at": "2026-05-19T14:36:19Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2026-05-19T14:36:04Z",
@@ -10814,6 +11489,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "6c0e4f10-5c61-4830-8ac2-2be2d8947747",
+    "last_operation": {
+      "updated_at": "2026-05-19T14:41:26Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2026-05-19T14:40:28Z",
@@ -10832,6 +11510,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "6430d626-937c-47db-a961-e38f52c17ba0",
+    "last_operation": {
+      "updated_at": "2026-05-20T05:23:32Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2026-05-20T05:23:16Z",
@@ -10850,6 +11531,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "7ba9df5d-29c9-42a6-aff1-4dab737e0448",
+    "last_operation": {
+      "updated_at": "2026-05-20T05:28:45Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2026-05-20T05:27:49Z",
@@ -10868,6 +11552,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "e9215dad-0d24-4bb5-a91b-e6e7ef7ed7d9",
+    "last_operation": {
+      "updated_at": "2026-06-08T05:32:54Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2026-06-08T05:32:39Z",
@@ -10886,6 +11573,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "b5dea6b1-d41e-476c-ba2d-01e277887e7f",
+    "last_operation": {
+      "updated_at": "2026-06-08T05:38:18Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2026-06-08T05:37:22Z",
@@ -10904,6 +11594,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "70e48010-a730-4e88-b1b0-6fab23adad01",
+    "last_operation": {
+      "updated_at": "2026-06-19T09:38:38Z"
+    },
     "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
     "created_at": "2026-06-19T09:38:23Z",
@@ -10922,6 +11615,9 @@ exports[`svm nock tests long list long list revealed 1`] = `
   },
   {
     "id": "806ce3f6-dd9c-4196-bb27-a730c7c24c26",
+    "last_operation": {
+      "updated_at": "2026-06-19T09:43:56Z"
+    },
     "usable": true,
     "service_plan_id": "76e66724-2a73-46d6-997a-92bebff00b99",
     "created_at": "2026-06-19T09:42:59Z",
