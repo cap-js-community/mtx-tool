@@ -7,6 +7,539 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
+        "path": "/v3/routes?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&include=domain",
+        "body": "",
+        "status": 200,
+        "response": {
+            "pagination": {
+                "total_results": 2,
+                "total_pages": 1,
+                "first": {
+                    "href": "https://api.cf.sap.hana.ondemand.com/v3/routes?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&include=domain&page=1&per_page=50"
+                },
+                "last": {
+                    "href": "https://api.cf.sap.hana.ondemand.com/v3/routes?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&include=domain&page=1&per_page=50"
+                },
+                "next": null,
+                "previous": null
+            },
+            "resources": [
+                {
+                    "guid": "819b3465-aa66-4ade-b29e-35530951b66e",
+                    "host": "skyfin-dev-afc-backend",
+                    "relationships": {
+                        "domain": {
+                            "data": {
+                                "guid": "9aa474f9-3f82-4967-a2e1-dfe0cd155064"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "91d1705b-ce16-47e9-b556-bf7abc554f09",
+                    "host": "skyfin-dev-afc-backend",
+                    "relationships": {
+                        "domain": {
+                            "data": {
+                                "guid": "3352296c-1b56-4b87-869f-cf310a917d14"
+                            }
+                        }
+                    }
+                }
+            ],
+            "included": {
+                "domains": [
+                    {
+                        "guid": "9aa474f9-3f82-4967-a2e1-dfe0cd155064",
+                        "name": "cfapps.sap.hana.ondemand.com"
+                    },
+                    {
+                        "guid": "3352296c-1b56-4b87-869f-cf310a917d14",
+                        "name": "mesh.cf.sap.hana.ondemand.com"
+                    }
+                ]
+            }
+        },
+        "rawHeaders": [
+            "content-type",
+            "application/json; charset=utf-8"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/processes",
+        "body": "",
+        "status": 200,
+        "response": {
+            "pagination": {
+                "total_results": 1,
+                "total_pages": 1,
+                "first": {
+                    "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/processes?page=1&per_page=50"
+                },
+                "last": {
+                    "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/processes?page=1&per_page=50"
+                },
+                "next": null,
+                "previous": null
+            },
+            "resources": [
+                {
+                    "instances": 2
+                }
+            ]
+        },
+        "rawHeaders": [
+            "content-type",
+            "application/json; charset=utf-8"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/service_credential_bindings?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&include=service_instance",
+        "body": "",
+        "status": 200,
+        "response": {
+            "pagination": {
+                "total_results": 17,
+                "total_pages": 1,
+                "first": {
+                    "href": "https://api.cf.sap.hana.ondemand.com/v3/service_credential_bindings?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&include=service_instance&page=1&per_page=50"
+                },
+                "last": {
+                    "href": "https://api.cf.sap.hana.ondemand.com/v3/service_credential_bindings?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&include=service_instance&page=1&per_page=50"
+                },
+                "next": null,
+                "previous": null
+            },
+            "resources": [
+                {
+                    "guid": "e9dd8657-cd50-4399-b620-cbb1fe40d606",
+                    "created_at": "2025-06-24T19:49:01Z",
+                    "updated_at": "2025-06-24T19:49:03Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "015ba89e-44e6-4316-a250-9ccbf2d9267e"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "65e7836d-1672-4813-94eb-a2ce8fae08da",
+                    "created_at": "2026-07-05T20:01:09Z",
+                    "updated_at": "2026-07-05T20:01:09Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "9f484b06-5918-4c1c-9ae1-aa2faa351469"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "92d99aff-a443-4137-afbc-961d66ff5c0d",
+                    "created_at": "2026-07-05T20:01:09Z",
+                    "updated_at": "2026-07-05T20:01:09Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "44cd8c4e-b1f3-4e69-a4fb-79e95570c017"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "12cb1794-5a5c-47f2-83da-1ece6d0dd145",
+                    "created_at": "2026-07-05T20:01:10Z",
+                    "updated_at": "2026-07-05T20:01:10Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "9c12b0fb-ab43-46fc-94e4-82eab5e541ce"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "0d3a1a6c-ab76-499c-b0d9-d4420cf7bc16",
+                    "created_at": "2026-07-05T20:01:14Z",
+                    "updated_at": "2026-07-05T20:01:14Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "cff72d89-f0b9-4c3d-b1e4-6e26bc874eaf"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "b39bd3e0-04e4-45fb-b6a4-54fb7bfe122c",
+                    "created_at": "2026-07-05T20:01:14Z",
+                    "updated_at": "2026-07-05T20:01:16Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "e020b20a-eb23-4475-91ec-d525f8738fd7"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "9b991a72-ab2c-46ad-a326-40fce2aaddc4",
+                    "created_at": "2026-07-05T20:01:14Z",
+                    "updated_at": "2026-07-05T20:01:15Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "bc85eb47-2b47-4544-b1de-821d11137d24"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "eb113ee5-f722-40c6-be2c-f2d8523e3601",
+                    "created_at": "2026-07-05T20:01:14Z",
+                    "updated_at": "2026-07-05T20:01:16Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "43c89fea-a7e1-4781-a446-eca57e3748b5"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "53739c8e-e175-46ff-8fb5-25049bba170d",
+                    "created_at": "2026-07-05T20:01:14Z",
+                    "updated_at": "2026-07-05T20:01:15Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "d2761c94-ee8f-47a8-8570-166d28321df3"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "afc8c32c-f668-44dc-a1f4-fd8a951170e0",
+                    "created_at": "2026-07-05T20:01:22Z",
+                    "updated_at": "2026-07-05T20:01:24Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "e188bf3f-4e52-4c14-ba89-3d05eaeeeff2"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "ed044b1d-9cf7-412c-ad1d-ff97e338adb1",
+                    "created_at": "2026-07-05T20:01:22Z",
+                    "updated_at": "2026-07-05T20:01:26Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "3c6e7048-f419-45ab-861b-1d500ed9a872"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "9593fb58-5b3d-4c42-aabc-03fb7ba84db7",
+                    "created_at": "2026-07-05T20:01:22Z",
+                    "updated_at": "2026-07-05T20:01:24Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "b37ed912-457a-43da-856c-20ded42fd748"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "29d1bf0d-9e07-4fad-81ce-949d4e50c810",
+                    "created_at": "2026-07-05T20:01:22Z",
+                    "updated_at": "2026-07-05T20:01:22Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "393a971c-77c1-4930-a373-f7345e2b2527"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "866a6e48-eb8a-4009-ba1a-ec2e74fad31e",
+                    "created_at": "2026-07-05T20:01:23Z",
+                    "updated_at": "2026-07-05T20:01:27Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "92549d91-3aaf-4f58-90c6-74ac2e84ac6b",
+                    "created_at": "2026-07-05T20:01:23Z",
+                    "updated_at": "2026-07-05T20:01:26Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "0c94f0c1-db0a-495d-b385-4a44a87fc398"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "4c46e3bc-c648-4e18-b3ca-6b0323835b41",
+                    "created_at": "2026-07-05T20:01:23Z",
+                    "updated_at": "2026-07-05T20:01:26Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "05ed0260-5f01-499a-b077-2a3cafc5eac3"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "917aab48-04e6-4a13-a665-8b69c97813d6",
+                    "created_at": "2026-07-05T20:01:34Z",
+                    "updated_at": "2026-07-05T20:01:41Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "f999651e-8c35-467b-822e-518554570a04"
+                            }
+                        }
+                    }
+                }
+            ],
+            "included": {
+                "service_instances": [
+                    {
+                        "guid": "05ed0260-5f01-499a-b077-2a3cafc5eac3",
+                        "name": "afc-destination",
+                        "type": "managed",
+                        "tags": [],
+                        "relationships": {
+                            "service_plan": {
+                                "data": {
+                                    "guid": "821497d5-8d07-4748-bf78-48495eec823b"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "guid": "e020b20a-eb23-4475-91ec-d525f8738fd7",
+                        "name": "afc-uaa",
+                        "type": "managed",
+                        "tags": [],
+                        "relationships": {
+                            "service_plan": {
+                                "data": {
+                                    "guid": "432bd9db-20e2-4997-825f-e4a937705b87"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "guid": "43c89fea-a7e1-4781-a446-eca57e3748b5",
+                        "name": "afc-connectivity",
+                        "type": "managed",
+                        "tags": [],
+                        "relationships": {
+                            "service_plan": {
+                                "data": {
+                                    "guid": "b7c58a7a-964b-467e-8014-6acf97f230e4"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "guid": "9f484b06-5918-4c1c-9ae1-aa2faa351469",
+                        "name": "afc-mail-service",
+                        "type": "user-provided",
+                        "tags": []
+                    },
+                    {
+                        "guid": "e188bf3f-4e52-4c14-ba89-3d05eaeeeff2",
+                        "name": "afc-malware-scanner",
+                        "type": "managed",
+                        "tags": [],
+                        "relationships": {
+                            "service_plan": {
+                                "data": {
+                                    "guid": "7f442f02-4522-4fd0-8055-4d4d4a25c114"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "guid": "393a971c-77c1-4930-a373-f7345e2b2527",
+                        "name": "afc-logs",
+                        "type": "managed",
+                        "tags": [],
+                        "relationships": {
+                            "service_plan": {
+                                "data": {
+                                    "guid": "3b25a498-ca00-4e01-bd1c-889de59fa3ef"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "guid": "3c6e7048-f419-45ab-861b-1d500ed9a872",
+                        "name": "afc-business-logging",
+                        "type": "managed",
+                        "tags": [],
+                        "relationships": {
+                            "service_plan": {
+                                "data": {
+                                    "guid": "9aacc9b5-dde9-4c24-8f07-33f078cdc6b3"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "guid": "b37ed912-457a-43da-856c-20ded42fd748",
+                        "name": "afc-dynatrace",
+                        "type": "managed",
+                        "tags": [],
+                        "relationships": {
+                            "service_plan": {
+                                "data": {
+                                    "guid": "d0acd8ba-e30c-4e77-9fdb-fc639505328a"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "guid": "51ddd18b-5a78-418e-8f41-9a4c518650ec",
+                        "name": "afc-service-manager",
+                        "type": "managed",
+                        "tags": [],
+                        "relationships": {
+                            "service_plan": {
+                                "data": {
+                                    "guid": "4ed7292b-5030-4f68-80ef-d2062affd476"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "guid": "d2761c94-ee8f-47a8-8570-166d28321df3",
+                        "name": "afc-auditlog",
+                        "type": "managed",
+                        "tags": [],
+                        "relationships": {
+                            "service_plan": {
+                                "data": {
+                                    "guid": "0a7957b8-5478-4d8a-917f-374a53b52355"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "guid": "44cd8c4e-b1f3-4e69-a4fb-79e95570c017",
+                        "name": "afc-ans-user-maintained",
+                        "type": "user-provided",
+                        "tags": [
+                            "alert-notification"
+                        ]
+                    },
+                    {
+                        "guid": "cff72d89-f0b9-4c3d-b1e4-6e26bc874eaf",
+                        "name": "afc-aicore",
+                        "type": "managed",
+                        "tags": [],
+                        "relationships": {
+                            "service_plan": {
+                                "data": {
+                                    "guid": "2f5efc6d-36b2-48df-9d3c-12767764ee7e"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "guid": "015ba89e-44e6-4316-a250-9ccbf2d9267e",
+                        "name": "afc-autoscaler",
+                        "type": "managed",
+                        "tags": [],
+                        "relationships": {
+                            "service_plan": {
+                                "data": {
+                                    "guid": "e227245e-0412-4a41-9873-494515103d0b"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "guid": "9c12b0fb-ab43-46fc-94e4-82eab5e541ce",
+                        "name": "afc-logging-hub",
+                        "type": "user-provided",
+                        "tags": [
+                            "cloud-logging"
+                        ]
+                    },
+                    {
+                        "guid": "0c94f0c1-db0a-495d-b385-4a44a87fc398",
+                        "name": "afc-redis",
+                        "type": "managed",
+                        "tags": [],
+                        "relationships": {
+                            "service_plan": {
+                                "data": {
+                                    "guid": "02531ff0-1b2b-46ad-9146-16a2f3d25928"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "guid": "f999651e-8c35-467b-822e-518554570a04",
+                        "name": "afc-ias",
+                        "type": "managed",
+                        "tags": [],
+                        "relationships": {
+                            "service_plan": {
+                                "data": {
+                                    "guid": "7e98b0fa-dbf3-4413-8e0b-0c8048ae0df0"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "guid": "bc85eb47-2b47-4544-b1de-821d11137d24",
+                        "name": "afc-certificate",
+                        "type": "managed",
+                        "tags": [],
+                        "relationships": {
+                            "service_plan": {
+                                "data": {
+                                    "guid": "971fa652-ab16-4c6a-8a42-ebbf2b4ca351"
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "rawHeaders": [
+            "content-type",
+            "application/json; charset=utf-8"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
         "path": "/v3/service_plans?include=service_offering",
         "body": "",
         "status": 200,
@@ -296,539 +829,6 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/routes?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&include=domain",
-        "body": "",
-        "status": 200,
-        "response": {
-            "pagination": {
-                "total_results": 2,
-                "total_pages": 1,
-                "first": {
-                    "href": "https://api.cf.sap.hana.ondemand.com/v3/routes?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&include=domain&page=1&per_page=50"
-                },
-                "last": {
-                    "href": "https://api.cf.sap.hana.ondemand.com/v3/routes?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&include=domain&page=1&per_page=50"
-                },
-                "next": null,
-                "previous": null
-            },
-            "resources": [
-                {
-                    "guid": "819b3465-aa66-4ade-b29e-35530951b66e",
-                    "host": "skyfin-dev-afc-backend",
-                    "relationships": {
-                        "domain": {
-                            "data": {
-                                "guid": "9aa474f9-3f82-4967-a2e1-dfe0cd155064"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "91d1705b-ce16-47e9-b556-bf7abc554f09",
-                    "host": "skyfin-dev-afc-backend",
-                    "relationships": {
-                        "domain": {
-                            "data": {
-                                "guid": "3352296c-1b56-4b87-869f-cf310a917d14"
-                            }
-                        }
-                    }
-                }
-            ],
-            "included": {
-                "domains": [
-                    {
-                        "guid": "9aa474f9-3f82-4967-a2e1-dfe0cd155064",
-                        "name": "cfapps.sap.hana.ondemand.com"
-                    },
-                    {
-                        "guid": "3352296c-1b56-4b87-869f-cf310a917d14",
-                        "name": "mesh.cf.sap.hana.ondemand.com"
-                    }
-                ]
-            }
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json; charset=utf-8"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://api.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/processes",
-        "body": "",
-        "status": 200,
-        "response": {
-            "pagination": {
-                "total_results": 1,
-                "total_pages": 1,
-                "first": {
-                    "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/processes?page=1&per_page=50"
-                },
-                "last": {
-                    "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/f84d681e-7123-442f-b8ea-2c747c11e145/processes?page=1&per_page=50"
-                },
-                "next": null,
-                "previous": null
-            },
-            "resources": [
-                {
-                    "instances": 2
-                }
-            ]
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json; charset=utf-8"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://api.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v3/service_credential_bindings?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&include=service_instance",
-        "body": "",
-        "status": 200,
-        "response": {
-            "pagination": {
-                "total_results": 17,
-                "total_pages": 1,
-                "first": {
-                    "href": "https://api.cf.sap.hana.ondemand.com/v3/service_credential_bindings?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&include=service_instance&page=1&per_page=50"
-                },
-                "last": {
-                    "href": "https://api.cf.sap.hana.ondemand.com/v3/service_credential_bindings?app_guids=f84d681e-7123-442f-b8ea-2c747c11e145&include=service_instance&page=1&per_page=50"
-                },
-                "next": null,
-                "previous": null
-            },
-            "resources": [
-                {
-                    "guid": "e9dd8657-cd50-4399-b620-cbb1fe40d606",
-                    "created_at": "2025-06-24T19:49:01Z",
-                    "updated_at": "2025-06-24T19:49:03Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "015ba89e-44e6-4316-a250-9ccbf2d9267e"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "4e72bf71-c8a5-4110-aa49-4e20dc07ba35",
-                    "created_at": "2026-06-30T20:00:25Z",
-                    "updated_at": "2026-06-30T20:00:25Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "9f484b06-5918-4c1c-9ae1-aa2faa351469"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "c34f69b6-e633-452d-947a-73649874d065",
-                    "created_at": "2026-06-30T20:00:26Z",
-                    "updated_at": "2026-06-30T20:00:26Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "44cd8c4e-b1f3-4e69-a4fb-79e95570c017"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "440d38ca-b54f-4f2f-ab9d-e9d073e5dd6f",
-                    "created_at": "2026-06-30T20:00:30Z",
-                    "updated_at": "2026-06-30T20:00:30Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "9c12b0fb-ab43-46fc-94e4-82eab5e541ce"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "f092eb3e-ece7-43fd-b4d8-687139e8598c",
-                    "created_at": "2026-06-30T20:00:33Z",
-                    "updated_at": "2026-06-30T20:00:35Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "e188bf3f-4e52-4c14-ba89-3d05eaeeeff2"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "42fad5cf-a5c6-4632-9d75-1ee6f40b2fa2",
-                    "created_at": "2026-06-30T20:00:33Z",
-                    "updated_at": "2026-06-30T20:00:37Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "e020b20a-eb23-4475-91ec-d525f8738fd7"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "8af34d2d-fa7a-42e0-90e3-5077e97ea320",
-                    "created_at": "2026-06-30T20:00:33Z",
-                    "updated_at": "2026-06-30T20:00:35Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "0c94f0c1-db0a-495d-b385-4a44a87fc398"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "86a4757d-982e-44d7-876a-cb1ae548ae81",
-                    "created_at": "2026-06-30T20:00:33Z",
-                    "updated_at": "2026-06-30T20:00:36Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "51ddd18b-5a78-418e-8f41-9a4c518650ec"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "94fe292c-6acc-4717-b25d-97ed5aa2202a",
-                    "created_at": "2026-06-30T20:00:34Z",
-                    "updated_at": "2026-06-30T20:00:35Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "bc85eb47-2b47-4544-b1de-821d11137d24"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "57d99719-d788-46e0-acc9-477601465f0d",
-                    "created_at": "2026-06-30T20:00:34Z",
-                    "updated_at": "2026-06-30T20:00:35Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "43c89fea-a7e1-4781-a446-eca57e3748b5"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "155efd4c-338d-4d5c-9a8a-ef23420dd1ec",
-                    "created_at": "2026-06-30T20:00:34Z",
-                    "updated_at": "2026-06-30T20:00:36Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "d2761c94-ee8f-47a8-8570-166d28321df3"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "2e37cd11-8a67-44b0-b398-51777ad9c9ab",
-                    "created_at": "2026-06-30T20:00:34Z",
-                    "updated_at": "2026-06-30T20:00:36Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "05ed0260-5f01-499a-b077-2a3cafc5eac3"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "ec748240-ebc6-44da-bcf4-4729d762771e",
-                    "created_at": "2026-06-30T20:00:34Z",
-                    "updated_at": "2026-06-30T20:00:34Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "393a971c-77c1-4930-a373-f7345e2b2527"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "2aafe7ea-fc6e-4e4a-b86e-424e841618ad",
-                    "created_at": "2026-06-30T20:00:34Z",
-                    "updated_at": "2026-06-30T20:00:35Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "cff72d89-f0b9-4c3d-b1e4-6e26bc874eaf"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "e519181d-750f-4588-b4f6-8fee219b8345",
-                    "created_at": "2026-06-30T20:00:34Z",
-                    "updated_at": "2026-06-30T20:00:37Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "b37ed912-457a-43da-856c-20ded42fd748"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "ca503bf1-ae28-498a-ac1e-a06f46e98dc9",
-                    "created_at": "2026-06-30T20:00:44Z",
-                    "updated_at": "2026-06-30T20:00:47Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "3c6e7048-f419-45ab-861b-1d500ed9a872"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "ee92992e-55cc-4212-8ac2-4c4e269f710d",
-                    "created_at": "2026-06-30T20:00:55Z",
-                    "updated_at": "2026-06-30T20:01:08Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "f999651e-8c35-467b-822e-518554570a04"
-                            }
-                        }
-                    }
-                }
-            ],
-            "included": {
-                "service_instances": [
-                    {
-                        "guid": "05ed0260-5f01-499a-b077-2a3cafc5eac3",
-                        "name": "afc-destination",
-                        "type": "managed",
-                        "tags": [],
-                        "relationships": {
-                            "service_plan": {
-                                "data": {
-                                    "guid": "821497d5-8d07-4748-bf78-48495eec823b"
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "guid": "e020b20a-eb23-4475-91ec-d525f8738fd7",
-                        "name": "afc-uaa",
-                        "type": "managed",
-                        "tags": [],
-                        "relationships": {
-                            "service_plan": {
-                                "data": {
-                                    "guid": "432bd9db-20e2-4997-825f-e4a937705b87"
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "guid": "43c89fea-a7e1-4781-a446-eca57e3748b5",
-                        "name": "afc-connectivity",
-                        "type": "managed",
-                        "tags": [],
-                        "relationships": {
-                            "service_plan": {
-                                "data": {
-                                    "guid": "b7c58a7a-964b-467e-8014-6acf97f230e4"
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "guid": "9f484b06-5918-4c1c-9ae1-aa2faa351469",
-                        "name": "afc-mail-service",
-                        "type": "user-provided",
-                        "tags": []
-                    },
-                    {
-                        "guid": "e188bf3f-4e52-4c14-ba89-3d05eaeeeff2",
-                        "name": "afc-malware-scanner",
-                        "type": "managed",
-                        "tags": [],
-                        "relationships": {
-                            "service_plan": {
-                                "data": {
-                                    "guid": "7f442f02-4522-4fd0-8055-4d4d4a25c114"
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "guid": "393a971c-77c1-4930-a373-f7345e2b2527",
-                        "name": "afc-logs",
-                        "type": "managed",
-                        "tags": [],
-                        "relationships": {
-                            "service_plan": {
-                                "data": {
-                                    "guid": "3b25a498-ca00-4e01-bd1c-889de59fa3ef"
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "guid": "3c6e7048-f419-45ab-861b-1d500ed9a872",
-                        "name": "afc-business-logging",
-                        "type": "managed",
-                        "tags": [],
-                        "relationships": {
-                            "service_plan": {
-                                "data": {
-                                    "guid": "9aacc9b5-dde9-4c24-8f07-33f078cdc6b3"
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "guid": "b37ed912-457a-43da-856c-20ded42fd748",
-                        "name": "afc-dynatrace",
-                        "type": "managed",
-                        "tags": [],
-                        "relationships": {
-                            "service_plan": {
-                                "data": {
-                                    "guid": "d0acd8ba-e30c-4e77-9fdb-fc639505328a"
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "guid": "51ddd18b-5a78-418e-8f41-9a4c518650ec",
-                        "name": "afc-service-manager",
-                        "type": "managed",
-                        "tags": [],
-                        "relationships": {
-                            "service_plan": {
-                                "data": {
-                                    "guid": "4ed7292b-5030-4f68-80ef-d2062affd476"
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "guid": "d2761c94-ee8f-47a8-8570-166d28321df3",
-                        "name": "afc-auditlog",
-                        "type": "managed",
-                        "tags": [],
-                        "relationships": {
-                            "service_plan": {
-                                "data": {
-                                    "guid": "0a7957b8-5478-4d8a-917f-374a53b52355"
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "guid": "44cd8c4e-b1f3-4e69-a4fb-79e95570c017",
-                        "name": "afc-ans-user-maintained",
-                        "type": "user-provided",
-                        "tags": [
-                            "alert-notification"
-                        ]
-                    },
-                    {
-                        "guid": "cff72d89-f0b9-4c3d-b1e4-6e26bc874eaf",
-                        "name": "afc-aicore",
-                        "type": "managed",
-                        "tags": [],
-                        "relationships": {
-                            "service_plan": {
-                                "data": {
-                                    "guid": "2f5efc6d-36b2-48df-9d3c-12767764ee7e"
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "guid": "015ba89e-44e6-4316-a250-9ccbf2d9267e",
-                        "name": "afc-autoscaler",
-                        "type": "managed",
-                        "tags": [],
-                        "relationships": {
-                            "service_plan": {
-                                "data": {
-                                    "guid": "e227245e-0412-4a41-9873-494515103d0b"
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "guid": "9c12b0fb-ab43-46fc-94e4-82eab5e541ce",
-                        "name": "afc-logging-hub",
-                        "type": "user-provided",
-                        "tags": [
-                            "cloud-logging"
-                        ]
-                    },
-                    {
-                        "guid": "0c94f0c1-db0a-495d-b385-4a44a87fc398",
-                        "name": "afc-redis",
-                        "type": "managed",
-                        "tags": [],
-                        "relationships": {
-                            "service_plan": {
-                                "data": {
-                                    "guid": "02531ff0-1b2b-46ad-9146-16a2f3d25928"
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "guid": "f999651e-8c35-467b-822e-518554570a04",
-                        "name": "afc-ias",
-                        "type": "managed",
-                        "tags": [],
-                        "relationships": {
-                            "service_plan": {
-                                "data": {
-                                    "guid": "7e98b0fa-dbf3-4413-8e0b-0c8048ae0df0"
-                                }
-                            }
-                        }
-                    },
-                    {
-                        "guid": "bc85eb47-2b47-4544-b1de-821d11137d24",
-                        "name": "afc-certificate",
-                        "type": "managed",
-                        "tags": [],
-                        "relationships": {
-                            "service_plan": {
-                                "data": {
-                                    "guid": "971fa652-ab16-4c6a-8a42-ebbf2b4ca351"
-                                }
-                            }
-                        }
-                    }
-                ]
-            }
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json; charset=utf-8"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://api.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
         "path": "/v3/service_plans?include=service_offering&page=2&per_page=50",
         "body": "",
         "status": 200,
@@ -987,7 +987,7 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/4e72bf71-c8a5-4110-aa49-4e20dc07ba35/details",
+        "path": "/v3/service_credential_bindings/65e7836d-1672-4813-94eb-a2ce8fae08da/details",
         "body": "",
         "status": 200,
         "response": {
@@ -1006,7 +1006,42 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/c34f69b6-e633-452d-947a-73649874d065/details",
+        "path": "/v3/service_credential_bindings/e9dd8657-cd50-4399-b620-cbb1fe40d606/details",
+        "body": "",
+        "status": 200,
+        "response": {
+            "credentials": {
+                "custom_metrics": {
+                    "mtls_url": "https://autoscaler-metrics-mtls.cf.sap.hana.ondemand.com/"
+                }
+            }
+        },
+        "rawHeaders": [
+            "content-type",
+            "application/json; charset=utf-8"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/service_credential_bindings/12cb1794-5a5c-47f2-83da-1ece6d0dd145/details",
+        "body": "",
+        "status": 200,
+        "response": {
+            "credentials": {},
+            "syslog_drain_url": "https://cf-credentials-syslog_drain_url-username:cf-credentials-syslog_drain_url-password@ingest-sf-068034bc-13cf-4be3-9589-3a751c760bea.cls-01.cloud.logs.services.sap.hana.ondemand.com/cfsyslog"
+        },
+        "rawHeaders": [
+            "content-type",
+            "application/json; charset=utf-8"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/service_credential_bindings/92d99aff-a443-4137-afbc-961d66ff5c0d/details",
         "body": "",
         "status": 200,
         "response": {
@@ -1049,68 +1084,24 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/e9dd8657-cd50-4399-b620-cbb1fe40d606/details",
+        "path": "/v3/service_credential_bindings/0d3a1a6c-ab76-499c-b0d9-d4420cf7bc16/details",
         "body": "",
         "status": 200,
         "response": {
             "credentials": {
-                "custom_metrics": {
-                    "mtls_url": "https://autoscaler-metrics-mtls.cf.sap.hana.ondemand.com/"
-                }
-            }
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json; charset=utf-8"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://api.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v3/service_credential_bindings/440d38ca-b54f-4f2f-ab9d-e9d073e5dd6f/details",
-        "body": "",
-        "status": 200,
-        "response": {
-            "credentials": {},
-            "syslog_drain_url": "https://cf-credentials-syslog_drain_url-username:cf-credentials-syslog_drain_url-password@ingest-sf-068034bc-13cf-4be3-9589-3a751c760bea.cls-01.cloud.logs.services.sap.hana.ondemand.com/cfsyslog"
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json; charset=utf-8"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://api.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v3/service_credential_bindings/57d99719-d788-46e0-acc9-477601465f0d/details",
-        "body": "",
-        "status": 200,
-        "response": {
-            "credentials": {
-                "tenantmode": "dedicated",
+                "serviceurls": {
+                    "AI_API_URL": "https://api.ai.internalprod.eu-central-1.aws.ml.hana.ondemand.com/"
+                },
+                "appname": "cff72d89-f0b9-4c3d-b1e4-6e26bc874eaf!b5874|xsuaa_std!b77089",
+                "clientid": "cf-credentials-credentials-clientid-563267fd",
+                "clientsecret": "cf-credentials-credentials-clientsecret",
+                "identityzone": "skyfin",
+                "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                "credential-type": "binding-secret",
                 "token-type": [
                     "cf-credentials-credentials-token-type-0"
-                ],
-                "clientid": "cf-credentials-credentials-clientid-f71016a7",
-                "token_service_domain": "cf-credentials-credentials-token_service_domain",
-                "credential-type": "binding-secret",
-                "token_service_url": "cf-credentials-credentials-token_service_url",
-                "xsappname": "clone43c89feaa7e14781a446eca57e3748b5!b5874|connectivity!b137",
-                "onpremise_proxy_ldap_port": "20001",
-                "onpremise_socks5_proxy_port": "20004",
-                "clientsecret": "cf-credentials-credentials-clientsecret",
-                "onpremise_proxy_http_port": "20003",
-                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
-                "onpremise_proxy_host": "connectivityproxy.internal.cf.sap.hana.ondemand.com",
-                "uaadomain": "authentication.sap.hana.ondemand.com",
-                "onpremise_proxy_port": "20003",
-                "verificationkey": "cf-credentials-credentials-verificationkey",
-                "identityzone": "skyfin",
-                "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                "onpremise_proxy_rfc_port": "20001",
-                "region_configuration_id": "cf-eu10-canary"
+                ]
             }
         },
         "rawHeaders": [
@@ -1122,7 +1113,7 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/42fad5cf-a5c6-4632-9d75-1ee6f40b2fa2/details",
+        "path": "/v3/service_credential_bindings/b39bd3e0-04e4-45fb-b6a4-54fb7bfe122c/details",
         "body": "",
         "status": 200,
         "response": {
@@ -1158,54 +1149,7 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/f092eb3e-ece7-43fd-b4d8-687139e8598c/details",
-        "body": "",
-        "status": 200,
-        "response": {
-            "credentials": {
-                "sync_scan_url": "https://malware-scanner.cf.sap.hana.ondemand.com/",
-                "async_scan_url": "",
-                "uri": "malware-scanner.cf.sap.hana.ondemand.com/",
-                "url": "https://malware-scanner.cf.sap.hana.ondemand.com/",
-                "username": "cf-credentials-credentials-username",
-                "password": "cf-credentials-credentials-password"
-            }
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json; charset=utf-8"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://api.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v3/service_credential_bindings/8af34d2d-fa7a-42e0-90e3-5077e97ea320/details",
-        "body": "",
-        "status": 200,
-        "response": {
-            "credentials": {
-                "password": "cf-credentials-credentials-password",
-                "hostname": "clustercfg.rg-0c94f0c1-db0a-495d-b385-4a44a87fc398.vwvwdz.euc1.cache.amazonaws.com",
-                "port": 3991,
-                "uri": "rediss://:cf-credentials-credentials-uri-password@clustercfg.rg-0c94f0c1-db0a-495d-b385-4a44a87fc398.vwvwdz.euc1.cache.amazonaws.com:3991",
-                "cluster_mode": true,
-                "urls": {
-                    "api_server": "https://api-backing-services.eu10-canary.data.services.cloud.sap"
-                },
-                "tls": true
-            }
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json; charset=utf-8"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://api.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v3/service_credential_bindings/94fe292c-6acc-4717-b25d-97ed5aa2202a/details",
+        "path": "/v3/service_credential_bindings/9b991a72-ab2c-46ad-a326-40fce2aaddc4/details",
         "body": "",
         "status": 200,
         "response": {
@@ -1245,19 +1189,17 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/86a4757d-982e-44d7-876a-cb1ae548ae81/details",
+        "path": "/v3/service_credential_bindings/afc8c32c-f668-44dc-a1f4-fd8a951170e0/details",
         "body": "",
         "status": 200,
         "response": {
             "credentials": {
-                "sm_url": "https://service-manager.cfapps.sap.hana.ondemand.com/",
-                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
-                "certurl": "https://skyfin.authentication.cert.sap.hana.ondemand.com/",
-                "clientid": "cf-credentials-credentials-clientid-612fd251",
-                "xsappname": "51ddd18b-5a78-418e-8f41-9a4c518650ec!b5874|service-manager!b4065",
-                "certificate": "cf-credentials-credentials-certificate",
-                "key": "cf-credentials-credentials-key",
-                "uaadomain": "authentication.sap.hana.ondemand.com"
+                "sync_scan_url": "https://malware-scanner.cf.sap.hana.ondemand.com/",
+                "async_scan_url": "",
+                "uri": "malware-scanner.cf.sap.hana.ondemand.com/",
+                "url": "https://malware-scanner.cf.sap.hana.ondemand.com/",
+                "username": "cf-credentials-credentials-username",
+                "password": "cf-credentials-credentials-password"
             }
         },
         "rawHeaders": [
@@ -1269,7 +1211,45 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/155efd4c-338d-4d5c-9a8a-ef23420dd1ec/details",
+        "path": "/v3/service_credential_bindings/eb113ee5-f722-40c6-be2c-f2d8523e3601/details",
+        "body": "",
+        "status": 200,
+        "response": {
+            "credentials": {
+                "tenantmode": "dedicated",
+                "token-type": [
+                    "cf-credentials-credentials-token-type-0"
+                ],
+                "clientid": "cf-credentials-credentials-clientid-f71016a7",
+                "token_service_domain": "cf-credentials-credentials-token_service_domain",
+                "credential-type": "binding-secret",
+                "token_service_url": "cf-credentials-credentials-token_service_url",
+                "xsappname": "clone43c89feaa7e14781a446eca57e3748b5!b5874|connectivity!b137",
+                "onpremise_proxy_ldap_port": "20001",
+                "onpremise_socks5_proxy_port": "20004",
+                "clientsecret": "cf-credentials-credentials-clientsecret",
+                "onpremise_proxy_http_port": "20003",
+                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                "onpremise_proxy_host": "connectivityproxy.internal.cf.sap.hana.ondemand.com",
+                "uaadomain": "authentication.sap.hana.ondemand.com",
+                "onpremise_proxy_port": "20003",
+                "verificationkey": "cf-credentials-credentials-verificationkey",
+                "identityzone": "skyfin",
+                "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                "onpremise_proxy_rfc_port": "20001",
+                "region_configuration_id": "cf-eu10-canary"
+            }
+        },
+        "rawHeaders": [
+            "content-type",
+            "application/json; charset=utf-8"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/service_credential_bindings/53739c8e-e175-46ff-8fb5-25049bba170d/details",
         "body": "",
         "status": 200,
         "response": {
@@ -1305,67 +1285,7 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/2aafe7ea-fc6e-4e4a-b86e-424e841618ad/details",
-        "body": "",
-        "status": 200,
-        "response": {
-            "credentials": {
-                "serviceurls": {
-                    "AI_API_URL": "https://api.ai.internalprod.eu-central-1.aws.ml.hana.ondemand.com/"
-                },
-                "appname": "cff72d89-f0b9-4c3d-b1e4-6e26bc874eaf!b5874|xsuaa_std!b77089",
-                "clientid": "cf-credentials-credentials-clientid-563267fd",
-                "clientsecret": "cf-credentials-credentials-clientsecret",
-                "identityzone": "skyfin",
-                "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
-                "credential-type": "binding-secret",
-                "token-type": [
-                    "cf-credentials-credentials-token-type-0"
-                ]
-            }
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json; charset=utf-8"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://api.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v3/service_credential_bindings/2e37cd11-8a67-44b0-b398-51777ad9c9ab/details",
-        "body": "",
-        "status": 200,
-        "response": {
-            "credentials": {
-                "tenantmode": "dedicated",
-                "token-type": [
-                    "cf-credentials-credentials-token-type-0"
-                ],
-                "clientid": "cf-credentials-credentials-clientid-d8a263ca",
-                "credential-type": "binding-secret",
-                "xsappname": "clone05ed02605f01499ab0772a3cafc5eac3!b5874|destination-xsappname!b433",
-                "clientsecret": "cf-credentials-credentials-clientsecret",
-                "uri": "https://destination-configuration.cfapps.sap.hana.ondemand.com/",
-                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
-                "uaadomain": "authentication.sap.hana.ondemand.com",
-                "instanceid": "05ed0260-5f01-499a-b077-2a3cafc5eac3",
-                "verificationkey": "cf-credentials-credentials-verificationkey",
-                "identityzone": "skyfin",
-                "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
-            }
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json; charset=utf-8"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://api.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v3/service_credential_bindings/ca503bf1-ae28-498a-ac1e-a06f46e98dc9/details",
+        "path": "/v3/service_credential_bindings/ed044b1d-9cf7-412c-ad1d-ff97e338adb1/details",
         "body": "",
         "status": 200,
         "response": {
@@ -1428,7 +1348,7 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/e519181d-750f-4588-b4f6-8fee219b8345/details",
+        "path": "/v3/service_credential_bindings/9593fb58-5b3d-4c42-aabc-03fb7ba84db7/details",
         "body": "",
         "status": 200,
         "response": {
@@ -1450,7 +1370,7 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/ec748240-ebc6-44da-bcf4-4729d762771e/details",
+        "path": "/v3/service_credential_bindings/29d1bf0d-9e07-4fad-81ce-949d4e50c810/details",
         "body": "",
         "status": 200,
         "response": {
@@ -1465,7 +1385,87 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/ee92992e-55cc-4212-8ac2-4c4e269f710d/details",
+        "path": "/v3/service_credential_bindings/866a6e48-eb8a-4009-ba1a-ec2e74fad31e/details",
+        "body": "",
+        "status": 200,
+        "response": {
+            "credentials": {
+                "sm_url": "https://service-manager.cfapps.sap.hana.ondemand.com/",
+                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                "certurl": "https://skyfin.authentication.cert.sap.hana.ondemand.com/",
+                "clientid": "cf-credentials-credentials-clientid-612fd251",
+                "xsappname": "51ddd18b-5a78-418e-8f41-9a4c518650ec!b5874|service-manager!b4065",
+                "certificate": "cf-credentials-credentials-certificate",
+                "key": "cf-credentials-credentials-key",
+                "uaadomain": "authentication.sap.hana.ondemand.com"
+            }
+        },
+        "rawHeaders": [
+            "content-type",
+            "application/json; charset=utf-8"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/service_credential_bindings/92549d91-3aaf-4f58-90c6-74ac2e84ac6b/details",
+        "body": "",
+        "status": 200,
+        "response": {
+            "credentials": {
+                "password": "cf-credentials-credentials-password",
+                "hostname": "clustercfg.rg-0c94f0c1-db0a-495d-b385-4a44a87fc398.vwvwdz.euc1.cache.amazonaws.com",
+                "port": 3991,
+                "uri": "rediss://:cf-credentials-credentials-uri-password@clustercfg.rg-0c94f0c1-db0a-495d-b385-4a44a87fc398.vwvwdz.euc1.cache.amazonaws.com:3991",
+                "cluster_mode": true,
+                "urls": {
+                    "api_server": "https://api-backing-services.eu10-canary.data.services.cloud.sap"
+                },
+                "tls": true
+            }
+        },
+        "rawHeaders": [
+            "content-type",
+            "application/json; charset=utf-8"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/service_credential_bindings/4c46e3bc-c648-4e18-b3ca-6b0323835b41/details",
+        "body": "",
+        "status": 200,
+        "response": {
+            "credentials": {
+                "tenantmode": "dedicated",
+                "token-type": [
+                    "cf-credentials-credentials-token-type-0"
+                ],
+                "clientid": "cf-credentials-credentials-clientid-d8a263ca",
+                "credential-type": "binding-secret",
+                "xsappname": "clone05ed02605f01499ab0772a3cafc5eac3!b5874|destination-xsappname!b433",
+                "clientsecret": "cf-credentials-credentials-clientsecret",
+                "uri": "https://destination-configuration.cfapps.sap.hana.ondemand.com/",
+                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                "uaadomain": "authentication.sap.hana.ondemand.com",
+                "instanceid": "05ed0260-5f01-499a-b077-2a3cafc5eac3",
+                "verificationkey": "cf-credentials-credentials-verificationkey",
+                "identityzone": "skyfin",
+                "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+            }
+        },
+        "rawHeaders": [
+            "content-type",
+            "application/json; charset=utf-8"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/service_credential_bindings/917aab48-04e6-4a13-a665-8b69c97813d6/details",
         "body": "",
         "status": 200,
         "response": {
@@ -1482,7 +1482,7 @@
                 "end_session_endpoint": "https://awdsp8ef4.accounts400.ondemand.com/oauth2/logout",
                 "url": "https://awdsp8ef4.accounts400.ondemand.com/",
                 "authorization_endpoint": "https://awdsp8ef4.accounts400.ondemand.com/oauth2/authorize",
-                "certificate_expires_at": "2026-09-28T20:01:01Z",
+                "certificate_expires_at": "2026-10-03T20:01:38Z",
                 "domain": "accounts400.ondemand.com",
                 "key": "cf-credentials-credentials-key"
             }
@@ -1503,7 +1503,7 @@
             "token_type": "bearer",
             "expires_in": 1799,
             "scope": "service-manager!b4065.scopes.container uaa.resource service-manager!b4065.subaccount.service_instance.manage service-manager!b4065.subaccount.service_binding.manage service-manager!b4065.subaccount.service_plan.read service-manager!b4065.subaccount.service_binding.read service-manager!b4065.subaccount.service_offering.read service-manager!b4065.subaccount.service_instance.read",
-            "jti": "e33dc81dd7ed40cbbaed0646644c39a2"
+            "jti": "5086ea10120d46df92e07f0d99c2302b"
         },
         "rawHeaders": [
             "cache-control",
@@ -1511,7 +1511,7 @@
             "content-type",
             "application/json",
             "date",
-            "Wed, 01 Jul 2026 14:53:20 GMT",
+            "Mon, 06 Jul 2026 08:03:38 GMT",
             "pragma",
             "no-cache",
             "server",
@@ -1521,7 +1521,7 @@
             "x-frame-options",
             "DENY",
             "x-vcap-request-id",
-            "ef67d0ae-e541-4c41-4c4d-571c6b609c18",
+            "4303923d-45a1-48ba-52f4-dc373cfdad90",
             "x-xss-protection",
             "1; mode=block",
             "transfer-encoding",
@@ -1536,17 +1536,119 @@
     {
         "scope": "https://service-manager.cfapps.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v1/service_bindings",
+        "path": "/v2/service_offerings?name=hana",
+        "body": "",
+        "status": 200,
+        "response": {
+            "items": [
+                {
+                    "id": "8c3922c9-fcbd-469e-9393-2d941400f2c1",
+                    "name": "hana",
+                    "description": "Manage schemas and HDI containers on an existing SAP HANA database.",
+                    "broker_id": "d6bbbbc4-a28f-4ae0-bfc8-bc6db48a290b",
+                    "bindable": true,
+                    "plan_updateable": false,
+                    "allow_context_updates": false,
+                    "created_at": "2020-04-01T18:39:15Z",
+                    "updated_at": "2026-06-29T13:14:55Z",
+                    "tags": [
+                        "hana",
+                        "database",
+                        "relational"
+                    ]
+                }
+            ]
+        },
+        "rawHeaders": [
+            "content-length",
+            "298",
+            "content-security-policy",
+            "default-src 'none'; frame-ancestors 'none'; object-src 'none';",
+            "content-type",
+            "application/json; charset=utf-8",
+            "date",
+            "Mon, 06 Jul 2026 08:03:38 GMT",
+            "vary",
+            "Accept-Encoding",
+            "x-content-type-options",
+            "nosniff",
+            "x-correlation-id",
+            "276f0091-ff4b-4098-46fd-71bc88ba6238",
+            "x-ratelimit-limit",
+            "5",
+            "x-ratelimit-remaining",
+            "4",
+            "x-request-id",
+            "276f0091-ff4b-4098-46fd-71bc88ba6238",
+            "x-vcap-request-id",
+            "276f0091-ff4b-4098-46fd-71bc88ba6238",
+            "strict-transport-security",
+            "max-age=31536000; includeSubDomains; preload;"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://service-manager.cfapps.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v2/service_plans?service_offering_id=8c3922c9-fcbd-469e-9393-2d941400f2c1&name=hdi-shared",
+        "body": "",
+        "status": 200,
+        "response": {
+            "items": [
+                {
+                    "id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
+                    "name": "hdi-shared",
+                    "description": "HDI container on a HANA database",
+                    "service_offering_id": "8c3922c9-fcbd-469e-9393-2d941400f2c1",
+                    "created_at": "2020-04-01T18:39:15Z",
+                    "updated_at": "2026-06-29T13:14:55Z"
+                }
+            ]
+        },
+        "rawHeaders": [
+            "content-length",
+            "226",
+            "content-security-policy",
+            "default-src 'none'; frame-ancestors 'none'; object-src 'none';",
+            "content-type",
+            "application/json; charset=utf-8",
+            "date",
+            "Mon, 06 Jul 2026 08:03:39 GMT",
+            "vary",
+            "Accept-Encoding",
+            "x-content-type-options",
+            "nosniff",
+            "x-correlation-id",
+            "e9aa9d7c-8247-47cd-5c3d-8441bb2f99f3",
+            "x-ratelimit-limit",
+            "5",
+            "x-ratelimit-remaining",
+            "4",
+            "x-request-id",
+            "e9aa9d7c-8247-47cd-5c3d-8441bb2f99f3",
+            "x-vcap-request-id",
+            "e9aa9d7c-8247-47cd-5c3d-8441bb2f99f3",
+            "strict-transport-security",
+            "max-age=31536000; includeSubDomains; preload;"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://service-manager.cfapps.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v2/service_bindings",
         "body": "",
         "status": 200,
         "response": {
             "items": [
                 {
                     "id": "3bc942d4-03f9-441a-9fae-1f16b2dc7957",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
-                    "created_at": "2026-06-30T01:02:01.133142Z",
-                    "updated_at": "2026-06-30T01:02:11.411833Z",
+                    "created_at": "2026-06-30T01:02:01Z",
+                    "updated_at": "2026-06-30T01:02:11Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1581,10 +1683,12 @@
                 },
                 {
                     "id": "0afaea0b-8979-4f73-8eac-1a970475837e",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "42ff43bd-14a7-41f7-b903-259235c1abcb",
-                    "created_at": "2026-06-30T01:02:01.14332Z",
-                    "updated_at": "2026-06-30T01:02:11.398655Z",
+                    "created_at": "2026-06-30T01:02:01Z",
+                    "updated_at": "2026-06-30T01:02:11Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1619,10 +1723,12 @@
                 },
                 {
                     "id": "c7250e2c-95e5-4acc-8b19-20ade98fc8d3",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "fe81e5b0-6526-4237-95a4-19268049f779",
-                    "created_at": "2026-06-30T01:02:01.158377Z",
-                    "updated_at": "2026-06-30T01:02:11.425551Z",
+                    "created_at": "2026-06-30T01:02:01Z",
+                    "updated_at": "2026-06-30T01:02:11Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1657,10 +1763,12 @@
                 },
                 {
                     "id": "c7627d65-f537-4c51-9369-faa0e02adbaf",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "8a633bdf-bd76-43ee-8414-74f8095a05c3",
-                    "created_at": "2026-06-30T01:02:01.150787Z",
-                    "updated_at": "2026-06-30T01:02:11.498778Z",
+                    "created_at": "2026-06-30T01:02:01Z",
+                    "updated_at": "2026-06-30T01:02:11Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1695,10 +1803,12 @@
                 },
                 {
                     "id": "6b6a252b-fa87-478d-924f-3310557b82d5",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "6e96ba0f-d345-43ef-a5be-b7d0de85d58b",
-                    "created_at": "2026-06-30T01:02:01.143759Z",
-                    "updated_at": "2026-06-30T01:02:11.478656Z",
+                    "created_at": "2026-06-30T01:02:01Z",
+                    "updated_at": "2026-06-30T01:02:11Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1733,10 +1843,12 @@
                 },
                 {
                     "id": "8eb1e868-b7b6-4228-8fd7-5803a7bd7dec",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "af9af05c-808b-4ada-a775-6c78854ad466",
-                    "created_at": "2026-06-30T01:02:01.15938Z",
-                    "updated_at": "2026-06-30T01:02:02.54107Z",
+                    "created_at": "2026-06-30T01:02:01Z",
+                    "updated_at": "2026-06-30T01:02:02Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1766,10 +1878,12 @@
                 },
                 {
                     "id": "b4636055-3e77-493c-baf8-abf34d700fde",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "ce93990a-885f-482b-a3e4-f5b55fa65e77",
-                    "created_at": "2026-06-30T01:02:02.621147Z",
-                    "updated_at": "2026-06-30T01:02:04.083964Z",
+                    "created_at": "2026-06-30T01:02:02Z",
+                    "updated_at": "2026-06-30T01:02:04Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1799,10 +1913,12 @@
                 },
                 {
                     "id": "6dadbbb5-4777-458d-80ef-07346a3abc59",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "ca87508f-b17a-4f9e-84c5-8b974eec9488",
-                    "created_at": "2026-06-30T01:02:04.540497Z",
-                    "updated_at": "2026-06-30T01:02:06.217276Z",
+                    "created_at": "2026-06-30T01:02:04Z",
+                    "updated_at": "2026-06-30T01:02:06Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1832,10 +1948,12 @@
                 },
                 {
                     "id": "ba448bef-a29c-48fc-b638-596e42420258",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "61d42c22-f100-419b-83d9-f0d7caeeca57",
-                    "created_at": "2026-06-30T01:02:06.309717Z",
-                    "updated_at": "2026-06-30T01:02:07.808119Z",
+                    "created_at": "2026-06-30T01:02:06Z",
+                    "updated_at": "2026-06-30T01:02:07Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1865,10 +1983,12 @@
                 },
                 {
                     "id": "9e4206f5-65c0-416a-8b5a-8169820a7d91",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "8dbac1ec-7127-4bda-86a4-0ff02cfefd8d",
-                    "created_at": "2026-06-30T01:02:08.391446Z",
-                    "updated_at": "2026-06-30T01:02:19.573906Z",
+                    "created_at": "2026-06-30T01:02:08Z",
+                    "updated_at": "2026-06-30T01:02:19Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1903,10 +2023,12 @@
                 },
                 {
                     "id": "82c5f66c-5078-47e9-94ac-1c221e9c49cb",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "c1626f78-e2de-47ab-8674-efe747db2fe3",
-                    "created_at": "2026-06-30T01:02:11.566542Z",
-                    "updated_at": "2026-06-30T01:02:21.837554Z",
+                    "created_at": "2026-06-30T01:02:11Z",
+                    "updated_at": "2026-06-30T01:02:21Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1941,10 +2063,12 @@
                 },
                 {
                     "id": "ce549ba0-df9e-4c4d-b4c7-57b44aa85126",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "9915f7de-1cbd-447d-a315-35825f68be69",
-                    "created_at": "2026-06-30T01:02:11.535491Z",
-                    "updated_at": "2026-06-30T01:02:21.906675Z",
+                    "created_at": "2026-06-30T01:02:11Z",
+                    "updated_at": "2026-06-30T01:02:21Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1979,10 +2103,12 @@
                 },
                 {
                     "id": "f49fc193-500c-43b2-bf0a-f0058d82521f",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "25c4c0ca-a01a-4534-bf34-842fb6e27c71",
-                    "created_at": "2026-06-30T01:02:11.507207Z",
-                    "updated_at": "2026-06-30T01:02:12.846221Z",
+                    "created_at": "2026-06-30T01:02:11Z",
+                    "updated_at": "2026-06-30T01:02:12Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2012,10 +2138,12 @@
                 },
                 {
                     "id": "70add69b-af18-4729-8036-bbbd21928b3e",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "a66e6ae9-72dd-4689-851a-f2b33bfb8ff9",
-                    "created_at": "2026-06-30T01:02:11.462604Z",
-                    "updated_at": "2026-06-30T01:02:12.915625Z",
+                    "created_at": "2026-06-30T01:02:11Z",
+                    "updated_at": "2026-06-30T01:02:12Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2045,10 +2173,12 @@
                 },
                 {
                     "id": "401a3234-1da9-4310-81ff-8b64a6795a37",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "875d3ddf-1ede-41e1-b8af-134e418427a3",
-                    "created_at": "2026-06-30T01:02:12.921121Z",
-                    "updated_at": "2026-06-30T01:02:23.233678Z",
+                    "created_at": "2026-06-30T01:02:12Z",
+                    "updated_at": "2026-06-30T01:02:23Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2083,10 +2213,12 @@
                 },
                 {
                     "id": "8c6bcf01-29ef-4605-9a84-c723479ae35e",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "164c212e-b0e9-4ec9-9259-3abbd753cb21",
-                    "created_at": "2026-06-30T01:02:11.559323Z",
-                    "updated_at": "2026-06-30T01:02:13.201813Z",
+                    "created_at": "2026-06-30T01:02:11Z",
+                    "updated_at": "2026-06-30T01:02:13Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2116,10 +2248,12 @@
                 },
                 {
                     "id": "1df14d9f-eedb-49d9-b5f4-75ca9614957a",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "ea6bfebc-a2a7-4a0f-b893-c970face3cd6",
-                    "created_at": "2026-06-30T01:02:13.248039Z",
-                    "updated_at": "2026-06-30T01:02:23.509061Z",
+                    "created_at": "2026-06-30T01:02:13Z",
+                    "updated_at": "2026-06-30T01:02:23Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2154,10 +2288,12 @@
                 },
                 {
                     "id": "792193d7-454e-445f-828e-c0d52c58d28d",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "f92f8e3e-f813-46b1-9846-c582de2b7982",
-                    "created_at": "2026-06-30T01:02:12.968599Z",
-                    "updated_at": "2026-06-30T01:02:14.027406Z",
+                    "created_at": "2026-06-30T01:02:12Z",
+                    "updated_at": "2026-06-30T01:02:14Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2187,10 +2323,12 @@
                 },
                 {
                     "id": "55484247-4565-4f02-9f47-e17fe73cb99e",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "899f36fe-1bf3-4d95-8ae3-cdd4722c2832",
-                    "created_at": "2026-06-30T01:02:14.085483Z",
-                    "updated_at": "2026-06-30T01:02:15.527731Z",
+                    "created_at": "2026-06-30T01:02:14Z",
+                    "updated_at": "2026-06-30T01:02:15Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2220,10 +2358,12 @@
                 },
                 {
                     "id": "0598c435-88b3-4544-a67a-f3c4845c2571",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "852bb033-afab-49d0-b827-4a3f32abe9ba",
-                    "created_at": "2026-06-30T01:02:15.605424Z",
-                    "updated_at": "2026-06-30T01:02:25.874265Z",
+                    "created_at": "2026-06-30T01:02:15Z",
+                    "updated_at": "2026-06-30T01:02:25Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2258,10 +2398,12 @@
                 },
                 {
                     "id": "423d3f66-6417-44ee-9772-8f6550c8de0d",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "66654db4-834b-4ae5-9a53-0e0fbabd42d1",
-                    "created_at": "2026-06-30T01:02:19.741845Z",
-                    "updated_at": "2026-06-30T01:02:21.197803Z",
+                    "created_at": "2026-06-30T01:02:19Z",
+                    "updated_at": "2026-06-30T01:02:21Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2291,10 +2433,12 @@
                 },
                 {
                     "id": "4b8faf64-556f-4537-96e5-b39d88683cde",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "9e954752-5a2d-45fa-a809-e9707cedf2e5",
-                    "created_at": "2026-06-30T01:02:21.258805Z",
-                    "updated_at": "2026-06-30T01:02:31.525351Z",
+                    "created_at": "2026-06-30T01:02:21Z",
+                    "updated_at": "2026-06-30T01:02:31Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2329,10 +2473,12 @@
                 },
                 {
                     "id": "7de6abe4-a470-4b5e-80ca-9b722572ee08",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "7758e957-e3a9-418f-9e2b-50bd492cefa6",
-                    "created_at": "2026-06-30T01:02:21.98597Z",
-                    "updated_at": "2026-06-30T01:02:32.244637Z",
+                    "created_at": "2026-06-30T01:02:21Z",
+                    "updated_at": "2026-06-30T01:02:32Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2367,10 +2513,12 @@
                 },
                 {
                     "id": "36eba8db-4f6f-45bc-99f5-a66d9332ad3d",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "57944233-590b-416d-93fd-399cabcb30b8",
-                    "created_at": "2026-06-30T01:02:21.899794Z",
-                    "updated_at": "2026-06-30T01:02:23.342657Z",
+                    "created_at": "2026-06-30T01:02:21Z",
+                    "updated_at": "2026-06-30T01:02:23Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2400,10 +2548,12 @@
                 },
                 {
                     "id": "7ddbc0e2-0192-4725-876f-b1ec80885587",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "2e5b16d4-5379-47b5-a03d-d749777dadae",
-                    "created_at": "2026-06-30T01:02:23.29021Z",
-                    "updated_at": "2026-06-30T01:02:33.518516Z",
+                    "created_at": "2026-06-30T01:02:23Z",
+                    "updated_at": "2026-06-30T01:02:33Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2438,10 +2588,12 @@
                 },
                 {
                     "id": "1aa10e1e-62f8-415e-b3c4-fd8d8a87d48c",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "67a22c54-b5b7-4b96-bea1-0a2d38999def",
-                    "created_at": "2026-06-30T01:02:23.392008Z",
-                    "updated_at": "2026-06-30T01:02:33.661354Z",
+                    "created_at": "2026-06-30T01:02:23Z",
+                    "updated_at": "2026-06-30T01:02:33Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2476,10 +2628,12 @@
                 },
                 {
                     "id": "94ca1997-1ec4-4cda-86b5-49ab890d0c1d",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "56c535b2-bc3a-44f5-96c8-3ae1054f455c",
-                    "created_at": "2026-06-30T01:02:23.562721Z",
-                    "updated_at": "2026-06-30T01:02:33.779482Z",
+                    "created_at": "2026-06-30T01:02:23Z",
+                    "updated_at": "2026-06-30T01:02:33Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2514,10 +2668,12 @@
                 },
                 {
                     "id": "4d44a37b-39c6-40aa-af58-40546c0470a6",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "adcba256-b5ef-4e7d-b8c5-5ea5e9c808f9",
-                    "created_at": "2026-06-30T01:02:25.922315Z",
-                    "updated_at": "2026-06-30T01:02:27.273328Z",
+                    "created_at": "2026-06-30T01:02:25Z",
+                    "updated_at": "2026-06-30T01:02:27Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2544,10 +2700,12 @@
                 },
                 {
                     "id": "c856b8cb-f6d8-4c7d-8bc8-796a45949876",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "54699da7-b092-4e4b-9429-b0df4770c2b2",
-                    "created_at": "2026-06-30T01:02:27.33893Z",
-                    "updated_at": "2026-06-30T01:02:28.866312Z",
+                    "created_at": "2026-06-30T01:02:27Z",
+                    "updated_at": "2026-06-30T01:02:28Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2574,10 +2732,12 @@
                 },
                 {
                     "id": "51f18161-10fe-43b3-9853-b99ab95c8979",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "2db8caf7-fcac-4b9d-abf2-38683639d2b1",
-                    "created_at": "2026-06-30T01:02:28.930471Z",
-                    "updated_at": "2026-06-30T01:02:30.220403Z",
+                    "created_at": "2026-06-30T01:02:28Z",
+                    "updated_at": "2026-06-30T01:02:30Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2604,10 +2764,12 @@
                 },
                 {
                     "id": "30164478-67a1-4952-bcaf-320f887c5c39",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "c18d7de5-195f-4967-8470-3a6438a23e24",
-                    "created_at": "2026-06-30T01:02:30.297627Z",
-                    "updated_at": "2026-06-30T01:02:31.407147Z",
+                    "created_at": "2026-06-30T01:02:30Z",
+                    "updated_at": "2026-06-30T01:02:31Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2634,10 +2796,12 @@
                 },
                 {
                     "id": "d9b7b53b-2041-44a0-858a-355155ca6a78",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "a56a9023-fe64-43ba-991d-50ed9395f2e8",
-                    "created_at": "2026-06-30T01:02:31.465295Z",
-                    "updated_at": "2026-06-30T01:02:41.716986Z",
+                    "created_at": "2026-06-30T01:02:31Z",
+                    "updated_at": "2026-06-30T01:02:41Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2672,10 +2836,12 @@
                 },
                 {
                     "id": "f40678ea-9039-42fc-a003-8530f5649521",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "639793df-096a-470b-8ef1-c7aec9bd048f",
-                    "created_at": "2026-06-30T01:02:32.308515Z",
-                    "updated_at": "2026-06-30T01:02:42.553179Z",
+                    "created_at": "2026-06-30T01:02:32Z",
+                    "updated_at": "2026-06-30T01:02:42Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2710,10 +2876,12 @@
                 },
                 {
                     "id": "8f47c739-f841-4087-8b6d-7b195300a64a",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "66da3e8b-eee4-456b-8aac-750c797c6d6d",
-                    "created_at": "2026-06-30T01:02:31.604776Z",
-                    "updated_at": "2026-06-30T01:02:33.095345Z",
+                    "created_at": "2026-06-30T01:02:31Z",
+                    "updated_at": "2026-06-30T01:02:33Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2740,10 +2908,12 @@
                 },
                 {
                     "id": "142c8e4b-5fad-4d8e-abcf-f6674cd9272c",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "3e0696d7-6669-40ce-8bde-8eb71b227b15",
-                    "created_at": "2026-06-30T01:02:33.840024Z",
-                    "updated_at": "2026-06-30T01:02:44.086631Z",
+                    "created_at": "2026-06-30T01:02:33Z",
+                    "updated_at": "2026-06-30T01:02:44Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2778,10 +2948,12 @@
                 },
                 {
                     "id": "6495c3c5-a9e1-4b52-95d1-5977847bf674",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "9e57fd34-309e-4ce2-9603-8371372d6c80",
-                    "created_at": "2026-06-30T01:02:33.203163Z",
-                    "updated_at": "2026-06-30T01:02:34.675727Z",
+                    "created_at": "2026-06-30T01:02:33Z",
+                    "updated_at": "2026-06-30T01:02:34Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2808,10 +2980,12 @@
                 },
                 {
                     "id": "251289a9-35c3-4af9-a14f-46f6bc962474",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "500011f3-9dd7-483b-bcc6-b9a87bc27fbe",
-                    "created_at": "2026-06-30T01:02:33.571899Z",
-                    "updated_at": "2026-06-30T01:02:34.886256Z",
+                    "created_at": "2026-06-30T01:02:33Z",
+                    "updated_at": "2026-06-30T01:02:34Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2838,10 +3012,12 @@
                 },
                 {
                     "id": "77116159-0306-423f-877a-e58ad1f3951b",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "2240055d-5306-43e7-a0c2-8623eff8e538",
-                    "created_at": "2026-06-30T01:02:33.71699Z",
-                    "updated_at": "2026-06-30T01:02:35.060062Z",
+                    "created_at": "2026-06-30T01:02:33Z",
+                    "updated_at": "2026-06-30T01:02:35Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2868,10 +3044,12 @@
                 },
                 {
                     "id": "8c20f7b1-9801-40ab-a1f5-4617ade19416",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "1c61ab20-0ab1-41ce-8ae4-b7269d9513a4",
-                    "created_at": "2026-06-30T01:02:35.108151Z",
-                    "updated_at": "2026-06-30T01:02:45.32672Z",
+                    "created_at": "2026-06-30T01:02:35Z",
+                    "updated_at": "2026-06-30T01:02:45Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2906,10 +3084,12 @@
                 },
                 {
                     "id": "a6f0652b-3a2a-4b9b-af72-036e7914ac7f",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "5b846327-36b7-4c55-b0fb-88abb38f23dc",
-                    "created_at": "2026-06-30T01:02:34.740203Z",
-                    "updated_at": "2026-06-30T01:02:36.160821Z",
+                    "created_at": "2026-06-30T01:02:34Z",
+                    "updated_at": "2026-06-30T01:02:36Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2936,10 +3116,12 @@
                 },
                 {
                     "id": "3b5c13b4-d315-4a05-ae51-967fb4258107",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "12fac650-6d22-4759-bb28-5e23628bbd8b",
-                    "created_at": "2026-06-30T01:02:34.961744Z",
-                    "updated_at": "2026-06-30T01:02:36.433268Z",
+                    "created_at": "2026-06-30T01:02:34Z",
+                    "updated_at": "2026-06-30T01:02:36Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2966,10 +3148,12 @@
                 },
                 {
                     "id": "302e92bb-e8b7-4ba4-9ecb-9c840ba0f020",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "eaf48f15-7d72-4a5b-8833-96a4b04dba8f",
-                    "created_at": "2026-06-30T01:02:36.50217Z",
-                    "updated_at": "2026-06-30T01:02:46.765064Z",
+                    "created_at": "2026-06-30T01:02:36Z",
+                    "updated_at": "2026-06-30T01:02:46Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3004,10 +3188,12 @@
                 },
                 {
                     "id": "0db54575-12ac-44b6-a035-2610d58425bd",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "411fac3d-9b5c-4fec-93ba-59fbc905c6cf",
-                    "created_at": "2026-06-30T01:02:36.207958Z",
-                    "updated_at": "2026-06-30T01:02:37.341431Z",
+                    "created_at": "2026-06-30T01:02:36Z",
+                    "updated_at": "2026-06-30T01:02:37Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3034,10 +3220,12 @@
                 },
                 {
                     "id": "a93dfd31-fc82-4fc4-a984-8e69fc6c8862",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "db86c471-92f6-458e-973c-a3d2e4329bf9",
-                    "created_at": "2026-06-30T01:02:37.423908Z",
-                    "updated_at": "2026-06-30T01:02:38.789685Z",
+                    "created_at": "2026-06-30T01:02:37Z",
+                    "updated_at": "2026-06-30T01:02:38Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3064,10 +3252,12 @@
                 },
                 {
                     "id": "d80fec91-cef9-4906-baab-4c8fb502d8d1",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "1d031371-1b20-4363-b1f9-473d21e6dd2a",
-                    "created_at": "2026-06-30T01:02:38.868442Z",
-                    "updated_at": "2026-06-30T01:02:49.142912Z",
+                    "created_at": "2026-06-30T01:02:38Z",
+                    "updated_at": "2026-06-30T01:02:49Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3102,10 +3292,12 @@
                 },
                 {
                     "id": "bd8b67ad-5bb9-4ad9-9013-637a15cc866d",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "a1d78a19-0f96-4ac4-bd31-d532f1d68f92",
-                    "created_at": "2026-06-30T01:02:42.643532Z",
-                    "updated_at": "2026-06-30T01:02:52.960795Z",
+                    "created_at": "2026-06-30T01:02:42Z",
+                    "updated_at": "2026-06-30T01:02:52Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3140,10 +3332,12 @@
                 },
                 {
                     "id": "0ffb6e3e-4191-4028-b568-d07b72def644",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "5f503f0c-cf58-4c40-9c77-c2688d95b43d",
-                    "created_at": "2026-06-30T01:02:41.789894Z",
-                    "updated_at": "2026-06-30T01:02:43.035435Z",
+                    "created_at": "2026-06-30T01:02:41Z",
+                    "updated_at": "2026-06-30T01:02:43Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3170,10 +3364,12 @@
                 },
                 {
                     "id": "714dbdae-4615-455c-8a56-2d3d53f3e00f",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "9be55a43-72bd-41b5-b33e-3aeb1f432ce0",
-                    "created_at": "2026-06-30T01:02:44.138144Z",
-                    "updated_at": "2026-06-30T01:02:54.444131Z",
+                    "created_at": "2026-06-30T01:02:44Z",
+                    "updated_at": "2026-06-30T01:02:54Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3208,10 +3404,12 @@
                 },
                 {
                     "id": "94cb7a9c-ab7a-4ead-ac46-48d8836681d2",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "62a446e2-f529-4969-8194-fb26cb6117f4",
-                    "created_at": "2026-06-30T01:02:43.139619Z",
-                    "updated_at": "2026-06-30T01:02:44.619547Z",
+                    "created_at": "2026-06-30T01:02:43Z",
+                    "updated_at": "2026-06-30T01:02:44Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3238,10 +3436,12 @@
                 },
                 {
                     "id": "a1b03a4e-8cb9-4ae9-9537-aa27686d4fac",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "6430d626-937c-47db-a961-e38f52c17ba0",
-                    "created_at": "2026-06-30T01:02:45.370205Z",
-                    "updated_at": "2026-06-30T01:02:55.586653Z",
+                    "created_at": "2026-06-30T01:02:45Z",
+                    "updated_at": "2026-06-30T01:02:55Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3276,10 +3476,12 @@
                 },
                 {
                     "id": "f424e51f-2e75-4c12-bcf8-fcca3253ab49",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "6c0e4f10-5c61-4830-8ac2-2be2d8947747",
-                    "created_at": "2026-06-30T01:02:44.667927Z",
-                    "updated_at": "2026-06-30T01:02:46.043938Z",
+                    "created_at": "2026-06-30T01:02:44Z",
+                    "updated_at": "2026-06-30T01:02:46Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3306,10 +3508,12 @@
                 },
                 {
                     "id": "436f54df-0270-4765-97bf-1b380b314c8e",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "e9215dad-0d24-4bb5-a91b-e6e7ef7ed7d9",
-                    "created_at": "2026-06-30T01:02:46.83315Z",
-                    "updated_at": "2026-06-30T01:02:57.105884Z",
+                    "created_at": "2026-06-30T01:02:46Z",
+                    "updated_at": "2026-06-30T01:02:57Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3344,10 +3548,12 @@
                 },
                 {
                     "id": "bcbb1355-d1fa-4741-aafc-c7da0ac2ba97",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "7ba9df5d-29c9-42a6-aff1-4dab737e0448",
-                    "created_at": "2026-06-30T01:02:46.087852Z",
-                    "updated_at": "2026-06-30T01:02:47.538263Z",
+                    "created_at": "2026-06-30T01:02:46Z",
+                    "updated_at": "2026-06-30T01:02:47Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3374,10 +3580,12 @@
                 },
                 {
                     "id": "1f4ab147-db78-48fd-9243-04dc411afc44",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "b5dea6b1-d41e-476c-ba2d-01e277887e7f",
-                    "created_at": "2026-06-30T01:02:47.598197Z",
-                    "updated_at": "2026-06-30T01:02:48.715988Z",
+                    "created_at": "2026-06-30T01:02:47Z",
+                    "updated_at": "2026-06-30T01:02:48Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3404,10 +3612,12 @@
                 },
                 {
                     "id": "46ffeee2-7d4b-4831-82ce-487c4d2cbcfc",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "70e48010-a730-4e88-b1b0-6fab23adad01",
-                    "created_at": "2026-06-30T01:02:48.773278Z",
-                    "updated_at": "2026-06-30T01:02:59.085636Z",
+                    "created_at": "2026-06-30T01:02:48Z",
+                    "updated_at": "2026-06-30T01:02:59Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3442,10 +3652,12 @@
                 },
                 {
                     "id": "d70e157f-cd25-46ec-ac92-831699e680bc",
-                    "ready": true,
+                    "last_operation": {
+                        "state": "succeeded"
+                    },
                     "service_instance_id": "806ce3f6-dd9c-4196-bb27-a730c7c24c26",
-                    "created_at": "2026-06-30T01:02:49.193601Z",
-                    "updated_at": "2026-06-30T01:02:50.518559Z",
+                    "created_at": "2026-06-30T01:02:49Z",
+                    "updated_at": "2026-06-30T01:02:50Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3473,12 +3685,26 @@
             ]
         },
         "rawHeaders": [
+            "content-security-policy",
+            "default-src 'none'; frame-ancestors 'none'; object-src 'none';",
             "content-type",
             "application/json",
             "date",
-            "Wed, 01 Jul 2026 14:53:20 GMT",
+            "Mon, 06 Jul 2026 08:03:39 GMT",
+            "vary",
+            "Accept-Encoding",
+            "x-content-type-options",
+            "nosniff",
+            "x-correlation-id",
+            "30eac163-4bc7-4bdb-4d51-93b894a120b6",
+            "x-ratelimit-limit",
+            "5",
+            "x-ratelimit-remaining",
+            "4",
+            "x-request-id",
+            "30eac163-4bc7-4bdb-4d51-93b894a120b6",
             "x-vcap-request-id",
-            "b26994f6-e1e7-46ac-4f4e-3fc880e12ca9",
+            "30eac163-4bc7-4bdb-4d51-93b894a120b6",
             "transfer-encoding",
             "chunked",
             "strict-transport-security",
@@ -3489,129 +3715,20 @@
     {
         "scope": "https://service-manager.cfapps.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v1/service_offerings?fieldQuery=name+eq+%27hana%27",
-        "body": "",
-        "status": 200,
-        "response": {
-            "items": [
-                {
-                    "id": "8c3922c9-fcbd-469e-9393-2d941400f2c1",
-                    "ready": true,
-                    "name": "hana",
-                    "description": "Manage schemas and HDI containers on an existing SAP HANA database.",
-                    "bindable": true,
-                    "instances_retrievable": true,
-                    "bindings_retrievable": true,
-                    "plan_updateable": false,
-                    "allow_context_updates": false,
-                    "tags": [
-                        "hana",
-                        "database",
-                        "relational"
-                    ],
-                    "metadata": {
-                        "supportsDRSetup": true,
-                        "displayName": "SAP HANA Schemas & HDI Containers",
-                        "longDescription": "<p>Use the \"SAP HANA Schemas & HDI Containers\" service to create service instances on SAP HANA databases and bind them to cloud applications. To create schemas and HDI containers, an SAP HANA database must be available in your space.</p><p>The \"SAP HANA Schemas & HDI Containers\" service works with SAP HANA databases provided by the SAP HANA service or SAP HANA Cloud.</p>",
-                        "imageUrl": "data:image/svg+xml;base64,PHN2ZyBpZD0iaGFuYSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNTYgNTYiPjxkZWZzPjxzdHlsZT4uY2xzLTF7ZmlsbDojMDA5MmQxO30uY2xzLTJ7ZmlsbDojNWE3YTk0O308L3N0eWxlPjwvZGVmcz48dGl0bGU+aGFuYTwvdGl0bGU+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNNTEsMjIuMzMyYTcuMjM2LDcuMjM2LDAsMCwwLTIuNjEzLTEuODJBMjIuNDA4LDIyLjQwOCwwLDAsMCwzOS41NjksMTlhMjIuNCwyMi40LDAsMCwwLTguODE3LDEuNTEyLDcuMjM2LDcuMjM2LDAsMCwwLTIuNjEzLDEuODIsMy43NzIsMy43NzIsMCwwLDAtMSwyLjUyMVY0Ni4wODFhMy42MzIsMy42MzIsMCwwLDAsMSwyLjUxNCw3LjEwNyw3LjEwNywwLDAsMCwyLjYwNywxLjgyMUEyMS4xNTQsMjEuMTU0LDAsMCwwLDM5LjU2OSw1MmEyMi40MDgsMjIuNDA4LDAsMCwwLDguODE4LTEuNTEyQTcuMjM2LDcuMjM2LDAsMCwwLDUxLDQ4LjY2OGEzLjkyNywzLjkyNywwLDAsMCwxLTIuNTIxVjI0Ljg1M0EzLjc3MiwzLjc3MiwwLDAsMCw1MSwyMi4zMzJaTTQyLjM2NSw0OS4xNzRjLS44OTMuMDg1LTEuODE4LjE0NC0yLjguMTQ0YTI4LjUzOCwyOC41MzgsMCwwLDEtMy40MDYtLjIxMVYzMC41NzJhMzMuMjYsMzMuMjYsMCwwLDAsMy40MDYuMTY1Yy45NzksMCwxLjktLjA1LDIuOC0uMTI2Wm03LjE2Ny0zLjAyN2MwLC43LS45MTYsMS40Ni0yLjQ1NCwyLjAzNWExNC4yOCwxNC4yOCwwLDAsMS0yLjIyOS42MjJWMzAuMjY3YTEzLjYyOCwxMy42MjgsMCwwLDAsNC42ODMtMS42NDNaTTQ3LjA3OCwyNi45ODVhMjEuNTcsMjEuNTcsMCwwLDEtNy41MDksMS4xMzYsMjEuNTA4LDIxLjUwOCwwLDAsMS03LjUtMS4xMzZjLTEuNTI0LS42NS0yLjQtMS40MTYtMi40LTIuMXYtLjAzMWMwLTEuMywzLjUyNi0zLjE3MSw5LjktMy4xNzEsNi40MTcsMCw5Ljk2MywxLjg3Niw5Ljk2MywzLjIwNUM0OS41MzIsMjUuNTc4LDQ4LjYzNiwyNi4zNDQsNDcuMDc4LDI2Ljk4NVoiLz48cGF0aCBjbGFzcz0iY2xzLTIiIGQ9Ik0yNC4zLDI3Ljk4NkgxMi40MWE1LjM4Nyw1LjM4NywwLDAsMS0xLjY3NS0xMC41MTVsMi4zMDgtLjc1OUwxMi43ODEsMTQuM2E4LjEsOC4xLDAsMCwxLDEuNS01LjI4NEE2LjUsNi41LDAsMCwxLDE5LjEwOSw3YTYuMDU0LDYuMDU0LDAsMCwxLDUuODY0LDQuMDMzbDEuMzA3LDMuMjlMMjkuMzEsMTIuNWEzLjkyMiwzLjkyMiwwLDAsMSwyLjA0My0uNTkxLDMuOTg4LDMuOTg4LDAsMCwxLDMuOTE0LDMuMjQ5bC4xNTkuODQ1aDNjLS4wNDctLjQzOS0uMTA4LS45LS4yMS0xLjRBNi45NDEsNi45NDEsMCwwLDAsMjcuNzYyLDkuOTI4LDkuNDUyLDkuNDUyLDAsMCwwLDE5LjA1NSw0QzguODYzLDQuMjQyLDkuOCwxNC42MjEsOS44LDE0LjYyMUE4LjM4Nyw4LjM4NywwLDAsMCwxMi40MSwzMC45ODZIMjQuM1oiLz48L3N2Zz4=",
-                        "documentationUrl": "https://help.sap.com/docs/hana-cloud-database/sap-hana-cloud-sap-hana-database-developer-guide-for-cloud-foundry-multitarget-applications-sap-business-app-studio/sap-hana-cloud-deployment-infrastructure-services",
-                        "supportUrl": "https://help.sap.com/docs/btp/sap-business-technology-platform/btp-getting-support",
-                        "serviceInventoryId": "SERVICE-218"
-                    },
-                    "broker_id": "d6bbbbc4-a28f-4ae0-bfc8-bc6db48a290b",
-                    "catalog_id": "79d9e11a-95c2-4771-ae2d-8ba703bd8fda",
-                    "catalog_name": "hana",
-                    "created_at": "2020-04-01T18:39:15.401359Z",
-                    "updated_at": "2026-06-29T13:14:55.262834Z"
-                }
-            ]
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json",
-            "date",
-            "Wed, 01 Jul 2026 14:53:20 GMT",
-            "x-vcap-request-id",
-            "bb0a56ab-1c9d-4143-5daf-eb30fabeaa42",
-            "transfer-encoding",
-            "chunked",
-            "strict-transport-security",
-            "max-age=31536000; includeSubDomains; preload;"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://service-manager.cfapps.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v1/service_plans?fieldQuery=service_offering_id+eq+%278c3922c9-fcbd-469e-9393-2d941400f2c1%27+and+name+eq+%27hdi-shared%27",
-        "body": "",
-        "status": 200,
-        "response": {
-            "items": [
-                {
-                    "id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "ready": true,
-                    "name": "hdi-shared",
-                    "description": "HDI container on a HANA database",
-                    "catalog_id": "bebaad3e-352b-4928-bc6b-8783d754ac3b",
-                    "catalog_name": "hdi-shared",
-                    "free": true,
-                    "metadata": {
-                        "supportedPlatforms": [
-                            "cloudfoundry",
-                            "kubernetes"
-                        ],
-                        "supportsInstanceSharing": true,
-                        "supportsDRSetup": true,
-                        "sap": {
-                            "tenant_aware": false,
-                            "instance_isolation": false
-                        },
-                        "displayName": "hdi-shared",
-                        "bullets": [
-                            "HDI container on a HANA database"
-                        ]
-                    },
-                    "maximum_polling_duration": 86400,
-                    "service_offering_id": "8c3922c9-fcbd-469e-9393-2d941400f2c1",
-                    "created_at": "2020-04-01T18:39:15.401359Z",
-                    "updated_at": "2026-06-29T13:14:55.488852Z",
-                    "labels": {
-                        "commercial_name": [
-                            "hdi-shared"
-                        ]
-                    }
-                }
-            ]
-        },
-        "rawHeaders": [
-            "content-length",
-            "703",
-            "content-type",
-            "application/json",
-            "date",
-            "Wed, 01 Jul 2026 14:53:21 GMT",
-            "x-vcap-request-id",
-            "1c30af3d-cdd5-4350-431b-d7450af4b0f2",
-            "strict-transport-security",
-            "max-age=31536000; includeSubDomains; preload;"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://service-manager.cfapps.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v1/service_instances?fieldQuery=service_plan_id+eq+%271b702f36-bd66-4fad-b4d8-75cf0a0b8347%27",
+        "path": "/v2/service_instances?service_plan_id=1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
         "body": "",
         "status": 200,
         "response": {
             "items": [
                 {
                     "id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
-                    "ready": true,
+                    "last_operation": {
+                        "updated_at": "2024-02-07T11:36:53Z"
+                    },
+                    "usable": true,
                     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "created_at": "2022-04-26T18:05:44.931344Z",
-                    "updated_at": "2024-02-07T11:36:53.771381Z",
+                    "created_at": "2022-04-26T18:05:44Z",
+                    "updated_at": "2022-04-26T18:05:44Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3626,10 +3743,13 @@
                 },
                 {
                     "id": "42ff43bd-14a7-41f7-b903-259235c1abcb",
-                    "ready": true,
+                    "last_operation": {
+                        "updated_at": "2024-02-07T11:36:53Z"
+                    },
+                    "usable": true,
                     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "created_at": "2022-09-05T12:11:41.981588Z",
-                    "updated_at": "2024-02-07T11:36:53.73628Z",
+                    "created_at": "2022-09-05T12:11:41Z",
+                    "updated_at": "2022-09-05T12:11:41Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3644,10 +3764,13 @@
                 },
                 {
                     "id": "6e96ba0f-d345-43ef-a5be-b7d0de85d58b",
-                    "ready": true,
+                    "last_operation": {
+                        "updated_at": "2024-02-07T11:36:53Z"
+                    },
+                    "usable": true,
                     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "created_at": "2023-01-30T20:19:09.136437Z",
-                    "updated_at": "2024-02-07T11:36:53.768028Z",
+                    "created_at": "2023-01-30T20:19:09Z",
+                    "updated_at": "2023-01-30T20:19:09Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3662,10 +3785,13 @@
                 },
                 {
                     "id": "8a633bdf-bd76-43ee-8414-74f8095a05c3",
-                    "ready": true,
+                    "last_operation": {
+                        "updated_at": "2024-02-07T11:36:53Z"
+                    },
+                    "usable": true,
                     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "created_at": "2023-09-05T14:19:48.964271Z",
-                    "updated_at": "2024-02-07T11:36:53.779523Z",
+                    "created_at": "2023-09-05T14:19:48Z",
+                    "updated_at": "2023-09-05T14:19:48Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3680,10 +3806,13 @@
                 },
                 {
                     "id": "fe81e5b0-6526-4237-95a4-19268049f779",
-                    "ready": true,
+                    "last_operation": {
+                        "updated_at": "2024-03-19T16:53:33Z"
+                    },
+                    "usable": true,
                     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "created_at": "2024-03-19T16:53:23.661687Z",
-                    "updated_at": "2024-03-19T16:53:33.754857Z",
+                    "created_at": "2024-03-19T16:53:23Z",
+                    "updated_at": "2024-03-19T16:53:23Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3698,10 +3827,13 @@
                 },
                 {
                     "id": "8dbac1ec-7127-4bda-86a4-0ff02cfefd8d",
-                    "ready": true,
+                    "last_operation": {
+                        "updated_at": "2024-07-05T11:20:04Z"
+                    },
+                    "usable": true,
                     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "created_at": "2024-07-05T11:19:53.817254Z",
-                    "updated_at": "2024-07-05T11:20:04.308966Z",
+                    "created_at": "2024-07-05T11:19:53Z",
+                    "updated_at": "2024-07-05T11:19:53Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3716,10 +3848,13 @@
                 },
                 {
                     "id": "9915f7de-1cbd-447d-a315-35825f68be69",
-                    "ready": true,
+                    "last_operation": {
+                        "updated_at": "2024-09-11T07:33:35Z"
+                    },
+                    "usable": true,
                     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "created_at": "2024-09-11T07:33:25.495344Z",
-                    "updated_at": "2024-09-11T07:33:35.801664Z",
+                    "created_at": "2024-09-11T07:33:25Z",
+                    "updated_at": "2024-09-11T07:33:25Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3734,10 +3869,13 @@
                 },
                 {
                     "id": "c1626f78-e2de-47ab-8674-efe747db2fe3",
-                    "ready": true,
+                    "last_operation": {
+                        "updated_at": "2024-11-27T06:50:32Z"
+                    },
+                    "usable": true,
                     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "created_at": "2024-11-27T06:50:22.018187Z",
-                    "updated_at": "2024-11-27T06:50:32.185918Z",
+                    "created_at": "2024-11-27T06:50:22Z",
+                    "updated_at": "2024-11-27T06:50:22Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3752,10 +3890,13 @@
                 },
                 {
                     "id": "875d3ddf-1ede-41e1-b8af-134e418427a3",
-                    "ready": true,
+                    "last_operation": {
+                        "updated_at": "2024-12-09T03:50:32Z"
+                    },
+                    "usable": true,
                     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "created_at": "2024-12-09T03:50:22.113452Z",
-                    "updated_at": "2024-12-09T03:50:32.255574Z",
+                    "created_at": "2024-12-09T03:50:22Z",
+                    "updated_at": "2024-12-09T03:50:22Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3770,10 +3911,13 @@
                 },
                 {
                     "id": "ea6bfebc-a2a7-4a0f-b893-c970face3cd6",
-                    "ready": true,
+                    "last_operation": {
+                        "updated_at": "2025-04-04T07:46:02Z"
+                    },
+                    "usable": true,
                     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "created_at": "2025-04-04T07:45:52.61102Z",
-                    "updated_at": "2025-04-04T07:46:02.904353Z",
+                    "created_at": "2025-04-04T07:45:52Z",
+                    "updated_at": "2025-04-04T07:45:52Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3788,10 +3932,13 @@
                 },
                 {
                     "id": "852bb033-afab-49d0-b827-4a3f32abe9ba",
-                    "ready": true,
+                    "last_operation": {
+                        "updated_at": "2025-05-22T12:08:38Z"
+                    },
+                    "usable": true,
                     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "created_at": "2025-05-22T12:08:28.756124Z",
-                    "updated_at": "2025-05-22T12:08:38.924272Z",
+                    "created_at": "2025-05-22T12:08:28Z",
+                    "updated_at": "2025-05-22T12:08:28Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3806,10 +3953,13 @@
                 },
                 {
                     "id": "9e954752-5a2d-45fa-a809-e9707cedf2e5",
-                    "ready": true,
+                    "last_operation": {
+                        "updated_at": "2025-05-22T12:27:14Z"
+                    },
+                    "usable": true,
                     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "created_at": "2025-05-22T12:27:03.779847Z",
-                    "updated_at": "2025-05-22T12:27:13.998587Z",
+                    "created_at": "2025-05-22T12:27:03Z",
+                    "updated_at": "2025-05-22T12:27:03Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3824,10 +3974,13 @@
                 },
                 {
                     "id": "7758e957-e3a9-418f-9e2b-50bd492cefa6",
-                    "ready": true,
+                    "last_operation": {
+                        "updated_at": "2025-09-19T08:54:15Z"
+                    },
+                    "usable": true,
                     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "created_at": "2025-09-19T08:54:05.735279Z",
-                    "updated_at": "2025-09-19T08:54:15.933234Z",
+                    "created_at": "2025-09-19T08:54:05Z",
+                    "updated_at": "2025-09-19T08:54:05Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3842,10 +3995,13 @@
                 },
                 {
                     "id": "2e5b16d4-5379-47b5-a03d-d749777dadae",
-                    "ready": true,
+                    "last_operation": {
+                        "updated_at": "2025-09-23T14:24:27Z"
+                    },
+                    "usable": true,
                     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "created_at": "2025-09-23T14:24:15.65587Z",
-                    "updated_at": "2025-09-23T14:24:27.042606Z",
+                    "created_at": "2025-09-23T14:24:15Z",
+                    "updated_at": "2025-09-23T14:24:15Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3860,10 +4016,13 @@
                 },
                 {
                     "id": "67a22c54-b5b7-4b96-bea1-0a2d38999def",
-                    "ready": true,
+                    "last_operation": {
+                        "updated_at": "2025-09-25T10:04:03Z"
+                    },
+                    "usable": true,
                     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "created_at": "2025-09-25T10:03:52.537627Z",
-                    "updated_at": "2025-09-25T10:04:03.139435Z",
+                    "created_at": "2025-09-25T10:03:52Z",
+                    "updated_at": "2025-09-25T10:03:52Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3878,10 +4037,13 @@
                 },
                 {
                     "id": "56c535b2-bc3a-44f5-96c8-3ae1054f455c",
-                    "ready": true,
+                    "last_operation": {
+                        "updated_at": "2025-10-27T13:43:40Z"
+                    },
+                    "usable": true,
                     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "created_at": "2025-10-27T13:43:30.220475Z",
-                    "updated_at": "2025-10-27T13:43:40.464561Z",
+                    "created_at": "2025-10-27T13:43:30Z",
+                    "updated_at": "2025-10-27T13:43:30Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3896,10 +4058,13 @@
                 },
                 {
                     "id": "a56a9023-fe64-43ba-991d-50ed9395f2e8",
-                    "ready": true,
+                    "last_operation": {
+                        "updated_at": "2025-11-27T08:36:08Z"
+                    },
+                    "usable": true,
                     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "created_at": "2025-11-27T08:35:57.96849Z",
-                    "updated_at": "2025-11-27T08:36:08.178234Z",
+                    "created_at": "2025-11-27T08:35:57Z",
+                    "updated_at": "2025-11-27T08:35:57Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3914,10 +4079,13 @@
                 },
                 {
                     "id": "639793df-096a-470b-8ef1-c7aec9bd048f",
-                    "ready": true,
+                    "last_operation": {
+                        "updated_at": "2025-12-02T12:44:14Z"
+                    },
+                    "usable": true,
                     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "created_at": "2025-12-02T12:44:02.914849Z",
-                    "updated_at": "2025-12-02T12:44:14.024251Z",
+                    "created_at": "2025-12-02T12:44:02Z",
+                    "updated_at": "2025-12-02T12:44:02Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3932,10 +4100,13 @@
                 },
                 {
                     "id": "3e0696d7-6669-40ce-8bde-8eb71b227b15",
-                    "ready": true,
+                    "last_operation": {
+                        "updated_at": "2025-12-22T02:16:04Z"
+                    },
+                    "usable": true,
                     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "created_at": "2025-12-22T02:15:53.861864Z",
-                    "updated_at": "2025-12-22T02:16:04.568818Z",
+                    "created_at": "2025-12-22T02:15:53Z",
+                    "updated_at": "2025-12-22T02:15:53Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3950,10 +4121,13 @@
                 },
                 {
                     "id": "1c61ab20-0ab1-41ce-8ae4-b7269d9513a4",
-                    "ready": true,
+                    "last_operation": {
+                        "updated_at": "2026-01-15T10:43:51Z"
+                    },
+                    "usable": true,
                     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "created_at": "2026-01-15T10:43:40.83055Z",
-                    "updated_at": "2026-01-15T10:43:51.047453Z",
+                    "created_at": "2026-01-15T10:43:40Z",
+                    "updated_at": "2026-01-15T10:43:40Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3968,10 +4142,13 @@
                 },
                 {
                     "id": "eaf48f15-7d72-4a5b-8833-96a4b04dba8f",
-                    "ready": true,
+                    "last_operation": {
+                        "updated_at": "2026-03-12T14:51:01Z"
+                    },
+                    "usable": true,
                     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "created_at": "2026-03-12T14:50:46.56639Z",
-                    "updated_at": "2026-03-12T14:51:01.87262Z",
+                    "created_at": "2026-03-12T14:50:46Z",
+                    "updated_at": "2026-03-12T14:50:46Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3986,10 +4163,13 @@
                 },
                 {
                     "id": "1d031371-1b20-4363-b1f9-473d21e6dd2a",
-                    "ready": true,
+                    "last_operation": {
+                        "updated_at": "2026-04-17T16:18:26Z"
+                    },
+                    "usable": true,
                     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "created_at": "2026-04-17T16:18:11.541605Z",
-                    "updated_at": "2026-04-17T16:18:26.832753Z",
+                    "created_at": "2026-04-17T16:18:11Z",
+                    "updated_at": "2026-04-17T16:18:11Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -4004,10 +4184,13 @@
                 },
                 {
                     "id": "a1d78a19-0f96-4ac4-bd31-d532f1d68f92",
-                    "ready": true,
+                    "last_operation": {
+                        "updated_at": "2026-05-18T11:04:39Z"
+                    },
+                    "usable": true,
                     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "created_at": "2026-05-18T11:04:24.541371Z",
-                    "updated_at": "2026-05-18T11:04:39.958999Z",
+                    "created_at": "2026-05-18T11:04:24Z",
+                    "updated_at": "2026-05-18T11:04:24Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -4022,10 +4205,13 @@
                 },
                 {
                     "id": "9be55a43-72bd-41b5-b33e-3aeb1f432ce0",
-                    "ready": true,
+                    "last_operation": {
+                        "updated_at": "2026-05-19T14:36:19Z"
+                    },
+                    "usable": true,
                     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "created_at": "2026-05-19T14:36:04.105076Z",
-                    "updated_at": "2026-05-19T14:36:19.43414Z",
+                    "created_at": "2026-05-19T14:36:04Z",
+                    "updated_at": "2026-05-19T14:36:04Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -4040,10 +4226,13 @@
                 },
                 {
                     "id": "6430d626-937c-47db-a961-e38f52c17ba0",
-                    "ready": true,
+                    "last_operation": {
+                        "updated_at": "2026-05-20T05:23:32Z"
+                    },
+                    "usable": true,
                     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "created_at": "2026-05-20T05:23:16.930508Z",
-                    "updated_at": "2026-05-20T05:23:32.148615Z",
+                    "created_at": "2026-05-20T05:23:16Z",
+                    "updated_at": "2026-05-20T05:23:16Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -4058,10 +4247,13 @@
                 },
                 {
                     "id": "e9215dad-0d24-4bb5-a91b-e6e7ef7ed7d9",
-                    "ready": true,
+                    "last_operation": {
+                        "updated_at": "2026-06-08T05:32:54Z"
+                    },
+                    "usable": true,
                     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "created_at": "2026-06-08T05:32:39.168199Z",
-                    "updated_at": "2026-06-08T05:32:54.474845Z",
+                    "created_at": "2026-06-08T05:32:39Z",
+                    "updated_at": "2026-06-08T05:32:39Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -4076,10 +4268,13 @@
                 },
                 {
                     "id": "70e48010-a730-4e88-b1b0-6fab23adad01",
-                    "ready": true,
+                    "last_operation": {
+                        "updated_at": "2026-06-19T09:38:38Z"
+                    },
+                    "usable": true,
                     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-                    "created_at": "2026-06-19T09:38:23.562547Z",
-                    "updated_at": "2026-06-19T09:38:38.904015Z",
+                    "created_at": "2026-06-19T09:38:23Z",
+                    "updated_at": "2026-06-19T09:38:23Z",
                     "labels": {
                         "container_id": [
                             "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -4095,12 +4290,26 @@
             ]
         },
         "rawHeaders": [
+            "content-security-policy",
+            "default-src 'none'; frame-ancestors 'none'; object-src 'none';",
             "content-type",
-            "application/json",
+            "application/json; charset=utf-8",
             "date",
-            "Wed, 01 Jul 2026 14:53:21 GMT",
+            "Mon, 06 Jul 2026 08:03:39 GMT",
+            "vary",
+            "Accept-Encoding",
+            "x-content-type-options",
+            "nosniff",
+            "x-correlation-id",
+            "5b420ae7-bbdc-4961-7927-7d58fdb7722f",
+            "x-ratelimit-limit",
+            "5",
+            "x-ratelimit-remaining",
+            "4",
+            "x-request-id",
+            "5b420ae7-bbdc-4961-7927-7d58fdb7722f",
             "x-vcap-request-id",
-            "d9239dfe-151b-408f-7860-eaf52d0636ce",
+            "5b420ae7-bbdc-4961-7927-7d58fdb7722f",
             "transfer-encoding",
             "chunked",
             "strict-transport-security",

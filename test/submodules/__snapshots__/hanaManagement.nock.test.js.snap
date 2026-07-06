@@ -4,7 +4,7 @@ exports[`hdi nock tests list list filtered json 1`] = `
 {
   "bindings": [
     {
-      "created_at": "2026-06-30T01:02:01.133142Z",
+      "created_at": "2026-06-30T01:02:01Z",
       "credentials": {
         "certificate": "service-manager-items-0-credentials-certificate",
         "database_id": "71836508-e02b-4a5b-88a2-4dd482f6de70",
@@ -37,14 +37,16 @@ exports[`hdi nock tests list list filtered json 1`] = `
           "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
-      "updated_at": "2026-06-30T01:02:11.411833Z",
+      "updated_at": "2026-06-30T01:02:11Z",
     },
   ],
   "instances": [
     {
-      "created_at": "2022-04-26T18:05:44.931344Z",
+      "created_at": "2022-04-26T18:05:44Z",
       "id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
       "labels": {
         "container_id": [
@@ -57,9 +59,12 @@ exports[`hdi nock tests list list filtered json 1`] = `
           "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2024-02-07T11:36:53Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2024-02-07T11:36:53.771381Z",
+      "updated_at": "2022-04-26T18:05:44Z",
+      "usable": true,
     },
   ],
 }
@@ -69,7 +74,7 @@ exports[`hdi nock tests list list json 1`] = `
 {
   "bindings": [
     {
-      "created_at": "2026-06-30T01:02:01.133142Z",
+      "created_at": "2026-06-30T01:02:01Z",
       "credentials": {
         "certificate": "service-manager-items-0-credentials-certificate",
         "database_id": "71836508-e02b-4a5b-88a2-4dd482f6de70",
@@ -102,12 +107,14 @@ exports[`hdi nock tests list list json 1`] = `
           "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
-      "updated_at": "2026-06-30T01:02:11.411833Z",
+      "updated_at": "2026-06-30T01:02:11Z",
     },
     {
-      "created_at": "2026-06-30T01:02:01.14332Z",
+      "created_at": "2026-06-30T01:02:01Z",
       "credentials": {
         "certificate": "service-manager-items-1-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -140,12 +147,14 @@ exports[`hdi nock tests list list json 1`] = `
           "cb9158ce-f8fd-441b-b443-17219e8f79fa",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "42ff43bd-14a7-41f7-b903-259235c1abcb",
-      "updated_at": "2026-06-30T01:02:11.398655Z",
+      "updated_at": "2026-06-30T01:02:11Z",
     },
     {
-      "created_at": "2026-06-30T01:02:01.158377Z",
+      "created_at": "2026-06-30T01:02:01Z",
       "credentials": {
         "certificate": "service-manager-items-2-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -178,12 +187,14 @@ exports[`hdi nock tests list list json 1`] = `
           "cf528063-6a43-4bf2-8ccc-ca4e6d75d88e",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "fe81e5b0-6526-4237-95a4-19268049f779",
-      "updated_at": "2026-06-30T01:02:11.425551Z",
+      "updated_at": "2026-06-30T01:02:11Z",
     },
     {
-      "created_at": "2026-06-30T01:02:01.150787Z",
+      "created_at": "2026-06-30T01:02:01Z",
       "credentials": {
         "certificate": "service-manager-items-3-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -216,12 +227,14 @@ exports[`hdi nock tests list list json 1`] = `
           "4c0909b1-a84e-4763-a26e-532fdb9e40fa",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "8a633bdf-bd76-43ee-8414-74f8095a05c3",
-      "updated_at": "2026-06-30T01:02:11.498778Z",
+      "updated_at": "2026-06-30T01:02:11Z",
     },
     {
-      "created_at": "2026-06-30T01:02:01.143759Z",
+      "created_at": "2026-06-30T01:02:01Z",
       "credentials": {
         "certificate": "service-manager-items-4-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -254,12 +267,14 @@ exports[`hdi nock tests list list json 1`] = `
           "t0",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "6e96ba0f-d345-43ef-a5be-b7d0de85d58b",
-      "updated_at": "2026-06-30T01:02:11.478656Z",
+      "updated_at": "2026-06-30T01:02:11Z",
     },
     {
-      "created_at": "2026-06-30T01:02:08.391446Z",
+      "created_at": "2026-06-30T01:02:08Z",
       "credentials": {
         "certificate": "service-manager-items-9-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -292,12 +307,14 @@ exports[`hdi nock tests list list json 1`] = `
           "ae2dc112-9745-4f5e-8feb-79ebdc0094bd",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "8dbac1ec-7127-4bda-86a4-0ff02cfefd8d",
-      "updated_at": "2026-06-30T01:02:19.573906Z",
+      "updated_at": "2026-06-30T01:02:19Z",
     },
     {
-      "created_at": "2026-06-30T01:02:11.566542Z",
+      "created_at": "2026-06-30T01:02:11Z",
       "credentials": {
         "certificate": "service-manager-items-10-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -330,12 +347,14 @@ exports[`hdi nock tests list list json 1`] = `
           "9c418100-6318-4e8a-b4b2-1114f4f44aef",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "c1626f78-e2de-47ab-8674-efe747db2fe3",
-      "updated_at": "2026-06-30T01:02:21.837554Z",
+      "updated_at": "2026-06-30T01:02:21Z",
     },
     {
-      "created_at": "2026-06-30T01:02:11.535491Z",
+      "created_at": "2026-06-30T01:02:11Z",
       "credentials": {
         "certificate": "service-manager-items-11-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -368,12 +387,14 @@ exports[`hdi nock tests list list json 1`] = `
           "663d2938-be50-44ab-92ca-538855eb594f",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "9915f7de-1cbd-447d-a315-35825f68be69",
-      "updated_at": "2026-06-30T01:02:21.906675Z",
+      "updated_at": "2026-06-30T01:02:21Z",
     },
     {
-      "created_at": "2026-06-30T01:02:12.921121Z",
+      "created_at": "2026-06-30T01:02:12Z",
       "credentials": {
         "certificate": "service-manager-items-14-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -406,12 +427,14 @@ exports[`hdi nock tests list list json 1`] = `
           "be884689-aad4-486e-b556-23fdcf266f6d",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "875d3ddf-1ede-41e1-b8af-134e418427a3",
-      "updated_at": "2026-06-30T01:02:23.233678Z",
+      "updated_at": "2026-06-30T01:02:23Z",
     },
     {
-      "created_at": "2026-06-30T01:02:13.248039Z",
+      "created_at": "2026-06-30T01:02:13Z",
       "credentials": {
         "certificate": "service-manager-items-16-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -444,12 +467,14 @@ exports[`hdi nock tests list list json 1`] = `
           "0de2abab-9030-4524-9940-e5b37ac75d92",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "ea6bfebc-a2a7-4a0f-b893-c970face3cd6",
-      "updated_at": "2026-06-30T01:02:23.509061Z",
+      "updated_at": "2026-06-30T01:02:23Z",
     },
     {
-      "created_at": "2026-06-30T01:02:15.605424Z",
+      "created_at": "2026-06-30T01:02:15Z",
       "credentials": {
         "certificate": "service-manager-items-19-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -482,12 +507,14 @@ exports[`hdi nock tests list list json 1`] = `
           "73675fb3-0298-4cf3-8f86-a78c18392193",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "852bb033-afab-49d0-b827-4a3f32abe9ba",
-      "updated_at": "2026-06-30T01:02:25.874265Z",
+      "updated_at": "2026-06-30T01:02:25Z",
     },
     {
-      "created_at": "2026-06-30T01:02:21.258805Z",
+      "created_at": "2026-06-30T01:02:21Z",
       "credentials": {
         "certificate": "service-manager-items-21-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -520,12 +547,14 @@ exports[`hdi nock tests list list json 1`] = `
           "d91fb749-a148-479f-b29d-71b1b6a9309d",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "9e954752-5a2d-45fa-a809-e9707cedf2e5",
-      "updated_at": "2026-06-30T01:02:31.525351Z",
+      "updated_at": "2026-06-30T01:02:31Z",
     },
     {
-      "created_at": "2026-06-30T01:02:21.98597Z",
+      "created_at": "2026-06-30T01:02:21Z",
       "credentials": {
         "certificate": "service-manager-items-22-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -558,12 +587,14 @@ exports[`hdi nock tests list list json 1`] = `
           "1bbe07b0-4de1-4cdb-830d-49b0ddf20b53",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "7758e957-e3a9-418f-9e2b-50bd492cefa6",
-      "updated_at": "2026-06-30T01:02:32.244637Z",
+      "updated_at": "2026-06-30T01:02:32Z",
     },
     {
-      "created_at": "2026-06-30T01:02:23.29021Z",
+      "created_at": "2026-06-30T01:02:23Z",
       "credentials": {
         "certificate": "service-manager-items-24-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -596,12 +627,14 @@ exports[`hdi nock tests list list json 1`] = `
           "86ab464d-5770-46b4-b93d-292c1416c453",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "2e5b16d4-5379-47b5-a03d-d749777dadae",
-      "updated_at": "2026-06-30T01:02:33.518516Z",
+      "updated_at": "2026-06-30T01:02:33Z",
     },
     {
-      "created_at": "2026-06-30T01:02:23.392008Z",
+      "created_at": "2026-06-30T01:02:23Z",
       "credentials": {
         "certificate": "service-manager-items-25-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -634,12 +667,14 @@ exports[`hdi nock tests list list json 1`] = `
           "ba22b06c-b55f-4940-ae38-b92a5928c8a5",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "67a22c54-b5b7-4b96-bea1-0a2d38999def",
-      "updated_at": "2026-06-30T01:02:33.661354Z",
+      "updated_at": "2026-06-30T01:02:33Z",
     },
     {
-      "created_at": "2026-06-30T01:02:23.562721Z",
+      "created_at": "2026-06-30T01:02:23Z",
       "credentials": {
         "certificate": "service-manager-items-26-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -672,12 +707,14 @@ exports[`hdi nock tests list list json 1`] = `
           "116b3ac3-6d84-4ed5-81be-0af4464a09b6",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "56c535b2-bc3a-44f5-96c8-3ae1054f455c",
-      "updated_at": "2026-06-30T01:02:33.779482Z",
+      "updated_at": "2026-06-30T01:02:33Z",
     },
     {
-      "created_at": "2026-06-30T01:02:31.465295Z",
+      "created_at": "2026-06-30T01:02:31Z",
       "credentials": {
         "certificate": "service-manager-items-31-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -710,12 +747,14 @@ exports[`hdi nock tests list list json 1`] = `
           "ed99fc2a-b367-4fc6-8918-5547e2e655a7",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "a56a9023-fe64-43ba-991d-50ed9395f2e8",
-      "updated_at": "2026-06-30T01:02:41.716986Z",
+      "updated_at": "2026-06-30T01:02:41Z",
     },
     {
-      "created_at": "2026-06-30T01:02:32.308515Z",
+      "created_at": "2026-06-30T01:02:32Z",
       "credentials": {
         "certificate": "service-manager-items-32-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -748,12 +787,14 @@ exports[`hdi nock tests list list json 1`] = `
           "fe2e319f-68cd-450f-8a02-d726dac64b35",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "639793df-096a-470b-8ef1-c7aec9bd048f",
-      "updated_at": "2026-06-30T01:02:42.553179Z",
+      "updated_at": "2026-06-30T01:02:42Z",
     },
     {
-      "created_at": "2026-06-30T01:02:33.840024Z",
+      "created_at": "2026-06-30T01:02:33Z",
       "credentials": {
         "certificate": "service-manager-items-34-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -786,12 +827,14 @@ exports[`hdi nock tests list list json 1`] = `
           "b46f4c09-e46e-432b-b837-0aad96d145f9",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "3e0696d7-6669-40ce-8bde-8eb71b227b15",
-      "updated_at": "2026-06-30T01:02:44.086631Z",
+      "updated_at": "2026-06-30T01:02:44Z",
     },
     {
-      "created_at": "2026-06-30T01:02:35.108151Z",
+      "created_at": "2026-06-30T01:02:35Z",
       "credentials": {
         "certificate": "service-manager-items-38-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -824,12 +867,14 @@ exports[`hdi nock tests list list json 1`] = `
           "79604d57-3933-4a66-81c2-a022413ec11d",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "1c61ab20-0ab1-41ce-8ae4-b7269d9513a4",
-      "updated_at": "2026-06-30T01:02:45.32672Z",
+      "updated_at": "2026-06-30T01:02:45Z",
     },
     {
-      "created_at": "2026-06-30T01:02:36.50217Z",
+      "created_at": "2026-06-30T01:02:36Z",
       "credentials": {
         "certificate": "service-manager-items-41-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -862,12 +907,14 @@ exports[`hdi nock tests list list json 1`] = `
           "97b55bf7-a906-42ab-9176-3e86762dcdb7",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "eaf48f15-7d72-4a5b-8833-96a4b04dba8f",
-      "updated_at": "2026-06-30T01:02:46.765064Z",
+      "updated_at": "2026-06-30T01:02:46Z",
     },
     {
-      "created_at": "2026-06-30T01:02:38.868442Z",
+      "created_at": "2026-06-30T01:02:38Z",
       "credentials": {
         "certificate": "service-manager-items-44-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -900,12 +947,14 @@ exports[`hdi nock tests list list json 1`] = `
           "1cc0aa7f-f77e-4038-9ab0-48ae43ed3c7a",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "1d031371-1b20-4363-b1f9-473d21e6dd2a",
-      "updated_at": "2026-06-30T01:02:49.142912Z",
+      "updated_at": "2026-06-30T01:02:49Z",
     },
     {
-      "created_at": "2026-06-30T01:02:42.643532Z",
+      "created_at": "2026-06-30T01:02:42Z",
       "credentials": {
         "certificate": "service-manager-items-45-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -938,12 +987,14 @@ exports[`hdi nock tests list list json 1`] = `
           "524ffdf2-8174-4b70-bc10-36bf458ab360",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "a1d78a19-0f96-4ac4-bd31-d532f1d68f92",
-      "updated_at": "2026-06-30T01:02:52.960795Z",
+      "updated_at": "2026-06-30T01:02:52Z",
     },
     {
-      "created_at": "2026-06-30T01:02:44.138144Z",
+      "created_at": "2026-06-30T01:02:44Z",
       "credentials": {
         "certificate": "service-manager-items-47-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -976,12 +1027,14 @@ exports[`hdi nock tests list list json 1`] = `
           "e0cdfa19-1d01-48b5-bc78-cb4785b20bc6",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "9be55a43-72bd-41b5-b33e-3aeb1f432ce0",
-      "updated_at": "2026-06-30T01:02:54.444131Z",
+      "updated_at": "2026-06-30T01:02:54Z",
     },
     {
-      "created_at": "2026-06-30T01:02:45.370205Z",
+      "created_at": "2026-06-30T01:02:45Z",
       "credentials": {
         "certificate": "service-manager-items-49-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -1014,12 +1067,14 @@ exports[`hdi nock tests list list json 1`] = `
           "899887a3-46a1-4370-b69a-d615f7420f08",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "6430d626-937c-47db-a961-e38f52c17ba0",
-      "updated_at": "2026-06-30T01:02:55.586653Z",
+      "updated_at": "2026-06-30T01:02:55Z",
     },
     {
-      "created_at": "2026-06-30T01:02:46.83315Z",
+      "created_at": "2026-06-30T01:02:46Z",
       "credentials": {
         "certificate": "service-manager-items-51-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -1052,12 +1107,14 @@ exports[`hdi nock tests list list json 1`] = `
           "5d5ebba0-e1b9-44c3-989e-f274438c91ec",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "e9215dad-0d24-4bb5-a91b-e6e7ef7ed7d9",
-      "updated_at": "2026-06-30T01:02:57.105884Z",
+      "updated_at": "2026-06-30T01:02:57Z",
     },
     {
-      "created_at": "2026-06-30T01:02:48.773278Z",
+      "created_at": "2026-06-30T01:02:48Z",
       "credentials": {
         "certificate": "service-manager-items-54-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -1090,14 +1147,16 @@ exports[`hdi nock tests list list json 1`] = `
           "5ca3a561-93c7-4ce1-a911-ad9923120381",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "70e48010-a730-4e88-b1b0-6fab23adad01",
-      "updated_at": "2026-06-30T01:02:59.085636Z",
+      "updated_at": "2026-06-30T01:02:59Z",
     },
   ],
   "instances": [
     {
-      "created_at": "2022-04-26T18:05:44.931344Z",
+      "created_at": "2022-04-26T18:05:44Z",
       "id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
       "labels": {
         "container_id": [
@@ -1110,12 +1169,15 @@ exports[`hdi nock tests list list json 1`] = `
           "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2024-02-07T11:36:53Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2024-02-07T11:36:53.771381Z",
+      "updated_at": "2022-04-26T18:05:44Z",
+      "usable": true,
     },
     {
-      "created_at": "2022-09-05T12:11:41.981588Z",
+      "created_at": "2022-09-05T12:11:41Z",
       "id": "42ff43bd-14a7-41f7-b903-259235c1abcb",
       "labels": {
         "container_id": [
@@ -1128,12 +1190,15 @@ exports[`hdi nock tests list list json 1`] = `
           "cb9158ce-f8fd-441b-b443-17219e8f79fa",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2024-02-07T11:36:53Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2024-02-07T11:36:53.73628Z",
+      "updated_at": "2022-09-05T12:11:41Z",
+      "usable": true,
     },
     {
-      "created_at": "2023-01-30T20:19:09.136437Z",
+      "created_at": "2023-01-30T20:19:09Z",
       "id": "6e96ba0f-d345-43ef-a5be-b7d0de85d58b",
       "labels": {
         "container_id": [
@@ -1146,12 +1211,15 @@ exports[`hdi nock tests list list json 1`] = `
           "t0",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2024-02-07T11:36:53Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2024-02-07T11:36:53.768028Z",
+      "updated_at": "2023-01-30T20:19:09Z",
+      "usable": true,
     },
     {
-      "created_at": "2023-09-05T14:19:48.964271Z",
+      "created_at": "2023-09-05T14:19:48Z",
       "id": "8a633bdf-bd76-43ee-8414-74f8095a05c3",
       "labels": {
         "container_id": [
@@ -1164,12 +1232,15 @@ exports[`hdi nock tests list list json 1`] = `
           "4c0909b1-a84e-4763-a26e-532fdb9e40fa",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2024-02-07T11:36:53Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2024-02-07T11:36:53.779523Z",
+      "updated_at": "2023-09-05T14:19:48Z",
+      "usable": true,
     },
     {
-      "created_at": "2024-03-19T16:53:23.661687Z",
+      "created_at": "2024-03-19T16:53:23Z",
       "id": "fe81e5b0-6526-4237-95a4-19268049f779",
       "labels": {
         "container_id": [
@@ -1182,12 +1253,15 @@ exports[`hdi nock tests list list json 1`] = `
           "cf528063-6a43-4bf2-8ccc-ca4e6d75d88e",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2024-03-19T16:53:33Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2024-03-19T16:53:33.754857Z",
+      "updated_at": "2024-03-19T16:53:23Z",
+      "usable": true,
     },
     {
-      "created_at": "2024-07-05T11:19:53.817254Z",
+      "created_at": "2024-07-05T11:19:53Z",
       "id": "8dbac1ec-7127-4bda-86a4-0ff02cfefd8d",
       "labels": {
         "container_id": [
@@ -1200,12 +1274,15 @@ exports[`hdi nock tests list list json 1`] = `
           "ae2dc112-9745-4f5e-8feb-79ebdc0094bd",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2024-07-05T11:20:04Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2024-07-05T11:20:04.308966Z",
+      "updated_at": "2024-07-05T11:19:53Z",
+      "usable": true,
     },
     {
-      "created_at": "2024-09-11T07:33:25.495344Z",
+      "created_at": "2024-09-11T07:33:25Z",
       "id": "9915f7de-1cbd-447d-a315-35825f68be69",
       "labels": {
         "container_id": [
@@ -1218,12 +1295,15 @@ exports[`hdi nock tests list list json 1`] = `
           "663d2938-be50-44ab-92ca-538855eb594f",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2024-09-11T07:33:35Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2024-09-11T07:33:35.801664Z",
+      "updated_at": "2024-09-11T07:33:25Z",
+      "usable": true,
     },
     {
-      "created_at": "2024-11-27T06:50:22.018187Z",
+      "created_at": "2024-11-27T06:50:22Z",
       "id": "c1626f78-e2de-47ab-8674-efe747db2fe3",
       "labels": {
         "container_id": [
@@ -1236,12 +1316,15 @@ exports[`hdi nock tests list list json 1`] = `
           "9c418100-6318-4e8a-b4b2-1114f4f44aef",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2024-11-27T06:50:32Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2024-11-27T06:50:32.185918Z",
+      "updated_at": "2024-11-27T06:50:22Z",
+      "usable": true,
     },
     {
-      "created_at": "2024-12-09T03:50:22.113452Z",
+      "created_at": "2024-12-09T03:50:22Z",
       "id": "875d3ddf-1ede-41e1-b8af-134e418427a3",
       "labels": {
         "container_id": [
@@ -1254,12 +1337,15 @@ exports[`hdi nock tests list list json 1`] = `
           "be884689-aad4-486e-b556-23fdcf266f6d",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2024-12-09T03:50:32Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2024-12-09T03:50:32.255574Z",
+      "updated_at": "2024-12-09T03:50:22Z",
+      "usable": true,
     },
     {
-      "created_at": "2025-04-04T07:45:52.61102Z",
+      "created_at": "2025-04-04T07:45:52Z",
       "id": "ea6bfebc-a2a7-4a0f-b893-c970face3cd6",
       "labels": {
         "container_id": [
@@ -1272,12 +1358,15 @@ exports[`hdi nock tests list list json 1`] = `
           "0de2abab-9030-4524-9940-e5b37ac75d92",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2025-04-04T07:46:02Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2025-04-04T07:46:02.904353Z",
+      "updated_at": "2025-04-04T07:45:52Z",
+      "usable": true,
     },
     {
-      "created_at": "2025-05-22T12:08:28.756124Z",
+      "created_at": "2025-05-22T12:08:28Z",
       "id": "852bb033-afab-49d0-b827-4a3f32abe9ba",
       "labels": {
         "container_id": [
@@ -1290,12 +1379,15 @@ exports[`hdi nock tests list list json 1`] = `
           "73675fb3-0298-4cf3-8f86-a78c18392193",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2025-05-22T12:08:38Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2025-05-22T12:08:38.924272Z",
+      "updated_at": "2025-05-22T12:08:28Z",
+      "usable": true,
     },
     {
-      "created_at": "2025-05-22T12:27:03.779847Z",
+      "created_at": "2025-05-22T12:27:03Z",
       "id": "9e954752-5a2d-45fa-a809-e9707cedf2e5",
       "labels": {
         "container_id": [
@@ -1308,12 +1400,15 @@ exports[`hdi nock tests list list json 1`] = `
           "d91fb749-a148-479f-b29d-71b1b6a9309d",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2025-05-22T12:27:14Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2025-05-22T12:27:13.998587Z",
+      "updated_at": "2025-05-22T12:27:03Z",
+      "usable": true,
     },
     {
-      "created_at": "2025-09-19T08:54:05.735279Z",
+      "created_at": "2025-09-19T08:54:05Z",
       "id": "7758e957-e3a9-418f-9e2b-50bd492cefa6",
       "labels": {
         "container_id": [
@@ -1326,12 +1421,15 @@ exports[`hdi nock tests list list json 1`] = `
           "1bbe07b0-4de1-4cdb-830d-49b0ddf20b53",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2025-09-19T08:54:15Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2025-09-19T08:54:15.933234Z",
+      "updated_at": "2025-09-19T08:54:05Z",
+      "usable": true,
     },
     {
-      "created_at": "2025-09-23T14:24:15.65587Z",
+      "created_at": "2025-09-23T14:24:15Z",
       "id": "2e5b16d4-5379-47b5-a03d-d749777dadae",
       "labels": {
         "container_id": [
@@ -1344,12 +1442,15 @@ exports[`hdi nock tests list list json 1`] = `
           "86ab464d-5770-46b4-b93d-292c1416c453",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2025-09-23T14:24:27Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2025-09-23T14:24:27.042606Z",
+      "updated_at": "2025-09-23T14:24:15Z",
+      "usable": true,
     },
     {
-      "created_at": "2025-09-25T10:03:52.537627Z",
+      "created_at": "2025-09-25T10:03:52Z",
       "id": "67a22c54-b5b7-4b96-bea1-0a2d38999def",
       "labels": {
         "container_id": [
@@ -1362,12 +1463,15 @@ exports[`hdi nock tests list list json 1`] = `
           "ba22b06c-b55f-4940-ae38-b92a5928c8a5",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2025-09-25T10:04:03Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2025-09-25T10:04:03.139435Z",
+      "updated_at": "2025-09-25T10:03:52Z",
+      "usable": true,
     },
     {
-      "created_at": "2025-10-27T13:43:30.220475Z",
+      "created_at": "2025-10-27T13:43:30Z",
       "id": "56c535b2-bc3a-44f5-96c8-3ae1054f455c",
       "labels": {
         "container_id": [
@@ -1380,12 +1484,15 @@ exports[`hdi nock tests list list json 1`] = `
           "116b3ac3-6d84-4ed5-81be-0af4464a09b6",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2025-10-27T13:43:40Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2025-10-27T13:43:40.464561Z",
+      "updated_at": "2025-10-27T13:43:30Z",
+      "usable": true,
     },
     {
-      "created_at": "2025-11-27T08:35:57.96849Z",
+      "created_at": "2025-11-27T08:35:57Z",
       "id": "a56a9023-fe64-43ba-991d-50ed9395f2e8",
       "labels": {
         "container_id": [
@@ -1398,12 +1505,15 @@ exports[`hdi nock tests list list json 1`] = `
           "ed99fc2a-b367-4fc6-8918-5547e2e655a7",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2025-11-27T08:36:08Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2025-11-27T08:36:08.178234Z",
+      "updated_at": "2025-11-27T08:35:57Z",
+      "usable": true,
     },
     {
-      "created_at": "2025-12-02T12:44:02.914849Z",
+      "created_at": "2025-12-02T12:44:02Z",
       "id": "639793df-096a-470b-8ef1-c7aec9bd048f",
       "labels": {
         "container_id": [
@@ -1416,12 +1526,15 @@ exports[`hdi nock tests list list json 1`] = `
           "fe2e319f-68cd-450f-8a02-d726dac64b35",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2025-12-02T12:44:14Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2025-12-02T12:44:14.024251Z",
+      "updated_at": "2025-12-02T12:44:02Z",
+      "usable": true,
     },
     {
-      "created_at": "2025-12-22T02:15:53.861864Z",
+      "created_at": "2025-12-22T02:15:53Z",
       "id": "3e0696d7-6669-40ce-8bde-8eb71b227b15",
       "labels": {
         "container_id": [
@@ -1434,12 +1547,15 @@ exports[`hdi nock tests list list json 1`] = `
           "b46f4c09-e46e-432b-b837-0aad96d145f9",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2025-12-22T02:16:04Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2025-12-22T02:16:04.568818Z",
+      "updated_at": "2025-12-22T02:15:53Z",
+      "usable": true,
     },
     {
-      "created_at": "2026-01-15T10:43:40.83055Z",
+      "created_at": "2026-01-15T10:43:40Z",
       "id": "1c61ab20-0ab1-41ce-8ae4-b7269d9513a4",
       "labels": {
         "container_id": [
@@ -1452,12 +1568,15 @@ exports[`hdi nock tests list list json 1`] = `
           "79604d57-3933-4a66-81c2-a022413ec11d",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2026-01-15T10:43:51Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2026-01-15T10:43:51.047453Z",
+      "updated_at": "2026-01-15T10:43:40Z",
+      "usable": true,
     },
     {
-      "created_at": "2026-03-12T14:50:46.56639Z",
+      "created_at": "2026-03-12T14:50:46Z",
       "id": "eaf48f15-7d72-4a5b-8833-96a4b04dba8f",
       "labels": {
         "container_id": [
@@ -1470,12 +1589,15 @@ exports[`hdi nock tests list list json 1`] = `
           "97b55bf7-a906-42ab-9176-3e86762dcdb7",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2026-03-12T14:51:01Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2026-03-12T14:51:01.87262Z",
+      "updated_at": "2026-03-12T14:50:46Z",
+      "usable": true,
     },
     {
-      "created_at": "2026-04-17T16:18:11.541605Z",
+      "created_at": "2026-04-17T16:18:11Z",
       "id": "1d031371-1b20-4363-b1f9-473d21e6dd2a",
       "labels": {
         "container_id": [
@@ -1488,12 +1610,15 @@ exports[`hdi nock tests list list json 1`] = `
           "1cc0aa7f-f77e-4038-9ab0-48ae43ed3c7a",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2026-04-17T16:18:26Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2026-04-17T16:18:26.832753Z",
+      "updated_at": "2026-04-17T16:18:11Z",
+      "usable": true,
     },
     {
-      "created_at": "2026-05-18T11:04:24.541371Z",
+      "created_at": "2026-05-18T11:04:24Z",
       "id": "a1d78a19-0f96-4ac4-bd31-d532f1d68f92",
       "labels": {
         "container_id": [
@@ -1506,12 +1631,15 @@ exports[`hdi nock tests list list json 1`] = `
           "524ffdf2-8174-4b70-bc10-36bf458ab360",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2026-05-18T11:04:39Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2026-05-18T11:04:39.958999Z",
+      "updated_at": "2026-05-18T11:04:24Z",
+      "usable": true,
     },
     {
-      "created_at": "2026-05-19T14:36:04.105076Z",
+      "created_at": "2026-05-19T14:36:04Z",
       "id": "9be55a43-72bd-41b5-b33e-3aeb1f432ce0",
       "labels": {
         "container_id": [
@@ -1524,12 +1652,15 @@ exports[`hdi nock tests list list json 1`] = `
           "e0cdfa19-1d01-48b5-bc78-cb4785b20bc6",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2026-05-19T14:36:19Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2026-05-19T14:36:19.43414Z",
+      "updated_at": "2026-05-19T14:36:04Z",
+      "usable": true,
     },
     {
-      "created_at": "2026-05-20T05:23:16.930508Z",
+      "created_at": "2026-05-20T05:23:16Z",
       "id": "6430d626-937c-47db-a961-e38f52c17ba0",
       "labels": {
         "container_id": [
@@ -1542,12 +1673,15 @@ exports[`hdi nock tests list list json 1`] = `
           "899887a3-46a1-4370-b69a-d615f7420f08",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2026-05-20T05:23:32Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2026-05-20T05:23:32.148615Z",
+      "updated_at": "2026-05-20T05:23:16Z",
+      "usable": true,
     },
     {
-      "created_at": "2026-06-08T05:32:39.168199Z",
+      "created_at": "2026-06-08T05:32:39Z",
       "id": "e9215dad-0d24-4bb5-a91b-e6e7ef7ed7d9",
       "labels": {
         "container_id": [
@@ -1560,12 +1694,15 @@ exports[`hdi nock tests list list json 1`] = `
           "5d5ebba0-e1b9-44c3-989e-f274438c91ec",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2026-06-08T05:32:54Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2026-06-08T05:32:54.474845Z",
+      "updated_at": "2026-06-08T05:32:39Z",
+      "usable": true,
     },
     {
-      "created_at": "2026-06-19T09:38:23.562547Z",
+      "created_at": "2026-06-19T09:38:23Z",
       "id": "70e48010-a730-4e88-b1b0-6fab23adad01",
       "labels": {
         "container_id": [
@@ -1578,9 +1715,12 @@ exports[`hdi nock tests list list json 1`] = `
           "5ca3a561-93c7-4ce1-a911-ad9923120381",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2026-06-19T09:38:38Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2026-06-19T09:38:38.904015Z",
+      "updated_at": "2026-06-19T09:38:23Z",
+      "usable": true,
     },
   ],
 }
@@ -1593,10 +1733,13 @@ exports[`hdi nock tests long list long list basic 1`] = `
 [
   {
     "id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2024-02-07T11:36:53Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2022-04-26T18:05:44.931344Z",
-    "updated_at": "2024-02-07T11:36:53.771381Z",
+    "created_at": "2022-04-26T18:05:44Z",
+    "updated_at": "2022-04-26T18:05:44Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1611,10 +1754,13 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "42ff43bd-14a7-41f7-b903-259235c1abcb",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2024-02-07T11:36:53Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2022-09-05T12:11:41.981588Z",
-    "updated_at": "2024-02-07T11:36:53.73628Z",
+    "created_at": "2022-09-05T12:11:41Z",
+    "updated_at": "2022-09-05T12:11:41Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1629,10 +1775,13 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "6e96ba0f-d345-43ef-a5be-b7d0de85d58b",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2024-02-07T11:36:53Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2023-01-30T20:19:09.136437Z",
-    "updated_at": "2024-02-07T11:36:53.768028Z",
+    "created_at": "2023-01-30T20:19:09Z",
+    "updated_at": "2023-01-30T20:19:09Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1647,10 +1796,13 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "8a633bdf-bd76-43ee-8414-74f8095a05c3",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2024-02-07T11:36:53Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2023-09-05T14:19:48.964271Z",
-    "updated_at": "2024-02-07T11:36:53.779523Z",
+    "created_at": "2023-09-05T14:19:48Z",
+    "updated_at": "2023-09-05T14:19:48Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1665,10 +1817,13 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "fe81e5b0-6526-4237-95a4-19268049f779",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2024-03-19T16:53:33Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2024-03-19T16:53:23.661687Z",
-    "updated_at": "2024-03-19T16:53:33.754857Z",
+    "created_at": "2024-03-19T16:53:23Z",
+    "updated_at": "2024-03-19T16:53:23Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1683,10 +1838,13 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "8dbac1ec-7127-4bda-86a4-0ff02cfefd8d",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2024-07-05T11:20:04Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2024-07-05T11:19:53.817254Z",
-    "updated_at": "2024-07-05T11:20:04.308966Z",
+    "created_at": "2024-07-05T11:19:53Z",
+    "updated_at": "2024-07-05T11:19:53Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1701,10 +1859,13 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "9915f7de-1cbd-447d-a315-35825f68be69",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2024-09-11T07:33:35Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2024-09-11T07:33:25.495344Z",
-    "updated_at": "2024-09-11T07:33:35.801664Z",
+    "created_at": "2024-09-11T07:33:25Z",
+    "updated_at": "2024-09-11T07:33:25Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1719,10 +1880,13 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "c1626f78-e2de-47ab-8674-efe747db2fe3",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2024-11-27T06:50:32Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2024-11-27T06:50:22.018187Z",
-    "updated_at": "2024-11-27T06:50:32.185918Z",
+    "created_at": "2024-11-27T06:50:22Z",
+    "updated_at": "2024-11-27T06:50:22Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1737,10 +1901,13 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "875d3ddf-1ede-41e1-b8af-134e418427a3",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2024-12-09T03:50:32Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2024-12-09T03:50:22.113452Z",
-    "updated_at": "2024-12-09T03:50:32.255574Z",
+    "created_at": "2024-12-09T03:50:22Z",
+    "updated_at": "2024-12-09T03:50:22Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1755,10 +1922,13 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "ea6bfebc-a2a7-4a0f-b893-c970face3cd6",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2025-04-04T07:46:02Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2025-04-04T07:45:52.61102Z",
-    "updated_at": "2025-04-04T07:46:02.904353Z",
+    "created_at": "2025-04-04T07:45:52Z",
+    "updated_at": "2025-04-04T07:45:52Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1773,10 +1943,13 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "852bb033-afab-49d0-b827-4a3f32abe9ba",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2025-05-22T12:08:38Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2025-05-22T12:08:28.756124Z",
-    "updated_at": "2025-05-22T12:08:38.924272Z",
+    "created_at": "2025-05-22T12:08:28Z",
+    "updated_at": "2025-05-22T12:08:28Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1791,10 +1964,13 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "9e954752-5a2d-45fa-a809-e9707cedf2e5",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2025-05-22T12:27:14Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2025-05-22T12:27:03.779847Z",
-    "updated_at": "2025-05-22T12:27:13.998587Z",
+    "created_at": "2025-05-22T12:27:03Z",
+    "updated_at": "2025-05-22T12:27:03Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1809,10 +1985,13 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "7758e957-e3a9-418f-9e2b-50bd492cefa6",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2025-09-19T08:54:15Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2025-09-19T08:54:05.735279Z",
-    "updated_at": "2025-09-19T08:54:15.933234Z",
+    "created_at": "2025-09-19T08:54:05Z",
+    "updated_at": "2025-09-19T08:54:05Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1827,10 +2006,13 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "2e5b16d4-5379-47b5-a03d-d749777dadae",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2025-09-23T14:24:27Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2025-09-23T14:24:15.65587Z",
-    "updated_at": "2025-09-23T14:24:27.042606Z",
+    "created_at": "2025-09-23T14:24:15Z",
+    "updated_at": "2025-09-23T14:24:15Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1845,10 +2027,13 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "67a22c54-b5b7-4b96-bea1-0a2d38999def",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2025-09-25T10:04:03Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2025-09-25T10:03:52.537627Z",
-    "updated_at": "2025-09-25T10:04:03.139435Z",
+    "created_at": "2025-09-25T10:03:52Z",
+    "updated_at": "2025-09-25T10:03:52Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1863,10 +2048,13 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "56c535b2-bc3a-44f5-96c8-3ae1054f455c",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2025-10-27T13:43:40Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2025-10-27T13:43:30.220475Z",
-    "updated_at": "2025-10-27T13:43:40.464561Z",
+    "created_at": "2025-10-27T13:43:30Z",
+    "updated_at": "2025-10-27T13:43:30Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1881,10 +2069,13 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "a56a9023-fe64-43ba-991d-50ed9395f2e8",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2025-11-27T08:36:08Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2025-11-27T08:35:57.96849Z",
-    "updated_at": "2025-11-27T08:36:08.178234Z",
+    "created_at": "2025-11-27T08:35:57Z",
+    "updated_at": "2025-11-27T08:35:57Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1899,10 +2090,13 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "639793df-096a-470b-8ef1-c7aec9bd048f",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2025-12-02T12:44:14Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2025-12-02T12:44:02.914849Z",
-    "updated_at": "2025-12-02T12:44:14.024251Z",
+    "created_at": "2025-12-02T12:44:02Z",
+    "updated_at": "2025-12-02T12:44:02Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1917,10 +2111,13 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "3e0696d7-6669-40ce-8bde-8eb71b227b15",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2025-12-22T02:16:04Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2025-12-22T02:15:53.861864Z",
-    "updated_at": "2025-12-22T02:16:04.568818Z",
+    "created_at": "2025-12-22T02:15:53Z",
+    "updated_at": "2025-12-22T02:15:53Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1935,10 +2132,13 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "1c61ab20-0ab1-41ce-8ae4-b7269d9513a4",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2026-01-15T10:43:51Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2026-01-15T10:43:40.83055Z",
-    "updated_at": "2026-01-15T10:43:51.047453Z",
+    "created_at": "2026-01-15T10:43:40Z",
+    "updated_at": "2026-01-15T10:43:40Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1953,10 +2153,13 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "eaf48f15-7d72-4a5b-8833-96a4b04dba8f",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2026-03-12T14:51:01Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2026-03-12T14:50:46.56639Z",
-    "updated_at": "2026-03-12T14:51:01.87262Z",
+    "created_at": "2026-03-12T14:50:46Z",
+    "updated_at": "2026-03-12T14:50:46Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1971,10 +2174,13 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "1d031371-1b20-4363-b1f9-473d21e6dd2a",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2026-04-17T16:18:26Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2026-04-17T16:18:11.541605Z",
-    "updated_at": "2026-04-17T16:18:26.832753Z",
+    "created_at": "2026-04-17T16:18:11Z",
+    "updated_at": "2026-04-17T16:18:11Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -1989,10 +2195,13 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "a1d78a19-0f96-4ac4-bd31-d532f1d68f92",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2026-05-18T11:04:39Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2026-05-18T11:04:24.541371Z",
-    "updated_at": "2026-05-18T11:04:39.958999Z",
+    "created_at": "2026-05-18T11:04:24Z",
+    "updated_at": "2026-05-18T11:04:24Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2007,10 +2216,13 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "9be55a43-72bd-41b5-b33e-3aeb1f432ce0",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2026-05-19T14:36:19Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2026-05-19T14:36:04.105076Z",
-    "updated_at": "2026-05-19T14:36:19.43414Z",
+    "created_at": "2026-05-19T14:36:04Z",
+    "updated_at": "2026-05-19T14:36:04Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2025,10 +2237,13 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "6430d626-937c-47db-a961-e38f52c17ba0",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2026-05-20T05:23:32Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2026-05-20T05:23:16.930508Z",
-    "updated_at": "2026-05-20T05:23:32.148615Z",
+    "created_at": "2026-05-20T05:23:16Z",
+    "updated_at": "2026-05-20T05:23:16Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2043,10 +2258,13 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "e9215dad-0d24-4bb5-a91b-e6e7ef7ed7d9",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2026-06-08T05:32:54Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2026-06-08T05:32:39.168199Z",
-    "updated_at": "2026-06-08T05:32:54.474845Z",
+    "created_at": "2026-06-08T05:32:39Z",
+    "updated_at": "2026-06-08T05:32:39Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2061,10 +2279,13 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "70e48010-a730-4e88-b1b0-6fab23adad01",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2026-06-19T09:38:38Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2026-06-19T09:38:23.562547Z",
-    "updated_at": "2026-06-19T09:38:38.904015Z",
+    "created_at": "2026-06-19T09:38:23Z",
+    "updated_at": "2026-06-19T09:38:23Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2084,10 +2305,12 @@ exports[`hdi nock tests long list long list basic 1`] = `
 [
   {
     "id": "3bc942d4-03f9-441a-9fae-1f16b2dc7957",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
-    "created_at": "2026-06-30T01:02:01.133142Z",
-    "updated_at": "2026-06-30T01:02:11.411833Z",
+    "created_at": "2026-06-30T01:02:01Z",
+    "updated_at": "2026-06-30T01:02:11Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2122,10 +2345,12 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "0afaea0b-8979-4f73-8eac-1a970475837e",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "42ff43bd-14a7-41f7-b903-259235c1abcb",
-    "created_at": "2026-06-30T01:02:01.14332Z",
-    "updated_at": "2026-06-30T01:02:11.398655Z",
+    "created_at": "2026-06-30T01:02:01Z",
+    "updated_at": "2026-06-30T01:02:11Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2160,10 +2385,12 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "c7250e2c-95e5-4acc-8b19-20ade98fc8d3",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "fe81e5b0-6526-4237-95a4-19268049f779",
-    "created_at": "2026-06-30T01:02:01.158377Z",
-    "updated_at": "2026-06-30T01:02:11.425551Z",
+    "created_at": "2026-06-30T01:02:01Z",
+    "updated_at": "2026-06-30T01:02:11Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2198,10 +2425,12 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "c7627d65-f537-4c51-9369-faa0e02adbaf",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "8a633bdf-bd76-43ee-8414-74f8095a05c3",
-    "created_at": "2026-06-30T01:02:01.150787Z",
-    "updated_at": "2026-06-30T01:02:11.498778Z",
+    "created_at": "2026-06-30T01:02:01Z",
+    "updated_at": "2026-06-30T01:02:11Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2236,10 +2465,12 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "6b6a252b-fa87-478d-924f-3310557b82d5",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "6e96ba0f-d345-43ef-a5be-b7d0de85d58b",
-    "created_at": "2026-06-30T01:02:01.143759Z",
-    "updated_at": "2026-06-30T01:02:11.478656Z",
+    "created_at": "2026-06-30T01:02:01Z",
+    "updated_at": "2026-06-30T01:02:11Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2274,10 +2505,12 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "9e4206f5-65c0-416a-8b5a-8169820a7d91",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "8dbac1ec-7127-4bda-86a4-0ff02cfefd8d",
-    "created_at": "2026-06-30T01:02:08.391446Z",
-    "updated_at": "2026-06-30T01:02:19.573906Z",
+    "created_at": "2026-06-30T01:02:08Z",
+    "updated_at": "2026-06-30T01:02:19Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2312,10 +2545,12 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "82c5f66c-5078-47e9-94ac-1c221e9c49cb",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "c1626f78-e2de-47ab-8674-efe747db2fe3",
-    "created_at": "2026-06-30T01:02:11.566542Z",
-    "updated_at": "2026-06-30T01:02:21.837554Z",
+    "created_at": "2026-06-30T01:02:11Z",
+    "updated_at": "2026-06-30T01:02:21Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2350,10 +2585,12 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "ce549ba0-df9e-4c4d-b4c7-57b44aa85126",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "9915f7de-1cbd-447d-a315-35825f68be69",
-    "created_at": "2026-06-30T01:02:11.535491Z",
-    "updated_at": "2026-06-30T01:02:21.906675Z",
+    "created_at": "2026-06-30T01:02:11Z",
+    "updated_at": "2026-06-30T01:02:21Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2388,10 +2625,12 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "401a3234-1da9-4310-81ff-8b64a6795a37",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "875d3ddf-1ede-41e1-b8af-134e418427a3",
-    "created_at": "2026-06-30T01:02:12.921121Z",
-    "updated_at": "2026-06-30T01:02:23.233678Z",
+    "created_at": "2026-06-30T01:02:12Z",
+    "updated_at": "2026-06-30T01:02:23Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2426,10 +2665,12 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "1df14d9f-eedb-49d9-b5f4-75ca9614957a",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "ea6bfebc-a2a7-4a0f-b893-c970face3cd6",
-    "created_at": "2026-06-30T01:02:13.248039Z",
-    "updated_at": "2026-06-30T01:02:23.509061Z",
+    "created_at": "2026-06-30T01:02:13Z",
+    "updated_at": "2026-06-30T01:02:23Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2464,10 +2705,12 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "0598c435-88b3-4544-a67a-f3c4845c2571",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "852bb033-afab-49d0-b827-4a3f32abe9ba",
-    "created_at": "2026-06-30T01:02:15.605424Z",
-    "updated_at": "2026-06-30T01:02:25.874265Z",
+    "created_at": "2026-06-30T01:02:15Z",
+    "updated_at": "2026-06-30T01:02:25Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2502,10 +2745,12 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "4b8faf64-556f-4537-96e5-b39d88683cde",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "9e954752-5a2d-45fa-a809-e9707cedf2e5",
-    "created_at": "2026-06-30T01:02:21.258805Z",
-    "updated_at": "2026-06-30T01:02:31.525351Z",
+    "created_at": "2026-06-30T01:02:21Z",
+    "updated_at": "2026-06-30T01:02:31Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2540,10 +2785,12 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "7de6abe4-a470-4b5e-80ca-9b722572ee08",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "7758e957-e3a9-418f-9e2b-50bd492cefa6",
-    "created_at": "2026-06-30T01:02:21.98597Z",
-    "updated_at": "2026-06-30T01:02:32.244637Z",
+    "created_at": "2026-06-30T01:02:21Z",
+    "updated_at": "2026-06-30T01:02:32Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2578,10 +2825,12 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "7ddbc0e2-0192-4725-876f-b1ec80885587",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "2e5b16d4-5379-47b5-a03d-d749777dadae",
-    "created_at": "2026-06-30T01:02:23.29021Z",
-    "updated_at": "2026-06-30T01:02:33.518516Z",
+    "created_at": "2026-06-30T01:02:23Z",
+    "updated_at": "2026-06-30T01:02:33Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2616,10 +2865,12 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "1aa10e1e-62f8-415e-b3c4-fd8d8a87d48c",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "67a22c54-b5b7-4b96-bea1-0a2d38999def",
-    "created_at": "2026-06-30T01:02:23.392008Z",
-    "updated_at": "2026-06-30T01:02:33.661354Z",
+    "created_at": "2026-06-30T01:02:23Z",
+    "updated_at": "2026-06-30T01:02:33Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2654,10 +2905,12 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "94ca1997-1ec4-4cda-86b5-49ab890d0c1d",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "56c535b2-bc3a-44f5-96c8-3ae1054f455c",
-    "created_at": "2026-06-30T01:02:23.562721Z",
-    "updated_at": "2026-06-30T01:02:33.779482Z",
+    "created_at": "2026-06-30T01:02:23Z",
+    "updated_at": "2026-06-30T01:02:33Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2692,10 +2945,12 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "d9b7b53b-2041-44a0-858a-355155ca6a78",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "a56a9023-fe64-43ba-991d-50ed9395f2e8",
-    "created_at": "2026-06-30T01:02:31.465295Z",
-    "updated_at": "2026-06-30T01:02:41.716986Z",
+    "created_at": "2026-06-30T01:02:31Z",
+    "updated_at": "2026-06-30T01:02:41Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2730,10 +2985,12 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "f40678ea-9039-42fc-a003-8530f5649521",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "639793df-096a-470b-8ef1-c7aec9bd048f",
-    "created_at": "2026-06-30T01:02:32.308515Z",
-    "updated_at": "2026-06-30T01:02:42.553179Z",
+    "created_at": "2026-06-30T01:02:32Z",
+    "updated_at": "2026-06-30T01:02:42Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2768,10 +3025,12 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "142c8e4b-5fad-4d8e-abcf-f6674cd9272c",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "3e0696d7-6669-40ce-8bde-8eb71b227b15",
-    "created_at": "2026-06-30T01:02:33.840024Z",
-    "updated_at": "2026-06-30T01:02:44.086631Z",
+    "created_at": "2026-06-30T01:02:33Z",
+    "updated_at": "2026-06-30T01:02:44Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2806,10 +3065,12 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "8c20f7b1-9801-40ab-a1f5-4617ade19416",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "1c61ab20-0ab1-41ce-8ae4-b7269d9513a4",
-    "created_at": "2026-06-30T01:02:35.108151Z",
-    "updated_at": "2026-06-30T01:02:45.32672Z",
+    "created_at": "2026-06-30T01:02:35Z",
+    "updated_at": "2026-06-30T01:02:45Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2844,10 +3105,12 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "302e92bb-e8b7-4ba4-9ecb-9c840ba0f020",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "eaf48f15-7d72-4a5b-8833-96a4b04dba8f",
-    "created_at": "2026-06-30T01:02:36.50217Z",
-    "updated_at": "2026-06-30T01:02:46.765064Z",
+    "created_at": "2026-06-30T01:02:36Z",
+    "updated_at": "2026-06-30T01:02:46Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2882,10 +3145,12 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "d80fec91-cef9-4906-baab-4c8fb502d8d1",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "1d031371-1b20-4363-b1f9-473d21e6dd2a",
-    "created_at": "2026-06-30T01:02:38.868442Z",
-    "updated_at": "2026-06-30T01:02:49.142912Z",
+    "created_at": "2026-06-30T01:02:38Z",
+    "updated_at": "2026-06-30T01:02:49Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2920,10 +3185,12 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "bd8b67ad-5bb9-4ad9-9013-637a15cc866d",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "a1d78a19-0f96-4ac4-bd31-d532f1d68f92",
-    "created_at": "2026-06-30T01:02:42.643532Z",
-    "updated_at": "2026-06-30T01:02:52.960795Z",
+    "created_at": "2026-06-30T01:02:42Z",
+    "updated_at": "2026-06-30T01:02:52Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2958,10 +3225,12 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "714dbdae-4615-455c-8a56-2d3d53f3e00f",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "9be55a43-72bd-41b5-b33e-3aeb1f432ce0",
-    "created_at": "2026-06-30T01:02:44.138144Z",
-    "updated_at": "2026-06-30T01:02:54.444131Z",
+    "created_at": "2026-06-30T01:02:44Z",
+    "updated_at": "2026-06-30T01:02:54Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -2996,10 +3265,12 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "a1b03a4e-8cb9-4ae9-9537-aa27686d4fac",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "6430d626-937c-47db-a961-e38f52c17ba0",
-    "created_at": "2026-06-30T01:02:45.370205Z",
-    "updated_at": "2026-06-30T01:02:55.586653Z",
+    "created_at": "2026-06-30T01:02:45Z",
+    "updated_at": "2026-06-30T01:02:55Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3034,10 +3305,12 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "436f54df-0270-4765-97bf-1b380b314c8e",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "e9215dad-0d24-4bb5-a91b-e6e7ef7ed7d9",
-    "created_at": "2026-06-30T01:02:46.83315Z",
-    "updated_at": "2026-06-30T01:02:57.105884Z",
+    "created_at": "2026-06-30T01:02:46Z",
+    "updated_at": "2026-06-30T01:02:57Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3072,10 +3345,12 @@ exports[`hdi nock tests long list long list basic 1`] = `
   },
   {
     "id": "46ffeee2-7d4b-4831-82ce-487c4d2cbcfc",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "70e48010-a730-4e88-b1b0-6fab23adad01",
-    "created_at": "2026-06-30T01:02:48.773278Z",
-    "updated_at": "2026-06-30T01:02:59.085636Z",
+    "created_at": "2026-06-30T01:02:48Z",
+    "updated_at": "2026-06-30T01:02:59Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3118,10 +3393,13 @@ exports[`hdi nock tests long list long list filtered basic 1`] = `
 
 {
   "id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
-  "ready": true,
+  "last_operation": {
+    "updated_at": "2024-02-07T11:36:53Z"
+  },
+  "usable": true,
   "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-  "created_at": "2022-04-26T18:05:44.931344Z",
-  "updated_at": "2024-02-07T11:36:53.771381Z",
+  "created_at": "2022-04-26T18:05:44Z",
+  "updated_at": "2022-04-26T18:05:44Z",
   "labels": {
     "container_id": [
       "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3139,10 +3417,12 @@ exports[`hdi nock tests long list long list filtered basic 1`] = `
 
 {
   "id": "3bc942d4-03f9-441a-9fae-1f16b2dc7957",
-  "ready": true,
+  "last_operation": {
+    "state": "succeeded"
+  },
   "service_instance_id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
-  "created_at": "2026-06-30T01:02:01.133142Z",
-  "updated_at": "2026-06-30T01:02:11.411833Z",
+  "created_at": "2026-06-30T01:02:01Z",
+  "updated_at": "2026-06-30T01:02:11Z",
   "labels": {
     "container_id": [
       "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3182,7 +3462,7 @@ exports[`hdi nock tests long list long list filtered json 1`] = `
 {
   "bindings": [
     {
-      "created_at": "2026-06-30T01:02:01.133142Z",
+      "created_at": "2026-06-30T01:02:01Z",
       "credentials": {
         "certificate": "service-manager-items-0-credentials-certificate",
         "database_id": "71836508-e02b-4a5b-88a2-4dd482f6de70",
@@ -3215,14 +3495,16 @@ exports[`hdi nock tests long list long list filtered json 1`] = `
           "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
-      "updated_at": "2026-06-30T01:02:11.411833Z",
+      "updated_at": "2026-06-30T01:02:11Z",
     },
   ],
   "instances": [
     {
-      "created_at": "2022-04-26T18:05:44.931344Z",
+      "created_at": "2022-04-26T18:05:44Z",
       "id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
       "labels": {
         "container_id": [
@@ -3235,9 +3517,12 @@ exports[`hdi nock tests long list long list filtered json 1`] = `
           "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2024-02-07T11:36:53Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2024-02-07T11:36:53.771381Z",
+      "updated_at": "2022-04-26T18:05:44Z",
+      "usable": true,
     },
   ],
 }
@@ -3249,10 +3534,13 @@ exports[`hdi nock tests long list long list filtered revealed 1`] = `
 
 {
   "id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
-  "ready": true,
+  "last_operation": {
+    "updated_at": "2024-02-07T11:36:53Z"
+  },
+  "usable": true,
   "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-  "created_at": "2022-04-26T18:05:44.931344Z",
-  "updated_at": "2024-02-07T11:36:53.771381Z",
+  "created_at": "2022-04-26T18:05:44Z",
+  "updated_at": "2022-04-26T18:05:44Z",
   "labels": {
     "container_id": [
       "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3270,10 +3558,12 @@ exports[`hdi nock tests long list long list filtered revealed 1`] = `
 
 {
   "id": "3bc942d4-03f9-441a-9fae-1f16b2dc7957",
-  "ready": true,
+  "last_operation": {
+    "state": "succeeded"
+  },
   "service_instance_id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
-  "created_at": "2026-06-30T01:02:01.133142Z",
-  "updated_at": "2026-06-30T01:02:11.411833Z",
+  "created_at": "2026-06-30T01:02:01Z",
+  "updated_at": "2026-06-30T01:02:11Z",
   "labels": {
     "container_id": [
       "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -3313,7 +3603,7 @@ exports[`hdi nock tests long list long list json 1`] = `
 {
   "bindings": [
     {
-      "created_at": "2026-06-30T01:02:01.133142Z",
+      "created_at": "2026-06-30T01:02:01Z",
       "credentials": {
         "certificate": "service-manager-items-0-credentials-certificate",
         "database_id": "71836508-e02b-4a5b-88a2-4dd482f6de70",
@@ -3346,12 +3636,14 @@ exports[`hdi nock tests long list long list json 1`] = `
           "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
-      "updated_at": "2026-06-30T01:02:11.411833Z",
+      "updated_at": "2026-06-30T01:02:11Z",
     },
     {
-      "created_at": "2026-06-30T01:02:01.14332Z",
+      "created_at": "2026-06-30T01:02:01Z",
       "credentials": {
         "certificate": "service-manager-items-1-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -3384,12 +3676,14 @@ exports[`hdi nock tests long list long list json 1`] = `
           "cb9158ce-f8fd-441b-b443-17219e8f79fa",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "42ff43bd-14a7-41f7-b903-259235c1abcb",
-      "updated_at": "2026-06-30T01:02:11.398655Z",
+      "updated_at": "2026-06-30T01:02:11Z",
     },
     {
-      "created_at": "2026-06-30T01:02:01.158377Z",
+      "created_at": "2026-06-30T01:02:01Z",
       "credentials": {
         "certificate": "service-manager-items-2-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -3422,12 +3716,14 @@ exports[`hdi nock tests long list long list json 1`] = `
           "cf528063-6a43-4bf2-8ccc-ca4e6d75d88e",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "fe81e5b0-6526-4237-95a4-19268049f779",
-      "updated_at": "2026-06-30T01:02:11.425551Z",
+      "updated_at": "2026-06-30T01:02:11Z",
     },
     {
-      "created_at": "2026-06-30T01:02:01.150787Z",
+      "created_at": "2026-06-30T01:02:01Z",
       "credentials": {
         "certificate": "service-manager-items-3-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -3460,12 +3756,14 @@ exports[`hdi nock tests long list long list json 1`] = `
           "4c0909b1-a84e-4763-a26e-532fdb9e40fa",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "8a633bdf-bd76-43ee-8414-74f8095a05c3",
-      "updated_at": "2026-06-30T01:02:11.498778Z",
+      "updated_at": "2026-06-30T01:02:11Z",
     },
     {
-      "created_at": "2026-06-30T01:02:01.143759Z",
+      "created_at": "2026-06-30T01:02:01Z",
       "credentials": {
         "certificate": "service-manager-items-4-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -3498,12 +3796,14 @@ exports[`hdi nock tests long list long list json 1`] = `
           "t0",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "6e96ba0f-d345-43ef-a5be-b7d0de85d58b",
-      "updated_at": "2026-06-30T01:02:11.478656Z",
+      "updated_at": "2026-06-30T01:02:11Z",
     },
     {
-      "created_at": "2026-06-30T01:02:08.391446Z",
+      "created_at": "2026-06-30T01:02:08Z",
       "credentials": {
         "certificate": "service-manager-items-9-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -3536,12 +3836,14 @@ exports[`hdi nock tests long list long list json 1`] = `
           "ae2dc112-9745-4f5e-8feb-79ebdc0094bd",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "8dbac1ec-7127-4bda-86a4-0ff02cfefd8d",
-      "updated_at": "2026-06-30T01:02:19.573906Z",
+      "updated_at": "2026-06-30T01:02:19Z",
     },
     {
-      "created_at": "2026-06-30T01:02:11.566542Z",
+      "created_at": "2026-06-30T01:02:11Z",
       "credentials": {
         "certificate": "service-manager-items-10-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -3574,12 +3876,14 @@ exports[`hdi nock tests long list long list json 1`] = `
           "9c418100-6318-4e8a-b4b2-1114f4f44aef",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "c1626f78-e2de-47ab-8674-efe747db2fe3",
-      "updated_at": "2026-06-30T01:02:21.837554Z",
+      "updated_at": "2026-06-30T01:02:21Z",
     },
     {
-      "created_at": "2026-06-30T01:02:11.535491Z",
+      "created_at": "2026-06-30T01:02:11Z",
       "credentials": {
         "certificate": "service-manager-items-11-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -3612,12 +3916,14 @@ exports[`hdi nock tests long list long list json 1`] = `
           "663d2938-be50-44ab-92ca-538855eb594f",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "9915f7de-1cbd-447d-a315-35825f68be69",
-      "updated_at": "2026-06-30T01:02:21.906675Z",
+      "updated_at": "2026-06-30T01:02:21Z",
     },
     {
-      "created_at": "2026-06-30T01:02:12.921121Z",
+      "created_at": "2026-06-30T01:02:12Z",
       "credentials": {
         "certificate": "service-manager-items-14-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -3650,12 +3956,14 @@ exports[`hdi nock tests long list long list json 1`] = `
           "be884689-aad4-486e-b556-23fdcf266f6d",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "875d3ddf-1ede-41e1-b8af-134e418427a3",
-      "updated_at": "2026-06-30T01:02:23.233678Z",
+      "updated_at": "2026-06-30T01:02:23Z",
     },
     {
-      "created_at": "2026-06-30T01:02:13.248039Z",
+      "created_at": "2026-06-30T01:02:13Z",
       "credentials": {
         "certificate": "service-manager-items-16-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -3688,12 +3996,14 @@ exports[`hdi nock tests long list long list json 1`] = `
           "0de2abab-9030-4524-9940-e5b37ac75d92",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "ea6bfebc-a2a7-4a0f-b893-c970face3cd6",
-      "updated_at": "2026-06-30T01:02:23.509061Z",
+      "updated_at": "2026-06-30T01:02:23Z",
     },
     {
-      "created_at": "2026-06-30T01:02:15.605424Z",
+      "created_at": "2026-06-30T01:02:15Z",
       "credentials": {
         "certificate": "service-manager-items-19-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -3726,12 +4036,14 @@ exports[`hdi nock tests long list long list json 1`] = `
           "73675fb3-0298-4cf3-8f86-a78c18392193",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "852bb033-afab-49d0-b827-4a3f32abe9ba",
-      "updated_at": "2026-06-30T01:02:25.874265Z",
+      "updated_at": "2026-06-30T01:02:25Z",
     },
     {
-      "created_at": "2026-06-30T01:02:21.258805Z",
+      "created_at": "2026-06-30T01:02:21Z",
       "credentials": {
         "certificate": "service-manager-items-21-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -3764,12 +4076,14 @@ exports[`hdi nock tests long list long list json 1`] = `
           "d91fb749-a148-479f-b29d-71b1b6a9309d",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "9e954752-5a2d-45fa-a809-e9707cedf2e5",
-      "updated_at": "2026-06-30T01:02:31.525351Z",
+      "updated_at": "2026-06-30T01:02:31Z",
     },
     {
-      "created_at": "2026-06-30T01:02:21.98597Z",
+      "created_at": "2026-06-30T01:02:21Z",
       "credentials": {
         "certificate": "service-manager-items-22-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -3802,12 +4116,14 @@ exports[`hdi nock tests long list long list json 1`] = `
           "1bbe07b0-4de1-4cdb-830d-49b0ddf20b53",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "7758e957-e3a9-418f-9e2b-50bd492cefa6",
-      "updated_at": "2026-06-30T01:02:32.244637Z",
+      "updated_at": "2026-06-30T01:02:32Z",
     },
     {
-      "created_at": "2026-06-30T01:02:23.29021Z",
+      "created_at": "2026-06-30T01:02:23Z",
       "credentials": {
         "certificate": "service-manager-items-24-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -3840,12 +4156,14 @@ exports[`hdi nock tests long list long list json 1`] = `
           "86ab464d-5770-46b4-b93d-292c1416c453",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "2e5b16d4-5379-47b5-a03d-d749777dadae",
-      "updated_at": "2026-06-30T01:02:33.518516Z",
+      "updated_at": "2026-06-30T01:02:33Z",
     },
     {
-      "created_at": "2026-06-30T01:02:23.392008Z",
+      "created_at": "2026-06-30T01:02:23Z",
       "credentials": {
         "certificate": "service-manager-items-25-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -3878,12 +4196,14 @@ exports[`hdi nock tests long list long list json 1`] = `
           "ba22b06c-b55f-4940-ae38-b92a5928c8a5",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "67a22c54-b5b7-4b96-bea1-0a2d38999def",
-      "updated_at": "2026-06-30T01:02:33.661354Z",
+      "updated_at": "2026-06-30T01:02:33Z",
     },
     {
-      "created_at": "2026-06-30T01:02:23.562721Z",
+      "created_at": "2026-06-30T01:02:23Z",
       "credentials": {
         "certificate": "service-manager-items-26-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -3916,12 +4236,14 @@ exports[`hdi nock tests long list long list json 1`] = `
           "116b3ac3-6d84-4ed5-81be-0af4464a09b6",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "56c535b2-bc3a-44f5-96c8-3ae1054f455c",
-      "updated_at": "2026-06-30T01:02:33.779482Z",
+      "updated_at": "2026-06-30T01:02:33Z",
     },
     {
-      "created_at": "2026-06-30T01:02:31.465295Z",
+      "created_at": "2026-06-30T01:02:31Z",
       "credentials": {
         "certificate": "service-manager-items-31-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -3954,12 +4276,14 @@ exports[`hdi nock tests long list long list json 1`] = `
           "ed99fc2a-b367-4fc6-8918-5547e2e655a7",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "a56a9023-fe64-43ba-991d-50ed9395f2e8",
-      "updated_at": "2026-06-30T01:02:41.716986Z",
+      "updated_at": "2026-06-30T01:02:41Z",
     },
     {
-      "created_at": "2026-06-30T01:02:32.308515Z",
+      "created_at": "2026-06-30T01:02:32Z",
       "credentials": {
         "certificate": "service-manager-items-32-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -3992,12 +4316,14 @@ exports[`hdi nock tests long list long list json 1`] = `
           "fe2e319f-68cd-450f-8a02-d726dac64b35",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "639793df-096a-470b-8ef1-c7aec9bd048f",
-      "updated_at": "2026-06-30T01:02:42.553179Z",
+      "updated_at": "2026-06-30T01:02:42Z",
     },
     {
-      "created_at": "2026-06-30T01:02:33.840024Z",
+      "created_at": "2026-06-30T01:02:33Z",
       "credentials": {
         "certificate": "service-manager-items-34-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -4030,12 +4356,14 @@ exports[`hdi nock tests long list long list json 1`] = `
           "b46f4c09-e46e-432b-b837-0aad96d145f9",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "3e0696d7-6669-40ce-8bde-8eb71b227b15",
-      "updated_at": "2026-06-30T01:02:44.086631Z",
+      "updated_at": "2026-06-30T01:02:44Z",
     },
     {
-      "created_at": "2026-06-30T01:02:35.108151Z",
+      "created_at": "2026-06-30T01:02:35Z",
       "credentials": {
         "certificate": "service-manager-items-38-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -4068,12 +4396,14 @@ exports[`hdi nock tests long list long list json 1`] = `
           "79604d57-3933-4a66-81c2-a022413ec11d",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "1c61ab20-0ab1-41ce-8ae4-b7269d9513a4",
-      "updated_at": "2026-06-30T01:02:45.32672Z",
+      "updated_at": "2026-06-30T01:02:45Z",
     },
     {
-      "created_at": "2026-06-30T01:02:36.50217Z",
+      "created_at": "2026-06-30T01:02:36Z",
       "credentials": {
         "certificate": "service-manager-items-41-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -4106,12 +4436,14 @@ exports[`hdi nock tests long list long list json 1`] = `
           "97b55bf7-a906-42ab-9176-3e86762dcdb7",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "eaf48f15-7d72-4a5b-8833-96a4b04dba8f",
-      "updated_at": "2026-06-30T01:02:46.765064Z",
+      "updated_at": "2026-06-30T01:02:46Z",
     },
     {
-      "created_at": "2026-06-30T01:02:38.868442Z",
+      "created_at": "2026-06-30T01:02:38Z",
       "credentials": {
         "certificate": "service-manager-items-44-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -4144,12 +4476,14 @@ exports[`hdi nock tests long list long list json 1`] = `
           "1cc0aa7f-f77e-4038-9ab0-48ae43ed3c7a",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "1d031371-1b20-4363-b1f9-473d21e6dd2a",
-      "updated_at": "2026-06-30T01:02:49.142912Z",
+      "updated_at": "2026-06-30T01:02:49Z",
     },
     {
-      "created_at": "2026-06-30T01:02:42.643532Z",
+      "created_at": "2026-06-30T01:02:42Z",
       "credentials": {
         "certificate": "service-manager-items-45-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -4182,12 +4516,14 @@ exports[`hdi nock tests long list long list json 1`] = `
           "524ffdf2-8174-4b70-bc10-36bf458ab360",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "a1d78a19-0f96-4ac4-bd31-d532f1d68f92",
-      "updated_at": "2026-06-30T01:02:52.960795Z",
+      "updated_at": "2026-06-30T01:02:52Z",
     },
     {
-      "created_at": "2026-06-30T01:02:44.138144Z",
+      "created_at": "2026-06-30T01:02:44Z",
       "credentials": {
         "certificate": "service-manager-items-47-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -4220,12 +4556,14 @@ exports[`hdi nock tests long list long list json 1`] = `
           "e0cdfa19-1d01-48b5-bc78-cb4785b20bc6",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "9be55a43-72bd-41b5-b33e-3aeb1f432ce0",
-      "updated_at": "2026-06-30T01:02:54.444131Z",
+      "updated_at": "2026-06-30T01:02:54Z",
     },
     {
-      "created_at": "2026-06-30T01:02:45.370205Z",
+      "created_at": "2026-06-30T01:02:45Z",
       "credentials": {
         "certificate": "service-manager-items-49-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -4258,12 +4596,14 @@ exports[`hdi nock tests long list long list json 1`] = `
           "899887a3-46a1-4370-b69a-d615f7420f08",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "6430d626-937c-47db-a961-e38f52c17ba0",
-      "updated_at": "2026-06-30T01:02:55.586653Z",
+      "updated_at": "2026-06-30T01:02:55Z",
     },
     {
-      "created_at": "2026-06-30T01:02:46.83315Z",
+      "created_at": "2026-06-30T01:02:46Z",
       "credentials": {
         "certificate": "service-manager-items-51-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -4296,12 +4636,14 @@ exports[`hdi nock tests long list long list json 1`] = `
           "5d5ebba0-e1b9-44c3-989e-f274438c91ec",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "e9215dad-0d24-4bb5-a91b-e6e7ef7ed7d9",
-      "updated_at": "2026-06-30T01:02:57.105884Z",
+      "updated_at": "2026-06-30T01:02:57Z",
     },
     {
-      "created_at": "2026-06-30T01:02:48.773278Z",
+      "created_at": "2026-06-30T01:02:48Z",
       "credentials": {
         "certificate": "service-manager-items-54-credentials-certificate",
         "database_id": "fa8a6cbe-1cdc-4dea-84cf-877c09b0f651",
@@ -4334,14 +4676,16 @@ exports[`hdi nock tests long list long list json 1`] = `
           "5ca3a561-93c7-4ce1-a911-ad9923120381",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "state": "succeeded",
+      },
       "service_instance_id": "70e48010-a730-4e88-b1b0-6fab23adad01",
-      "updated_at": "2026-06-30T01:02:59.085636Z",
+      "updated_at": "2026-06-30T01:02:59Z",
     },
   ],
   "instances": [
     {
-      "created_at": "2022-04-26T18:05:44.931344Z",
+      "created_at": "2022-04-26T18:05:44Z",
       "id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
       "labels": {
         "container_id": [
@@ -4354,12 +4698,15 @@ exports[`hdi nock tests long list long list json 1`] = `
           "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2024-02-07T11:36:53Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2024-02-07T11:36:53.771381Z",
+      "updated_at": "2022-04-26T18:05:44Z",
+      "usable": true,
     },
     {
-      "created_at": "2022-09-05T12:11:41.981588Z",
+      "created_at": "2022-09-05T12:11:41Z",
       "id": "42ff43bd-14a7-41f7-b903-259235c1abcb",
       "labels": {
         "container_id": [
@@ -4372,12 +4719,15 @@ exports[`hdi nock tests long list long list json 1`] = `
           "cb9158ce-f8fd-441b-b443-17219e8f79fa",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2024-02-07T11:36:53Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2024-02-07T11:36:53.73628Z",
+      "updated_at": "2022-09-05T12:11:41Z",
+      "usable": true,
     },
     {
-      "created_at": "2023-01-30T20:19:09.136437Z",
+      "created_at": "2023-01-30T20:19:09Z",
       "id": "6e96ba0f-d345-43ef-a5be-b7d0de85d58b",
       "labels": {
         "container_id": [
@@ -4390,12 +4740,15 @@ exports[`hdi nock tests long list long list json 1`] = `
           "t0",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2024-02-07T11:36:53Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2024-02-07T11:36:53.768028Z",
+      "updated_at": "2023-01-30T20:19:09Z",
+      "usable": true,
     },
     {
-      "created_at": "2023-09-05T14:19:48.964271Z",
+      "created_at": "2023-09-05T14:19:48Z",
       "id": "8a633bdf-bd76-43ee-8414-74f8095a05c3",
       "labels": {
         "container_id": [
@@ -4408,12 +4761,15 @@ exports[`hdi nock tests long list long list json 1`] = `
           "4c0909b1-a84e-4763-a26e-532fdb9e40fa",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2024-02-07T11:36:53Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2024-02-07T11:36:53.779523Z",
+      "updated_at": "2023-09-05T14:19:48Z",
+      "usable": true,
     },
     {
-      "created_at": "2024-03-19T16:53:23.661687Z",
+      "created_at": "2024-03-19T16:53:23Z",
       "id": "fe81e5b0-6526-4237-95a4-19268049f779",
       "labels": {
         "container_id": [
@@ -4426,12 +4782,15 @@ exports[`hdi nock tests long list long list json 1`] = `
           "cf528063-6a43-4bf2-8ccc-ca4e6d75d88e",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2024-03-19T16:53:33Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2024-03-19T16:53:33.754857Z",
+      "updated_at": "2024-03-19T16:53:23Z",
+      "usable": true,
     },
     {
-      "created_at": "2024-07-05T11:19:53.817254Z",
+      "created_at": "2024-07-05T11:19:53Z",
       "id": "8dbac1ec-7127-4bda-86a4-0ff02cfefd8d",
       "labels": {
         "container_id": [
@@ -4444,12 +4803,15 @@ exports[`hdi nock tests long list long list json 1`] = `
           "ae2dc112-9745-4f5e-8feb-79ebdc0094bd",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2024-07-05T11:20:04Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2024-07-05T11:20:04.308966Z",
+      "updated_at": "2024-07-05T11:19:53Z",
+      "usable": true,
     },
     {
-      "created_at": "2024-09-11T07:33:25.495344Z",
+      "created_at": "2024-09-11T07:33:25Z",
       "id": "9915f7de-1cbd-447d-a315-35825f68be69",
       "labels": {
         "container_id": [
@@ -4462,12 +4824,15 @@ exports[`hdi nock tests long list long list json 1`] = `
           "663d2938-be50-44ab-92ca-538855eb594f",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2024-09-11T07:33:35Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2024-09-11T07:33:35.801664Z",
+      "updated_at": "2024-09-11T07:33:25Z",
+      "usable": true,
     },
     {
-      "created_at": "2024-11-27T06:50:22.018187Z",
+      "created_at": "2024-11-27T06:50:22Z",
       "id": "c1626f78-e2de-47ab-8674-efe747db2fe3",
       "labels": {
         "container_id": [
@@ -4480,12 +4845,15 @@ exports[`hdi nock tests long list long list json 1`] = `
           "9c418100-6318-4e8a-b4b2-1114f4f44aef",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2024-11-27T06:50:32Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2024-11-27T06:50:32.185918Z",
+      "updated_at": "2024-11-27T06:50:22Z",
+      "usable": true,
     },
     {
-      "created_at": "2024-12-09T03:50:22.113452Z",
+      "created_at": "2024-12-09T03:50:22Z",
       "id": "875d3ddf-1ede-41e1-b8af-134e418427a3",
       "labels": {
         "container_id": [
@@ -4498,12 +4866,15 @@ exports[`hdi nock tests long list long list json 1`] = `
           "be884689-aad4-486e-b556-23fdcf266f6d",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2024-12-09T03:50:32Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2024-12-09T03:50:32.255574Z",
+      "updated_at": "2024-12-09T03:50:22Z",
+      "usable": true,
     },
     {
-      "created_at": "2025-04-04T07:45:52.61102Z",
+      "created_at": "2025-04-04T07:45:52Z",
       "id": "ea6bfebc-a2a7-4a0f-b893-c970face3cd6",
       "labels": {
         "container_id": [
@@ -4516,12 +4887,15 @@ exports[`hdi nock tests long list long list json 1`] = `
           "0de2abab-9030-4524-9940-e5b37ac75d92",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2025-04-04T07:46:02Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2025-04-04T07:46:02.904353Z",
+      "updated_at": "2025-04-04T07:45:52Z",
+      "usable": true,
     },
     {
-      "created_at": "2025-05-22T12:08:28.756124Z",
+      "created_at": "2025-05-22T12:08:28Z",
       "id": "852bb033-afab-49d0-b827-4a3f32abe9ba",
       "labels": {
         "container_id": [
@@ -4534,12 +4908,15 @@ exports[`hdi nock tests long list long list json 1`] = `
           "73675fb3-0298-4cf3-8f86-a78c18392193",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2025-05-22T12:08:38Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2025-05-22T12:08:38.924272Z",
+      "updated_at": "2025-05-22T12:08:28Z",
+      "usable": true,
     },
     {
-      "created_at": "2025-05-22T12:27:03.779847Z",
+      "created_at": "2025-05-22T12:27:03Z",
       "id": "9e954752-5a2d-45fa-a809-e9707cedf2e5",
       "labels": {
         "container_id": [
@@ -4552,12 +4929,15 @@ exports[`hdi nock tests long list long list json 1`] = `
           "d91fb749-a148-479f-b29d-71b1b6a9309d",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2025-05-22T12:27:14Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2025-05-22T12:27:13.998587Z",
+      "updated_at": "2025-05-22T12:27:03Z",
+      "usable": true,
     },
     {
-      "created_at": "2025-09-19T08:54:05.735279Z",
+      "created_at": "2025-09-19T08:54:05Z",
       "id": "7758e957-e3a9-418f-9e2b-50bd492cefa6",
       "labels": {
         "container_id": [
@@ -4570,12 +4950,15 @@ exports[`hdi nock tests long list long list json 1`] = `
           "1bbe07b0-4de1-4cdb-830d-49b0ddf20b53",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2025-09-19T08:54:15Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2025-09-19T08:54:15.933234Z",
+      "updated_at": "2025-09-19T08:54:05Z",
+      "usable": true,
     },
     {
-      "created_at": "2025-09-23T14:24:15.65587Z",
+      "created_at": "2025-09-23T14:24:15Z",
       "id": "2e5b16d4-5379-47b5-a03d-d749777dadae",
       "labels": {
         "container_id": [
@@ -4588,12 +4971,15 @@ exports[`hdi nock tests long list long list json 1`] = `
           "86ab464d-5770-46b4-b93d-292c1416c453",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2025-09-23T14:24:27Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2025-09-23T14:24:27.042606Z",
+      "updated_at": "2025-09-23T14:24:15Z",
+      "usable": true,
     },
     {
-      "created_at": "2025-09-25T10:03:52.537627Z",
+      "created_at": "2025-09-25T10:03:52Z",
       "id": "67a22c54-b5b7-4b96-bea1-0a2d38999def",
       "labels": {
         "container_id": [
@@ -4606,12 +4992,15 @@ exports[`hdi nock tests long list long list json 1`] = `
           "ba22b06c-b55f-4940-ae38-b92a5928c8a5",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2025-09-25T10:04:03Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2025-09-25T10:04:03.139435Z",
+      "updated_at": "2025-09-25T10:03:52Z",
+      "usable": true,
     },
     {
-      "created_at": "2025-10-27T13:43:30.220475Z",
+      "created_at": "2025-10-27T13:43:30Z",
       "id": "56c535b2-bc3a-44f5-96c8-3ae1054f455c",
       "labels": {
         "container_id": [
@@ -4624,12 +5013,15 @@ exports[`hdi nock tests long list long list json 1`] = `
           "116b3ac3-6d84-4ed5-81be-0af4464a09b6",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2025-10-27T13:43:40Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2025-10-27T13:43:40.464561Z",
+      "updated_at": "2025-10-27T13:43:30Z",
+      "usable": true,
     },
     {
-      "created_at": "2025-11-27T08:35:57.96849Z",
+      "created_at": "2025-11-27T08:35:57Z",
       "id": "a56a9023-fe64-43ba-991d-50ed9395f2e8",
       "labels": {
         "container_id": [
@@ -4642,12 +5034,15 @@ exports[`hdi nock tests long list long list json 1`] = `
           "ed99fc2a-b367-4fc6-8918-5547e2e655a7",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2025-11-27T08:36:08Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2025-11-27T08:36:08.178234Z",
+      "updated_at": "2025-11-27T08:35:57Z",
+      "usable": true,
     },
     {
-      "created_at": "2025-12-02T12:44:02.914849Z",
+      "created_at": "2025-12-02T12:44:02Z",
       "id": "639793df-096a-470b-8ef1-c7aec9bd048f",
       "labels": {
         "container_id": [
@@ -4660,12 +5055,15 @@ exports[`hdi nock tests long list long list json 1`] = `
           "fe2e319f-68cd-450f-8a02-d726dac64b35",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2025-12-02T12:44:14Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2025-12-02T12:44:14.024251Z",
+      "updated_at": "2025-12-02T12:44:02Z",
+      "usable": true,
     },
     {
-      "created_at": "2025-12-22T02:15:53.861864Z",
+      "created_at": "2025-12-22T02:15:53Z",
       "id": "3e0696d7-6669-40ce-8bde-8eb71b227b15",
       "labels": {
         "container_id": [
@@ -4678,12 +5076,15 @@ exports[`hdi nock tests long list long list json 1`] = `
           "b46f4c09-e46e-432b-b837-0aad96d145f9",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2025-12-22T02:16:04Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2025-12-22T02:16:04.568818Z",
+      "updated_at": "2025-12-22T02:15:53Z",
+      "usable": true,
     },
     {
-      "created_at": "2026-01-15T10:43:40.83055Z",
+      "created_at": "2026-01-15T10:43:40Z",
       "id": "1c61ab20-0ab1-41ce-8ae4-b7269d9513a4",
       "labels": {
         "container_id": [
@@ -4696,12 +5097,15 @@ exports[`hdi nock tests long list long list json 1`] = `
           "79604d57-3933-4a66-81c2-a022413ec11d",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2026-01-15T10:43:51Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2026-01-15T10:43:51.047453Z",
+      "updated_at": "2026-01-15T10:43:40Z",
+      "usable": true,
     },
     {
-      "created_at": "2026-03-12T14:50:46.56639Z",
+      "created_at": "2026-03-12T14:50:46Z",
       "id": "eaf48f15-7d72-4a5b-8833-96a4b04dba8f",
       "labels": {
         "container_id": [
@@ -4714,12 +5118,15 @@ exports[`hdi nock tests long list long list json 1`] = `
           "97b55bf7-a906-42ab-9176-3e86762dcdb7",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2026-03-12T14:51:01Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2026-03-12T14:51:01.87262Z",
+      "updated_at": "2026-03-12T14:50:46Z",
+      "usable": true,
     },
     {
-      "created_at": "2026-04-17T16:18:11.541605Z",
+      "created_at": "2026-04-17T16:18:11Z",
       "id": "1d031371-1b20-4363-b1f9-473d21e6dd2a",
       "labels": {
         "container_id": [
@@ -4732,12 +5139,15 @@ exports[`hdi nock tests long list long list json 1`] = `
           "1cc0aa7f-f77e-4038-9ab0-48ae43ed3c7a",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2026-04-17T16:18:26Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2026-04-17T16:18:26.832753Z",
+      "updated_at": "2026-04-17T16:18:11Z",
+      "usable": true,
     },
     {
-      "created_at": "2026-05-18T11:04:24.541371Z",
+      "created_at": "2026-05-18T11:04:24Z",
       "id": "a1d78a19-0f96-4ac4-bd31-d532f1d68f92",
       "labels": {
         "container_id": [
@@ -4750,12 +5160,15 @@ exports[`hdi nock tests long list long list json 1`] = `
           "524ffdf2-8174-4b70-bc10-36bf458ab360",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2026-05-18T11:04:39Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2026-05-18T11:04:39.958999Z",
+      "updated_at": "2026-05-18T11:04:24Z",
+      "usable": true,
     },
     {
-      "created_at": "2026-05-19T14:36:04.105076Z",
+      "created_at": "2026-05-19T14:36:04Z",
       "id": "9be55a43-72bd-41b5-b33e-3aeb1f432ce0",
       "labels": {
         "container_id": [
@@ -4768,12 +5181,15 @@ exports[`hdi nock tests long list long list json 1`] = `
           "e0cdfa19-1d01-48b5-bc78-cb4785b20bc6",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2026-05-19T14:36:19Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2026-05-19T14:36:19.43414Z",
+      "updated_at": "2026-05-19T14:36:04Z",
+      "usable": true,
     },
     {
-      "created_at": "2026-05-20T05:23:16.930508Z",
+      "created_at": "2026-05-20T05:23:16Z",
       "id": "6430d626-937c-47db-a961-e38f52c17ba0",
       "labels": {
         "container_id": [
@@ -4786,12 +5202,15 @@ exports[`hdi nock tests long list long list json 1`] = `
           "899887a3-46a1-4370-b69a-d615f7420f08",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2026-05-20T05:23:32Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2026-05-20T05:23:32.148615Z",
+      "updated_at": "2026-05-20T05:23:16Z",
+      "usable": true,
     },
     {
-      "created_at": "2026-06-08T05:32:39.168199Z",
+      "created_at": "2026-06-08T05:32:39Z",
       "id": "e9215dad-0d24-4bb5-a91b-e6e7ef7ed7d9",
       "labels": {
         "container_id": [
@@ -4804,12 +5223,15 @@ exports[`hdi nock tests long list long list json 1`] = `
           "5d5ebba0-e1b9-44c3-989e-f274438c91ec",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2026-06-08T05:32:54Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2026-06-08T05:32:54.474845Z",
+      "updated_at": "2026-06-08T05:32:39Z",
+      "usable": true,
     },
     {
-      "created_at": "2026-06-19T09:38:23.562547Z",
+      "created_at": "2026-06-19T09:38:23Z",
       "id": "70e48010-a730-4e88-b1b0-6fab23adad01",
       "labels": {
         "container_id": [
@@ -4822,9 +5244,12 @@ exports[`hdi nock tests long list long list json 1`] = `
           "5ca3a561-93c7-4ce1-a911-ad9923120381",
         ],
       },
-      "ready": true,
+      "last_operation": {
+        "updated_at": "2026-06-19T09:38:38Z",
+      },
       "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-      "updated_at": "2026-06-19T09:38:38.904015Z",
+      "updated_at": "2026-06-19T09:38:23Z",
+      "usable": true,
     },
   ],
 }
@@ -4837,10 +5262,13 @@ exports[`hdi nock tests long list long list revealed 1`] = `
 [
   {
     "id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2024-02-07T11:36:53Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2022-04-26T18:05:44.931344Z",
-    "updated_at": "2024-02-07T11:36:53.771381Z",
+    "created_at": "2022-04-26T18:05:44Z",
+    "updated_at": "2022-04-26T18:05:44Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -4855,10 +5283,13 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "42ff43bd-14a7-41f7-b903-259235c1abcb",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2024-02-07T11:36:53Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2022-09-05T12:11:41.981588Z",
-    "updated_at": "2024-02-07T11:36:53.73628Z",
+    "created_at": "2022-09-05T12:11:41Z",
+    "updated_at": "2022-09-05T12:11:41Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -4873,10 +5304,13 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "6e96ba0f-d345-43ef-a5be-b7d0de85d58b",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2024-02-07T11:36:53Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2023-01-30T20:19:09.136437Z",
-    "updated_at": "2024-02-07T11:36:53.768028Z",
+    "created_at": "2023-01-30T20:19:09Z",
+    "updated_at": "2023-01-30T20:19:09Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -4891,10 +5325,13 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "8a633bdf-bd76-43ee-8414-74f8095a05c3",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2024-02-07T11:36:53Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2023-09-05T14:19:48.964271Z",
-    "updated_at": "2024-02-07T11:36:53.779523Z",
+    "created_at": "2023-09-05T14:19:48Z",
+    "updated_at": "2023-09-05T14:19:48Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -4909,10 +5346,13 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "fe81e5b0-6526-4237-95a4-19268049f779",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2024-03-19T16:53:33Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2024-03-19T16:53:23.661687Z",
-    "updated_at": "2024-03-19T16:53:33.754857Z",
+    "created_at": "2024-03-19T16:53:23Z",
+    "updated_at": "2024-03-19T16:53:23Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -4927,10 +5367,13 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "8dbac1ec-7127-4bda-86a4-0ff02cfefd8d",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2024-07-05T11:20:04Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2024-07-05T11:19:53.817254Z",
-    "updated_at": "2024-07-05T11:20:04.308966Z",
+    "created_at": "2024-07-05T11:19:53Z",
+    "updated_at": "2024-07-05T11:19:53Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -4945,10 +5388,13 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "9915f7de-1cbd-447d-a315-35825f68be69",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2024-09-11T07:33:35Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2024-09-11T07:33:25.495344Z",
-    "updated_at": "2024-09-11T07:33:35.801664Z",
+    "created_at": "2024-09-11T07:33:25Z",
+    "updated_at": "2024-09-11T07:33:25Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -4963,10 +5409,13 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "c1626f78-e2de-47ab-8674-efe747db2fe3",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2024-11-27T06:50:32Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2024-11-27T06:50:22.018187Z",
-    "updated_at": "2024-11-27T06:50:32.185918Z",
+    "created_at": "2024-11-27T06:50:22Z",
+    "updated_at": "2024-11-27T06:50:22Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -4981,10 +5430,13 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "875d3ddf-1ede-41e1-b8af-134e418427a3",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2024-12-09T03:50:32Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2024-12-09T03:50:22.113452Z",
-    "updated_at": "2024-12-09T03:50:32.255574Z",
+    "created_at": "2024-12-09T03:50:22Z",
+    "updated_at": "2024-12-09T03:50:22Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -4999,10 +5451,13 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "ea6bfebc-a2a7-4a0f-b893-c970face3cd6",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2025-04-04T07:46:02Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2025-04-04T07:45:52.61102Z",
-    "updated_at": "2025-04-04T07:46:02.904353Z",
+    "created_at": "2025-04-04T07:45:52Z",
+    "updated_at": "2025-04-04T07:45:52Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5017,10 +5472,13 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "852bb033-afab-49d0-b827-4a3f32abe9ba",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2025-05-22T12:08:38Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2025-05-22T12:08:28.756124Z",
-    "updated_at": "2025-05-22T12:08:38.924272Z",
+    "created_at": "2025-05-22T12:08:28Z",
+    "updated_at": "2025-05-22T12:08:28Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5035,10 +5493,13 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "9e954752-5a2d-45fa-a809-e9707cedf2e5",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2025-05-22T12:27:14Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2025-05-22T12:27:03.779847Z",
-    "updated_at": "2025-05-22T12:27:13.998587Z",
+    "created_at": "2025-05-22T12:27:03Z",
+    "updated_at": "2025-05-22T12:27:03Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5053,10 +5514,13 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "7758e957-e3a9-418f-9e2b-50bd492cefa6",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2025-09-19T08:54:15Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2025-09-19T08:54:05.735279Z",
-    "updated_at": "2025-09-19T08:54:15.933234Z",
+    "created_at": "2025-09-19T08:54:05Z",
+    "updated_at": "2025-09-19T08:54:05Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5071,10 +5535,13 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "2e5b16d4-5379-47b5-a03d-d749777dadae",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2025-09-23T14:24:27Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2025-09-23T14:24:15.65587Z",
-    "updated_at": "2025-09-23T14:24:27.042606Z",
+    "created_at": "2025-09-23T14:24:15Z",
+    "updated_at": "2025-09-23T14:24:15Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5089,10 +5556,13 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "67a22c54-b5b7-4b96-bea1-0a2d38999def",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2025-09-25T10:04:03Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2025-09-25T10:03:52.537627Z",
-    "updated_at": "2025-09-25T10:04:03.139435Z",
+    "created_at": "2025-09-25T10:03:52Z",
+    "updated_at": "2025-09-25T10:03:52Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5107,10 +5577,13 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "56c535b2-bc3a-44f5-96c8-3ae1054f455c",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2025-10-27T13:43:40Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2025-10-27T13:43:30.220475Z",
-    "updated_at": "2025-10-27T13:43:40.464561Z",
+    "created_at": "2025-10-27T13:43:30Z",
+    "updated_at": "2025-10-27T13:43:30Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5125,10 +5598,13 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "a56a9023-fe64-43ba-991d-50ed9395f2e8",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2025-11-27T08:36:08Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2025-11-27T08:35:57.96849Z",
-    "updated_at": "2025-11-27T08:36:08.178234Z",
+    "created_at": "2025-11-27T08:35:57Z",
+    "updated_at": "2025-11-27T08:35:57Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5143,10 +5619,13 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "639793df-096a-470b-8ef1-c7aec9bd048f",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2025-12-02T12:44:14Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2025-12-02T12:44:02.914849Z",
-    "updated_at": "2025-12-02T12:44:14.024251Z",
+    "created_at": "2025-12-02T12:44:02Z",
+    "updated_at": "2025-12-02T12:44:02Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5161,10 +5640,13 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "3e0696d7-6669-40ce-8bde-8eb71b227b15",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2025-12-22T02:16:04Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2025-12-22T02:15:53.861864Z",
-    "updated_at": "2025-12-22T02:16:04.568818Z",
+    "created_at": "2025-12-22T02:15:53Z",
+    "updated_at": "2025-12-22T02:15:53Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5179,10 +5661,13 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "1c61ab20-0ab1-41ce-8ae4-b7269d9513a4",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2026-01-15T10:43:51Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2026-01-15T10:43:40.83055Z",
-    "updated_at": "2026-01-15T10:43:51.047453Z",
+    "created_at": "2026-01-15T10:43:40Z",
+    "updated_at": "2026-01-15T10:43:40Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5197,10 +5682,13 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "eaf48f15-7d72-4a5b-8833-96a4b04dba8f",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2026-03-12T14:51:01Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2026-03-12T14:50:46.56639Z",
-    "updated_at": "2026-03-12T14:51:01.87262Z",
+    "created_at": "2026-03-12T14:50:46Z",
+    "updated_at": "2026-03-12T14:50:46Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5215,10 +5703,13 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "1d031371-1b20-4363-b1f9-473d21e6dd2a",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2026-04-17T16:18:26Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2026-04-17T16:18:11.541605Z",
-    "updated_at": "2026-04-17T16:18:26.832753Z",
+    "created_at": "2026-04-17T16:18:11Z",
+    "updated_at": "2026-04-17T16:18:11Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5233,10 +5724,13 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "a1d78a19-0f96-4ac4-bd31-d532f1d68f92",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2026-05-18T11:04:39Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2026-05-18T11:04:24.541371Z",
-    "updated_at": "2026-05-18T11:04:39.958999Z",
+    "created_at": "2026-05-18T11:04:24Z",
+    "updated_at": "2026-05-18T11:04:24Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5251,10 +5745,13 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "9be55a43-72bd-41b5-b33e-3aeb1f432ce0",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2026-05-19T14:36:19Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2026-05-19T14:36:04.105076Z",
-    "updated_at": "2026-05-19T14:36:19.43414Z",
+    "created_at": "2026-05-19T14:36:04Z",
+    "updated_at": "2026-05-19T14:36:04Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5269,10 +5766,13 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "6430d626-937c-47db-a961-e38f52c17ba0",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2026-05-20T05:23:32Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2026-05-20T05:23:16.930508Z",
-    "updated_at": "2026-05-20T05:23:32.148615Z",
+    "created_at": "2026-05-20T05:23:16Z",
+    "updated_at": "2026-05-20T05:23:16Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5287,10 +5787,13 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "e9215dad-0d24-4bb5-a91b-e6e7ef7ed7d9",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2026-06-08T05:32:54Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2026-06-08T05:32:39.168199Z",
-    "updated_at": "2026-06-08T05:32:54.474845Z",
+    "created_at": "2026-06-08T05:32:39Z",
+    "updated_at": "2026-06-08T05:32:39Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5305,10 +5808,13 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "70e48010-a730-4e88-b1b0-6fab23adad01",
-    "ready": true,
+    "last_operation": {
+      "updated_at": "2026-06-19T09:38:38Z"
+    },
+    "usable": true,
     "service_plan_id": "1b702f36-bd66-4fad-b4d8-75cf0a0b8347",
-    "created_at": "2026-06-19T09:38:23.562547Z",
-    "updated_at": "2026-06-19T09:38:38.904015Z",
+    "created_at": "2026-06-19T09:38:23Z",
+    "updated_at": "2026-06-19T09:38:23Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5328,10 +5834,12 @@ exports[`hdi nock tests long list long list revealed 1`] = `
 [
   {
     "id": "3bc942d4-03f9-441a-9fae-1f16b2dc7957",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "cd0dd852-4045-4bff-82b5-909d0948c6fb",
-    "created_at": "2026-06-30T01:02:01.133142Z",
-    "updated_at": "2026-06-30T01:02:11.411833Z",
+    "created_at": "2026-06-30T01:02:01Z",
+    "updated_at": "2026-06-30T01:02:11Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5366,10 +5874,12 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "0afaea0b-8979-4f73-8eac-1a970475837e",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "42ff43bd-14a7-41f7-b903-259235c1abcb",
-    "created_at": "2026-06-30T01:02:01.14332Z",
-    "updated_at": "2026-06-30T01:02:11.398655Z",
+    "created_at": "2026-06-30T01:02:01Z",
+    "updated_at": "2026-06-30T01:02:11Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5404,10 +5914,12 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "c7250e2c-95e5-4acc-8b19-20ade98fc8d3",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "fe81e5b0-6526-4237-95a4-19268049f779",
-    "created_at": "2026-06-30T01:02:01.158377Z",
-    "updated_at": "2026-06-30T01:02:11.425551Z",
+    "created_at": "2026-06-30T01:02:01Z",
+    "updated_at": "2026-06-30T01:02:11Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5442,10 +5954,12 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "c7627d65-f537-4c51-9369-faa0e02adbaf",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "8a633bdf-bd76-43ee-8414-74f8095a05c3",
-    "created_at": "2026-06-30T01:02:01.150787Z",
-    "updated_at": "2026-06-30T01:02:11.498778Z",
+    "created_at": "2026-06-30T01:02:01Z",
+    "updated_at": "2026-06-30T01:02:11Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5480,10 +5994,12 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "6b6a252b-fa87-478d-924f-3310557b82d5",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "6e96ba0f-d345-43ef-a5be-b7d0de85d58b",
-    "created_at": "2026-06-30T01:02:01.143759Z",
-    "updated_at": "2026-06-30T01:02:11.478656Z",
+    "created_at": "2026-06-30T01:02:01Z",
+    "updated_at": "2026-06-30T01:02:11Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5518,10 +6034,12 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "9e4206f5-65c0-416a-8b5a-8169820a7d91",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "8dbac1ec-7127-4bda-86a4-0ff02cfefd8d",
-    "created_at": "2026-06-30T01:02:08.391446Z",
-    "updated_at": "2026-06-30T01:02:19.573906Z",
+    "created_at": "2026-06-30T01:02:08Z",
+    "updated_at": "2026-06-30T01:02:19Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5556,10 +6074,12 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "82c5f66c-5078-47e9-94ac-1c221e9c49cb",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "c1626f78-e2de-47ab-8674-efe747db2fe3",
-    "created_at": "2026-06-30T01:02:11.566542Z",
-    "updated_at": "2026-06-30T01:02:21.837554Z",
+    "created_at": "2026-06-30T01:02:11Z",
+    "updated_at": "2026-06-30T01:02:21Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5594,10 +6114,12 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "ce549ba0-df9e-4c4d-b4c7-57b44aa85126",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "9915f7de-1cbd-447d-a315-35825f68be69",
-    "created_at": "2026-06-30T01:02:11.535491Z",
-    "updated_at": "2026-06-30T01:02:21.906675Z",
+    "created_at": "2026-06-30T01:02:11Z",
+    "updated_at": "2026-06-30T01:02:21Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5632,10 +6154,12 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "401a3234-1da9-4310-81ff-8b64a6795a37",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "875d3ddf-1ede-41e1-b8af-134e418427a3",
-    "created_at": "2026-06-30T01:02:12.921121Z",
-    "updated_at": "2026-06-30T01:02:23.233678Z",
+    "created_at": "2026-06-30T01:02:12Z",
+    "updated_at": "2026-06-30T01:02:23Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5670,10 +6194,12 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "1df14d9f-eedb-49d9-b5f4-75ca9614957a",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "ea6bfebc-a2a7-4a0f-b893-c970face3cd6",
-    "created_at": "2026-06-30T01:02:13.248039Z",
-    "updated_at": "2026-06-30T01:02:23.509061Z",
+    "created_at": "2026-06-30T01:02:13Z",
+    "updated_at": "2026-06-30T01:02:23Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5708,10 +6234,12 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "0598c435-88b3-4544-a67a-f3c4845c2571",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "852bb033-afab-49d0-b827-4a3f32abe9ba",
-    "created_at": "2026-06-30T01:02:15.605424Z",
-    "updated_at": "2026-06-30T01:02:25.874265Z",
+    "created_at": "2026-06-30T01:02:15Z",
+    "updated_at": "2026-06-30T01:02:25Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5746,10 +6274,12 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "4b8faf64-556f-4537-96e5-b39d88683cde",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "9e954752-5a2d-45fa-a809-e9707cedf2e5",
-    "created_at": "2026-06-30T01:02:21.258805Z",
-    "updated_at": "2026-06-30T01:02:31.525351Z",
+    "created_at": "2026-06-30T01:02:21Z",
+    "updated_at": "2026-06-30T01:02:31Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5784,10 +6314,12 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "7de6abe4-a470-4b5e-80ca-9b722572ee08",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "7758e957-e3a9-418f-9e2b-50bd492cefa6",
-    "created_at": "2026-06-30T01:02:21.98597Z",
-    "updated_at": "2026-06-30T01:02:32.244637Z",
+    "created_at": "2026-06-30T01:02:21Z",
+    "updated_at": "2026-06-30T01:02:32Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5822,10 +6354,12 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "7ddbc0e2-0192-4725-876f-b1ec80885587",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "2e5b16d4-5379-47b5-a03d-d749777dadae",
-    "created_at": "2026-06-30T01:02:23.29021Z",
-    "updated_at": "2026-06-30T01:02:33.518516Z",
+    "created_at": "2026-06-30T01:02:23Z",
+    "updated_at": "2026-06-30T01:02:33Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5860,10 +6394,12 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "1aa10e1e-62f8-415e-b3c4-fd8d8a87d48c",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "67a22c54-b5b7-4b96-bea1-0a2d38999def",
-    "created_at": "2026-06-30T01:02:23.392008Z",
-    "updated_at": "2026-06-30T01:02:33.661354Z",
+    "created_at": "2026-06-30T01:02:23Z",
+    "updated_at": "2026-06-30T01:02:33Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5898,10 +6434,12 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "94ca1997-1ec4-4cda-86b5-49ab890d0c1d",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "56c535b2-bc3a-44f5-96c8-3ae1054f455c",
-    "created_at": "2026-06-30T01:02:23.562721Z",
-    "updated_at": "2026-06-30T01:02:33.779482Z",
+    "created_at": "2026-06-30T01:02:23Z",
+    "updated_at": "2026-06-30T01:02:33Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5936,10 +6474,12 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "d9b7b53b-2041-44a0-858a-355155ca6a78",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "a56a9023-fe64-43ba-991d-50ed9395f2e8",
-    "created_at": "2026-06-30T01:02:31.465295Z",
-    "updated_at": "2026-06-30T01:02:41.716986Z",
+    "created_at": "2026-06-30T01:02:31Z",
+    "updated_at": "2026-06-30T01:02:41Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -5974,10 +6514,12 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "f40678ea-9039-42fc-a003-8530f5649521",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "639793df-096a-470b-8ef1-c7aec9bd048f",
-    "created_at": "2026-06-30T01:02:32.308515Z",
-    "updated_at": "2026-06-30T01:02:42.553179Z",
+    "created_at": "2026-06-30T01:02:32Z",
+    "updated_at": "2026-06-30T01:02:42Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -6012,10 +6554,12 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "142c8e4b-5fad-4d8e-abcf-f6674cd9272c",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "3e0696d7-6669-40ce-8bde-8eb71b227b15",
-    "created_at": "2026-06-30T01:02:33.840024Z",
-    "updated_at": "2026-06-30T01:02:44.086631Z",
+    "created_at": "2026-06-30T01:02:33Z",
+    "updated_at": "2026-06-30T01:02:44Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -6050,10 +6594,12 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "8c20f7b1-9801-40ab-a1f5-4617ade19416",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "1c61ab20-0ab1-41ce-8ae4-b7269d9513a4",
-    "created_at": "2026-06-30T01:02:35.108151Z",
-    "updated_at": "2026-06-30T01:02:45.32672Z",
+    "created_at": "2026-06-30T01:02:35Z",
+    "updated_at": "2026-06-30T01:02:45Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -6088,10 +6634,12 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "302e92bb-e8b7-4ba4-9ecb-9c840ba0f020",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "eaf48f15-7d72-4a5b-8833-96a4b04dba8f",
-    "created_at": "2026-06-30T01:02:36.50217Z",
-    "updated_at": "2026-06-30T01:02:46.765064Z",
+    "created_at": "2026-06-30T01:02:36Z",
+    "updated_at": "2026-06-30T01:02:46Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -6126,10 +6674,12 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "d80fec91-cef9-4906-baab-4c8fb502d8d1",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "1d031371-1b20-4363-b1f9-473d21e6dd2a",
-    "created_at": "2026-06-30T01:02:38.868442Z",
-    "updated_at": "2026-06-30T01:02:49.142912Z",
+    "created_at": "2026-06-30T01:02:38Z",
+    "updated_at": "2026-06-30T01:02:49Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -6164,10 +6714,12 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "bd8b67ad-5bb9-4ad9-9013-637a15cc866d",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "a1d78a19-0f96-4ac4-bd31-d532f1d68f92",
-    "created_at": "2026-06-30T01:02:42.643532Z",
-    "updated_at": "2026-06-30T01:02:52.960795Z",
+    "created_at": "2026-06-30T01:02:42Z",
+    "updated_at": "2026-06-30T01:02:52Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -6202,10 +6754,12 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "714dbdae-4615-455c-8a56-2d3d53f3e00f",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "9be55a43-72bd-41b5-b33e-3aeb1f432ce0",
-    "created_at": "2026-06-30T01:02:44.138144Z",
-    "updated_at": "2026-06-30T01:02:54.444131Z",
+    "created_at": "2026-06-30T01:02:44Z",
+    "updated_at": "2026-06-30T01:02:54Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -6240,10 +6794,12 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "a1b03a4e-8cb9-4ae9-9537-aa27686d4fac",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "6430d626-937c-47db-a961-e38f52c17ba0",
-    "created_at": "2026-06-30T01:02:45.370205Z",
-    "updated_at": "2026-06-30T01:02:55.586653Z",
+    "created_at": "2026-06-30T01:02:45Z",
+    "updated_at": "2026-06-30T01:02:55Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -6278,10 +6834,12 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "436f54df-0270-4765-97bf-1b380b314c8e",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "e9215dad-0d24-4bb5-a91b-e6e7ef7ed7d9",
-    "created_at": "2026-06-30T01:02:46.83315Z",
-    "updated_at": "2026-06-30T01:02:57.105884Z",
+    "created_at": "2026-06-30T01:02:46Z",
+    "updated_at": "2026-06-30T01:02:57Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"
@@ -6316,10 +6874,12 @@ exports[`hdi nock tests long list long list revealed 1`] = `
   },
   {
     "id": "46ffeee2-7d4b-4831-82ce-487c4d2cbcfc",
-    "ready": true,
+    "last_operation": {
+      "state": "succeeded"
+    },
     "service_instance_id": "70e48010-a730-4e88-b1b0-6fab23adad01",
-    "created_at": "2026-06-30T01:02:48.773278Z",
-    "updated_at": "2026-06-30T01:02:59.085636Z",
+    "created_at": "2026-06-30T01:02:48Z",
+    "updated_at": "2026-06-30T01:02:59Z",
     "labels": {
       "container_id": [
         "51ddd18b-5a78-418e-8f41-9a4c518650ec"

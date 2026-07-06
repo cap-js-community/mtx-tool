@@ -67,7 +67,6 @@ const mockOfferingResponse = mockItemsResponse([
   { id: `offering-id-1`, name: `otherOffering` },
 ]);
 const mockFilteredOfferingResponse = mockItemsResponse([{ id: `offering-id-0`, name: `myOffering` }]);
-const mockFilteredHanaContainerOfferingResponse = mockItemsResponse([{ id: `offering-id-0`, name: `hana` }]);
 const mockPlanResponse = mockItemsResponse([
   { id: `plan-id-0`, service_offering_id: `offering-id-0`, name: `myPlan` },
   { id: `plan-id-1`, service_offering_id: `offering-id-1`, name: `otherPlan` },
@@ -75,6 +74,9 @@ const mockPlanResponse = mockItemsResponse([
 const mockFilteredPlanResponse = mockItemsResponse([
   { id: `plan-id-0`, service_offering_id: `offering-id-0`, name: `myPlan` },
 ]);
+
+const testHanaContainerPlanName = "hana:hdi-shared";
+const mockFilteredHanaContainerOfferingResponse = mockItemsResponse([{ id: `offering-id-0`, name: `hana` }]);
 const mockFilteredHanaContainerPlanResponse = mockItemsResponse([
   { id: `plan-id-0`, service_offering_id: `offering-id-0`, name: `hdi-shared` },
 ]);
@@ -112,8 +114,7 @@ const mockBindingFactory = (i) => ({
 
 describe("svm tests", () => {
   afterEach(() => {
-    resetMakeOneTime(svm._._requestOfferings);
-    resetMakeOneTime(svm._._requestPlans);
+    resetMakeOneTime(svm._._getServiceManager);
     mockRequest.request.mockClear();
   });
 
@@ -275,8 +276,8 @@ describe("svm tests", () => {
     });
 
     test("myPlan all-tenants", async () => {
-      mockRequest.request.mockReturnValueOnce(mockFilteredHanaContainerOfferingResponse);
-      mockRequest.request.mockReturnValueOnce(mockFilteredHanaContainerPlanResponse);
+      mockRequest.request.mockReturnValueOnce(mockFilteredOfferingResponse);
+      mockRequest.request.mockReturnValueOnce(mockFilteredPlanResponse);
       mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isPlanFiltered: true }));
       mockRequest.request.mockReturnValueOnce(
         mockItemsResponse(Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)))
@@ -289,6 +290,44 @@ describe("svm tests", () => {
         [
           "GET service-manager-url /v2/service_offerings { name: 'myOffering' }",
           "GET service-manager-url /v2/service_plans { service_offering_id: 'offering-id-0', name: 'myPlan' }",
+          "GET service-manager-url /v2/service_instances { service_plan_id: 'plan-id-0' }",
+          "GET service-manager-url /v2/service_bindings",
+          "POST service-manager-url /v2/service_bindings
+        '{"name":"xxx","service_instance_id":"instance-id-0","labels":{"instance_id":["instance-id-0"],"tenant_id":["tenant-id-0"],"service_plan_id":["plan-id-0"]}}'",
+          "POST service-manager-url /v2/service_bindings
+        '{"name":"xxx","service_instance_id":"instance-id-2","labels":{"instance_id":["instance-id-2"],"tenant_id":["tenant-id-1"],"service_plan_id":["plan-id-0"]}}'",
+          "POST service-manager-url /v2/service_bindings
+        '{"name":"xxx","service_instance_id":"instance-id-4","labels":{"instance_id":["instance-id-4"],"tenant_id":["tenant-id-2"],"service_plan_id":["plan-id-0"]}}'",
+          "GET service-manager-url /v2/service_bindings/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/operations/op-id",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-0",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-2",
+          "DELETE service-manager-url /v2/service_bindings/binding-id-4",
+          "GET service-manager-url /v2/service_bindings/binding-id-0/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/binding-id-2/operations/op-id",
+          "GET service-manager-url /v2/service_bindings/binding-id-4/operations/op-id",
+        ]
+      `);
+      expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`"refreshed 3 bindings"`);
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
+    });
+
+    test("hana:hdi-shared injects managing_client_lib label", async () => {
+      mockRequest.request.mockReturnValueOnce(mockFilteredHanaContainerOfferingResponse);
+      mockRequest.request.mockReturnValueOnce(mockFilteredHanaContainerPlanResponse);
+      mockRequest.request.mockReturnValueOnce(mockInstanceResponse(6, { isPlanFiltered: true }));
+      mockRequest.request.mockReturnValueOnce(
+        mockItemsResponse(Array.from({ length: 6 }).map((_, i) => mockBindingFactory(i)))
+      );
+
+      expect(
+        await svm.serviceManagerRefreshBindings(mockContext, [testHanaContainerPlanName, "all-tenants"], [])
+      ).toBeUndefined();
+      expect(collectRequestMockCallsStable(mockRequest.request)).toMatchInlineSnapshot(`
+        [
+          "GET service-manager-url /v2/service_offerings { name: 'hana' }",
+          "GET service-manager-url /v2/service_plans { service_offering_id: 'offering-id-0', name: 'hdi-shared' }",
           "GET service-manager-url /v2/service_instances { service_plan_id: 'plan-id-0' }",
           "GET service-manager-url /v2/service_bindings",
           "POST service-manager-url /v2/service_bindings

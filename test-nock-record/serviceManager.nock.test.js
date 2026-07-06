@@ -22,8 +22,7 @@ const freshContext = async () => await newContext({ usePersistedCache: false, is
 
 describe("svm nock", () => {
   afterEach(() => {
-    resetMakeOneTime(svm._._requestOfferings);
-    resetMakeOneTime(svm._._requestPlans);
+    resetMakeOneTime(svm._._getServiceManager);
     nock.restore();
   });
 

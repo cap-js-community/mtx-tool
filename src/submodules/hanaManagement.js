@@ -1,6 +1,5 @@
 "use strict";
 
-const packageInfo = require("../../package.json");
 const {
   tableList,
   isPortFree,
@@ -10,19 +9,12 @@ const {
 } = require("../shared/static");
 const { makeOneTime } = require("../shared/execution-control");
 const { assert } = require("../shared/error");
-const { request } = require("../shared/request");
 const { Logger } = require("../shared/logger");
+const { ServiceManager } = require("../shared/service-manager");
 
 const TUNNEL_LOCAL_PORT = 30015;
-const SENSITIVE_FIELD_NAMES = ["password", "hdi_password"];
-const SENSITIVE_FIELD_HIDDEN_TEXT = "*** show with --reveal ***";
 const HDI_SHARED_SERVICE_OFFERING = "hana";
 const HDI_SHARED_SERVICE_PLAN = "hdi-shared";
-
-const QUERY_TYPE = {
-  FIELD: "fieldQuery",
-  LABEL: "labelQuery",
-};
 
 const logger = Logger.getInstance();
 
@@ -33,137 +25,33 @@ const compareForTenantId = compareFor((a) => a.labels.tenant_id[0].toUpperCase()
 const _formatOutput = (output) =>
   JSON.stringify(Array.isArray(output) && output.length === 1 ? output[0] : output, null, 2);
 
-const _hideSensitiveDataInBinding = (entry) => {
-  const fields = entry?.credentials ? Object.keys(entry.credentials) : [];
-  for (const field of fields) {
-    if (SENSITIVE_FIELD_NAMES.includes(field)) {
-      entry.credentials[field] = SENSITIVE_FIELD_HIDDEN_TEXT;
-    }
-  }
-};
-
-const _getQueryPart = (filters) =>
-  Object.entries(filters)
-    .reduce((acc, [key, value]) => {
-      acc.push(`${key} eq '${value}'`);
-      return acc;
-    }, [])
-    .join(" and ");
-
-const _getQuery = (components) => {
-  const partMap = components.reduce((acc, { predicate, type, key, value }) => {
-    if (predicate) {
-      if (!Object.prototype.hasOwnProperty.call(acc, type)) {
-        acc[type] = { [key]: value };
-      } else {
-        acc[type][key] = value;
-      }
-    }
-    return acc;
-  }, {});
-  const parts = Object.entries(partMap);
-  return parts.length === 0
-    ? undefined
-    : parts.reduce(
-        (acc, [type, filters]) => {
-          acc["query"][type] = _getQueryPart(filters);
-          return acc;
-        },
-        { query: {} }
-      );
-};
-
-const _serviceManagerRequest = async (context, reqOptions = {}) => {
+const _getServiceManager = makeOneTime(async (context) => {
   const {
     cfBinding: { credentials },
   } = await context.getHdiInfo();
-  const url = credentials.sm_url;
-  const auth = { token: await context.getCachedUaaTokenFromCredentials(credentials) };
-  const response = await request({
-    url,
-    auth,
-    ...reqOptions,
-    headers: {
-      // NOTE: service-manager uses this client information for better consumption reporting and rate-limiting
-      "Client-Name": packageInfo.name,
-      "Client-Version": packageInfo.version,
-      ...reqOptions?.headers,
-    },
+  return new ServiceManager({
+    credentials,
+    getToken: (credentials) => context.getCachedUaaTokenFromCredentials(credentials),
   });
-
-  if (reqOptions.method) {
-    return response;
-  }
-  // NOTE: no method here means GET and all service endpoints we use have this structure
-  return (await response.json())?.items ?? [];
-};
-
-const _requestOfferings = makeOneTime(
-  async (context, { filterServiceOfferingName } = {}) =>
-    await _serviceManagerRequest(context, {
-      pathname: "/v1/service_offerings",
-      ..._getQuery([
-        { predicate: filterServiceOfferingName, type: QUERY_TYPE.FIELD, key: "name", value: filterServiceOfferingName },
-      ]),
-    })
-);
-
-const _requestPlans = makeOneTime(
-  async (context, { filterServiceOfferingId, filterServicePlanName } = {}) =>
-    await _serviceManagerRequest(context, {
-      pathname: "/v1/service_plans",
-      ..._getQuery([
-        {
-          predicate: filterServiceOfferingId,
-          type: QUERY_TYPE.FIELD,
-          key: "service_offering_id",
-          value: filterServiceOfferingId,
-        },
-        { predicate: filterServicePlanName, type: QUERY_TYPE.FIELD, key: "name", value: filterServicePlanName },
-      ]),
-    })
-);
+});
 
 const _getHdiSharedPlanId = makeOneTime(async (context) => {
-  const [offering] = await _requestOfferings(context, { filterServiceOfferingName: HDI_SHARED_SERVICE_OFFERING });
-  assert(offering?.id, `could not find service offering with name ${HDI_SHARED_SERVICE_OFFERING}`);
-  const [plan] = await _requestPlans(context, {
-    filterServiceOfferingId: offering.id,
-    filterServicePlanName: HDI_SHARED_SERVICE_PLAN,
-  });
-  assert(plan?.id, `could not find service plan with name ${HDI_SHARED_SERVICE_PLAN}`);
-  return plan.id;
+  const svm = await _getServiceManager(context);
+  const { planId } = await svm.getPlanInfo(HDI_SHARED_SERVICE_OFFERING, HDI_SHARED_SERVICE_PLAN);
+  return planId;
 });
 
 const _hdiInstances = async (context, { filterTenantId, doEnsureTenantLabel = true } = {}) => {
-  const servicePlanId = await _getHdiSharedPlanId(context);
-  let instances = await _serviceManagerRequest(context, {
-    pathname: "/v1/service_instances",
-    ..._getQuery([
-      { predicate: true, type: QUERY_TYPE.FIELD, key: "service_plan_id", value: servicePlanId },
-      { predicate: filterTenantId, type: QUERY_TYPE.LABEL, key: "tenant_id", value: filterTenantId },
-    ]),
-  });
-  if (doEnsureTenantLabel) {
-    instances = instances.filter((instance) => instance.labels.tenant_id !== undefined);
-  }
-  return instances;
+  const svm = await _getServiceManager(context);
+  const filterPlanId = await _getHdiSharedPlanId(context);
+  return await svm.getInstances({ filterTenantId, filterPlanId, doEnsureTenantLabel });
 };
 
 // NOTE: service-manager has no way to filter bindings by the underlying instance's service_plan_id, so we fetch by
 //   tenant and rely on callers to intersect against hdi instances
 const _hdiBindings = async (context, { filterTenantId, doReveal = false, doEnsureTenantLabel = true } = {}) => {
-  let bindings = await _serviceManagerRequest(context, {
-    pathname: "/v1/service_bindings",
-    ..._getQuery([{ predicate: filterTenantId, type: QUERY_TYPE.LABEL, key: "tenant_id", value: filterTenantId }]),
-  });
-  if (doEnsureTenantLabel) {
-    bindings = bindings.filter((binding) => binding.labels.tenant_id !== undefined);
-  }
-  if (!doReveal) {
-    bindings.forEach(_hideSensitiveDataInBinding);
-  }
-  return bindings;
+  const svm = await _getServiceManager(context);
+  return await svm.getBindings({ filterTenantId, doEnsureTenantLabel, doReveal });
 };
 
 const _nextFreeSidPort = async () => {
@@ -277,7 +165,7 @@ const _hdiList = async (context, { filterTenantId, doTimestamps, doJsonOutput } 
   instances.sort(compareForTenantId);
 
   const doShowDbTenantColumn = bindings.some((binding) => binding.credentials?.tenantId);
-  const headerRow = ["tenant_id", "host", "schema", "ready"];
+  const headerRow = ["tenant_id", "host", "schema", "usable"];
   doShowDbTenantColumn && headerRow.splice(1, 0, "db_tenant_id");
   doTimestamps && headerRow.push("created_on", "updated_on");
   const nowDate = new Date();
@@ -287,10 +175,15 @@ const _hdiList = async (context, { filterTenantId, doTimestamps, doJsonOutput } 
       instance.labels.tenant_id[0],
       binding ? binding.credentials?.host + ":" + binding.credentials?.port : "missing binding",
       binding ? binding.credentials?.schema : "",
-      binding ? instance.ready && binding.ready : "",
+      instance.usable,
     ];
     doShowDbTenantColumn && row.splice(1, 0, instance.id);
-    doTimestamps && row.push(...formatTimestampsWithRelativeDays([instance.created_at, instance.updated_at], nowDate));
+    doTimestamps &&
+      row.push(
+        // NOTE: we currently use instance.last_operation.updated_at in preference to instance.updated_at,
+        //   because the top-level fields appears not to be filled correctly.
+        ...formatTimestampsWithRelativeDays([instance.created_at, instance.last_operation?.updated_at], nowDate)
+      );
     return row;
   };
   const table = instances && instances.length ? [headerRow].concat(instances.map(instanceMap)) : null;
@@ -335,8 +228,7 @@ module.exports = {
   hdiTunnelTenant,
 
   _: {
-    _requestOfferings,
-    _requestPlans,
+    _getServiceManager,
     _getHdiSharedPlanId,
   },
 };
