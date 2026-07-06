@@ -178,7 +178,12 @@ const _hdiList = async (context, { filterTenantId, doTimestamps, doJsonOutput } 
       instance.usable,
     ];
     doShowDbTenantColumn && row.splice(1, 0, instance.id);
-    doTimestamps && row.push(...formatTimestampsWithRelativeDays([instance.created_at, instance.updated_at], nowDate));
+    doTimestamps &&
+      row.push(
+        // NOTE: we currently use instance.last_operation.updated_at in preference to instance.updated_at,
+        //   because the top-level fields appears not to be filled correctly.
+        ...formatTimestampsWithRelativeDays([instance.created_at, instance.last_operation?.updated_at], nowDate)
+      );
     return row;
   };
   const table = instances && instances.length ? [headerRow].concat(instances.map(instanceMap)) : null;

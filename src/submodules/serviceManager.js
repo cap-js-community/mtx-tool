@@ -48,8 +48,8 @@ const svmRequestConcurrency = parseIntWithFallback(
 // NOTE: the tenant ids for service manager are not necessarily uuids, this is a much broader validator
 const isValidTenantId = (input) => input && /^[0-9a-z-_/]+$/i.test(input);
 
-const compareForTenantId = compareFor((a) => a.labels.tenant_id[0].toUpperCase());
-const compareForUpdatedAtDesc = compareFor((a) => a.updated_at, true);
+const compareInstancesForTenantId = compareFor((a) => a.labels.tenant_id[0].toUpperCase());
+const compareBindingsForUpdatedAtDesc = compareFor((a) => a.updated_at, true);
 
 const _formatOutput = (output) =>
   JSON.stringify(Array.isArray(output) && output.length === 1 ? output[0] : output, null, 2);
@@ -81,7 +81,7 @@ const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJs
     svm.getBindings({ filterTenantId }),
   ]);
   const planFullNameById = _indexPlanFullNameById(offerings, plans);
-  instances.sort(compareForTenantId);
+  instances.sort(compareInstancesForTenantId);
   const bindingsByInstance = clusterByKey(bindings, "service_instance_id");
 
   if (doJsonOutput) {
@@ -118,7 +118,9 @@ const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJs
           instance.id,
           instance.usable,
           ...(doTimestamps
-            ? formatTimestampsWithRelativeDays([instance.created_at, instance.updated_at], nowDate)
+            ? // NOTE: we currently use instance.last_operation.updated_at in preference to instance.updated_at,
+              //   because the top-level fields appears not to be filled correctly.
+              formatTimestampsWithRelativeDays([instance.created_at, instance.last_operation?.updated_at], nowDate)
             : []),
           connectorPiece(instanceBindings.length, index),
           binding.id,
@@ -184,8 +186,8 @@ const _serviceManagerRepairBindings = async (context, { planInfo, parameters } =
     ? _indexPlanFullNameByIdFromPlanInfo(planInfo)
     : _indexPlanFullNameById(offerings, plans);
 
-  instances.sort(compareForTenantId);
-  bindings.sort(compareForUpdatedAtDesc);
+  instances.sort(compareInstancesForTenantId);
+  bindings.sort(compareBindingsForUpdatedAtDesc);
   const bindingsByInstance = clusterByKey(bindings, "service_instance_id");
   const changeQueue = new FunnelQueue(svmRequestConcurrency);
 
@@ -307,7 +309,7 @@ const _serviceManagerFreshBindings = async (
     ? _indexPlanFullNameByIdFromPlanInfo(planInfo)
     : _indexPlanFullNameById(offerings, plans);
 
-  bindings.sort(compareForUpdatedAtDesc);
+  bindings.sort(compareBindingsForUpdatedAtDesc);
   const bindingsByInstance = clusterByKey(bindings, "service_instance_id");
 
   await limiter(svmRequestConcurrency, instances, async (instance) => {

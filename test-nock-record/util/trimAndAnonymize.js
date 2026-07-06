@@ -394,13 +394,14 @@ const trimServiceManagerBindingsCall = (call) => {
 };
 
 // Trim a service-manager /v2/service_instances response. Production reads from
-// each instance: id, usable, service_plan_id, created_at, updated_at, and
+// each instance: id, last_operation.updated_at, usable, service_plan_id, created_at, updated_at, and
 // labels.
 const trimServiceManagerInstancesV2Call = (call) => {
   const response = call.response;
   call.response = {
     items: response.items.map((instance) => ({
       id: instance.id,
+      last_operation: instance.last_operation && { updated_at: instance.last_operation.updated_at },
       usable: instance.usable,
       service_plan_id: instance.service_plan_id,
       created_at: instance.created_at,
