@@ -209,6 +209,7 @@ const _serviceManagerNormalizeBindings = async (
       for (let i = 0; i < missingBindingCount; i++) {
         const newLabels = {
           ...instance.labels,
+          ...succeededBindings[0]?.labels,
           ...(planFullName === HANA_CONTAINER_OFFERING_PLAN_NAME && HANA_CONTAINER_LABELS),
         };
         changeQueue.enqueue(
