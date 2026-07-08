@@ -226,6 +226,10 @@ const _serviceManagerNormalizeBindings = async (
         );
       });
     } else if (succeededBindings.length > targetCount) {
+      // NOTE: bindings are sorted by updated_at desc, so succeededBindings[0] is the most-recent. we keep it and
+      //   delete the rest. this ordering is a load-bearing invariant of the zero-downtime credential rotation
+      //   choreography: after a rolling restart, applications hold credentials from the most-recent binding, so
+      //   pruning older bindings never invalidates in-use credentials.
       const ambivalentBindings = succeededBindings.slice(1);
       for (const ambivalentBinding of ambivalentBindings) {
         changeQueue.enqueue(async () => await svm.deleteBinding(ambivalentBinding.id));
