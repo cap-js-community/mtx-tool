@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ⚠️ This release is potentially disruptive. We reworked with service-manager interactions. The operations for credential
 rotation become idempotent now, making outside retries possible.
 
+Both replacement commands take `SERVICE_PLAN TENANT_ID` calling args. Callers of the old `--svm-repair-bindings` need to use `all-tenants` to reproduce the previous behavior.
+
 | old svm command          | new svm command              |
 | :----------------------- | :--------------------------- |
 | `--svm-repair-bindings`  | `--svm-make-bindings-single` |
