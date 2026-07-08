@@ -12,22 +12,31 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ⚠️ This release is potentially disruptive. We reworked with service-manager interactions. The operations for credential
 rotation become idempotent now, making outside retries possible.
 
-| old svm command          | new svm command                                                              |
-| :----------------------- | :--------------------------------------------------------------------------- |
-| `--svm-repair-bindings`  | `--svm-make-bindings-single`                                                 |
-| `--svm-fresh-bindings`   | `--svm-make-bindings-double`                                                 |
-| `--svm-refresh-bindings` | `--svm-make-bindings-double` then `--svm-make-bindings-single` after restart |
+| old svm command          | new svm command              |
+| :----------------------- | :--------------------------- |
+| `--svm-repair-bindings`  | `--svm-make-bindings-single` |
+| `--svm-fresh-bindings`   | `--svm-make-bindings-double` |
+| `--svm-refresh-bindings` | see choreography below       |
+
+The full rotation is a _five-step choreography_ of the two idempotent commands:
+
+1. rolling restart — converge apps onto the most-recent binding.
+2. `--svm-make-bindings-single` — prune to one binding per instance.
+3. `--svm-make-bindings-double` — add the new binding.
+4. rolling restart — apps switch to the new binding.
+5. `--svm-make-bindings-single` — prune the old binding.
+
+If the fleet is already at one binding per instance, skip to step 3.
 
 ### REMOVED
 
-- svm: removed `--svm-refresh-bindings`. for zero-downtime credential rotation, use `--svm-make-bindings-double` and,
-  after applications have restarted, `--svm-make-bindings-single`.
+- svm: removed `--svm-refresh-bindings`. credential rotation is now a choreography of the two idempotent commands.
 
 ### CHANGED
 
-- svm: renamed `--svm-repair-bindings` to `--svm-make-bindings-single` and `--svm-fresh-bindings` to
-  `--svm-make-bindings-double`. both are now idempotent and have the `SERVICE_PLAN TENANT_ID` calling args, making them
-  consistent with other non-list `svm` commands.
+- svm: reworked `--svm-repair-bindings` to `--svm-make-bindings-single` and `--svm-fresh-bindings` to
+  `--svm-make-bindings-double`. both are now idempotent and have the `SERVICE_PLAN TENANT_ID` calling args, making
+  them consistent with other `svm` commands.
 
 ## v0.12.0 - 2026-06-26
 
