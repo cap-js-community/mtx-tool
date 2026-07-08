@@ -9,6 +9,26 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## v0.13.0 - tbd
 
+⚠️ This release is potentially disruptive. We reworked with service-manager interactions. The operations for credential
+rotation become idempotent now, making outside retries possible.
+
+| old svm command          | new svm command                                                              |
+| :----------------------- | :--------------------------------------------------------------------------- |
+| `--svm-repair-bindings`  | `--svm-make-bindings-single`                                                 |
+| `--svm-fresh-bindings`   | `--svm-make-bindings-double`                                                 |
+| `--svm-refresh-bindings` | `--svm-make-bindings-double` then `--svm-make-bindings-single` after restart |
+
+### REMOVED
+
+- svm: removed `--svm-refresh-bindings`. for zero-downtime credential rotation, use `--svm-make-bindings-double` and,
+  after applications have restarted, `--svm-make-bindings-single`.
+
+### CHANGED
+
+- svm: renamed `--svm-repair-bindings` to `--svm-make-bindings-single` and `--svm-fresh-bindings` to
+  `--svm-make-bindings-double`. both are now idempotent and have the `SERVICE_PLAN TENANT_ID` calling args, making them
+  consistent with other non-list `svm` commands.
+
 ## v0.12.0 - 2026-06-26
 
 ### CHANGED
