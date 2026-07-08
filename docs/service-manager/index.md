@@ -28,20 +28,19 @@ Commands for this area are:
 
 ```
    === service manager (svm) ===
-~  svml   --svm-list [TENANT_ID]                                  list all managed service instances and binding
-~  svmll  --svm-long-list [TENANT_ID]                             long list all managed service instances and bindings
-          --svm-repair-bindings SERVICE_PLAN [PARAMS]             repair missing and ambivalent service bindings
-          --svm-fresh-bindings SERVICE_PLAN TENANT_ID [PARAMS]    create new service bindings
-          --svm-refresh-bindings SERVICE_PLAN TENANT_ID [PARAMS]  delete and recreate service bindings
-*         --svm-delete-bindings SERVICE_PLAN TENANT_ID            delete service bindings
-*         --svm-delete SERVICE_PLAN TENANT_ID                     delete service instances and bindings
-          ...    SERVICE_PLAN                                     filter for service plan with "offering:plan"
-                                                                    or "all-services" for all
-          ...    TENANT_ID                                        filter for tenant id or "all-tenants" for all
-          ...    [PARAMS]                                         create binding with custom parameters
-          ...    --json                                           list in json
-          ...    --time                                           list includes timestamps
-          ...    --reveal                                         show sensitive information
+~  svml   --svm-list [TENANT_ID]                                      list all service instances and bindings
+~  svmll  --svm-long-list [TENANT_ID]                                 long list all service instances and bindings
+          --svm-make-bindings-single SERVICE_PLAN TENANT_ID [PARAMS]  make service bindings 1-to-1
+          --svm-make-bindings-double SERVICE_PLAN TENANT_ID [PARAMS]  make service bindings 1-to-2
+*         --svm-delete-bindings SERVICE_PLAN TENANT_ID                delete service bindings
+*         --svm-delete SERVICE_PLAN TENANT_ID                         delete service instances and bindings
+          ...    SERVICE_PLAN                                         filter for service plan with "offering:plan"
+                                                                        or "all-services" for all
+          ...    TENANT_ID                                            filter for tenant id or "all-tenants" for all
+          ...    [PARAMS]                                             create binding with custom parameters
+          ...    --json                                               list in json
+          ...    --time                                               list includes timestamps
+          ...    --reveal                                             show sensitive information
 
 ~  are read-only commands
 *  are potentially _dangerous_ commands
@@ -89,17 +88,15 @@ mtx --svm-repair-bindings SERVICE_PLAN
 will normalize all service instances, so that they have exactly one binding. Missing bindings are created and ambivalent
 ones are removed. This happens either for a given service plan, e.g. `objectstore:standard`, or for `all-services`.
 
-## Fresh or Refresh Bindings
+## Fresh Bindings
 
-The fresh and refresh commands
+The fresh command
 
 ```
 mtx --svm-fresh-bindings SERVICE_PLAN TENANT_ID
-mtx --svm-refresh-bindings SERVICE_PLAN TENANT_ID
 ```
 
-will create new bindings and, for refresh, also remove the current bindings. Regular credential rotation is recommended
-to increase security.
+will create new bindings. Regular credential rotation is recommended to increase security.
 
 You can select which managed bindings you want to include with the following combinations:
 
@@ -110,24 +107,19 @@ You can select which managed bindings you want to include with the following com
 | `<service-offering>:<service-plan>` | `all-tenants` | all managed bindings for a given plan, e.g. `hana:hdi-shared` |
 | `<service-offering>:<service-plan>` | `<tenant-id>` | all managed bindings for a given tenant and plan              |
 
-{: .warn}
-Refreshing will invalidate current credentials, i.e. all applications that have them in memory need to either handle
-this gracefully or be restarted. See [Zero Downtime Credential Rotation](#zero-downtime-credential-rotation) for how
-to perform credential rotation in productive environments.
-
 {: .info}
 Fresh will not invalidate current credentials, but you should use the repair command for cleanup once the new
-credentials are active in all relevant servers.
+credentials are active in all relevant servers. See [Zero Downtime Credential Rotation](#zero-downtime-credential-rotation)
+for how to perform credential rotation in productive environments.
 
-Both the fresh and refresh commands allow you to pass arbitrary parameters to the service binding that gets created in
-service manager. In other words,
+The fresh command allows you to pass arbitrary parameters to the service binding that gets created in service manager.
+In other words,
 
 ```
 mtx --svm-fresh-bindings SERVICE_PLAN TENANT_ID '{"special":true}'
-mtx --svm-refresh-bindings SERVICE_PLAN TENANT_ID '{"special":true}'
 ```
 
-correspond to
+corresponds to
 
 ```
 cf bind-service <some-app> <service-instance matching tenant and service-plan> -c '{"special":true}'
@@ -136,7 +128,7 @@ cf bind-service <some-app> <service-instance matching tenant and service-plan> -
 ## Delete Bindings and Delete
 
 The deletion commands are only sensible for cleanup after some mocking/testing purposes. The syntax is similar to
-[Refresh Bindings](#refresh-bindings).
+[Fresh Bindings](#fresh-bindings).
 
 Use
 
