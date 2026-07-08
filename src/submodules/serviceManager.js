@@ -290,14 +290,14 @@ async function _resolveBindingsOptions(context, planFullName, tenantId, rawParam
   };
 }
 
-const serviceManagerNormalizeBindingsSingle = async (context, [planFullName, tenantId], [rawParameters]) => {
+const serviceManagerMakeBindingsSingle = async (context, [planFullName, tenantId], [rawParameters]) => {
   return await _serviceManagerNormalizeBindings(context, {
     targetCount: 1,
     ...(await _resolveBindingsOptions(context, planFullName, tenantId, rawParameters)),
   });
 };
 
-const serviceManagerNormalizeBindingsDouble = async (context, [planFullName, tenantId], [rawParameters]) => {
+const serviceManagerMakeBindingsDouble = async (context, [planFullName, tenantId], [rawParameters]) => {
   return await _serviceManagerNormalizeBindings(context, {
     targetCount: 2,
     ...(await _resolveBindingsOptions(context, planFullName, tenantId, rawParameters)),
@@ -357,8 +357,8 @@ const serviceManagerDeleteInstancesAndBindings = async (context, [planFullName, 
 module.exports = {
   serviceManagerList,
   serviceManagerLongList,
-  serviceManagerNormalizeBindingsSingle,
-  serviceManagerNormalizeBindingsDouble,
+  serviceManagerMakeBindingsSingle,
+  serviceManagerMakeBindingsDouble,
   serviceManagerDeleteBindings,
   serviceManagerDeleteInstancesAndBindings,
 

@@ -356,18 +356,18 @@ const APP_COMMAND_INFOS = Object.freeze({
     callback: svm.serviceManagerLongList,
     readonly: true,
   },
-  SVM_REPAIR_BINDINGS: {
-    commandVariants: ["--svm-repair-bindings"],
-    requiredPassArgs: [PASS_ARG.SERVICE_PLAN],
-    optionalPassArgs: [PASS_ARG.PARAMS],
-    callback: svm.serviceManagerRepairBindings,
-    useCache: false,
-  },
-  SVM_FRESH_BINDINGS: {
-    commandVariants: ["--svm-fresh-bindings"],
+  SVM_MAKE_BINDINGS_SINGLE: {
+    commandVariants: ["--svm-make-bindings-single"],
     requiredPassArgs: [PASS_ARG.SERVICE_PLAN, PASS_ARG.TENANT_ID],
     optionalPassArgs: [PASS_ARG.PARAMS],
-    callback: svm.serviceManagerFreshBindings,
+    callback: svm.serviceManagerMakeBindingsSingle,
+    useCache: false,
+  },
+  SVM_MAKE_BINDINGS_DOUBLE: {
+    commandVariants: ["--svm-make-bindings-double"],
+    requiredPassArgs: [PASS_ARG.SERVICE_PLAN, PASS_ARG.TENANT_ID],
+    optionalPassArgs: [PASS_ARG.PARAMS],
+    callback: svm.serviceManagerMakeBindingsDouble,
     useCache: false,
   },
   SVM_DELETE_BINDINGS: {
