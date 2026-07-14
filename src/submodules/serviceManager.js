@@ -359,6 +359,38 @@ const serviceManagerDeleteInstancesAndBindings = async (context, [planFullName, 
   });
 };
 
+const serviceManagerRepairBindingsDeprecated = async (context, [planFullName], [rawParameters]) => {
+  const doFilterPlanId = planFullName !== SERVICE_PLAN_ALL_IDENTIFIER;
+  const planInfo = doFilterPlanId ? await _getPlanInfoFromFullName(context, planFullName) : undefined;
+  const parameters = tryJsonParse(rawParameters);
+  assert(!rawParameters || isObject(parameters), `argument "${rawParameters}" needs to be a valid JSON object`);
+  return await _serviceManagerNormalizeBindings(context, {
+    targetCount: 1,
+    ...(planInfo && { planInfo }),
+    parameters,
+  });
+};
+
+const serviceManagerRefreshBindingsDeprecated = async (context, [planFullName, tenantId], [rawParameters]) => {
+  const options = await _resolveBindingsOptions(context, planFullName, tenantId, rawParameters);
+  await _serviceManagerNormalizeBindings(context, {
+    targetCount: 2,
+    ...options,
+  });
+  await _serviceManagerNormalizeBindings(context, {
+    targetCount: 1,
+    ...options,
+  });
+};
+
+const serviceManagerFreshBindingsDeprecated = async (context, [planFullName, tenantId], [rawParameters]) => {
+  const options = await _resolveBindingsOptions(context, planFullName, tenantId, rawParameters);
+  await _serviceManagerNormalizeBindings(context, {
+    targetCount: 2,
+    ...options,
+  });
+};
+
 module.exports = {
   serviceManagerList,
   serviceManagerLongList,
@@ -366,6 +398,9 @@ module.exports = {
   serviceManagerMakeBindingsDouble,
   serviceManagerDeleteBindings,
   serviceManagerDeleteInstancesAndBindings,
+  serviceManagerRepairBindingsDeprecated,
+  serviceManagerFreshBindingsDeprecated,
+  serviceManagerRefreshBindingsDeprecated,
 
   _: {
     _getServiceManager,
