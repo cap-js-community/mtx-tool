@@ -370,6 +370,20 @@ const APP_COMMAND_INFOS = Object.freeze({
     callback: svm.serviceManagerMakeBindingsDouble,
     useCache: false,
   },
+  SVM_DELETE_BINDINGS: {
+    commandVariants: ["--svm-delete-bindings"],
+    requiredPassArgs: [PASS_ARG.SERVICE_PLAN, PASS_ARG.TENANT_ID],
+    callback: svm.serviceManagerDeleteBindings,
+    useCache: false,
+    danger: true,
+  },
+  SVM_DELETE: {
+    commandVariants: ["--svm-delete"],
+    requiredPassArgs: [PASS_ARG.SERVICE_PLAN, PASS_ARG.TENANT_ID],
+    callback: svm.serviceManagerDeleteInstancesAndBindings,
+    useCache: false,
+    danger: true,
+  },
   SVM_REPAIR_BINDINGS: {
     deprecated: true,
     commandVariants: ["--svm-repair-bindings"],
@@ -393,20 +407,6 @@ const APP_COMMAND_INFOS = Object.freeze({
     optionalPassArgs: [PASS_ARG.PARAMS],
     callback: svm.serviceManagerRefreshBindingsDeprecated,
     useCache: false,
-  },
-  SVM_DELETE_BINDINGS: {
-    commandVariants: ["--svm-delete-bindings"],
-    requiredPassArgs: [PASS_ARG.SERVICE_PLAN, PASS_ARG.TENANT_ID],
-    callback: svm.serviceManagerDeleteBindings,
-    useCache: false,
-    danger: true,
-  },
-  SVM_DELETE: {
-    commandVariants: ["--svm-delete"],
-    requiredPassArgs: [PASS_ARG.SERVICE_PLAN, PASS_ARG.TENANT_ID],
-    callback: svm.serviceManagerDeleteInstancesAndBindings,
-    useCache: false,
-    danger: true,
   },
 
   SRV_ENVIRONMENT: {
