@@ -360,14 +360,10 @@ const serviceManagerDeleteInstancesAndBindings = async (context, [planFullName, 
 };
 
 const serviceManagerRepairBindingsDeprecated = async (context, [planFullName], [rawParameters]) => {
-  const doFilterPlanId = planFullName !== SERVICE_PLAN_ALL_IDENTIFIER;
-  const planInfo = doFilterPlanId ? await _getPlanInfoFromFullName(context, planFullName) : undefined;
-  const parameters = tryJsonParse(rawParameters);
-  assert(!rawParameters || isObject(parameters), `argument "${rawParameters}" needs to be a valid JSON object`);
+  const options = await _resolveBindingsOptions(context, planFullName, TENANT_ID_ALL_IDENTIFIER, rawParameters);
   return await _serviceManagerNormalizeBindings(context, {
     targetCount: 1,
-    ...(planInfo && { planInfo }),
-    parameters,
+    ...options,
   });
 };
 
