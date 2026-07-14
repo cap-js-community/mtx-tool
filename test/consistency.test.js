@@ -8,11 +8,7 @@ const { join } = require("path");
 
 const { USAGE, GENERIC_COMMAND_INFOS, APP_COMMAND_INFOS } = require("../src/commands");
 
-const appCommandInfos = Object.values(APP_COMMAND_INFOS);
-
-/*
- NOTE: Just internal consistency tests for now.
- */
+const appCommandInfos = Object.values(APP_COMMAND_INFOS).filter(({ deprecated }) => !deprecated);
 
 describe("consistency tests", () => {
   test("readme pipelines version is up-to-date with leading changelog release", async () => {
