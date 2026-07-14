@@ -9,12 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## v0.13.0 - tbd
 
-⚠️ This release is potentially disruptive. We reworked with service-manager interactions. The operations for credential
-rotation become idempotent now, making outside retries possible.
+We reworked the service-manager interactions. The operations for credential rotation become idempotent now, making
+outside retries possible.
 
-Both replacement commands take `SERVICE_PLAN TENANT_ID` calling args. Callers of the old `--svm-repair-bindings` need to use `all-tenants` to reproduce the previous behavior.
+The old commands still work but are now deprecated: they emit a warning and delegate to the new implementations. Migrate to the replacements below, as the deprecated commands will be removed in a future release.
 
-| old svm command          | new svm command              |
+| deprecated svm command   | new svm command              |
 | :----------------------- | :--------------------------- |
 | `--svm-repair-bindings`  | `--svm-make-bindings-single` |
 | `--svm-fresh-bindings`   | `--svm-make-bindings-double` |
@@ -30,15 +30,16 @@ The full rotation is a _five-step choreography_ of the two idempotent commands:
 
 If the fleet is already at one binding per instance, skip to step 3.
 
-### REMOVED
-
-- svm: removed `--svm-refresh-bindings`. credential rotation is now a choreography of the two idempotent commands.
-
 ### CHANGED
 
 - svm: reworked `--svm-repair-bindings` to `--svm-make-bindings-single` and `--svm-fresh-bindings` to
   `--svm-make-bindings-double`. both are now idempotent and have the `SERVICE_PLAN TENANT_ID` calling args, making
   them consistent with other `svm` commands.
+
+- svm: `--svm-repair-bindings`, `--svm-fresh-bindings`, and `--svm-refresh-bindings` are deprecated. they still work
+  but now emit a warning. they are reimplemented on top of the new idempotent binding logic in a way that reproduces
+  their previous behavior, and will be removed in a future release. migrate to `--svm-make-bindings-single`,
+  `--svm-make-bindings-double`.
 
 ## v0.12.0 - 2026-06-26
 
