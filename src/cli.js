@@ -10,10 +10,15 @@ const { LEVEL, Logger } = require("./shared/logger");
 const logger = Logger.getInstance();
 
 const _dangerGuard = async () => {
-  logger.info('this is a dangerous operation, wait for 15sec and then enter "yes" if you are sure.');
+  logger.info('this is a dangerous command, wait for 15sec and then enter "yes" if you are sure.');
   await sleep(15000);
   const answer = await question("do you want to proceed?");
   assert(answer === "yes", "failed danger guard check");
+};
+
+const _deprecatedWarning = async () => {
+  logger.warning("this is a deprecated command. update your pipelines and do not rely on it for the future.");
+  await sleep(15000);
 };
 
 const checkOption = async (cliOption, args) => {
@@ -25,6 +30,7 @@ const checkOption = async (cliOption, args) => {
     requiredPassArgs = [],
     optionalPassArgs = [],
     optionalFlagArgs = [],
+    deprecated = false,
     silent = false,
     passContext = true,
     danger = false,
@@ -85,6 +91,7 @@ const checkOption = async (cliOption, args) => {
   !silent && logger.info("running", command, ...maskedPassArgs, ...flagArgs);
   const context = passContext ? await newContext({ usePersistedCache: useCache, isReadonlyCommand: readonly }) : null;
   danger && !doForce && (await _dangerGuard());
+  deprecated && (await _deprecatedWarning());
   const result = context ? await callback(context, passArgs, flagValues) : await callback(passArgs, flagValues);
 
   doJsonOutput && logger.setMaxLevel(LEVEL.INFO);
