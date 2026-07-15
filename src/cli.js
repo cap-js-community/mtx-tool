@@ -17,7 +17,9 @@ const _dangerGuard = async () => {
 };
 
 const _deprecatedWarning = async () => {
-  logger.warning("this is a deprecated command. update your pipelines and do not rely on it for the future.");
+  logger.warning(
+    "this is a deprecated command. update your pipelines and do not rely on it for the future. normal processing continues in 15 sec."
+  );
   await sleep(15000);
 };
 

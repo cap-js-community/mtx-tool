@@ -188,7 +188,7 @@ describe("cli tests", () => {
       expect(mockStatic.sleep).toHaveBeenCalledWith(15000);
       expect(mockLogger.warning.mock.calls[0]).toMatchInlineSnapshot(`
         [
-          "this is a deprecated command. update your pipelines and do not rely on it for the future.",
+          "this is a deprecated command. update your pipelines and do not rely on it for the future. normal processing continues in 15 sec.",
         ]
       `);
       expect(svmRepairCallbackSpy).toHaveBeenCalledTimes(1);
