@@ -77,46 +77,33 @@ occur:
                            \-  second-binding-id  ready_state
   ```
 
-## Repair Bindings
+## Normalize Bindings
 
-The repair command
+The two make-bindings commands normalize service instances to a target number of bindings. They are _idempotent_:
+running them repeatedly converges on the same state, which makes them safe to retry.
 
-```
-mtx --svm-repair-bindings SERVICE_PLAN
-```
+- `mtx --svm-make-bindings-single SERVICE_PLAN TENANT_ID` normalizes to exactly one binding per instance.
+- `mtx --svm-make-bindings-double SERVICE_PLAN TENANT_ID` normalizes to exactly two bindings per instance.
 
-will normalize all service instances, so that they have exactly one binding. Missing bindings are created and ambivalent
-ones are removed. This happens either for a given service plan, e.g. `objectstore:standard`, or for `all-services`.
+In both cases, missing bindings are created and surplus bindings are removed until the target count is reached. Failed
+bindings are always cleaned up. When surplus bindings are pruned, the most-recently-updated binding is kept and older
+ones are removed. This ordering is what makes zero-downtime rotation possible: after a rolling restart applications
+hold credentials from the most-recent binding, so pruning older bindings never invalidates in-use credentials.
 
-## Fresh Bindings
+You can select which managed instances you want to include with the following combinations:
 
-The fresh command
+| SERVICE_PLAN                        | TENANT_ID     | selects                                                        |
+| :---------------------------------- | :------------ | :------------------------------------------------------------- |
+| `all-services`                      | `all-tenants` | all managed instances                                          |
+| `all-services`                      | `<tenant-id>` | all managed instances for a given tenant                       |
+| `<service-offering>:<service-plan>` | `all-tenants` | all managed instances for a given plan, e.g. `hana:hdi-shared` |
+| `<service-offering>:<service-plan>` | `<tenant-id>` | all managed instances for a given tenant and plan              |
 
-```
-mtx --svm-fresh-bindings SERVICE_PLAN TENANT_ID
-```
-
-will create new bindings. Regular credential rotation is recommended to increase security.
-
-You can select which managed bindings you want to include with the following combinations:
-
-| SERVICE_PLAN                        | TENANT_ID     | selects                                                       |
-| :---------------------------------- | :------------ | :------------------------------------------------------------ |
-| `all-services`                      | `all-tenants` | all managed bindings                                          |
-| `all-services`                      | `<tenant-id>` | all managed bindings for a given tenant                       |
-| `<service-offering>:<service-plan>` | `all-tenants` | all managed bindings for a given plan, e.g. `hana:hdi-shared` |
-| `<service-offering>:<service-plan>` | `<tenant-id>` | all managed bindings for a given tenant and plan              |
-
-{: .info}
-Fresh will not invalidate current credentials, but you should use the repair command for cleanup once the new
-credentials are active in all relevant servers. See [Zero Downtime Credential Rotation](#zero-downtime-credential-rotation)
-for how to perform credential rotation in productive environments.
-
-The fresh command allows you to pass arbitrary parameters to the service binding that gets created in service manager.
-In other words,
+The make-bindings commands allow you to pass arbitrary parameters to the service bindings that get created in service
+manager. In other words,
 
 ```
-mtx --svm-fresh-bindings SERVICE_PLAN TENANT_ID '{"special":true}'
+mtx --svm-make-bindings-single SERVICE_PLAN TENANT_ID '{"special":true}'
 ```
 
 corresponds to
@@ -125,10 +112,15 @@ corresponds to
 cf bind-service <some-app> <service-instance matching tenant and service-plan> -c '{"special":true}'
 ```
 
+{: .info}
+Regular credential rotation is recommended to increase security. See
+[Zero Downtime Credential Rotation](#zero-downtime-credential-rotation) for how to rotate credentials in productive
+environments without invalidating in-use credentials.
+
 ## Delete Bindings and Delete
 
 The deletion commands are only sensible for cleanup after some mocking/testing purposes. The syntax is similar to
-[Fresh Bindings](#fresh-bindings).
+[Normalize Bindings](#normalize-bindings).
 
 Use
 
@@ -150,36 +142,25 @@ In most cases, the BTP cockpit's subaccount _unsubscribe_ functionality, or even
 
 ## Zero Downtime Credential Rotation
 
-Especially in productive environments, it is necessary to perform the rotation without downtime to ensure business
-continuity. The following procedure describes a pattern which can be applied to rotate credentials best which are
-stored in bindings managed by Service Manager:
+In productive environments credentials must rotate without downtime. Rotation is a _five-step choreography_ of the two
+idempotent make-bindings commands, so any step can be retried safely if it fails.
 
-1.  _Create new bindings_: Use
+1.  _Rolling restart_ — converge all apps onto the most-recent binding.
 
-    ```
-    mtx --svm-fresh-bindings SERVICE_PLAN TENANT_ID
-    ```
+2.  `mtx --svm-make-bindings-single SERVICE_PLAN TENANT_ID` — prune to one binding per instance.
 
-    to ensure that for the given tenant(s) a new binding with fresh credentials is created. Existing bindings stored in
-    memory by applications are not invalidated and can still be used.
+3.  `mtx --svm-make-bindings-double SERVICE_PLAN TENANT_ID` — add the new binding. In-memory credentials stay valid.
 
-2.  _Ensure old bindings are not used anymore_: Restart your application e.g. using a blue-green deployment to ensure
-    business continuity. This can be accomplished for example using the command `cf deploy --strategy blue-green`. This
-    will ensure that all bindings previously stored in memory are not used anymore and newly created bindings will be
-    used from now on.
+4.  _Rolling restart_ — apps switch to the new binding.
 
-    See [Blue-Green Deployment of Multitarget Applications](https://help.sap.com/docs/btp/sap-business-technology-platform/blue-green-deployment-of-multitarget-applications) for details.
+5.  `mtx --svm-make-bindings-single SERVICE_PLAN TENANT_ID` — prune the old binding. Rotation is complete.
 
-3.  _Delete old bindings_: Use
+See [Blue-Green Deployment of Multitarget Applications](https://help.sap.com/docs/btp/sap-business-technology-platform/blue-green-deployment-of-multitarget-applications) for details.
 
-    ```
-    mtx --svm-repair-bindings SERVICE_PLAN
-    ```
+{: .info}
+If the fleet is already at one binding per instance, skip to step 3.
 
-    to ensure that all bindings for the given tenant(s) are deleted except the newly created one. After this step has been
-    performed, credentials are fully rotated.
-
-    {: .warn}
-    For Service Manager APIs, rate limits are in place. API requests for credential rotation count in addition to the
-    regular calls to Service Manager APIs performed by your application. If the request limit is a concern, you should
-    use the `MTX_SVM_CONCURRENCY` env variable to limit concurrency.
+{: .warn}
+For Service Manager APIs, rate limits are in place. API requests for credential rotation count in addition to the
+regular calls to Service Manager APIs performed by your application. If the request limit is a concern, you should
+use the `MTX_SVM_CONCURRENCY` env variable to limit concurrency.
