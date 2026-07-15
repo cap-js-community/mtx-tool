@@ -9,6 +9,13 @@ jest.mock("../src/context", () => ({
   newContext: mockNewContext,
 }));
 
+const mockStatic = require("../src/shared/static");
+jest.mock("../src/shared/static", () => ({
+  ...jest.requireActual("../src/shared/static"),
+  sleep: jest.fn(),
+  question: jest.fn(),
+}));
+
 const { cli } = require("../src/cli");
 const { APP_COMMAND_INFOS, USAGE } = require("../src/commands");
 
@@ -19,6 +26,8 @@ const processExitSpy = jest.spyOn(process, "exit").mockReturnValue();
 
 const uaaUserCallbackSpy = jest.spyOn(APP_COMMAND_INFOS.UAA_USER, "callback").mockReturnValue();
 const uaaServiceUserCallbackSpy = jest.spyOn(APP_COMMAND_INFOS.UAA_SERVICE_USER, "callback").mockReturnValue();
+const svmDeleteCallbackSpy = jest.spyOn(APP_COMMAND_INFOS.SVM_DELETE, "callback").mockReturnValue();
+const svmRepairCallbackSpy = jest.spyOn(APP_COMMAND_INFOS.SVM_REPAIR_BINDINGS, "callback").mockReturnValue();
 
 const mockUsername = "freddy";
 const mockPassword = "is_ready";
@@ -128,5 +137,63 @@ describe("cli tests", () => {
     expect(mockLogger.error).toHaveBeenCalledTimes(0);
     expect(mockLogger.info).toHaveBeenCalledTimes(1);
     expect(mockLogger.info.mock.calls[0]).toMatchSnapshot();
+  });
+
+  describe("danger guard and deprecation", () => {
+    test("danger guard proceeds when answer is yes", async () => {
+      mockNewContext.mockResolvedValueOnce({});
+      mockStatic.question.mockResolvedValueOnce("yes");
+
+      await cli(["--svm-delete", "all-services", "all-tenants"]);
+
+      expect(mockStatic.question).toHaveBeenCalledTimes(1);
+      expect(mockStatic.sleep).toHaveBeenCalledWith(15000);
+      expect(svmDeleteCallbackSpy).toHaveBeenCalledTimes(1);
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      expect(processExitSpy).toHaveBeenCalledTimes(0);
+    });
+
+    test("danger guard aborts when answer is not yes", async () => {
+      mockNewContext.mockResolvedValueOnce({});
+      mockStatic.question.mockResolvedValueOnce("no");
+
+      await cli(["--svm-delete", "all-services", "all-tenants"]);
+
+      expect(mockStatic.question).toHaveBeenCalledTimes(1);
+      expect(svmDeleteCallbackSpy).toHaveBeenCalledTimes(0);
+      expect(mockLogger.error.mock.calls[0]).toMatchInlineSnapshot(`
+        [
+          "error: failed danger guard check",
+        ]
+      `);
+      expect(processExitSpy).toHaveBeenCalledWith(-1);
+    });
+
+    test("danger guard is bypassed by force flag", async () => {
+      mockNewContext.mockResolvedValueOnce({});
+
+      await cli(["--svm-delete", "all-services", "all-tenants", "--force"]);
+
+      expect(mockStatic.question).toHaveBeenCalledTimes(0);
+      expect(svmDeleteCallbackSpy).toHaveBeenCalledTimes(1);
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      expect(processExitSpy).toHaveBeenCalledTimes(0);
+    });
+
+    test("deprecated command emits a warning and still runs", async () => {
+      mockNewContext.mockResolvedValueOnce({});
+
+      await cli(["--svm-repair-bindings", "all-services"]);
+
+      expect(mockStatic.sleep).toHaveBeenCalledWith(15000);
+      expect(mockLogger.warning.mock.calls[0]).toMatchInlineSnapshot(`
+        [
+          "this is a deprecated command. update your pipelines and do not rely on it for the future.",
+        ]
+      `);
+      expect(svmRepairCallbackSpy).toHaveBeenCalledTimes(1);
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
+      expect(processExitSpy).toHaveBeenCalledTimes(0);
+    });
   });
 });

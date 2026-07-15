@@ -7,7 +7,39 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- order is REMOVED, CHANGED, ADDED, FIXED -->
 
-## v0.12.1 - tbd
+## v0.13.0 - tbd
+
+We reworked the service-manager interactions. The operations for credential rotation become idempotent now, making
+outside retries possible.
+
+The old commands still work but are now deprecated: they emit a warning and delegate to the new implementations. Migrate to the replacements below, as the deprecated commands will be removed in a future release.
+
+| deprecated svm command   | new svm command              |
+| :----------------------- | :--------------------------- |
+| `--svm-repair-bindings`  | `--svm-make-bindings-single` |
+| `--svm-fresh-bindings`   | `--svm-make-bindings-double` |
+| `--svm-refresh-bindings` | see choreography below       |
+
+The full rotation is a _five-step choreography_ of the two idempotent commands:
+
+1. rolling restart — converge apps onto the most-recent binding.
+2. `--svm-make-bindings-single` — prune to one binding per instance.
+3. `--svm-make-bindings-double` — add the new binding.
+4. rolling restart — apps switch to the new binding.
+5. `--svm-make-bindings-single` — prune the old binding.
+
+If the fleet is already at one binding per instance, skip to step 3.
+
+### CHANGED
+
+- svm: reworked `--svm-repair-bindings` to `--svm-make-bindings-single` and `--svm-fresh-bindings` to
+  `--svm-make-bindings-double`. both are now idempotent and have the `SERVICE_PLAN TENANT_ID` calling args, making
+  them consistent with other `svm` commands.
+
+- svm: `--svm-repair-bindings`, `--svm-fresh-bindings`, and `--svm-refresh-bindings` are deprecated. they still work
+  but now emit a warning. they are reimplemented on top of the new idempotent binding logic in a way that reproduces
+  their previous behavior, and will be removed in a future release. migrate to `--svm-make-bindings-single`,
+  `--svm-make-bindings-double`.
 
 ## v0.12.0 - 2026-06-26
 

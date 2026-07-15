@@ -11,7 +11,7 @@ class MockLogger {
     return MockLogger.__instance;
   }
   info = jest.fn();
-  warnings = jest.fn();
+  warning = jest.fn();
   error = jest.fn();
   setMaxLevel = jest.fn();
 }
