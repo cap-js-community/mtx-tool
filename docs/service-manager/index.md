@@ -50,7 +50,7 @@ Commands for this area are:
 
 | environment variable  | effect                                                    |
 | :-------------------- | :-------------------------------------------------------- |
-| `MTX_SVM_CONCURRENCY` | change concurrency used for service calls (default is 10) |
+| `MTX_SVM_CONCURRENCY` | change concurrency used for service calls (default is 6)  |
 
 ## List
 
@@ -65,16 +65,16 @@ occur:
 
 - One instance with one binding
   ```
-  tenant_id  instance_id  ---  binding-id  ready_state
+  tenant_id  instance_id  usable  ---  binding-id
   ```
 - One instance without binding (no access possible)
   ```
-  tenant_id  instance_id  -x
+  tenant_id  instance_id  usable  -x
   ```
 - One instance with two bindings (access is ambivalent)
   ```
-  tenant_id  instance_id  -+-  first-binding-id   ready_state
-                           \-  second-binding-id  ready_state
+  tenant_id  instance_id  usable  -+-  first-binding-id
+                                   \-  second-binding-id
   ```
 
 ## Normalize Bindings
