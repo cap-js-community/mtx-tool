@@ -48,9 +48,9 @@ Commands for this area are:
 
 ## Environment
 
-| environment variable  | effect                                                    |
-| :-------------------- | :-------------------------------------------------------- |
-| `MTX_SVM_CONCURRENCY` | change concurrency used for service calls (default is 6)  |
+| environment variable  | effect                                                   |
+| :-------------------- | :------------------------------------------------------- |
+| `MTX_SVM_CONCURRENCY` | change concurrency used for service calls (default is 6) |
 
 ## List
 
