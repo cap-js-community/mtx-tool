@@ -254,7 +254,8 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     };
   });
 
-  const getRawAppInfo = async (cfApp) => {
+  const getRawAppInfo = async (appName) => {
+    const cfApp = _getCfAppFromAppName(appName);
     const cfBuildpack = cfApp.lifecycle?.data?.buildpacks?.[0];
     const [
       { cfServiceOfferingsById, cfServicePlansById },
@@ -321,9 +322,9 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   };
 
   const getRawAppInfoCached = async (appName) => {
+    // NOTE: both for the memory and persisted cache we use the user-familiar appName from settings and not the
+    //   _actual_ appName. In getRawAppInfo, the settings appName gets resolved to cfApp, which has the real name.
     return await rawAppMemoryCache.getSetCb(appName, async () => {
-      // TODO(tricky) if we already have appName in persisted cache, this should not be needed
-      const cfApp = _getCfAppFromAppName(appName);
       // check persisted cache
       let rawAppPersistedCache = usePersistedCache
         ? _readRawAppPersistedCache(
@@ -331,19 +332,19 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
             cachePath,
             cfInfo.config.OrganizationFields.GUID,
             cfInfo.config.SpaceFields.GUID,
-            cfApp.name
+            appName
           )
         : null;
       if (!rawAppPersistedCache) {
         // get fresh data
-        rawAppPersistedCache = await getRawAppInfo(cfApp);
+        rawAppPersistedCache = await getRawAppInfo(appName);
         // update persisted cache
         _writeRawAppPersistedCache(
           rawAppPersistedCache,
           cachePath,
           cfInfo.config.OrganizationFields.GUID,
           cfInfo.config.SpaceFields.GUID,
-          cfApp.name
+          appName
         );
       }
       return rawAppPersistedCache;
