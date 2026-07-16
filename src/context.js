@@ -346,7 +346,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
           cfApp.name
         );
       }
-      return [cfApp, rawAppPersistedCache];
+      return rawAppPersistedCache;
     });
   };
 
@@ -472,8 +472,8 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const getAppNameInfoCached = async (appName, setting) => {
     assert(appName, "used getAppNameInfoCached without appName parameter");
 
-    const [cfApp, rawAppInfo] = await getRawAppInfoCached(appName);
-    return processRawAppInfo(cfApp.name, rawAppInfo, setting);
+    const rawAppInfo = await getRawAppInfoCached(appName);
+    return processRawAppInfo(appName, rawAppInfo, setting);
   };
 
   const getUaaInfo = makeOneTime(getAppInfoCached(CONFIG_TYPE.UAA_APP));
