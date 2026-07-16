@@ -240,7 +240,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const cfTokenCache = new ExpiringLazyCache({ expirationGap: UAA_TOKEN_CACHE_EXPIRY_GAP });
   const settingTypeToAppNameCache = new LazyCache();
   const appNameToCfAppCache = new LazyCache();
-  let rawAppMemoryCache = new LazyCache();
+  const rawAppMemoryCache = new LazyCache();
 
   const _cfServiceInfoMaps = makeOneTime(async () => {
     const { resources: cfServicePlans, included: cfServiceOfferingBuckets } = await _cfRequestPaged(
