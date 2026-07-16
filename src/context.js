@@ -236,7 +236,6 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const { filepath: configPath, dir, location } = _resolveDir(FILENAME.CONFIG) || {};
   const runtimeConfig = readRuntimeConfig(configPath);
   const cachePath = pathlib.join(dir, FILENAME.CACHE);
-  const { resources: cfApps } = await _cfRequestPaged(cfInfo, `/v3/apps?space_guids=${cfInfo.config.SpaceFields.GUID}`);
   const cfTokenCache = new ExpiringLazyCache({ expirationGap: UAA_TOKEN_CACHE_EXPIRY_GAP });
   const settingTypeToAppNameCache = new LazyCache();
   const appNameToCfAppCache = new LazyCache();
@@ -255,7 +254,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   });
 
   const getRawAppInfo = async (appName) => {
-    const cfApp = _getCfAppFromAppName(appName);
+    const cfApp = await _getCfAppFromAppName(appName);
     const cfBuildpack = cfApp.lifecycle?.data?.buildpacks?.[0];
     const [
       { cfServiceOfferingsById, cfServicePlansById },
@@ -439,8 +438,17 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     });
   };
 
-  const _getCfAppFromAppName = (appName) =>
-    appNameToCfAppCache.getSetCb(appName, () => {
+  const _getCfApps = makeOneTime(async () => {
+    const { resources: cfApps } = await _cfRequestPaged(
+      cfInfo,
+      `/v3/apps?space_guids=${cfInfo.config.SpaceFields.GUID}`
+    );
+    return cfApps;
+  });
+
+  const _getCfAppFromAppName = async (appName) =>
+    await appNameToCfAppCache.getSetCb(appName, async () => {
+      const cfApps = await _getCfApps();
       // determine matching cfApp considering suffixes
       // NOTE: the appNameCandidates order should take precedence over cfApps order.
       const appNameCandidates = _getAppNameCandidates(appName);
@@ -507,7 +515,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     );
 
   const getCfEnv = async (appName) => {
-    const cfApp = _getCfAppFromAppName(appName);
+    const cfApp = await _getCfAppFromAppName(appName);
     const cfEnv = await _cfRequest(cfInfo, `/v3/apps/${cfApp.guid}/env`);
     const filePath = cfEnv.system_env_json?.VCAP_SERVICES_FILE_PATH;
     if (filePath) {
