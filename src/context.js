@@ -320,9 +320,9 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     };
   };
 
-  const getRawAppInfoCached = async (cfApp) => {
-    const { name: appName } = cfApp;
+  const getRawAppInfoCached = async (appName) => {
     return await rawAppMemoryCache.getSetCb(appName, async () => {
+      const cfApp = _getCfAppFromAppName(appName);
       // check persisted cache
       let rawAppPersistedCache = usePersistedCache
         ? _readRawAppPersistedCache(
@@ -330,7 +330,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
             cachePath,
             cfInfo.config.OrganizationFields.GUID,
             cfInfo.config.SpaceFields.GUID,
-            appName
+            cfApp.name
           )
         : null;
       if (!rawAppPersistedCache) {
@@ -342,10 +342,10 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
           cachePath,
           cfInfo.config.OrganizationFields.GUID,
           cfInfo.config.SpaceFields.GUID,
-          appName
+          cfApp.name
         );
       }
-      return rawAppPersistedCache;
+      return [cfApp, rawAppPersistedCache];
     });
   };
 
@@ -473,9 +473,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const getAppNameInfoCached = async (appName, setting) => {
     assert(appName, "used getAppNameInfoCached without appName parameter");
 
-    // TODO(tricky) this needs an early out if appName is already in the cache then cfAppFromName need not be called to save the cf request
-    const cfApp = _getCfAppFromAppName(appName);
-    const rawAppInfo = await getRawAppInfoCached(cfApp);
+    const [cfApp, rawAppInfo] = await getRawAppInfoCached(appName);
     return processRawAppInfo(cfApp.name, rawAppInfo, setting);
   };
 
