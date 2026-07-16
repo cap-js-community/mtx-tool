@@ -240,7 +240,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const cfTokenCache = new ExpiringLazyCache({ expirationGap: UAA_TOKEN_CACHE_EXPIRY_GAP });
   const settingTypeToAppNameCache = new LazyCache();
   const appNameToCfAppCache = new LazyCache();
-  let rawAppMemoryCache = {};
+  const rawAppMemoryCache = new LazyCache();
 
   const _cfServiceInfoMaps = makeOneTime(async () => {
     const { resources: cfServicePlans, included: cfServiceOfferingBuckets } = await _cfRequestPaged(
@@ -254,7 +254,8 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     };
   });
 
-  const getRawAppInfo = async (cfApp) => {
+  const getRawAppInfo = async (appName) => {
+    const cfApp = _getCfAppFromAppName(appName);
     const cfBuildpack = cfApp.lifecycle?.data?.buildpacks?.[0];
     const [
       { cfServiceOfferingsById, cfServicePlansById },
@@ -320,10 +321,10 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     };
   };
 
-  const getRawAppInfoCached = async (cfApp) => {
-    const { name: appName } = cfApp;
-    // check memory cache
-    if (!Object.prototype.hasOwnProperty.call(rawAppMemoryCache, appName)) {
+  const getRawAppInfoCached = async (appName) => {
+    // NOTE: both for the memory and persisted cache we use the user-familiar appName from settings and not the
+    //   _actual_ appName. In getRawAppInfo, the settings appName gets resolved to cfApp, which has the real name.
+    return await rawAppMemoryCache.getSetCb(appName, async () => {
       // check persisted cache
       let rawAppPersistedCache = usePersistedCache
         ? _readRawAppPersistedCache(
@@ -336,7 +337,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
         : null;
       if (!rawAppPersistedCache) {
         // get fresh data
-        rawAppPersistedCache = await getRawAppInfo(cfApp);
+        rawAppPersistedCache = await getRawAppInfo(appName);
         // update persisted cache
         _writeRawAppPersistedCache(
           rawAppPersistedCache,
@@ -346,10 +347,8 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
           appName
         );
       }
-      // update memory cache
-      rawAppMemoryCache[appName] = rawAppPersistedCache;
-    }
-    return rawAppMemoryCache[appName];
+      return rawAppPersistedCache;
+    });
   };
 
   const processRawAppInfo = (appName, rawAppInfo, { requireServices, requireRoute } = {}) => {
@@ -380,13 +379,11 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
       assert(cfRouteUrl, `could not obtain required route url for app "${appName}"`);
     }
 
-    const cfSsh = async (options) => _cfSsh(appName, options);
+    const cfSsh = async (options) => await _cfSsh(cfApp.name, options);
 
-    const cfAppName = cfApp.name;
-    const cfAppGuid = cfApp.guid;
     return {
-      cfAppName,
-      cfAppGuid,
+      cfAppName: cfApp.name,
+      cfAppGuid: cfApp.guid,
       cfBuildpack,
       cfProcess,
       cfBinding,
@@ -396,10 +393,8 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     };
   };
 
-  const _getAppNameFromSettingType = (type) =>
+  const _getAppNameFromSettingType = (type, setting) =>
     settingTypeToAppNameCache.getSetCb(type, () => {
-      const setting = CONFIG_INFOS[type];
-
       // determine configured appName
       const configAppName = runtimeConfig[setting.config];
       const envAppName = (setting.envVariable && process.env[setting.envVariable]) || null;
@@ -470,18 +465,16 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     });
 
   const getAppInfoCached = (type) => async () => {
-    const appName = _getAppNameFromSettingType(type);
     const setting = CONFIG_INFOS[type];
+    const appName = _getAppNameFromSettingType(type, setting);
     return await getAppNameInfoCached(appName, setting);
   };
 
   const getAppNameInfoCached = async (appName, setting) => {
     assert(appName, "used getAppNameInfoCached without appName parameter");
 
-    // TODO(tricky) this needs an early out if appName is already in the cache then cfAppFromName need not be called to save the cf request
-    const cfApp = _getCfAppFromAppName(appName);
-    const rawAppInfo = await getRawAppInfoCached(cfApp);
-    return processRawAppInfo(cfApp.name, rawAppInfo, setting);
+    const rawAppInfo = await getRawAppInfoCached(appName);
+    return processRawAppInfo(appName, rawAppInfo, setting);
   };
 
   const getUaaInfo = makeOneTime(getAppInfoCached(CONFIG_TYPE.UAA_APP));
