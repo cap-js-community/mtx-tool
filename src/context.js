@@ -240,7 +240,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const cfTokenCache = new ExpiringLazyCache({ expirationGap: UAA_TOKEN_CACHE_EXPIRY_GAP });
   const settingTypeToAppNameCache = new LazyCache();
   const appNameToCfAppCache = new LazyCache();
-  let rawAppMemoryCache = {};
+  let rawAppMemoryCache = new LazyCache();
 
   const _cfServiceInfoMaps = makeOneTime(async () => {
     const { resources: cfServicePlans, included: cfServiceOfferingBuckets } = await _cfRequestPaged(
@@ -322,8 +322,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
 
   const getRawAppInfoCached = async (cfApp) => {
     const { name: appName } = cfApp;
-    // check memory cache
-    if (!Object.prototype.hasOwnProperty.call(rawAppMemoryCache, appName)) {
+    return await rawAppMemoryCache.getSetCb(appName, async () => {
       // check persisted cache
       let rawAppPersistedCache = usePersistedCache
         ? _readRawAppPersistedCache(
@@ -346,10 +345,8 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
           appName
         );
       }
-      // update memory cache
-      rawAppMemoryCache[appName] = rawAppPersistedCache;
-    }
-    return rawAppMemoryCache[appName];
+      return rawAppPersistedCache;
+    });
   };
 
   const processRawAppInfo = (appName, rawAppInfo, { requireServices, requireRoute } = {}) => {
@@ -396,10 +393,8 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     };
   };
 
-  const _getAppNameFromSettingType = (type) =>
+  const _getAppNameFromSettingType = (type, setting) =>
     settingTypeToAppNameCache.getSetCb(type, () => {
-      const setting = CONFIG_INFOS[type];
-
       // determine configured appName
       const configAppName = runtimeConfig[setting.config];
       const envAppName = (setting.envVariable && process.env[setting.envVariable]) || null;
@@ -470,8 +465,8 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     });
 
   const getAppInfoCached = (type) => async () => {
-    const appName = _getAppNameFromSettingType(type);
     const setting = CONFIG_INFOS[type];
+    const appName = _getAppNameFromSettingType(type, setting);
     return await getAppNameInfoCached(appName, setting);
   };
 
