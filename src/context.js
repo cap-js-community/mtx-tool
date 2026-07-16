@@ -322,6 +322,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
 
   const getRawAppInfoCached = async (appName) => {
     return await rawAppMemoryCache.getSetCb(appName, async () => {
+      // TODO(tricky) if we already have appName in persisted cache, this should not be needed
       const cfApp = _getCfAppFromAppName(appName);
       // check persisted cache
       let rawAppPersistedCache = usePersistedCache
@@ -377,13 +378,11 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
       assert(cfRouteUrl, `could not obtain required route url for app "${appName}"`);
     }
 
-    const cfSsh = async (options) => _cfSsh(appName, options);
+    const cfSsh = async (options) => await _cfSsh(cfApp.name, options);
 
-    const cfAppName = cfApp.name;
-    const cfAppGuid = cfApp.guid;
     return {
-      cfAppName,
-      cfAppGuid,
+      cfAppName: cfApp.name,
+      cfAppGuid: cfApp.guid,
       cfBuildpack,
       cfProcess,
       cfBinding,
