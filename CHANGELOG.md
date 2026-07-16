@@ -41,6 +41,10 @@ If the fleet is already at one binding per instance, skip to step 3.
   their previous behavior, and will be removed in a future release. migrate to `--svm-make-bindings-single`,
   `--svm-make-bindings-double`.
 
+### FIXED
+
+- core: mtx cache now dedupes concurrent lookups of the same configured app name, avoiding redundant cf requests.
+
 ## v0.12.0 - 2026-06-26
 
 ### CHANGED
