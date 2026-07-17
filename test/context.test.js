@@ -80,10 +80,10 @@ describe("context tests", () => {
     mockStatic.tryReadJsonSync.mockReturnValueOnce(mockCfConfig);
     mockStatic.tryAccessSync.mockReturnValueOnce(true);
     mockStatic.tryReadJsonSync.mockReturnValueOnce(mockRuntimeConfig);
-    mockRequest.mockReturnValueOnce({ json: () => mockCfApps });
 
     const context = await newContext();
 
+    mockRequest.mockReturnValueOnce({ json: () => mockCfApps });
     mockRawAppInfoRequests({ servicePlans: mockCfServicePlansEmpty, bindings: mockCfBindingsEmpty });
 
     await expect(context.getUaaInfo()).rejects.toMatchInlineSnapshot(
@@ -96,10 +96,10 @@ describe("context tests", () => {
     mockStatic.tryReadJsonSync.mockReturnValueOnce(mockCfConfig);
     mockStatic.tryAccessSync.mockReturnValueOnce(true);
     mockStatic.tryReadJsonSync.mockReturnValueOnce(mockRuntimeConfig);
-    mockRequest.mockReturnValueOnce({ json: () => mockCfApps });
 
     const context = await newContext();
 
+    mockRequest.mockReturnValueOnce({ json: () => mockCfApps });
     mockRawAppInfoRequests({
       servicePlans: mockCfServicePlansUaa,
       bindings: mockCfBindingsUaa,
@@ -139,10 +139,10 @@ describe("context tests", () => {
     mockStatic.tryReadJsonSync.mockReturnValueOnce(mockCfConfig);
     mockStatic.tryAccessSync.mockReturnValueOnce(true);
     mockStatic.tryReadJsonSync.mockReturnValueOnce(mockRuntimeConfig);
-    mockRequest.mockReturnValueOnce({ json: () => mockCfApps });
 
     const context = await newContext();
 
+    mockRequest.mockReturnValueOnce({ json: () => mockCfApps });
     mockRequest.mockReturnValueOnce({ json: () => mockCfAppEnv });
 
     const env = await context.getCfEnv("uaa-app");
@@ -159,10 +159,10 @@ describe("context tests", () => {
     mockStatic.tryReadJsonSync.mockReturnValueOnce(mockCfConfig);
     mockStatic.tryAccessSync.mockReturnValueOnce(true);
     mockStatic.tryReadJsonSync.mockReturnValueOnce(mockRuntimeConfig);
-    mockRequest.mockReturnValueOnce({ json: () => mockCfApps });
 
     const context = await newContext();
 
+    mockRequest.mockReturnValueOnce({ json: () => mockCfApps });
     const filePath = "/etc/cf-service-bindings/vcap_services";
     const fileBackedServices = {
       xsuaa: [
@@ -196,10 +196,10 @@ describe("context tests", () => {
     mockStatic.tryReadJsonSync.mockReturnValueOnce(mockCfConfig);
     mockStatic.tryAccessSync.mockReturnValueOnce(true);
     mockStatic.tryReadJsonSync.mockReturnValueOnce(mockRuntimeConfig);
-    mockRequest.mockReturnValueOnce({ json: () => mockCfApps });
 
     const context = await newContext();
 
+    mockRequest.mockReturnValueOnce({ json: () => mockCfApps });
     const cfAppEnvWithFilePath = {
       ...mockCfAppEnv,
       system_env_json: { VCAP_SERVICES_FILE_PATH: "/tmp/x; rm -rf ~" },
@@ -212,16 +212,21 @@ describe("context tests", () => {
     expect(mockStatic.spawnAsync.mock.calls.length).toBe(sshCallsBefore);
   });
 
-  test("can create context for paged cf apps", async () => {
+  test("_getCfApps follows pagination and merges all pages", async () => {
     mockStatic.spawnAsync.mockReturnValueOnce(["oauth-token"]);
     mockStatic.tryReadJsonSync.mockReturnValueOnce(mockCfConfig);
     mockStatic.tryAccessSync.mockReturnValueOnce(true);
     mockStatic.tryReadJsonSync.mockReturnValueOnce(mockRuntimeConfig);
+
+    const context = await newContext();
+    expect(context).toBeDefined();
+
     for (const mockCfAppsPage of mockCfAppsPages) {
       mockRequest.mockReturnValueOnce({ json: () => mockCfAppsPage });
     }
 
-    await expect(newContext()).resolves.toBeDefined();
+    const cfApps = await context._._getCfApps();
+    expect(cfApps.map(({ name }) => name)).toEqual(["uaa-app-1", "uaa-app-2"]);
     expect(mockRequest.mock.calls).toMatchSnapshot();
   });
 
@@ -230,7 +235,6 @@ describe("context tests", () => {
     mockStatic.tryReadJsonSync.mockReturnValueOnce(mockCfConfig);
     mockStatic.tryAccessSync.mockReturnValueOnce(true);
     mockStatic.tryReadJsonSync.mockReturnValueOnce({ regAppName: "reg-app" });
-    mockRequest.mockReturnValueOnce({ json: () => mockCfApps });
 
     const context = await newContext();
 
