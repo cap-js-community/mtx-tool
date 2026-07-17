@@ -7,37 +7,6 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/apps/5cccc504-4911-43ef-a531-31cbf2b89939/processes",
-        "body": "",
-        "status": 200,
-        "response": {
-            "pagination": {
-                "total_results": 1,
-                "total_pages": 1,
-                "first": {
-                    "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5cccc504-4911-43ef-a531-31cbf2b89939/processes?page=1&per_page=50"
-                },
-                "last": {
-                    "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5cccc504-4911-43ef-a531-31cbf2b89939/processes?page=1&per_page=50"
-                },
-                "next": null,
-                "previous": null
-            },
-            "resources": [
-                {
-                    "instances": 1
-                }
-            ]
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json; charset=utf-8"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://api.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
         "path": "/v3/routes?app_guids=5cccc504-4911-43ef-a531-31cbf2b89939&include=domain",
         "body": "",
         "status": 200,
@@ -100,6 +69,37 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
+        "path": "/v3/apps/5cccc504-4911-43ef-a531-31cbf2b89939/processes",
+        "body": "",
+        "status": 200,
+        "response": {
+            "pagination": {
+                "total_results": 1,
+                "total_pages": 1,
+                "first": {
+                    "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5cccc504-4911-43ef-a531-31cbf2b89939/processes?page=1&per_page=50"
+                },
+                "last": {
+                    "href": "https://api.cf.sap.hana.ondemand.com/v3/apps/5cccc504-4911-43ef-a531-31cbf2b89939/processes?page=1&per_page=50"
+                },
+                "next": null,
+                "previous": null
+            },
+            "resources": [
+                {
+                    "instances": 1
+                }
+            ]
+        },
+        "rawHeaders": [
+            "content-type",
+            "application/json; charset=utf-8"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
         "path": "/v3/service_credential_bindings?app_guids=5cccc504-4911-43ef-a531-31cbf2b89939&include=service_instance",
         "body": "",
         "status": 200,
@@ -118,9 +118,9 @@
             },
             "resources": [
                 {
-                    "guid": "8255f4a9-42d7-4b1c-9f1e-fef997bf0c07",
-                    "created_at": "2026-07-15T20:04:32Z",
-                    "updated_at": "2026-07-15T20:04:32Z",
+                    "guid": "823cb52e-20c7-467d-a46d-ece6e788ad93",
+                    "created_at": "2026-07-16T20:14:10Z",
+                    "updated_at": "2026-07-16T20:14:10Z",
                     "relationships": {
                         "service_instance": {
                             "data": {
@@ -130,45 +130,9 @@
                     }
                 },
                 {
-                    "guid": "1f77e992-b21b-4560-9cfc-8602032d8942",
-                    "created_at": "2026-07-15T20:04:43Z",
-                    "updated_at": "2026-07-15T20:04:45Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "e020b20a-eb23-4475-91ec-d525f8738fd7"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "cea3fcf6-366a-469e-89c2-9d79bc8c7216",
-                    "created_at": "2026-07-15T20:04:43Z",
-                    "updated_at": "2026-07-15T20:04:46Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "b4700476-0b63-4eea-add7-2873a2fc4f0b"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "72d376ae-99ba-417a-b32d-03b53a017abe",
-                    "created_at": "2026-07-15T20:04:43Z",
-                    "updated_at": "2026-07-15T20:04:44Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "b37ed912-457a-43da-856c-20ded42fd748"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "781b24d3-866b-4fbf-8785-6cbae6ea15aa",
-                    "created_at": "2026-07-15T20:04:43Z",
-                    "updated_at": "2026-07-15T20:04:44Z",
+                    "guid": "0648027f-620a-41ec-829a-66cbb6b3b185",
+                    "created_at": "2026-07-16T20:14:24Z",
+                    "updated_at": "2026-07-16T20:14:25Z",
                     "relationships": {
                         "service_instance": {
                             "data": {
@@ -178,105 +142,9 @@
                     }
                 },
                 {
-                    "guid": "a1ba8969-672d-40e2-8cec-03729d8dbe0e",
-                    "created_at": "2026-07-15T20:04:43Z",
-                    "updated_at": "2026-07-15T20:04:46Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "3c6e7048-f419-45ab-861b-1d500ed9a872"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "53e0cc21-7f42-474d-a330-ed6c65077f76",
-                    "created_at": "2026-07-15T20:04:43Z",
-                    "updated_at": "2026-07-15T20:04:44Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "43c89fea-a7e1-4781-a446-eca57e3748b5"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "6052de03-aea4-4af0-8e18-170d4d982348",
-                    "created_at": "2026-07-15T20:04:43Z",
-                    "updated_at": "2026-07-15T20:04:44Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "05ed0260-5f01-499a-b077-2a3cafc5eac3"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "e1356164-5ae0-4929-9c9b-3c0d06aa3797",
-                    "created_at": "2026-07-15T20:04:43Z",
-                    "updated_at": "2026-07-15T20:04:44Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "8452bcb5-45fc-4740-a770-e49580b331f9"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "3b23fc53-09dc-4c7a-a385-10a6fb04fd3b",
-                    "created_at": "2026-07-15T20:04:44Z",
-                    "updated_at": "2026-07-15T20:04:44Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "e9f2bb15-1b46-4ea6-8530-a89508081ec4"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "3d29820c-50fa-4e53-9029-6a687ae94b07",
-                    "created_at": "2026-07-15T20:04:44Z",
-                    "updated_at": "2026-07-15T20:04:45Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "bc61bfb2-0ac6-4002-90c3-74f17dcab64e"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "c266c70d-cefd-46b8-a0db-1d21ee673d0f",
-                    "created_at": "2026-07-15T20:04:44Z",
-                    "updated_at": "2026-07-15T20:04:46Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "51ddd18b-5a78-418e-8f41-9a4c518650ec"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "9e3ef686-005a-4d65-ad46-4e22080050cb",
-                    "created_at": "2026-07-15T20:04:44Z",
-                    "updated_at": "2026-07-15T20:04:45Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "e6168484-4a7c-480b-b418-fefcf45afba8"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "5c59dd6e-8305-4760-b8a6-5d2966b3dae7",
-                    "created_at": "2026-07-15T20:04:44Z",
-                    "updated_at": "2026-07-15T20:04:44Z",
+                    "guid": "4a5f2a5d-617c-40f1-a635-82f925098864",
+                    "created_at": "2026-07-16T20:14:24Z",
+                    "updated_at": "2026-07-16T20:14:24Z",
                     "relationships": {
                         "service_instance": {
                             "data": {
@@ -286,21 +154,9 @@
                     }
                 },
                 {
-                    "guid": "56cb9811-eed5-4a1c-b416-bb97656ae26f",
-                    "created_at": "2026-07-15T20:04:44Z",
-                    "updated_at": "2026-07-15T20:04:45Z",
-                    "relationships": {
-                        "service_instance": {
-                            "data": {
-                                "guid": "d2761c94-ee8f-47a8-8570-166d28321df3"
-                            }
-                        }
-                    }
-                },
-                {
-                    "guid": "93a1f897-74f2-4397-950e-933a50815289",
-                    "created_at": "2026-07-15T20:04:44Z",
-                    "updated_at": "2026-07-15T20:04:47Z",
+                    "guid": "0ddf9d37-ccbb-4640-bd1f-15f8b3d4476a",
+                    "created_at": "2026-07-16T20:14:24Z",
+                    "updated_at": "2026-07-16T20:14:26Z",
                     "relationships": {
                         "service_instance": {
                             "data": {
@@ -310,9 +166,141 @@
                     }
                 },
                 {
-                    "guid": "fd00bc38-a799-440b-be18-8ef6ba4e3ace",
-                    "created_at": "2026-07-15T20:04:44Z",
-                    "updated_at": "2026-07-15T20:04:47Z",
+                    "guid": "b06564d3-138a-4f31-b841-e757743145db",
+                    "created_at": "2026-07-16T20:14:24Z",
+                    "updated_at": "2026-07-16T20:14:25Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "bc61bfb2-0ac6-4002-90c3-74f17dcab64e"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "06bb24fe-8017-4873-8395-b6eeb0d96e41",
+                    "created_at": "2026-07-16T20:14:24Z",
+                    "updated_at": "2026-07-16T20:14:26Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "3c6e7048-f419-45ab-861b-1d500ed9a872"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "f7b165f7-4a1a-4491-93f5-7cc4b33b92d6",
+                    "created_at": "2026-07-16T20:14:24Z",
+                    "updated_at": "2026-07-16T20:14:25Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "d2761c94-ee8f-47a8-8570-166d28321df3"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "ff7cab2c-93f5-4390-82a7-35fb0ac805fb",
+                    "created_at": "2026-07-16T20:14:24Z",
+                    "updated_at": "2026-07-16T20:14:25Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "05ed0260-5f01-499a-b077-2a3cafc5eac3"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "5fea34db-f3fa-404a-8fbf-81ab32c07f5c",
+                    "created_at": "2026-07-16T20:14:24Z",
+                    "updated_at": "2026-07-16T20:14:25Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "43c89fea-a7e1-4781-a446-eca57e3748b5"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "4bbcb23a-148b-4955-9e69-5b77aab2273e",
+                    "created_at": "2026-07-16T20:14:24Z",
+                    "updated_at": "2026-07-16T20:14:25Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "e6168484-4a7c-480b-b418-fefcf45afba8"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "2fe6fbed-5e05-4783-898e-695a8feff893",
+                    "created_at": "2026-07-16T20:14:24Z",
+                    "updated_at": "2026-07-16T20:14:26Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "e020b20a-eb23-4475-91ec-d525f8738fd7"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "2d2c0b3b-b435-4796-bfc0-5ba6f6f7c3ea",
+                    "created_at": "2026-07-16T20:14:24Z",
+                    "updated_at": "2026-07-16T20:14:27Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "b4700476-0b63-4eea-add7-2873a2fc4f0b"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "9306b0aa-9949-471c-9be3-f75afb4614d3",
+                    "created_at": "2026-07-16T20:14:24Z",
+                    "updated_at": "2026-07-16T20:14:25Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "b37ed912-457a-43da-856c-20ded42fd748"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "4fafc303-a1a2-4bf1-9b09-73bcd477e12e",
+                    "created_at": "2026-07-16T20:14:24Z",
+                    "updated_at": "2026-07-16T20:14:25Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "8452bcb5-45fc-4740-a770-e49580b331f9"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "e87622c1-fc33-4177-aed6-31e4657fcd23",
+                    "created_at": "2026-07-16T20:14:24Z",
+                    "updated_at": "2026-07-16T20:14:25Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "e9f2bb15-1b46-4ea6-8530-a89508081ec4"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "fe56a05a-dbd6-4f80-9a38-dd5eaab27d92",
+                    "created_at": "2026-07-16T20:14:24Z",
+                    "updated_at": "2026-07-16T20:14:27Z",
                     "relationships": {
                         "service_instance": {
                             "data": {
@@ -322,9 +310,21 @@
                     }
                 },
                 {
-                    "guid": "6d60d3ae-e230-4b3a-88c3-401064bcfa0b",
-                    "created_at": "2026-07-15T20:04:54Z",
-                    "updated_at": "2026-07-15T20:05:01Z",
+                    "guid": "612cf5a6-441d-4c70-ace2-20bd0622d8d3",
+                    "created_at": "2026-07-16T20:14:24Z",
+                    "updated_at": "2026-07-16T20:14:27Z",
+                    "relationships": {
+                        "service_instance": {
+                            "data": {
+                                "guid": "51ddd18b-5a78-418e-8f41-9a4c518650ec"
+                            }
+                        }
+                    }
+                },
+                {
+                    "guid": "79bd2991-c54e-4a72-a811-536f94435643",
+                    "created_at": "2026-07-16T20:14:34Z",
+                    "updated_at": "2026-07-16T20:14:57Z",
                     "relationships": {
                         "service_instance": {
                             "data": {
@@ -1024,94 +1024,7 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/1f77e992-b21b-4560-9cfc-8602032d8942/details",
-        "body": "",
-        "status": 200,
-        "response": {
-            "credentials": {
-                "tenantmode": "shared",
-                "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
-                "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                "clientid": "cf-credentials-credentials-clientid-8168a434",
-                "credential-type": "x509",
-                "clientx509enabled": false,
-                "xsappname": "afc-dev!t5874",
-                "certificate": "cf-credentials-credentials-certificate",
-                "serviceInstanceId": "e020b20a-eb23-4475-91ec-d525f8738fd7",
-                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
-                "uaadomain": "authentication.sap.hana.ondemand.com",
-                "verificationkey": "cf-credentials-credentials-verificationkey",
-                "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
-                "certurl": "https://skyfin.authentication.cert.sap.hana.ondemand.com/",
-                "identityzone": "skyfin",
-                "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                "certificate-pinning": true,
-                "key": "cf-credentials-credentials-key"
-            }
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json; charset=utf-8"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://api.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v3/service_credential_bindings/cea3fcf6-366a-469e-89c2-9d79bc8c7216/details",
-        "body": "",
-        "status": 200,
-        "response": {
-            "credentials": {
-                "endpoints": {
-                    "portal-service": "https://portal-service.cfapps.sap.hana.ondemand.com",
-                    "token-service": "cf-credentials-credentials-endpoints-token-service"
-                },
-                "sap.cloud.service": "com.sap.ui.portal",
-                "sap.cloud.service.alias": "cp",
-                "saasregistryenabled": true,
-                "html5-apps-repo": {
-                    "app_host_id": "85cd3f98-4345-42bd-b425-364c144d0e0e,570d7b41-113a-469b-ae5f-7ba55967aed4,c693e508-f8d5-4a70-be60-cb6106d0b60e,77d1971b-3fdc-45e0-8da3-f7b719dfff86"
-                },
-                "uaa": {
-                    "tenantmode": "dedicated",
-                    "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
-                    "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                    "clientid": "cf-credentials-credentials-uaa-clientid-687c6c55",
-                    "credential-type": "x509",
-                    "clientx509enabled": false,
-                    "xsappname": "b4700476-0b63-4eea-add7-2873a2fc4f0b!b5874|portal-cf-service!b119",
-                    "certificate": "cf-credentials-credentials-uaa-certificate",
-                    "serviceInstanceId": "b4700476-0b63-4eea-add7-2873a2fc4f0b",
-                    "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
-                    "uaadomain": "authentication.sap.hana.ondemand.com",
-                    "verificationkey": "cf-credentials-credentials-uaa-verificationkey",
-                    "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
-                    "certurl": "https://skyfin.authentication.cert.sap.hana.ondemand.com/",
-                    "identityzone": "skyfin",
-                    "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                    "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                    "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                    "certificate-pinning": true,
-                    "key": "cf-credentials-credentials-uaa-key"
-                },
-                "fdc_app_host_id": "77d1971b-3fdc-45e0-8da3-f7b719dfff86",
-                "instance_id": "b4700476-0b63-4eea-add7-2873a2fc4f0b",
-                "forwardiastoken": true
-            }
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json; charset=utf-8"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://api.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v3/service_credential_bindings/8255f4a9-42d7-4b1c-9f1e-fef997bf0c07/details",
+        "path": "/v3/service_credential_bindings/823cb52e-20c7-467d-a46d-ece6e788ad93/details",
         "body": "",
         "status": 200,
         "response": {
@@ -1127,7 +1040,94 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/a1ba8969-672d-40e2-8cec-03729d8dbe0e/details",
+        "path": "/v3/service_credential_bindings/4a5f2a5d-617c-40f1-a635-82f925098864/details",
+        "body": "",
+        "status": 200,
+        "response": {
+            "credentials": {}
+        },
+        "rawHeaders": [
+            "content-type",
+            "application/json; charset=utf-8"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/service_credential_bindings/0648027f-620a-41ec-829a-66cbb6b3b185/details",
+        "body": "",
+        "status": 200,
+        "response": {
+            "credentials": {
+                "password": "cf-credentials-credentials-password",
+                "hostname": "clustercfg.rg-0c94f0c1-db0a-495d-b385-4a44a87fc398.vwvwdz.euc1.cache.amazonaws.com",
+                "port": 3991,
+                "uri": "rediss://:cf-credentials-credentials-uri-password@clustercfg.rg-0c94f0c1-db0a-495d-b385-4a44a87fc398.vwvwdz.euc1.cache.amazonaws.com:3991",
+                "cluster_mode": true,
+                "urls": {
+                    "api_server": "https://api-backing-services.eu10-canary.data.services.cloud.sap"
+                },
+                "tls": true
+            }
+        },
+        "rawHeaders": [
+            "content-type",
+            "application/json; charset=utf-8"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/service_credential_bindings/0ddf9d37-ccbb-4640-bd1f-15f8b3d4476a/details",
+        "body": "",
+        "status": 200,
+        "response": {
+            "credentials": {
+                "vendor": "SAP",
+                "sap.cloud.service": "com.sap.ui.flex.cf.keyuser",
+                "sap.cloud.service.alias": "flexkeyuser",
+                "endpoints": {
+                    "keyuser": "cf-credentials-credentials-endpoints-keyuser"
+                },
+                "saasregistryenabled": true,
+                "grant_type": "user_token",
+                "url": "https://ui5-flexibility-keyuser.cfapps.sap.hana.ondemand.com/",
+                "uaa": {
+                    "tenantmode": "dedicated",
+                    "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
+                    "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                    "clientid": "cf-credentials-credentials-uaa-clientid-656f02ac",
+                    "credential-type": "x509",
+                    "clientx509enabled": false,
+                    "xsappname": "04d135c3-cde3-4394-9ee5-b90561e5bcf0!b5874|ui5-flexibility-keyuser!b1506",
+                    "certificate": "cf-credentials-credentials-uaa-certificate",
+                    "serviceInstanceId": "04d135c3-cde3-4394-9ee5-b90561e5bcf0",
+                    "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                    "uaadomain": "authentication.sap.hana.ondemand.com",
+                    "verificationkey": "cf-credentials-credentials-uaa-verificationkey",
+                    "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
+                    "certurl": "https://skyfin.authentication.cert.sap.hana.ondemand.com/",
+                    "identityzone": "skyfin",
+                    "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                    "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                    "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                    "certificate-pinning": true,
+                    "key": "cf-credentials-credentials-uaa-key"
+                }
+            }
+        },
+        "rawHeaders": [
+            "content-type",
+            "application/json; charset=utf-8"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/service_credential_bindings/06bb24fe-8017-4873-8395-b6eeb0d96e41/details",
         "body": "",
         "status": 200,
         "response": {
@@ -1190,20 +1190,26 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/781b24d3-866b-4fbf-8785-6cbae6ea15aa/details",
+        "path": "/v3/service_credential_bindings/ff7cab2c-93f5-4390-82a7-35fb0ac805fb/details",
         "body": "",
         "status": 200,
         "response": {
             "credentials": {
-                "password": "cf-credentials-credentials-password",
-                "hostname": "clustercfg.rg-0c94f0c1-db0a-495d-b385-4a44a87fc398.vwvwdz.euc1.cache.amazonaws.com",
-                "port": 3991,
-                "uri": "rediss://:cf-credentials-credentials-uri-password@clustercfg.rg-0c94f0c1-db0a-495d-b385-4a44a87fc398.vwvwdz.euc1.cache.amazonaws.com:3991",
-                "cluster_mode": true,
-                "urls": {
-                    "api_server": "https://api-backing-services.eu10-canary.data.services.cloud.sap"
-                },
-                "tls": true
+                "tenantmode": "dedicated",
+                "token-type": [
+                    "cf-credentials-credentials-token-type-0"
+                ],
+                "clientid": "cf-credentials-credentials-clientid-d8a263ca",
+                "credential-type": "binding-secret",
+                "xsappname": "clone05ed02605f01499ab0772a3cafc5eac3!b5874|destination-xsappname!b433",
+                "clientsecret": "cf-credentials-credentials-clientsecret",
+                "uri": "https://destination-configuration.cfapps.sap.hana.ondemand.com/",
+                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                "uaadomain": "authentication.sap.hana.ondemand.com",
+                "instanceid": "05ed0260-5f01-499a-b077-2a3cafc5eac3",
+                "verificationkey": "cf-credentials-credentials-verificationkey",
+                "identityzone": "skyfin",
+                "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
             }
         },
         "rawHeaders": [
@@ -1215,7 +1221,46 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/53e0cc21-7f42-474d-a330-ed6c65077f76/details",
+        "path": "/v3/service_credential_bindings/b06564d3-138a-4f31-b841-e757743145db/details",
+        "body": "",
+        "status": 200,
+        "response": {
+            "credentials": {
+                "tenantmode": "dedicated",
+                "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
+                "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                "subscription_manager_url": "https://saas-manager.mesh.cf.sap.hana.ondemand.com/",
+                "credential-type": "binding-secret",
+                "clientid": "cf-credentials-credentials-clientid-7582a29d",
+                "xsappname": "afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                "clientsecret": "cf-credentials-credentials-clientsecret",
+                "serviceInstanceId": "bc61bfb2-0ac6-4002-90c3-74f17dcab64e",
+                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                "ias_service_instance_id": "f999651e-8c35-467b-822e-518554570a04",
+                "uaadomain": "authentication.sap.hana.ondemand.com",
+                "callback_certificate_subject": "{\"CN\":\"Subscription Manager\",\"L\":\"Subscription Manager\",\"OU\": [\"sap-provisioning\",\"Canary\",\"SAP Cloud Platform Clients\"],\"O\":\"SAP SE\",\"C\":\"DE\"}",
+                "app_name": "afc-dev-sms",
+                "verificationkey": "cf-credentials-credentials-verificationkey",
+                "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
+                "identityzone": "skyfin",
+                "callback_certificate_subject_rfc_2253": "CN=Subscription Manager,L=Subscription Manager,OU=sap-provisioning,OU=Canary,OU=SAP Cloud Platform Clients,O=SAP SE,C=DE",
+                "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                "callback_certificate_issuer": "{\"C\":\"DE\",\"L\":\"*\",\"O\":\"SAP SE\",\"OU\":\"SAP Cloud Platform Clients\",\"CN\":\"SAP Cloud Platform Client CA\"}",
+                "app_urls": "{\"subscriptionCallbacks\":{\"url\":\"https://skyfin-dev-afc-mtx.mesh.cf.sap.hana.ondemand.com/-/cds/sms-provisioning/tenant/{app_tid}\",\"async\":{\"updateDependenciesEnable\":false,\"updateSubscriptionParametersEnable\":false,\"subscribeEnable\":true,\"unSubscribeEnable\":true,\"timeoutInMillis\":600000}},\"omitSubscriptionCallbacks\":null,\"dependenciesCallbacks\":{\"url\":\"https://skyfin-dev-afc-mtx.mesh.cf.sap.hana.ondemand.com/-/cds/sms-provisioning/dependencies/{app_tid}\"},\"subscriptionParamsCallbacks\":{\"url\":\"\"},\"subscriptionFailureCallbacks\":null}"
+            }
+        },
+        "rawHeaders": [
+            "content-type",
+            "application/json; charset=utf-8"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/service_credential_bindings/5fea34db-f3fa-404a-8fbf-81ab32c07f5c/details",
         "body": "",
         "status": 200,
         "response": {
@@ -1253,26 +1298,31 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/6052de03-aea4-4af0-8e18-170d4d982348/details",
+        "path": "/v3/service_credential_bindings/f7b165f7-4a1a-4491-93f5-7cc4b33b92d6/details",
         "body": "",
         "status": 200,
         "response": {
             "credentials": {
-                "tenantmode": "dedicated",
-                "token-type": [
-                    "cf-credentials-credentials-token-type-0"
-                ],
-                "clientid": "cf-credentials-credentials-clientid-d8a263ca",
-                "credential-type": "binding-secret",
-                "xsappname": "clone05ed02605f01499ab0772a3cafc5eac3!b5874|destination-xsappname!b433",
-                "clientsecret": "cf-credentials-credentials-clientsecret",
-                "uri": "https://destination-configuration.cfapps.sap.hana.ondemand.com/",
-                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
-                "uaadomain": "authentication.sap.hana.ondemand.com",
-                "instanceid": "05ed0260-5f01-499a-b077-2a3cafc5eac3",
-                "verificationkey": "cf-credentials-credentials-verificationkey",
-                "identityzone": "skyfin",
-                "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+                "vendor": "SAP",
+                "url": "https://api.auditlog.cf.sap.hana.ondemand.com/",
+                "uaa": {
+                    "tenantmode": "dedicated",
+                    "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
+                    "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                    "credential-type": "binding-secret",
+                    "clientid": "cf-credentials-credentials-uaa-clientid-69cb97bf",
+                    "xsappname": "d2761c94-ee8f-47a8-8570-166d28321df3!b5874|auditlog!b4",
+                    "clientsecret": "cf-credentials-credentials-uaa-clientsecret",
+                    "serviceInstanceId": "d2761c94-ee8f-47a8-8570-166d28321df3",
+                    "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                    "uaadomain": "authentication.sap.hana.ondemand.com",
+                    "verificationkey": "cf-credentials-credentials-uaa-verificationkey",
+                    "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
+                    "identityzone": "skyfin",
+                    "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                    "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                    "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+                }
             }
         },
         "rawHeaders": [
@@ -1284,43 +1334,7 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/e1356164-5ae0-4929-9c9b-3c0d06aa3797/details",
-        "body": "",
-        "status": 200,
-        "response": {
-            "credentials": {
-                "tenantmode": "dedicated",
-                "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
-                "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                "credential-type": "binding-secret",
-                "clientid": "cf-credentials-credentials-clientid-50cc36f7",
-                "xsappname": "afc-dev",
-                "appName": "afc-dev",
-                "clientsecret": "cf-credentials-credentials-clientsecret",
-                "tenant_onboarding_url": "https://saas-manager.mesh.cf.sap.hana.ondemand.com/",
-                "saas_registry_url": "https://saas-manager.mesh.cf.sap.hana.ondemand.com/",
-                "appUrls": "{\"getDependencies\":\"https://skyfin-dev-afc-mtx.mesh.cf.sap.hana.ondemand.com/-/cds/saas-provisioning/dependencies\",\"onSubscription\":\"https://skyfin-dev-afc-mtx.mesh.cf.sap.hana.ondemand.com/-/cds/saas-provisioning/tenant/{tenantId}\",\"getSubscriptionParameters\":\"\",\"onSubscriptionFailure\":null,\"onSubscriptionAsync\":true,\"onUnSubscriptionAsync\":true,\"onUpdateSubscriptionParametersAsync\":false,\"callbackTimeoutMillis\":900000,\"runGetDependenciesOnAsyncCallback\":false,\"onUpdateDependenciesAsync\":false}",
-                "serviceInstanceId": "8452bcb5-45fc-4740-a770-e49580b331f9",
-                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
-                "uaadomain": "authentication.sap.hana.ondemand.com",
-                "verificationkey": "cf-credentials-credentials-verificationkey",
-                "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
-                "identityzone": "skyfin",
-                "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
-            }
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json; charset=utf-8"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://api.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v3/service_credential_bindings/9e3ef686-005a-4d65-ad46-4e22080050cb/details",
+        "path": "/v3/service_credential_bindings/4bbcb23a-148b-4955-9e69-5b77aab2273e/details",
         "body": "",
         "status": 200,
         "response": {
@@ -1365,58 +1379,31 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/c266c70d-cefd-46b8-a0db-1d21ee673d0f/details",
+        "path": "/v3/service_credential_bindings/2fe6fbed-5e05-4783-898e-695a8feff893/details",
         "body": "",
         "status": 200,
         "response": {
             "credentials": {
-                "sm_url": "https://service-manager.cfapps.sap.hana.ondemand.com/",
-                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
-                "certurl": "https://skyfin.authentication.cert.sap.hana.ondemand.com/",
-                "clientid": "cf-credentials-credentials-clientid-612fd251",
-                "xsappname": "51ddd18b-5a78-418e-8f41-9a4c518650ec!b5874|service-manager!b4065",
-                "certificate": "cf-credentials-credentials-certificate",
-                "key": "cf-credentials-credentials-key",
-                "uaadomain": "authentication.sap.hana.ondemand.com"
-            }
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json; charset=utf-8"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://api.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v3/service_credential_bindings/3d29820c-50fa-4e53-9029-6a687ae94b07/details",
-        "body": "",
-        "status": 200,
-        "response": {
-            "credentials": {
-                "tenantmode": "dedicated",
+                "tenantmode": "shared",
                 "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
                 "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                "subscription_manager_url": "https://saas-manager.mesh.cf.sap.hana.ondemand.com/",
-                "credential-type": "binding-secret",
-                "clientid": "cf-credentials-credentials-clientid-7582a29d",
-                "xsappname": "afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                "clientsecret": "cf-credentials-credentials-clientsecret",
-                "serviceInstanceId": "bc61bfb2-0ac6-4002-90c3-74f17dcab64e",
+                "clientid": "cf-credentials-credentials-clientid-8168a434",
+                "credential-type": "x509",
+                "clientx509enabled": false,
+                "xsappname": "afc-dev!t5874",
+                "certificate": "cf-credentials-credentials-certificate",
+                "serviceInstanceId": "e020b20a-eb23-4475-91ec-d525f8738fd7",
                 "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
-                "ias_service_instance_id": "f999651e-8c35-467b-822e-518554570a04",
                 "uaadomain": "authentication.sap.hana.ondemand.com",
-                "callback_certificate_subject": "{\"CN\":\"Subscription Manager\",\"L\":\"Subscription Manager\",\"OU\": [\"sap-provisioning\",\"Canary\",\"SAP Cloud Platform Clients\"],\"O\":\"SAP SE\",\"C\":\"DE\"}",
-                "app_name": "afc-dev-sms",
                 "verificationkey": "cf-credentials-credentials-verificationkey",
                 "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
+                "certurl": "https://skyfin.authentication.cert.sap.hana.ondemand.com/",
                 "identityzone": "skyfin",
-                "callback_certificate_subject_rfc_2253": "CN=Subscription Manager,L=Subscription Manager,OU=sap-provisioning,OU=Canary,OU=SAP Cloud Platform Clients,O=SAP SE,C=DE",
                 "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
                 "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
                 "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                "callback_certificate_issuer": "{\"C\":\"DE\",\"L\":\"*\",\"O\":\"SAP SE\",\"OU\":\"SAP Cloud Platform Clients\",\"CN\":\"SAP Cloud Platform Client CA\"}",
-                "app_urls": "{\"subscriptionCallbacks\":{\"url\":\"https://skyfin-dev-afc-mtx.mesh.cf.sap.hana.ondemand.com/-/cds/sms-provisioning/tenant/{app_tid}\",\"async\":{\"updateDependenciesEnable\":false,\"updateSubscriptionParametersEnable\":false,\"subscribeEnable\":true,\"unSubscribeEnable\":true,\"timeoutInMillis\":600000}},\"omitSubscriptionCallbacks\":null,\"dependenciesCallbacks\":{\"url\":\"https://skyfin-dev-afc-mtx.mesh.cf.sap.hana.ondemand.com/-/cds/sms-provisioning/dependencies/{app_tid}\"},\"subscriptionParamsCallbacks\":{\"url\":\"\"},\"subscriptionFailureCallbacks\":null}"
+                "certificate-pinning": true,
+                "key": "cf-credentials-credentials-key"
             }
         },
         "rawHeaders": [
@@ -1428,88 +1415,31 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/3b23fc53-09dc-4c7a-a385-10a6fb04fd3b/details",
+        "path": "/v3/service_credential_bindings/2d2c0b3b-b435-4796-bfc0-5ba6f6f7c3ea/details",
         "body": "",
         "status": 200,
         "response": {
             "credentials": {
                 "endpoints": {
-                    "credentials_url": "https://clm-sl-ans-canary-ans-service-api.cfapps.sap.hana.ondemand.com/api",
-                    "notifications_url": "https://clm-sl-ans-canary-ans-service-api.cfapps.sap.hana.ondemand.com/",
-                    "notifications_mtls_url": "https://clm-sl-ans-canary-ans-service-api.mesh.cf.sap.hana.ondemand.com/",
-                    "websockets_url": "https://clm-sl-ans-canary-ans-service-api.cfapps.sap.hana.ondemand.com/"
+                    "portal-service": "https://portal-service.cfapps.sap.hana.ondemand.com",
+                    "token-service": "cf-credentials-credentials-endpoints-token-service"
                 },
+                "sap.cloud.service": "com.sap.ui.portal",
+                "sap.cloud.service.alias": "cp",
                 "saasregistryenabled": true,
-                "sap.cloud.service": "alert-notification",
-                "grant_type": "user_token",
-                "uaa": {
-                    "tenantmode": "shared",
-                    "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
-                    "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                    "credential-type": "binding-secret",
-                    "clientid": "cf-credentials-credentials-uaa-clientid-130968dc",
-                    "xsappname": "e9f2bb15-1b46-4ea6-8530-a89508081ec4!b5874|ans-business!b2187",
-                    "clientsecret": "cf-credentials-credentials-uaa-clientsecret",
-                    "serviceInstanceId": "e9f2bb15-1b46-4ea6-8530-a89508081ec4",
-                    "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
-                    "uaadomain": "authentication.sap.hana.ondemand.com",
-                    "verificationkey": "cf-credentials-credentials-uaa-verificationkey",
-                    "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
-                    "identityzone": "skyfin",
-                    "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                    "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                    "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
-                }
-            }
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json; charset=utf-8"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://api.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v3/service_credential_bindings/5c59dd6e-8305-4760-b8a6-5d2966b3dae7/details",
-        "body": "",
-        "status": 200,
-        "response": {
-            "credentials": {}
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json; charset=utf-8"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://api.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v3/service_credential_bindings/93a1f897-74f2-4397-950e-933a50815289/details",
-        "body": "",
-        "status": 200,
-        "response": {
-            "credentials": {
-                "vendor": "SAP",
-                "sap.cloud.service": "com.sap.ui.flex.cf.keyuser",
-                "sap.cloud.service.alias": "flexkeyuser",
-                "endpoints": {
-                    "keyuser": "cf-credentials-credentials-endpoints-keyuser"
+                "html5-apps-repo": {
+                    "app_host_id": "85cd3f98-4345-42bd-b425-364c144d0e0e,570d7b41-113a-469b-ae5f-7ba55967aed4,c693e508-f8d5-4a70-be60-cb6106d0b60e,77d1971b-3fdc-45e0-8da3-f7b719dfff86"
                 },
-                "saasregistryenabled": true,
-                "grant_type": "user_token",
-                "url": "https://ui5-flexibility-keyuser.cfapps.sap.hana.ondemand.com/",
                 "uaa": {
                     "tenantmode": "dedicated",
                     "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
                     "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                    "clientid": "cf-credentials-credentials-uaa-clientid-656f02ac",
+                    "clientid": "cf-credentials-credentials-uaa-clientid-687c6c55",
                     "credential-type": "x509",
                     "clientx509enabled": false,
-                    "xsappname": "04d135c3-cde3-4394-9ee5-b90561e5bcf0!b5874|ui5-flexibility-keyuser!b1506",
+                    "xsappname": "b4700476-0b63-4eea-add7-2873a2fc4f0b!b5874|portal-cf-service!b119",
                     "certificate": "cf-credentials-credentials-uaa-certificate",
-                    "serviceInstanceId": "04d135c3-cde3-4394-9ee5-b90561e5bcf0",
+                    "serviceInstanceId": "b4700476-0b63-4eea-add7-2873a2fc4f0b",
                     "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
                     "uaadomain": "authentication.sap.hana.ondemand.com",
                     "verificationkey": "cf-credentials-credentials-uaa-verificationkey",
@@ -1521,7 +1451,10 @@
                     "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
                     "certificate-pinning": true,
                     "key": "cf-credentials-credentials-uaa-key"
-                }
+                },
+                "fdc_app_host_id": "77d1971b-3fdc-45e0-8da3-f7b719dfff86",
+                "instance_id": "b4700476-0b63-4eea-add7-2873a2fc4f0b",
+                "forwardiastoken": true
             }
         },
         "rawHeaders": [
@@ -1533,7 +1466,65 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/fd00bc38-a799-440b-be18-8ef6ba4e3ace/details",
+        "path": "/v3/service_credential_bindings/9306b0aa-9949-471c-9be3-f75afb4614d3/details",
+        "body": "",
+        "status": 200,
+        "response": {
+            "credentials": {
+                "apitoken": "cf-credentials-credentials-apitoken",
+                "apiurl": "https://canary.eu10.apm.services.cloud.sap/e/99479865-a86b-4792-a740-fc62388b3496/api",
+                "environmentid": "99479865-a86b-4792-a740-fc62388b3496",
+                "ingest_apitoken": "cf-credentials-credentials-ingest_apitoken",
+                "skiperrors": "true",
+                "token_expiry": "cf-credentials-credentials-token_expiry"
+            }
+        },
+        "rawHeaders": [
+            "content-type",
+            "application/json; charset=utf-8"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/service_credential_bindings/4fafc303-a1a2-4bf1-9b09-73bcd477e12e/details",
+        "body": "",
+        "status": 200,
+        "response": {
+            "credentials": {
+                "tenantmode": "dedicated",
+                "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
+                "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                "credential-type": "binding-secret",
+                "clientid": "cf-credentials-credentials-clientid-50cc36f7",
+                "xsappname": "afc-dev",
+                "appName": "afc-dev",
+                "clientsecret": "cf-credentials-credentials-clientsecret",
+                "tenant_onboarding_url": "https://saas-manager.mesh.cf.sap.hana.ondemand.com/",
+                "saas_registry_url": "https://saas-manager.mesh.cf.sap.hana.ondemand.com/",
+                "appUrls": "{\"getDependencies\":\"https://skyfin-dev-afc-mtx.mesh.cf.sap.hana.ondemand.com/-/cds/saas-provisioning/dependencies\",\"onSubscription\":\"https://skyfin-dev-afc-mtx.mesh.cf.sap.hana.ondemand.com/-/cds/saas-provisioning/tenant/{tenantId}\",\"getSubscriptionParameters\":\"\",\"onSubscriptionFailure\":null,\"onSubscriptionAsync\":true,\"onUnSubscriptionAsync\":true,\"onUpdateSubscriptionParametersAsync\":false,\"callbackTimeoutMillis\":900000,\"runGetDependenciesOnAsyncCallback\":false,\"onUpdateDependenciesAsync\":false}",
+                "serviceInstanceId": "8452bcb5-45fc-4740-a770-e49580b331f9",
+                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                "uaadomain": "authentication.sap.hana.ondemand.com",
+                "verificationkey": "cf-credentials-credentials-verificationkey",
+                "apiurl": "https://api.authentication.sap.hana.ondemand.com/",
+                "identityzone": "skyfin",
+                "identityzoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                "tenantid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                "zoneid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8"
+            }
+        },
+        "rawHeaders": [
+            "content-type",
+            "application/json; charset=utf-8"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/service_credential_bindings/fe56a05a-dbd6-4f80-9a38-dd5eaab27d92/details",
         "body": "",
         "status": 200,
         "response": {
@@ -1580,53 +1571,29 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/6d60d3ae-e230-4b3a-88c3-401064bcfa0b/details",
+        "path": "/v3/service_credential_bindings/e87622c1-fc33-4177-aed6-31e4657fcd23/details",
         "body": "",
         "status": 200,
         "response": {
             "credentials": {
-                "btp-tenant-api": "https://api.authentication.sap.hana.ondemand.com",
-                "app_tid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
-                "clientid": "cf-credentials-credentials-clientid-ea7419d4",
-                "credential-type": "X509_GENERATED",
-                "certificate": "cf-credentials-credentials-certificate",
-                "domains": [
-                    "accounts400.ondemand.com",
-                    "accounts400.cloud.sap"
-                ],
-                "end_session_endpoint": "https://awdsp8ef4.accounts400.ondemand.com/oauth2/logout",
-                "url": "https://awdsp8ef4.accounts400.ondemand.com/",
-                "authorization_endpoint": "https://awdsp8ef4.accounts400.ondemand.com/oauth2/authorize",
-                "certificate_expires_at": "2026-10-13T20:04:56Z",
-                "domain": "accounts400.ondemand.com",
-                "key": "cf-credentials-credentials-key"
-            }
-        },
-        "rawHeaders": [
-            "content-type",
-            "application/json; charset=utf-8"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://api.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/v3/service_credential_bindings/56cb9811-eed5-4a1c-b416-bb97656ae26f/details",
-        "body": "",
-        "status": 200,
-        "response": {
-            "credentials": {
-                "vendor": "SAP",
-                "url": "https://api.auditlog.cf.sap.hana.ondemand.com/",
+                "endpoints": {
+                    "credentials_url": "https://clm-sl-ans-canary-ans-service-api.cfapps.sap.hana.ondemand.com/api",
+                    "notifications_url": "https://clm-sl-ans-canary-ans-service-api.cfapps.sap.hana.ondemand.com/",
+                    "notifications_mtls_url": "https://clm-sl-ans-canary-ans-service-api.mesh.cf.sap.hana.ondemand.com/",
+                    "websockets_url": "https://clm-sl-ans-canary-ans-service-api.cfapps.sap.hana.ondemand.com/"
+                },
+                "saasregistryenabled": true,
+                "sap.cloud.service": "alert-notification",
+                "grant_type": "user_token",
                 "uaa": {
-                    "tenantmode": "dedicated",
+                    "tenantmode": "shared",
                     "sburl": "https://internal-xsuaa.authentication.sap.hana.ondemand.com/",
                     "subaccountid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
                     "credential-type": "binding-secret",
-                    "clientid": "cf-credentials-credentials-uaa-clientid-69cb97bf",
-                    "xsappname": "d2761c94-ee8f-47a8-8570-166d28321df3!b5874|auditlog!b4",
+                    "clientid": "cf-credentials-credentials-uaa-clientid-130968dc",
+                    "xsappname": "e9f2bb15-1b46-4ea6-8530-a89508081ec4!b5874|ans-business!b2187",
                     "clientsecret": "cf-credentials-credentials-uaa-clientsecret",
-                    "serviceInstanceId": "d2761c94-ee8f-47a8-8570-166d28321df3",
+                    "serviceInstanceId": "e9f2bb15-1b46-4ea6-8530-a89508081ec4",
                     "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
                     "uaadomain": "authentication.sap.hana.ondemand.com",
                     "verificationkey": "cf-credentials-credentials-uaa-verificationkey",
@@ -1647,17 +1614,50 @@
     {
         "scope": "https://api.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/v3/service_credential_bindings/72d376ae-99ba-417a-b32d-03b53a017abe/details",
+        "path": "/v3/service_credential_bindings/612cf5a6-441d-4c70-ace2-20bd0622d8d3/details",
         "body": "",
         "status": 200,
         "response": {
             "credentials": {
-                "apitoken": "cf-credentials-credentials-apitoken",
-                "apiurl": "https://canary.eu10.apm.services.cloud.sap/e/99479865-a86b-4792-a740-fc62388b3496/api",
-                "environmentid": "99479865-a86b-4792-a740-fc62388b3496",
-                "ingest_apitoken": "cf-credentials-credentials-ingest_apitoken",
-                "skiperrors": "true",
-                "token_expiry": "cf-credentials-credentials-token_expiry"
+                "sm_url": "https://service-manager.cfapps.sap.hana.ondemand.com/",
+                "url": "https://skyfin.authentication.sap.hana.ondemand.com/",
+                "certurl": "https://skyfin.authentication.cert.sap.hana.ondemand.com/",
+                "clientid": "cf-credentials-credentials-clientid-612fd251",
+                "xsappname": "51ddd18b-5a78-418e-8f41-9a4c518650ec!b5874|service-manager!b4065",
+                "certificate": "cf-credentials-credentials-certificate",
+                "key": "cf-credentials-credentials-key",
+                "uaadomain": "authentication.sap.hana.ondemand.com"
+            }
+        },
+        "rawHeaders": [
+            "content-type",
+            "application/json; charset=utf-8"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://api.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/v3/service_credential_bindings/79bd2991-c54e-4a72-a811-536f94435643/details",
+        "body": "",
+        "status": 200,
+        "response": {
+            "credentials": {
+                "btp-tenant-api": "https://api.authentication.sap.hana.ondemand.com",
+                "app_tid": "7b20408e-3fe0-4ade-aa2e-ad97baac72e8",
+                "clientid": "cf-credentials-credentials-clientid-ea7419d4",
+                "credential-type": "X509_GENERATED",
+                "certificate": "cf-credentials-credentials-certificate",
+                "domains": [
+                    "accounts400.ondemand.com",
+                    "accounts400.cloud.sap"
+                ],
+                "end_session_endpoint": "https://awdsp8ef4.accounts400.ondemand.com/oauth2/logout",
+                "url": "https://awdsp8ef4.accounts400.ondemand.com/",
+                "authorization_endpoint": "https://awdsp8ef4.accounts400.ondemand.com/oauth2/authorize",
+                "certificate_expires_at": "2026-10-14T20:14:52Z",
+                "domain": "accounts400.ondemand.com",
+                "key": "cf-credentials-credentials-key"
             }
         },
         "rawHeaders": [
@@ -1676,7 +1676,7 @@
             "token_type": "bearer",
             "expires_in": 43199,
             "scope": "lps-registry-broker!b13.entitlement.read uaa.resource lps-registry-broker!b13.subscription.read lps-registry-broker!b13.job.read lps-registry-broker!b13.subscription.write",
-            "jti": "49f8cac6b60d48cabc6e8a1d827617e7"
+            "jti": "9eeb426a525e4be7a28cc3989fa23e3f"
         },
         "rawHeaders": [
             "cache-control",
@@ -1684,7 +1684,7 @@
             "content-type",
             "application/json",
             "date",
-            "Thu, 16 Jul 2026 09:38:00 GMT",
+            "Fri, 17 Jul 2026 13:06:41 GMT",
             "pragma",
             "no-cache",
             "server",
@@ -1694,54 +1694,9 @@
             "x-frame-options",
             "DENY",
             "x-vcap-request-id",
-            "b79757f1-f3ea-4255-5855-cb134efcd970",
+            "a7bdb76d-01e8-48bc-7eaf-e6af58dc10f8",
             "x-xss-protection",
             "1; mode=block",
-            "transfer-encoding",
-            "chunked",
-            "strict-transport-security",
-            "max-age=31536000; includeSubDomains; preload;"
-        ],
-        "responseIsBinary": false
-    },
-    {
-        "scope": "https://saas-manager.mesh.cf.sap.hana.ondemand.com:443",
-        "method": "GET",
-        "path": "/saas-manager/v1/application/subscriptions?appName=afc-dev&tenantId=5ecc7413-2b7e-414a-9496-ad4a61f6cccf&size=200&page=1",
-        "body": "",
-        "status": 200,
-        "response": {
-            "subscriptions": [],
-            "morePages": false,
-            "totalPages": 0,
-            "total": 0,
-            "page": 1
-        },
-        "rawHeaders": [
-            "cache-control",
-            "no-cache, no-store, max-age=0, must-revalidate",
-            "content-type",
-            "application/json",
-            "date",
-            "Thu, 16 Jul 2026 09:38:00 GMT",
-            "expires",
-            "0",
-            "pragma",
-            "no-cache",
-            "vary",
-            "origin,access-control-request-method,access-control-request-headers,accept-encoding",
-            "x-content-type-options",
-            "nosniff",
-            "x-correlationid",
-            "66e9a305-6698-4f7d-7e03-4035c5dea794",
-            "x-frame-options",
-            "DENY",
-            "x-ratelimit-remaining",
-            "24",
-            "x-vcap-request-id",
-            "66e9a305-6698-4f7d-7e03-4035c5dea794",
-            "x-xss-protection",
-            "0",
             "transfer-encoding",
             "chunked",
             "strict-transport-security",
@@ -1759,7 +1714,7 @@
             "token_type": "bearer",
             "expires_in": 43199,
             "scope": "lps-registry-broker!b13.sms.provider.subscription.read lps-registry-broker!b13.sms.provider.application.read uaa.resource lps-registry-broker!b13.sms.provider.subscription.update lps-registry-broker!b13.job.read lps-registry-broker!b13.sms.provider.subscription.delete",
-            "jti": "da53e42bfcf24619a5723302974ab78a"
+            "jti": "30073590dc8c490fbe14ae787f34080f"
         },
         "rawHeaders": [
             "cache-control",
@@ -1767,7 +1722,7 @@
             "content-type",
             "application/json",
             "date",
-            "Thu, 16 Jul 2026 09:38:00 GMT",
+            "Fri, 17 Jul 2026 13:06:41 GMT",
             "pragma",
             "no-cache",
             "server",
@@ -1777,7 +1732,7 @@
             "x-frame-options",
             "DENY",
             "x-vcap-request-id",
-            "718c609b-0034-4c8c-6061-25b9fcb622da",
+            "795b182d-79a8-403d-5aaf-4c1111e099cb",
             "x-xss-protection",
             "1; mode=block",
             "transfer-encoding",
@@ -1790,7 +1745,46 @@
     {
         "scope": "https://saas-manager.mesh.cf.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/subscription-manager/v1/subscriptions?appName=afc-dev-sms&app_tid=5ecc7413-2b7e-414a-9496-ad4a61f6cccf&size=200&page=1",
+        "path": "/saas-manager/v2/application/subscriptions?tenantId=5ecc7413-2b7e-414a-9496-ad4a61f6cccf&size=200",
+        "body": "",
+        "status": 200,
+        "response": {
+            "subscriptions": []
+        },
+        "rawHeaders": [
+            "cache-control",
+            "no-cache, no-store, max-age=0, must-revalidate",
+            "content-type",
+            "application/json",
+            "date",
+            "Fri, 17 Jul 2026 13:06:41 GMT",
+            "expires",
+            "0",
+            "pragma",
+            "no-cache",
+            "vary",
+            "origin,access-control-request-method,access-control-request-headers,accept-encoding",
+            "x-content-type-options",
+            "nosniff",
+            "x-correlationid",
+            "cc16560f-ddca-426f-70ee-d7fbc4189448",
+            "x-frame-options",
+            "DENY",
+            "x-vcap-request-id",
+            "cc16560f-ddca-426f-70ee-d7fbc4189448",
+            "x-xss-protection",
+            "0",
+            "transfer-encoding",
+            "chunked",
+            "strict-transport-security",
+            "max-age=31536000; includeSubDomains; preload;"
+        ],
+        "responseIsBinary": false
+    },
+    {
+        "scope": "https://saas-manager.mesh.cf.sap.hana.ondemand.com:443",
+        "method": "GET",
+        "path": "/subscription-manager/v2/subscriptions?app_tid=5ecc7413-2b7e-414a-9496-ad4a61f6cccf&top=200",
         "body": "",
         "status": 200,
         "response": {
@@ -1804,6 +1798,7 @@
                     "subscriber": {
                         "zoneId": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
                         "app_tid": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
+                        "tenantHost": "awdsp8ef4.accounts400.ondemand.com",
                         "subaccountId": "5ecc7413-2b7e-414a-9496-ad4a61f6cccf",
                         "subaccountSubdomain": "skyfin-company",
                         "globalAccountId": "011b4e7a-43b5-4f63-819a-9b1e46ab23b6",
@@ -1822,10 +1817,389 @@
                     "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
                     "createdDate": "Thu Sep 18 09:24:29 UTC 2025",
                     "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                    "modifiedDate": "Thu Jul 16 09:36:13 UTC 2026",
+                    "modifiedDate": "Fri Jul 17 13:05:38 UTC 2026",
                     "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
                     "appError": "{\"error\":{\"code\":\"bpm.wtm.tenant.subscription.update.failed\",\"message\":\"The subscription could not be updated because it was either not found, is in a non-updatable state or the dependent service instance has changed.\",\"logId\":\"3a56ebd0-e1a4-49a4-842a-3cfbba1543da\"}}",
                     "dependencies": [
+                        {
+                            "provider": {
+                                "appName": "html5-apps-repo",
+                                "commercialAppName": "html5-apps-repo",
+                                "appId": "html5-apps-repo-uaa!b1129",
+                                "tenantId": "sap-html5-apps-repo"
+                            },
+                            "xsuaaSubscriptionId": "4457fe63-ba67-42be-80c6-ce16066c80ca!b5874|html5-apps-repo-uaa!b1129_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
+                            "xsuaaState": "SUBSCRIBED",
+                            "appId": "4457fe63-ba67-42be-80c6-ce16066c80ca!b5874|html5-apps-repo-uaa!b1129",
+                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
+                            "createdDate": "Mon Oct 20 10:36:14 UTC 2025",
+                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                            "modifiedDate": "Fri Jul 17 13:05:18 UTC 2026",
+                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                            "dependencies": []
+                        },
+                        {
+                            "provider": {
+                                "appName": "connectivity",
+                                "commercialAppName": "connectivity",
+                                "appId": "connectivity!b137",
+                                "tenantId": "sap-connectivity"
+                            },
+                            "xsuaaSubscriptionId": "clone43c89feaa7e14781a446eca57e3748b5!b5874|connectivity!b137_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
+                            "xsuaaState": "SUBSCRIBED",
+                            "appId": "clone43c89feaa7e14781a446eca57e3748b5!b5874|connectivity!b137",
+                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
+                            "createdDate": "Mon Oct 20 10:36:13 UTC 2025",
+                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                            "modifiedDate": "Fri Jul 17 13:05:18 UTC 2026",
+                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                            "dependencies": []
+                        },
+                        {
+                            "provider": {
+                                "appName": "destination",
+                                "commercialAppName": "destination",
+                                "appId": "destination-xsappname!b433",
+                                "tenantId": "sap-destination-configuration"
+                            },
+                            "xsuaaSubscriptionId": "clone05ed02605f01499ab0772a3cafc5eac3!b5874|destination-xsappname!b433_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
+                            "xsuaaState": "SUBSCRIBED",
+                            "appId": "clone05ed02605f01499ab0772a3cafc5eac3!b5874|destination-xsappname!b433",
+                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
+                            "createdDate": "Mon Oct 20 10:36:14 UTC 2025",
+                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                            "modifiedDate": "Fri Jul 17 13:05:18 UTC 2026",
+                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                            "dependencies": []
+                        },
+                        {
+                            "provider": {
+                                "appName": "businesslogging-sb-prod",
+                                "commercialAppName": "businesslogging-sb-prod",
+                                "appId": "businesslogging-sb-prod!b3598",
+                                "tenantId": "3e057446-6320-4265-95e9-c8317e11208e"
+                            },
+                            "xsuaaSubscriptionId": "afc-dev!b5874|businesslogging-sb-prod!b3598_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
+                            "xsuaaState": "SUBSCRIBED",
+                            "appId": "afc-dev!b5874|businesslogging-sb-prod!b3598",
+                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
+                            "createdDate": "Mon Oct 20 10:36:14 UTC 2025",
+                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                            "modifiedDate": "Fri Jul 17 13:05:30 UTC 2026",
+                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                            "dependencies": [
+                                {
+                                    "provider": {
+                                        "appName": "auditlog",
+                                        "commercialAppName": "auditlog",
+                                        "appId": "auditlog!b4",
+                                        "tenantId": "sap"
+                                    },
+                                    "xsuaaSubscriptionId": "000cf9ab-4df6-4a40-b30e-3716896a28f9!b3598|auditlog!b4_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
+                                    "xsuaaState": "SUBSCRIBED",
+                                    "appId": "000cf9ab-4df6-4a40-b30e-3716896a28f9!b3598|auditlog!b4",
+                                    "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
+                                    "createdDate": "Fri Jul 17 12:59:15 UTC 2026",
+                                    "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                    "modifiedDate": "Fri Jul 17 13:05:18 UTC 2026",
+                                    "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                    "dependencies": []
+                                }
+                            ]
+                        },
+                        {
+                            "provider": {
+                                "appName": "auditlog",
+                                "commercialAppName": "auditlog",
+                                "appId": "auditlog!b4",
+                                "tenantId": "sap"
+                            },
+                            "xsuaaSubscriptionId": "d2761c94-ee8f-47a8-8570-166d28321df3!b5874|auditlog!b4_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
+                            "xsuaaState": "SUBSCRIBED",
+                            "appId": "d2761c94-ee8f-47a8-8570-166d28321df3!b5874|auditlog!b4",
+                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
+                            "createdDate": "Mon Oct 20 10:36:13 UTC 2025",
+                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                            "modifiedDate": "Fri Jul 17 13:05:18 UTC 2026",
+                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                            "dependencies": []
+                        },
+                        {
+                            "provider": {
+                                "appName": "8df5f951-acc1-439b-8ba8-b01a3cd60e08",
+                                "commercialAppName": "8df5f951-acc1-439b-8ba8-b01a3cd60e08",
+                                "appId": "ui5-flexibility-keyuser!b1506",
+                                "tenantId": "81a696f4-b689-417c-b556-69efd330e09d"
+                            },
+                            "xsuaaSubscriptionId": "04d135c3-cde3-4394-9ee5-b90561e5bcf0!b5874|ui5-flexibility-keyuser!b1506_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
+                            "xsuaaState": "SUBSCRIBED",
+                            "appId": "04d135c3-cde3-4394-9ee5-b90561e5bcf0!b5874|ui5-flexibility-keyuser!b1506",
+                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
+                            "createdDate": "Mon Oct 20 10:36:13 UTC 2025",
+                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                            "modifiedDate": "Fri Jul 17 13:05:32 UTC 2026",
+                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                            "dependencies": [
+                                {
+                                    "provider": {
+                                        "appName": "cas-saas-registry-prod",
+                                        "commercialAppName": "cas-saas-registry-prod",
+                                        "appId": "cas-uaa-prod-eu10-canary!b11030",
+                                        "tenantId": "3e3cb95e-04a7-43bf-a294-92cecbdf862c"
+                                    },
+                                    "xsuaaSubscriptionId": "578334dc-1d38-45e3-893c-b176e5711992!b1506|cas-uaa-prod-eu10-canary!b11030_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
+                                    "xsuaaState": "SUBSCRIBED",
+                                    "appId": "578334dc-1d38-45e3-893c-b176e5711992!b1506|cas-uaa-prod-eu10-canary!b11030",
+                                    "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
+                                    "createdDate": "Fri Jul 17 12:59:12 UTC 2026",
+                                    "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                    "modifiedDate": "Fri Jul 17 13:05:30 UTC 2026",
+                                    "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                    "dependencies": [
+                                        {
+                                            "provider": {
+                                                "appName": "destination",
+                                                "commercialAppName": "destination",
+                                                "appId": "destination-xsappname!b433",
+                                                "tenantId": "sap-destination-configuration"
+                                            },
+                                            "xsuaaSubscriptionId": "clonebecdbd6b56cd4aac9e725c2dc563aca1!b11030|destination-xsappname!b433_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
+                                            "xsuaaState": "SUBSCRIBED",
+                                            "appId": "clonebecdbd6b56cd4aac9e725c2dc563aca1!b11030|destination-xsappname!b433",
+                                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
+                                            "createdDate": "Fri Jul 17 12:59:12 UTC 2026",
+                                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                            "modifiedDate": "Fri Jul 17 13:05:18 UTC 2026",
+                                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                            "dependencies": [
+                                                {
+                                                    "provider": {
+                                                        "appName": "connectivity",
+                                                        "commercialAppName": "connectivity",
+                                                        "appId": "connectivity!b137",
+                                                        "tenantId": "sap-connectivity"
+                                                    },
+                                                    "xsuaaSubscriptionId": "clonefdc27fad0ffe484abfd9493063d81ebb!b433|connectivity!b137_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
+                                                    "xsuaaState": "SUBSCRIBED",
+                                                    "appId": "clonefdc27fad0ffe484abfd9493063d81ebb!b433|connectivity!b137",
+                                                    "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
+                                                    "createdDate": "Fri Jul 17 12:59:13 UTC 2026",
+                                                    "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                                    "modifiedDate": "Fri Jul 17 13:05:18 UTC 2026",
+                                                    "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                                    "dependencies": [
+                                                        {
+                                                            "provider": {
+                                                                "appName": "connectivity",
+                                                                "commercialAppName": "connectivity",
+                                                                "appId": "connectivity!b137",
+                                                                "tenantId": "sap-connectivity"
+                                                            },
+                                                            "xsuaaSubscriptionId": "sccManagementa5b0ae6799924861a13774efa35e1ba2!b137|connectivity!b137_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
+                                                            "xsuaaState": "SUBSCRIBED",
+                                                            "appId": "sccManagementa5b0ae6799924861a13774efa35e1ba2!b137|connectivity!b137",
+                                                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
+                                                            "createdDate": "Fri Jul 17 12:59:14 UTC 2026",
+                                                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                                            "modifiedDate": "Fri Jul 17 13:05:18 UTC 2026",
+                                                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                                            "dependencies": []
+                                                        },
+                                                        {
+                                                            "provider": {
+                                                                "appName": "auditlog",
+                                                                "commercialAppName": "auditlog",
+                                                                "appId": "auditlog!b4",
+                                                                "tenantId": "sap"
+                                                            },
+                                                            "xsuaaSubscriptionId": "0cf612d6-910f-4030-acda-19a30ba00125!b137|auditlog!b4_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
+                                                            "xsuaaState": "SUBSCRIBED",
+                                                            "appId": "0cf612d6-910f-4030-acda-19a30ba00125!b137|auditlog!b4",
+                                                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
+                                                            "createdDate": "Fri Jul 17 12:59:14 UTC 2026",
+                                                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                                            "modifiedDate": "Fri Jul 17 13:05:18 UTC 2026",
+                                                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                                            "dependencies": []
+                                                        },
+                                                        {
+                                                            "provider": {
+                                                                "appName": "auditlog",
+                                                                "commercialAppName": "auditlog",
+                                                                "appId": "auditlog!b4",
+                                                                "tenantId": "sap"
+                                                            },
+                                                            "xsuaaSubscriptionId": "da0519fb-67db-4809-85ac-a340b5b0b9a5!b137|auditlog!b4_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
+                                                            "xsuaaState": "SUBSCRIBED",
+                                                            "appId": "da0519fb-67db-4809-85ac-a340b5b0b9a5!b137|auditlog!b4",
+                                                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
+                                                            "createdDate": "Fri Jul 17 12:59:14 UTC 2026",
+                                                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                                            "modifiedDate": "Fri Jul 17 13:05:18 UTC 2026",
+                                                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                                            "dependencies": []
+                                                        },
+                                                        {
+                                                            "provider": {
+                                                                "appName": "77c03ecf-c046-4739-9c95-a224086f4d13",
+                                                                "commercialAppName": "77c03ecf-c046-4739-9c95-a224086f4d13",
+                                                                "appId": "certificate-service!b17617",
+                                                                "tenantId": "cf-eu10-canary-certificate-service"
+                                                            },
+                                                            "xsuaaSubscriptionId": "4925f3d6-d50c-40c1-ae38-7393a68a5a3a!b137|certificate-service!b17617_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
+                                                            "xsuaaState": "SUBSCRIBED",
+                                                            "appId": "4925f3d6-d50c-40c1-ae38-7393a68a5a3a!b137|certificate-service!b17617",
+                                                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
+                                                            "createdDate": "Fri Jul 17 12:59:14 UTC 2026",
+                                                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                                            "modifiedDate": "Fri Jul 17 13:05:18 UTC 2026",
+                                                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                                            "dependencies": []
+                                                        },
+                                                        {
+                                                            "provider": {
+                                                                "appName": "77c03ecf-c046-4739-9c95-a224086f4d13",
+                                                                "commercialAppName": "77c03ecf-c046-4739-9c95-a224086f4d13",
+                                                                "appId": "certificate-service!b17617",
+                                                                "tenantId": "cf-eu10-canary-certificate-service"
+                                                            },
+                                                            "xsuaaSubscriptionId": "cc8a280b-a265-43f8-b3f9-f56c8b93c3c3!b137|certificate-service!b17617_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
+                                                            "xsuaaState": "SUBSCRIBED",
+                                                            "appId": "cc8a280b-a265-43f8-b3f9-f56c8b93c3c3!b137|certificate-service!b17617",
+                                                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
+                                                            "createdDate": "Fri Jul 17 12:59:14 UTC 2026",
+                                                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                                            "modifiedDate": "Fri Jul 17 13:05:18 UTC 2026",
+                                                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                                            "dependencies": []
+                                                        },
+                                                        {
+                                                            "provider": {
+                                                                "appName": "connectivity",
+                                                                "commercialAppName": "connectivity",
+                                                                "appId": "connectivity!b137",
+                                                                "tenantId": "sap-connectivity"
+                                                            },
+                                                            "xsuaaSubscriptionId": "sccManagement4332461f6499470db225d6804ba2d55b!b137|connectivity!b137_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
+                                                            "xsuaaState": "SUBSCRIBED",
+                                                            "appId": "sccManagement4332461f6499470db225d6804ba2d55b!b137|connectivity!b137",
+                                                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
+                                                            "createdDate": "Fri Jul 17 12:59:14 UTC 2026",
+                                                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                                            "modifiedDate": "Fri Jul 17 13:05:18 UTC 2026",
+                                                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                                            "dependencies": []
+                                                        },
+                                                        {
+                                                            "provider": {
+                                                                "appName": "connectivity",
+                                                                "commercialAppName": "connectivity",
+                                                                "appId": "connectivity!b137",
+                                                                "tenantId": "sap-connectivity"
+                                                            },
+                                                            "xsuaaSubscriptionId": "clonec0ec6bd1464646e6800f6c3b701b23a3!b137|connectivity!b137_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
+                                                            "xsuaaState": "SUBSCRIBED",
+                                                            "appId": "clonec0ec6bd1464646e6800f6c3b701b23a3!b137|connectivity!b137",
+                                                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
+                                                            "createdDate": "Fri Jul 17 12:59:14 UTC 2026",
+                                                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                                            "modifiedDate": "Fri Jul 17 13:05:18 UTC 2026",
+                                                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                                            "dependencies": []
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "provider": {
+                                                        "appName": "connectivity",
+                                                        "commercialAppName": "connectivity",
+                                                        "appId": "connectivity!b137",
+                                                        "tenantId": "sap-connectivity"
+                                                    },
+                                                    "xsuaaSubscriptionId": "clone845c0d6c34194265aeb6e95ebff4823d!b433|connectivity!b137_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
+                                                    "xsuaaState": "SUBSCRIBED",
+                                                    "appId": "clone845c0d6c34194265aeb6e95ebff4823d!b433|connectivity!b137",
+                                                    "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
+                                                    "createdDate": "Fri Jul 17 12:59:14 UTC 2026",
+                                                    "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                                    "modifiedDate": "Fri Jul 17 13:05:18 UTC 2026",
+                                                    "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                                    "dependencies": []
+                                                },
+                                                {
+                                                    "provider": {
+                                                        "appName": "auditlog",
+                                                        "commercialAppName": "auditlog",
+                                                        "appId": "auditlog!b4",
+                                                        "tenantId": "sap"
+                                                    },
+                                                    "xsuaaSubscriptionId": "5001ed64-87a0-415c-8041-33406951606e!b433|auditlog!b4_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
+                                                    "xsuaaState": "SUBSCRIBED",
+                                                    "appId": "5001ed64-87a0-415c-8041-33406951606e!b433|auditlog!b4",
+                                                    "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
+                                                    "createdDate": "Fri Jul 17 12:59:14 UTC 2026",
+                                                    "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                                    "modifiedDate": "Fri Jul 17 13:05:18 UTC 2026",
+                                                    "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                                    "dependencies": []
+                                                },
+                                                {
+                                                    "provider": {
+                                                        "appName": "connectivity",
+                                                        "commercialAppName": "connectivity",
+                                                        "appId": "connectivity!b137",
+                                                        "tenantId": "sap-connectivity"
+                                                    },
+                                                    "xsuaaSubscriptionId": "cloned1d0bbb3f69f4629882d2506f3b0fe48!b433|connectivity!b137_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
+                                                    "xsuaaState": "SUBSCRIBED",
+                                                    "appId": "cloned1d0bbb3f69f4629882d2506f3b0fe48!b433|connectivity!b137",
+                                                    "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
+                                                    "createdDate": "Fri Jul 17 12:59:14 UTC 2026",
+                                                    "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                                    "modifiedDate": "Fri Jul 17 13:05:18 UTC 2026",
+                                                    "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                                    "dependencies": []
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "provider": {
+                                                "appName": "auditlog",
+                                                "commercialAppName": "auditlog",
+                                                "appId": "auditlog!b4",
+                                                "tenantId": "sap"
+                                            },
+                                            "xsuaaSubscriptionId": "978820d8-2c40-4e82-90f2-985417761de1!b11030|auditlog!b4_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
+                                            "xsuaaState": "SUBSCRIBED",
+                                            "appId": "978820d8-2c40-4e82-90f2-985417761de1!b11030|auditlog!b4",
+                                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
+                                            "createdDate": "Fri Jul 17 12:59:14 UTC 2026",
+                                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                            "modifiedDate": "Fri Jul 17 13:05:18 UTC 2026",
+                                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                            "dependencies": []
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "provider": {
+                                "appName": "ans",
+                                "commercialAppName": "ans",
+                                "appId": "ans-business!b2187",
+                                "tenantId": "88207f87-c41a-4056-bdad-527a630ccf2c"
+                            },
+                            "xsuaaSubscriptionId": "e9f2bb15-1b46-4ea6-8530-a89508081ec4!b5874|ans-business!b2187_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
+                            "xsuaaState": "SUBSCRIBED",
+                            "appId": "e9f2bb15-1b46-4ea6-8530-a89508081ec4!b5874|ans-business!b2187",
+                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
+                            "createdDate": "Mon Oct 20 10:36:14 UTC 2025",
+                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                            "modifiedDate": "Fri Jul 17 13:05:30 UTC 2026",
+                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                            "dependencies": []
+                        },
                         {
                             "provider": {
                                 "appName": "afc-dev",
@@ -1839,7 +2213,7 @@
                             "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
                             "createdDate": "Fri Mar 19 09:51:40 UTC 2021",
                             "createdBy": "D060517",
-                            "modifiedDate": "Thu Jul 16 09:36:13 UTC 2026",
+                            "modifiedDate": "Fri Jul 17 13:05:38 UTC 2026",
                             "modifiedBy": "D060517",
                             "dependencies": [
                                 {
@@ -1855,7 +2229,7 @@
                                     "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
                                     "createdDate": "Wed Aug 30 12:11:17 UTC 2023",
                                     "createdBy": "APPLICATION_OWNER",
-                                    "modifiedDate": "Thu Jul 16 09:35:49 UTC 2026",
+                                    "modifiedDate": "Fri Jul 17 13:05:18 UTC 2026",
                                     "modifiedBy": "APPLICATION_OWNER",
                                     "dependencies": []
                                 },
@@ -1872,7 +2246,7 @@
                                     "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
                                     "createdDate": "Tue Aug 31 12:57:39 UTC 2021",
                                     "createdBy": "APPLICATION_OWNER",
-                                    "modifiedDate": "Thu Jul 16 09:35:49 UTC 2026",
+                                    "modifiedDate": "Fri Jul 17 13:05:18 UTC 2026",
                                     "modifiedBy": "APPLICATION_OWNER",
                                     "dependencies": []
                                 },
@@ -1889,27 +2263,9 @@
                                     "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
                                     "createdDate": "Fri Mar 19 09:51:41 UTC 2021",
                                     "createdBy": "D060517",
-                                    "modifiedDate": "Thu Jul 16 09:36:08 UTC 2026",
+                                    "modifiedDate": "Fri Jul 17 13:05:32 UTC 2026",
                                     "modifiedBy": "D060517",
-                                    "dependencies": [
-                                        {
-                                            "provider": {
-                                                "appName": "cas-saas-registry-prod",
-                                                "commercialAppName": "cas-saas-registry-prod",
-                                                "appId": "cas-uaa-prod-eu10-canary!b11030",
-                                                "tenantId": "3e3cb95e-04a7-43bf-a294-92cecbdf862c"
-                                            },
-                                            "xsuaaSubscriptionId": "578334dc-1d38-45e3-893c-b176e5711992!b1506|cas-uaa-prod-eu10-canary!b11030_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
-                                            "xsuaaState": "SUBSCRIBED",
-                                            "appId": "578334dc-1d38-45e3-893c-b176e5711992!b1506|cas-uaa-prod-eu10-canary!b11030",
-                                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
-                                            "createdDate": "Thu Jul 16 09:34:00 UTC 2026",
-                                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "modifiedDate": "Thu Jul 16 09:36:04 UTC 2026",
-                                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "dependencies": []
-                                        }
-                                    ]
+                                    "dependencies": []
                                 },
                                 {
                                     "provider": {
@@ -1924,62 +2280,9 @@
                                     "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
                                     "createdDate": "Fri Mar 19 09:51:41 UTC 2021",
                                     "createdBy": "D060517",
-                                    "modifiedDate": "Thu Jul 16 09:36:04 UTC 2026",
+                                    "modifiedDate": "Fri Jul 17 13:05:30 UTC 2026",
                                     "modifiedBy": "D060517",
-                                    "dependencies": [
-                                        {
-                                            "provider": {
-                                                "appName": "auditlog",
-                                                "commercialAppName": "auditlog",
-                                                "appId": "auditlog!b4",
-                                                "tenantId": "sap"
-                                            },
-                                            "xsuaaSubscriptionId": "000cf9ab-4df6-4a40-b30e-3716896a28f9!b3598|auditlog!b4_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
-                                            "xsuaaState": "SUBSCRIBED",
-                                            "appId": "000cf9ab-4df6-4a40-b30e-3716896a28f9!b3598|auditlog!b4",
-                                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
-                                            "createdDate": "Thu Jul 16 09:33:57 UTC 2026",
-                                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "modifiedDate": "Thu Jul 16 09:35:49 UTC 2026",
-                                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "dependencies": []
-                                        }
-                                    ]
-                                },
-                                {
-                                    "provider": {
-                                        "appName": "portal",
-                                        "commercialAppName": "portal",
-                                        "appId": "portal-cf-service!b119",
-                                        "tenantId": "portalrel"
-                                    },
-                                    "xsuaaSubscriptionId": "b4700476-0b63-4eea-add7-2873a2fc4f0b!b5874|portal-cf-service!b119_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_afc-dev!t5874",
-                                    "xsuaaState": "SUBSCRIBED",
-                                    "appId": "b4700476-0b63-4eea-add7-2873a2fc4f0b!b5874|portal-cf-service!b119",
-                                    "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
-                                    "createdDate": "Fri Mar 19 09:51:41 UTC 2021",
-                                    "createdBy": "D060517",
-                                    "modifiedDate": "Thu Jul 16 09:36:13 UTC 2026",
-                                    "modifiedBy": "D060517",
-                                    "dependencies": [
-                                        {
-                                            "provider": {
-                                                "appName": "ui5-flexibility-personalization",
-                                                "commercialAppName": "ui5-flexibility-personalization",
-                                                "appId": "ui5-flexibility-personalization!b1506",
-                                                "tenantId": "81a696f4-b689-417c-b556-69efd330e09d"
-                                            },
-                                            "xsuaaSubscriptionId": "757b82dc-66c9-46ed-b724-9df99fa5a419!b119|ui5-flexibility-personalization!b1506_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
-                                            "xsuaaState": "SUBSCRIBED",
-                                            "appId": "757b82dc-66c9-46ed-b724-9df99fa5a419!b119|ui5-flexibility-personalization!b1506",
-                                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
-                                            "createdDate": "Thu Jul 16 09:33:57 UTC 2026",
-                                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "modifiedDate": "Thu Jul 16 09:36:13 UTC 2026",
-                                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "dependencies": []
-                                        }
-                                    ]
+                                    "dependencies": []
                                 },
                                 {
                                     "provider": {
@@ -1994,7 +2297,7 @@
                                     "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
                                     "createdDate": "Tue Sep 26 06:53:06 UTC 2023",
                                     "createdBy": "APPLICATION_OWNER",
-                                    "modifiedDate": "Thu Jul 16 09:36:04 UTC 2026",
+                                    "modifiedDate": "Fri Jul 17 13:05:30 UTC 2026",
                                     "modifiedBy": "APPLICATION_OWNER",
                                     "dependencies": [
                                         {
@@ -2010,7 +2313,7 @@
                                             "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
                                             "createdDate": "Tue Jun 23 09:30:36 UTC 2026",
                                             "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "modifiedDate": "Thu Jul 16 09:35:49 UTC 2026",
+                                            "modifiedDate": "Fri Jul 17 13:05:18 UTC 2026",
                                             "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
                                             "dependencies": []
                                         },
@@ -2027,7 +2330,7 @@
                                             "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
                                             "createdDate": "Tue Jun 23 09:30:38 UTC 2026",
                                             "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "modifiedDate": "Thu Jul 16 09:35:49 UTC 2026",
+                                            "modifiedDate": "Fri Jul 17 13:05:18 UTC 2026",
                                             "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
                                             "dependencies": []
                                         },
@@ -2044,7 +2347,7 @@
                                             "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
                                             "createdDate": "Tue Jun 23 09:30:36 UTC 2026",
                                             "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "modifiedDate": "Thu Jul 16 09:36:04 UTC 2026",
+                                            "modifiedDate": "Fri Jul 17 13:05:30 UTC 2026",
                                             "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
                                             "dependencies": []
                                         }
@@ -2063,74 +2366,40 @@
                                     "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
                                     "createdDate": "Fri Mar 19 09:51:41 UTC 2021",
                                     "createdBy": "D060517",
-                                    "modifiedDate": "Thu Jul 16 09:35:49 UTC 2026",
+                                    "modifiedDate": "Fri Jul 17 13:05:18 UTC 2026",
+                                    "modifiedBy": "D060517",
+                                    "dependencies": []
+                                },
+                                {
+                                    "provider": {
+                                        "appName": "portal",
+                                        "commercialAppName": "portal",
+                                        "appId": "portal-cf-service!b119",
+                                        "tenantId": "portalrel"
+                                    },
+                                    "xsuaaSubscriptionId": "b4700476-0b63-4eea-add7-2873a2fc4f0b!b5874|portal-cf-service!b119_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_afc-dev!t5874",
+                                    "xsuaaState": "SUBSCRIBED",
+                                    "appId": "b4700476-0b63-4eea-add7-2873a2fc4f0b!b5874|portal-cf-service!b119",
+                                    "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
+                                    "createdDate": "Fri Mar 19 09:51:41 UTC 2021",
+                                    "createdBy": "D060517",
+                                    "modifiedDate": "Fri Jul 17 13:05:38 UTC 2026",
                                     "modifiedBy": "D060517",
                                     "dependencies": [
                                         {
                                             "provider": {
-                                                "appName": "connectivity",
-                                                "commercialAppName": "connectivity",
-                                                "appId": "connectivity!b137",
-                                                "tenantId": "sap-connectivity"
+                                                "appName": "ui5-flexibility-personalization",
+                                                "commercialAppName": "ui5-flexibility-personalization",
+                                                "appId": "ui5-flexibility-personalization!b1506",
+                                                "tenantId": "81a696f4-b689-417c-b556-69efd330e09d"
                                             },
-                                            "xsuaaSubscriptionId": "clonefdc27fad0ffe484abfd9493063d81ebb!b433|connectivity!b137_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
+                                            "xsuaaSubscriptionId": "757b82dc-66c9-46ed-b724-9df99fa5a419!b119|ui5-flexibility-personalization!b1506_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
                                             "xsuaaState": "SUBSCRIBED",
-                                            "appId": "clonefdc27fad0ffe484abfd9493063d81ebb!b433|connectivity!b137",
+                                            "appId": "757b82dc-66c9-46ed-b724-9df99fa5a419!b119|ui5-flexibility-personalization!b1506",
                                             "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
-                                            "createdDate": "Thu Jul 16 09:33:58 UTC 2026",
+                                            "createdDate": "Thu Jul 16 09:33:57 UTC 2026",
                                             "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "modifiedDate": "Thu Jul 16 09:35:49 UTC 2026",
-                                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "dependencies": []
-                                        },
-                                        {
-                                            "provider": {
-                                                "appName": "connectivity",
-                                                "commercialAppName": "connectivity",
-                                                "appId": "connectivity!b137",
-                                                "tenantId": "sap-connectivity"
-                                            },
-                                            "xsuaaSubscriptionId": "clone845c0d6c34194265aeb6e95ebff4823d!b433|connectivity!b137_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
-                                            "xsuaaState": "SUBSCRIBED",
-                                            "appId": "clone845c0d6c34194265aeb6e95ebff4823d!b433|connectivity!b137",
-                                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
-                                            "createdDate": "Thu Jul 16 09:33:58 UTC 2026",
-                                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "modifiedDate": "Thu Jul 16 09:35:49 UTC 2026",
-                                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "dependencies": []
-                                        },
-                                        {
-                                            "provider": {
-                                                "appName": "auditlog",
-                                                "commercialAppName": "auditlog",
-                                                "appId": "auditlog!b4",
-                                                "tenantId": "sap"
-                                            },
-                                            "xsuaaSubscriptionId": "5001ed64-87a0-415c-8041-33406951606e!b433|auditlog!b4_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
-                                            "xsuaaState": "SUBSCRIBED",
-                                            "appId": "5001ed64-87a0-415c-8041-33406951606e!b433|auditlog!b4",
-                                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
-                                            "createdDate": "Thu Jul 16 09:33:58 UTC 2026",
-                                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "modifiedDate": "Thu Jul 16 09:35:49 UTC 2026",
-                                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "dependencies": []
-                                        },
-                                        {
-                                            "provider": {
-                                                "appName": "connectivity",
-                                                "commercialAppName": "connectivity",
-                                                "appId": "connectivity!b137",
-                                                "tenantId": "sap-connectivity"
-                                            },
-                                            "xsuaaSubscriptionId": "cloned1d0bbb3f69f4629882d2506f3b0fe48!b433|connectivity!b137_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
-                                            "xsuaaState": "SUBSCRIBED",
-                                            "appId": "cloned1d0bbb3f69f4629882d2506f3b0fe48!b433|connectivity!b137",
-                                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
-                                            "createdDate": "Thu Jul 16 09:33:58 UTC 2026",
-                                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "modifiedDate": "Thu Jul 16 09:35:49 UTC 2026",
+                                            "modifiedDate": "Fri Jul 17 13:05:38 UTC 2026",
                                             "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
                                             "dependencies": []
                                         }
@@ -2149,129 +2418,9 @@
                                     "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
                                     "createdDate": "Fri Mar 19 09:51:41 UTC 2021",
                                     "createdBy": "D060517",
-                                    "modifiedDate": "Thu Jul 16 09:35:49 UTC 2026",
+                                    "modifiedDate": "Fri Jul 17 13:05:18 UTC 2026",
                                     "modifiedBy": "D060517",
-                                    "dependencies": [
-                                        {
-                                            "provider": {
-                                                "appName": "auditlog",
-                                                "commercialAppName": "auditlog",
-                                                "appId": "auditlog!b4",
-                                                "tenantId": "sap"
-                                            },
-                                            "xsuaaSubscriptionId": "0cf612d6-910f-4030-acda-19a30ba00125!b137|auditlog!b4_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
-                                            "xsuaaState": "SUBSCRIBED",
-                                            "appId": "0cf612d6-910f-4030-acda-19a30ba00125!b137|auditlog!b4",
-                                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
-                                            "createdDate": "Thu Jul 16 09:33:58 UTC 2026",
-                                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "modifiedDate": "Thu Jul 16 09:35:49 UTC 2026",
-                                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "dependencies": []
-                                        },
-                                        {
-                                            "provider": {
-                                                "appName": "77c03ecf-c046-4739-9c95-a224086f4d13",
-                                                "commercialAppName": "77c03ecf-c046-4739-9c95-a224086f4d13",
-                                                "appId": "certificate-service!b17617",
-                                                "tenantId": "cf-eu10-canary-certificate-service"
-                                            },
-                                            "xsuaaSubscriptionId": "4925f3d6-d50c-40c1-ae38-7393a68a5a3a!b137|certificate-service!b17617_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
-                                            "xsuaaState": "SUBSCRIBED",
-                                            "appId": "4925f3d6-d50c-40c1-ae38-7393a68a5a3a!b137|certificate-service!b17617",
-                                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
-                                            "createdDate": "Thu Jul 16 09:33:58 UTC 2026",
-                                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "modifiedDate": "Thu Jul 16 09:35:49 UTC 2026",
-                                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "dependencies": []
-                                        },
-                                        {
-                                            "provider": {
-                                                "appName": "77c03ecf-c046-4739-9c95-a224086f4d13",
-                                                "commercialAppName": "77c03ecf-c046-4739-9c95-a224086f4d13",
-                                                "appId": "certificate-service!b17617",
-                                                "tenantId": "cf-eu10-canary-certificate-service"
-                                            },
-                                            "xsuaaSubscriptionId": "cc8a280b-a265-43f8-b3f9-f56c8b93c3c3!b137|certificate-service!b17617_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
-                                            "xsuaaState": "SUBSCRIBED",
-                                            "appId": "cc8a280b-a265-43f8-b3f9-f56c8b93c3c3!b137|certificate-service!b17617",
-                                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
-                                            "createdDate": "Thu Jul 16 09:33:58 UTC 2026",
-                                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "modifiedDate": "Thu Jul 16 09:35:49 UTC 2026",
-                                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "dependencies": []
-                                        },
-                                        {
-                                            "provider": {
-                                                "appName": "connectivity",
-                                                "commercialAppName": "connectivity",
-                                                "appId": "connectivity!b137",
-                                                "tenantId": "sap-connectivity"
-                                            },
-                                            "xsuaaSubscriptionId": "sccManagement4332461f6499470db225d6804ba2d55b!b137|connectivity!b137_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
-                                            "xsuaaState": "SUBSCRIBED",
-                                            "appId": "sccManagement4332461f6499470db225d6804ba2d55b!b137|connectivity!b137",
-                                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
-                                            "createdDate": "Thu Jul 16 09:33:58 UTC 2026",
-                                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "modifiedDate": "Thu Jul 16 09:35:49 UTC 2026",
-                                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "dependencies": []
-                                        },
-                                        {
-                                            "provider": {
-                                                "appName": "connectivity",
-                                                "commercialAppName": "connectivity",
-                                                "appId": "connectivity!b137",
-                                                "tenantId": "sap-connectivity"
-                                            },
-                                            "xsuaaSubscriptionId": "sccManagementa5b0ae6799924861a13774efa35e1ba2!b137|connectivity!b137_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
-                                            "xsuaaState": "SUBSCRIBED",
-                                            "appId": "sccManagementa5b0ae6799924861a13774efa35e1ba2!b137|connectivity!b137",
-                                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
-                                            "createdDate": "Thu Jul 16 09:33:58 UTC 2026",
-                                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "modifiedDate": "Thu Jul 16 09:35:49 UTC 2026",
-                                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "dependencies": []
-                                        },
-                                        {
-                                            "provider": {
-                                                "appName": "auditlog",
-                                                "commercialAppName": "auditlog",
-                                                "appId": "auditlog!b4",
-                                                "tenantId": "sap"
-                                            },
-                                            "xsuaaSubscriptionId": "da0519fb-67db-4809-85ac-a340b5b0b9a5!b137|auditlog!b4_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
-                                            "xsuaaState": "SUBSCRIBED",
-                                            "appId": "da0519fb-67db-4809-85ac-a340b5b0b9a5!b137|auditlog!b4",
-                                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
-                                            "createdDate": "Thu Jul 16 09:33:58 UTC 2026",
-                                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "modifiedDate": "Thu Jul 16 09:35:49 UTC 2026",
-                                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "dependencies": []
-                                        },
-                                        {
-                                            "provider": {
-                                                "appName": "connectivity",
-                                                "commercialAppName": "connectivity",
-                                                "appId": "connectivity!b137",
-                                                "tenantId": "sap-connectivity"
-                                            },
-                                            "xsuaaSubscriptionId": "clonec0ec6bd1464646e6800f6c3b701b23a3!b137|connectivity!b137_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
-                                            "xsuaaState": "SUBSCRIBED",
-                                            "appId": "clonec0ec6bd1464646e6800f6c3b701b23a3!b137|connectivity!b137",
-                                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
-                                            "createdDate": "Thu Jul 16 09:33:58 UTC 2026",
-                                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "modifiedDate": "Thu Jul 16 09:35:49 UTC 2026",
-                                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "dependencies": []
-                                        }
-                                    ]
+                                    "dependencies": []
                                 },
                                 {
                                     "provider": {
@@ -2286,183 +2435,11 @@
                                     "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
                                     "createdDate": "Tue Jun 18 05:45:32 UTC 2024",
                                     "createdBy": "APPLICATION_OWNER",
-                                    "modifiedDate": "Thu Jul 16 09:36:13 UTC 2026",
+                                    "modifiedDate": "Fri Jul 17 13:05:38 UTC 2026",
                                     "modifiedBy": "APPLICATION_OWNER",
-                                    "dependencies": [
-                                        {
-                                            "provider": {
-                                                "appName": "cas-saas-registry-prod",
-                                                "commercialAppName": "cas-saas-registry-prod",
-                                                "appId": "cas-uaa-prod-eu10-canary!b11030",
-                                                "tenantId": "3e3cb95e-04a7-43bf-a294-92cecbdf862c"
-                                            },
-                                            "xsuaaSubscriptionId": "959635c1-1d69-475e-b6d2-371a1657d0ec!b2675|cas-uaa-prod-eu10-canary!b11030_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
-                                            "xsuaaState": "SUBSCRIBED",
-                                            "appId": "959635c1-1d69-475e-b6d2-371a1657d0ec!b2675|cas-uaa-prod-eu10-canary!b11030",
-                                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
-                                            "createdDate": "Thu Jul 16 09:33:59 UTC 2026",
-                                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "modifiedDate": "Thu Jul 16 09:36:04 UTC 2026",
-                                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                            "dependencies": [
-                                                {
-                                                    "provider": {
-                                                        "appName": "destination",
-                                                        "commercialAppName": "destination",
-                                                        "appId": "destination-xsappname!b433",
-                                                        "tenantId": "sap-destination-configuration"
-                                                    },
-                                                    "xsuaaSubscriptionId": "clonebecdbd6b56cd4aac9e725c2dc563aca1!b11030|destination-xsappname!b433_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
-                                                    "xsuaaState": "SUBSCRIBED",
-                                                    "appId": "clonebecdbd6b56cd4aac9e725c2dc563aca1!b11030|destination-xsappname!b433",
-                                                    "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
-                                                    "createdDate": "Thu Jul 16 09:33:59 UTC 2026",
-                                                    "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                                    "modifiedDate": "Thu Jul 16 09:35:49 UTC 2026",
-                                                    "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                                    "dependencies": []
-                                                },
-                                                {
-                                                    "provider": {
-                                                        "appName": "auditlog",
-                                                        "commercialAppName": "auditlog",
-                                                        "appId": "auditlog!b4",
-                                                        "tenantId": "sap"
-                                                    },
-                                                    "xsuaaSubscriptionId": "978820d8-2c40-4e82-90f2-985417761de1!b11030|auditlog!b4_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
-                                                    "xsuaaState": "SUBSCRIBED",
-                                                    "appId": "978820d8-2c40-4e82-90f2-985417761de1!b11030|auditlog!b4",
-                                                    "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
-                                                    "createdDate": "Thu Jul 16 09:33:59 UTC 2026",
-                                                    "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                                    "modifiedDate": "Thu Jul 16 09:35:49 UTC 2026",
-                                                    "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                                                    "dependencies": []
-                                                }
-                                            ]
-                                        }
-                                    ]
+                                    "dependencies": []
                                 }
                             ]
-                        },
-                        {
-                            "provider": {
-                                "appName": "html5-apps-repo",
-                                "commercialAppName": "html5-apps-repo",
-                                "appId": "html5-apps-repo-uaa!b1129",
-                                "tenantId": "sap-html5-apps-repo"
-                            },
-                            "xsuaaSubscriptionId": "4457fe63-ba67-42be-80c6-ce16066c80ca!b5874|html5-apps-repo-uaa!b1129_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
-                            "xsuaaState": "SUBSCRIBED",
-                            "appId": "4457fe63-ba67-42be-80c6-ce16066c80ca!b5874|html5-apps-repo-uaa!b1129",
-                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
-                            "createdDate": "Mon Oct 20 10:36:14 UTC 2025",
-                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                            "modifiedDate": "Thu Jul 16 09:35:49 UTC 2026",
-                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                            "dependencies": []
-                        },
-                        {
-                            "provider": {
-                                "appName": "connectivity",
-                                "commercialAppName": "connectivity",
-                                "appId": "connectivity!b137",
-                                "tenantId": "sap-connectivity"
-                            },
-                            "xsuaaSubscriptionId": "clone43c89feaa7e14781a446eca57e3748b5!b5874|connectivity!b137_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
-                            "xsuaaState": "SUBSCRIBED",
-                            "appId": "clone43c89feaa7e14781a446eca57e3748b5!b5874|connectivity!b137",
-                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
-                            "createdDate": "Mon Oct 20 10:36:13 UTC 2025",
-                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                            "modifiedDate": "Thu Jul 16 09:35:49 UTC 2026",
-                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                            "dependencies": []
-                        },
-                        {
-                            "provider": {
-                                "appName": "destination",
-                                "commercialAppName": "destination",
-                                "appId": "destination-xsappname!b433",
-                                "tenantId": "sap-destination-configuration"
-                            },
-                            "xsuaaSubscriptionId": "clone05ed02605f01499ab0772a3cafc5eac3!b5874|destination-xsappname!b433_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
-                            "xsuaaState": "SUBSCRIBED",
-                            "appId": "clone05ed02605f01499ab0772a3cafc5eac3!b5874|destination-xsappname!b433",
-                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
-                            "createdDate": "Mon Oct 20 10:36:14 UTC 2025",
-                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                            "modifiedDate": "Thu Jul 16 09:35:49 UTC 2026",
-                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                            "dependencies": []
-                        },
-                        {
-                            "provider": {
-                                "appName": "businesslogging-sb-prod",
-                                "commercialAppName": "businesslogging-sb-prod",
-                                "appId": "businesslogging-sb-prod!b3598",
-                                "tenantId": "3e057446-6320-4265-95e9-c8317e11208e"
-                            },
-                            "xsuaaSubscriptionId": "afc-dev!b5874|businesslogging-sb-prod!b3598_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
-                            "xsuaaState": "SUBSCRIBED",
-                            "appId": "afc-dev!b5874|businesslogging-sb-prod!b3598",
-                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
-                            "createdDate": "Mon Oct 20 10:36:14 UTC 2025",
-                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                            "modifiedDate": "Thu Jul 16 09:36:04 UTC 2026",
-                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                            "dependencies": []
-                        },
-                        {
-                            "provider": {
-                                "appName": "auditlog",
-                                "commercialAppName": "auditlog",
-                                "appId": "auditlog!b4",
-                                "tenantId": "sap"
-                            },
-                            "xsuaaSubscriptionId": "d2761c94-ee8f-47a8-8570-166d28321df3!b5874|auditlog!b4_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
-                            "xsuaaState": "SUBSCRIBED",
-                            "appId": "d2761c94-ee8f-47a8-8570-166d28321df3!b5874|auditlog!b4",
-                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
-                            "createdDate": "Mon Oct 20 10:36:13 UTC 2025",
-                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                            "modifiedDate": "Thu Jul 16 09:35:49 UTC 2026",
-                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                            "dependencies": []
-                        },
-                        {
-                            "provider": {
-                                "appName": "8df5f951-acc1-439b-8ba8-b01a3cd60e08",
-                                "commercialAppName": "8df5f951-acc1-439b-8ba8-b01a3cd60e08",
-                                "appId": "ui5-flexibility-keyuser!b1506",
-                                "tenantId": "81a696f4-b689-417c-b556-69efd330e09d"
-                            },
-                            "xsuaaSubscriptionId": "04d135c3-cde3-4394-9ee5-b90561e5bcf0!b5874|ui5-flexibility-keyuser!b1506_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
-                            "xsuaaState": "SUBSCRIBED",
-                            "appId": "04d135c3-cde3-4394-9ee5-b90561e5bcf0!b5874|ui5-flexibility-keyuser!b1506",
-                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
-                            "createdDate": "Mon Oct 20 10:36:13 UTC 2025",
-                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                            "modifiedDate": "Thu Jul 16 09:36:08 UTC 2026",
-                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                            "dependencies": []
-                        },
-                        {
-                            "provider": {
-                                "appName": "ans",
-                                "commercialAppName": "ans",
-                                "appId": "ans-business!b2187",
-                                "tenantId": "88207f87-c41a-4056-bdad-527a630ccf2c"
-                            },
-                            "xsuaaSubscriptionId": "e9f2bb15-1b46-4ea6-8530-a89508081ec4!b5874|ans-business!b2187_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
-                            "xsuaaState": "SUBSCRIBED",
-                            "appId": "e9f2bb15-1b46-4ea6-8530-a89508081ec4!b5874|ans-business!b2187",
-                            "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
-                            "createdDate": "Mon Oct 20 10:36:14 UTC 2025",
-                            "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                            "modifiedDate": "Thu Jul 16 09:36:04 UTC 2026",
-                            "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                            "dependencies": []
                         },
                         {
                             "provider": {
@@ -2477,9 +2454,27 @@
                             "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
                             "createdDate": "Mon Oct 20 10:36:11 UTC 2025",
                             "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                            "modifiedDate": "Thu Jul 16 09:36:13 UTC 2026",
+                            "modifiedDate": "Fri Jul 17 13:05:38 UTC 2026",
                             "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                            "dependencies": []
+                            "dependencies": [
+                                {
+                                    "provider": {
+                                        "appName": "cas-saas-registry-prod",
+                                        "commercialAppName": "cas-saas-registry-prod",
+                                        "appId": "cas-uaa-prod-eu10-canary!b11030",
+                                        "tenantId": "3e3cb95e-04a7-43bf-a294-92cecbdf862c"
+                                    },
+                                    "xsuaaSubscriptionId": "959635c1-1d69-475e-b6d2-371a1657d0ec!b2675|cas-uaa-prod-eu10-canary!b11030_5ecc7413-2b7e-414a-9496-ad4a61f6cccf_f999651e-8c35-467b-822e-518554570a04",
+                                    "xsuaaState": "SUBSCRIBED",
+                                    "appId": "959635c1-1d69-475e-b6d2-371a1657d0ec!b2675|cas-uaa-prod-eu10-canary!b11030",
+                                    "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
+                                    "createdDate": "Fri Jul 17 12:59:15 UTC 2026",
+                                    "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                    "modifiedDate": "Fri Jul 17 13:05:30 UTC 2026",
+                                    "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
+                                    "dependencies": []
+                                }
+                            ]
                         },
                         {
                             "provider": {
@@ -2494,17 +2489,13 @@
                             "callbackState": "UPDATE_CALLBACK_SUCCEEDED",
                             "createdDate": "Mon Oct 20 10:36:13 UTC 2025",
                             "createdBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
-                            "modifiedDate": "Thu Jul 16 09:36:13 UTC 2026",
+                            "modifiedDate": "Fri Jul 17 13:05:38 UTC 2026",
                             "modifiedBy": "sb-afc-dev-sms-clone!b5874|lps-registry-broker!b13",
                             "dependencies": []
                         }
                     ]
                 }
-            ],
-            "morePages": false,
-            "totalPages": 1,
-            "total": 1,
-            "page": 1
+            ]
         },
         "rawHeaders": [
             "cache-control",
@@ -2512,7 +2503,7 @@
             "content-type",
             "application/json",
             "date",
-            "Thu, 16 Jul 2026 09:38:00 GMT",
+            "Fri, 17 Jul 2026 13:06:42 GMT",
             "expires",
             "0",
             "pragma",
@@ -2522,11 +2513,11 @@
             "x-content-type-options",
             "nosniff",
             "x-correlationid",
-            "e6006fcf-f2cb-4e42-70eb-2aa29d8e747b",
+            "274ecf50-e7dc-4711-5023-b24f0077a0a5",
             "x-frame-options",
             "DENY",
             "x-vcap-request-id",
-            "e6006fcf-f2cb-4e42-70eb-2aa29d8e747b",
+            "274ecf50-e7dc-4711-5023-b24f0077a0a5",
             "x-xss-protection",
             "0",
             "transfer-encoding",
@@ -2549,7 +2540,7 @@
             "content-length",
             "0",
             "date",
-            "Thu, 16 Jul 2026 09:38:01 GMT",
+            "Fri, 17 Jul 2026 13:06:42 GMT",
             "expires",
             "0",
             "pragma",
@@ -2563,11 +2554,11 @@
             "x-content-type-options",
             "nosniff",
             "x-correlationid",
-            "b0facb79-0664-4e73-9f93-530856788b43",
+            "4793197a-7ebd-4e08-a854-131c60ed87c8",
             "x-frame-options",
             "DENY",
             "x-vcap-request-id",
-            "ed70b4c8-796c-4c2d-7771-e0ed3856f060",
+            "633be744-44ae-4d7b-7246-43483b64935f",
             "x-xss-protection",
             "0",
             "strict-transport-security",
