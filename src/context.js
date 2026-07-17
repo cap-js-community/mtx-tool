@@ -548,6 +548,10 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     getCachedUaaTokenFromCredentials,
     getCachedIasTokenFromCredentials,
     getAppNameInfoCached,
+
+    _: {
+      _getCfApps,
+    },
   };
 };
 

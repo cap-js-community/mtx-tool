@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`context tests can create context for paged cf apps 1`] = `
+exports[`context tests _getCfApps follows pagination and merges all pages 1`] = `
 [
   [
     {

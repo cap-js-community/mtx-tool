@@ -212,21 +212,23 @@ describe("context tests", () => {
     expect(mockStatic.spawnAsync.mock.calls.length).toBe(sshCallsBefore);
   });
 
-  // TODO test cf app PAGING works
-  // test("can create context for paged cf apps", async () => {
-  //   mockStatic.spawnAsync.mockReturnValueOnce(["oauth-token"]);
-  //   mockStatic.tryReadJsonSync.mockReturnValueOnce(mockCfConfig);
-  //   mockStatic.tryAccessSync.mockReturnValueOnce(true);
-  //   mockStatic.tryReadJsonSync.mockReturnValueOnce(mockRuntimeConfig);
-  //   for (const mockCfAppsPage of mockCfAppsPages) {
-  //     mockRequest.mockReturnValueOnce({ json: () => mockCfAppsPage });
-  //   }
-  //
-  //   const context = await newContext();
-  //
-  //   expect(context).toBeDefined();
-  //   expect(mockRequest.mock.calls).toMatchSnapshot();
-  // });
+  test("_getCfApps follows pagination and merges all pages", async () => {
+    mockStatic.spawnAsync.mockReturnValueOnce(["oauth-token"]);
+    mockStatic.tryReadJsonSync.mockReturnValueOnce(mockCfConfig);
+    mockStatic.tryAccessSync.mockReturnValueOnce(true);
+    mockStatic.tryReadJsonSync.mockReturnValueOnce(mockRuntimeConfig);
+
+    const context = await newContext();
+    expect(context).toBeDefined();
+
+    for (const mockCfAppsPage of mockCfAppsPages) {
+      mockRequest.mockReturnValueOnce({ json: () => mockCfAppsPage });
+    }
+
+    const cfApps = await context._._getCfApps();
+    expect(cfApps.map(({ name }) => name)).toEqual(["uaa-app-1", "uaa-app-2"]);
+    expect(mockRequest.mock.calls).toMatchSnapshot();
+  });
 
   test("has reg/sms info", async () => {
     mockStatic.spawnAsync.mockReturnValueOnce(["oauth-token"]);
