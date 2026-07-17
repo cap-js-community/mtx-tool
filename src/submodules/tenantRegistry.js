@@ -5,6 +5,7 @@
  * - https://saas-manager.cfapps.sap.hana.ondemand.com/api?scope=saas-registry-service (Service Operations) [not supported anymore]
  *
  * APIs of the subscription-manager
+ * - https://saas-manager.cfapps.sap.hana.ondemand.com/api?scope=subscription-manager
  * - https://int.api.hana.ondemand.com/api/APISubscriptionManagerService/resource/IAS_Subscription_Operations_for_Providers_or_Systems
  */
 "use strict";
@@ -96,30 +97,26 @@ const _call = async (context, source, reqOptions) => {
   }
 };
 
-const _getSubscriptionsPage = async (context, source, { filterTenantId, size, page }) => {
+const _getSubscriptionsPage = async (context, source, { filterTenantId, cursor }) => {
   switch (source) {
     case SUBSCRIPTION_SOURCE.SUBSCRIPTION_MANAGER: {
-      const credentials = (await context.getSmsInfo()).cfBinding.credentials;
       return await _callSms(context, {
-        pathname: "/subscription-manager/v1/subscriptions",
+        pathname: "/subscription-manager/v2/subscriptions",
         query: {
-          appName: credentials.app_name,
           ...(filterTenantId && { app_tid: filterTenantId }),
-          size,
-          page,
+          top: REGISTRY_PAGE_SIZE,
+          ...(cursor && { cursor }),
         },
         headers: { Accept: "application/json" },
       });
     }
     case SUBSCRIPTION_SOURCE.SAAS_REGISTRY: {
-      const credentials = (await context.getRegInfo()).cfBinding.credentials;
       return await _callReg(context, {
-        pathname: "/saas-manager/v1/application/subscriptions",
+        pathname: "/saas-manager/v2/application/subscriptions",
         query: {
-          appName: credentials.appName,
           ...(filterTenantId && { tenantId: filterTenantId }),
-          size,
-          page,
+          size: REGISTRY_PAGE_SIZE,
+          ...(cursor && { cursor }),
         },
         headers: { Accept: "application/json" },
       });
@@ -129,18 +126,15 @@ const _getSubscriptionsPage = async (context, source, { filterTenantId, size, pa
 
 const _getSubscriptions = async (context, source, { filterTenantId }) => {
   const pages = [];
-  let page = 1;
+  let cursor;
   while (true) {
-    const response = await _getSubscriptionsPage(context, source, {
-      filterTenantId,
-      size: REGISTRY_PAGE_SIZE,
-      page: page++,
-    });
-    const { subscriptions, morePages } = await response.json();
+    const response = await _getSubscriptionsPage(context, source, { filterTenantId, cursor });
+    const { subscriptions, nextCursor } = await response.json();
     pages.push(subscriptions);
-    if (!morePages) {
+    if (!nextCursor) {
       return pages.flat();
     }
+    cursor = nextCursor;
   }
 };
 

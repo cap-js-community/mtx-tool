@@ -543,20 +543,20 @@ const trimAndAnonymize = (calls) => {
 
     // ##### SAAS | SAAS-REGISTRY
     // "scope": "https://saas-manager.mesh.cf.sap.hana.ondemand.com:443",
-    // "path": "/saas-manager/v1/",
+    // "path": "/saas-manager/v1/" or "/saas-manager/v2/",
     if (
       /https:\/\/saas-manager\.mesh\.cf\.sap\.hana\.ondemand\.com:443/.test(call.scope) &&
-      /\/saas-manager\/v1\//.test(call.path)
+      /\/saas-manager\/v[12]\//.test(call.path)
     ) {
       return anonymizeSaasRegistryCall(call);
     }
 
     // ##### SAAS | SUBSCRIPTION-MANAGER
     // "scope": "https://saas-manager.mesh.cf.sap.hana.ondemand.com:443",
-    // "path": "/subscription-manager/v1/",
+    // "path": "/subscription-manager/v1/" or "/subscription-manager/v2/",
     if (
       /https:\/\/saas-manager\.mesh\.cf\.sap\.hana\.ondemand\.com:443/.test(call.scope) &&
-      /\/subscription-manager\/v1\//.test(call.path)
+      /\/subscription-manager\/v[12]\//.test(call.path)
     ) {
       return anonymizeSubscriptionManagerCall(call);
     }

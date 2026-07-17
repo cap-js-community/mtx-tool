@@ -43,6 +43,10 @@ If the fleet is already at one binding per instance, skip to step 3.
 
 ### FIXED
 
+- reg: subscription listing now uses the cursor-based paging APIs (`/subscription-manager/v2/subscriptions` and
+  `/saas-manager/v2/application/subscriptions`) instead of page-number paging, keeping pagination reliable for large
+  result sets (fixes #197).
+
 - core: mtx cache now dedupes concurrent lookups of the same configured app name, avoiding redundant cf requests.
 
 ## v0.12.0 - 2026-06-26
