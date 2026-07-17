@@ -202,7 +202,7 @@ describe("reg tests", () => {
         fakeSubscriptionFactoryReg(i + 1, { doFail: i + 1 <= 2 || i + 1 >= 9, doRecent: i + 1 >= 6 })
       );
       mockRequest.request.mockReturnValueOnce({
-        json: () => ({ subscriptions: fakeSubscriptions.slice(0, 5), morePages: true }),
+        json: () => ({ subscriptions: fakeSubscriptions.slice(0, 5), nextCursor: "next" }),
       });
       mockRequest.request.mockReturnValueOnce({
         json: () => ({ subscriptions: fakeSubscriptions.slice(5) }),
@@ -426,7 +426,7 @@ describe("reg tests", () => {
             reqOptions.url === "subscription_manager_url"
               ? fakeSubscriptionsSms.slice(0, 5)
               : fakeSubscriptionsReg.slice(0, 5),
-          morePages: true,
+          nextCursor: "next",
         }),
       });
       const listPageTwoResponse = (reqOptions) => ({
