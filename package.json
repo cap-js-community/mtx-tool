@@ -7,11 +7,9 @@
   },
   "files": [
     "bin",
-    "src",
-    "npm-shrinkwrap.json"
+    "src"
   ],
   "scripts": {
-    "prepublishOnly": "npm ci --omit=dev && npx shx rm package-lock.json && npm shrinkwrap",
     "patch": "npx patch-package",
     "test": "jest",
     "test:coverage": "jest --runInBand --coverageReporters=html --coverageReporters=text-summary",
@@ -46,8 +44,11 @@
     "node-fetch": "^2.7.0"
   },
   "overrides": {
-    "whatwg-url": "^14.0.0"
+    "whatwg-url": "^14.2.0"
   },
+  "bundleDependencies": [
+    "node-fetch"
+  ],
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.7.0",
