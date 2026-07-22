@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 <!-- order is REMOVED, CHANGED, ADDED, FIXED -->
 
-## v0.13.0 - tbd
+## v0.13.1 - tbd
+
+## v0.13.0 - 2026-07-22
 
 We reworked the service-manager interactions. The operations for credential rotation become idempotent now, making
 outside retries possible.
