@@ -34,6 +34,9 @@ If the fleet is already at one binding per instance, skip to step 3.
 
 ### CHANGED
 
+- npm: use `bundleDependencies` instead of shrinkwrap to ship the `whatwg-url` override to users. shrinkwrap is no
+  longer honored as of npm v12.
+
 - svm: reworked `--svm-repair-bindings` to `--svm-make-bindings-single` and `--svm-fresh-bindings` to
   `--svm-make-bindings-double`. both are now idempotent and have the `SERVICE_PLAN TENANT_ID` calling args, making
   them consistent with other `svm` commands.
