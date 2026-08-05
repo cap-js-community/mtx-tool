@@ -408,6 +408,13 @@ const APP_COMMAND_INFOS = Object.freeze({
     callback: svm.serviceManagerRefreshBindingsDeprecated,
     useCache: false,
   },
+  SVM_MAGIC: {
+    commandVariants: ["--svm-magic"],
+    requiredPassArgs: [],
+    optionalPassArgs: [],
+    callback: svm.serviceManagerMagicCommand,
+    useCache: false,
+  },
 
   SRV_ENVIRONMENT: {
     commandVariants: ["srvenv", "--server-env"],
