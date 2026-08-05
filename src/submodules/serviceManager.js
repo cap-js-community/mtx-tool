@@ -387,22 +387,6 @@ const serviceManagerFreshBindingsDeprecated = async (context, [planFullName, ten
   });
 };
 
-const serviceManagerMagicCommand = async (context) => {
-  const svm = await _getServiceManager(context);
-  const planId = (await _getPlanInfoFromFullName(context, "hana:hdi-shared")).planId;
-
-  await svm.deleteInstance("d50f94e2-0fc6-45b4-8773-691577c25895");
-
-  // await svm.createInstance(planId, {
-  //   parameters: {
-  //     database_id: "65b39b2b-52ca-40aa-8282-fc15c25c7009",
-  //     enableTenant: "true",
-  //     schema: "9B86F93224904D9AACA072653D12BABB",
-  //     reuse_hdi_container: "true",
-  //   },
-  // });
-};
-
 module.exports = {
   serviceManagerList,
   serviceManagerLongList,
@@ -413,7 +397,6 @@ module.exports = {
   serviceManagerRepairBindingsDeprecated,
   serviceManagerFreshBindingsDeprecated,
   serviceManagerRefreshBindingsDeprecated,
-  serviceManagerMagicCommand,
 
   _: {
     _getServiceManager,
