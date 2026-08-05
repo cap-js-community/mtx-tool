@@ -60,6 +60,10 @@
     "prettier": "^3.9.6",
     "typescript": "^7.0.2"
   },
+  "allowScripts": {
+    "fsevents": true,
+    "unrs-resolver": true
+  },
   "homepage": "https://cap-js-community.github.io/mtx-tool/",
   "repository": {
     "type": "git",

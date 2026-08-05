@@ -123,7 +123,7 @@ class ServiceManager {
       operation = await pollResponse.json();
     } while (operation.state !== OPERATION_STATE.SUCCEEDED && operation.state !== OPERATION_STATE.FAILED);
     if (operation.state === OPERATION_STATE.FAILED) {
-      const detail = operation.error?.description ?? operation.error?.broker_error?.description ?? "";
+      const detail = operation.error?.broker_error?.error_message ?? operation.error?.description ?? "";
       fail("service-manager operation failed for %s: %s", location, detail);
     }
     return operation;
@@ -237,6 +237,20 @@ class ServiceManager {
         name,
         service_plan_id: planId,
         ...(Object.keys(labels).length > 0 && { labels }),
+        ...(parameters && { parameters }),
+      }),
+    });
+  }
+
+  async updateInstance(instanceId, { name, parameters, labels } = {}) {
+    assert(instanceId, "updateInstance requires instanceId");
+    return await this.#requestWithPolling({
+      method: "PATCH",
+      pathname: `/v2/service_instances/${instanceId}`,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...(name && { name }),
+        ...(labels && { labels }),
         ...(parameters && { parameters }),
       }),
     });
