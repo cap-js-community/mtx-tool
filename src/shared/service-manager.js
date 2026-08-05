@@ -242,7 +242,7 @@ class ServiceManager {
     });
   }
 
-  async updateInstance(instanceId, { name, parameters } = {}) {
+  async updateInstance(instanceId, { name, parameters, labels } = {}) {
     assert(instanceId, "updateInstance requires instanceId");
     return await this.#requestWithPolling({
       method: "PATCH",
@@ -250,6 +250,7 @@ class ServiceManager {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         ...(name && { name }),
+        ...(labels && { labels }),
         ...(parameters && { parameters }),
       }),
     });
