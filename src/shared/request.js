@@ -1,5 +1,6 @@
 "use strict";
 
+const { STATUS_CODES } = require("http");
 const { default: fetchlib } = require("node-fetch");
 const crypto = require("crypto");
 
@@ -205,9 +206,10 @@ const _request = async ({
       const correlationHeader = CORRELATION_HEADERS_RECEIVER_PRECEDENCE.find((header) => response.headers.has(header));
       logRequestId ??= doLogAttempt && LogRequestId.next();
       const retryLogPart = doStopRetry ? [] : [`retrying in ${sleepTime / 1000}sec`];
+      const statusText = response.statusText || STATUS_CODES[response.status];
       const logParts = [
         ...(doLogAttempt ? [`[req-${logRequestId} ${attempt + 1}/${RETRY_MAX_ATTEMPTS}]`] : []),
-        `${_method} ${decodeURI(_url.href)} ${response.status} ${response.statusText}`,
+        `${_method} ${decodeURI(_url.href)} ${response.status} ${statusText}`,
         ...(showCorrelation
           ? [`(${responseTime}ms, ${correlationHeader}: ${response.headers.get(correlationHeader)})`]
           : [`(${responseTime}ms)`]),
