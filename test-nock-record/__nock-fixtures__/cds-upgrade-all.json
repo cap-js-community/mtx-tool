@@ -2404,7 +2404,7 @@
     {
         "scope": "https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/-/cds/jobs/pollJob(ID=%27eed94190-32a5-41e0-871b-69db6e095f5b%27)",
+        "path": "/-/cds/jobs/pollJob(ID='eed94190-32a5-41e0-871b-69db6e095f5b')",
         "body": "",
         "status": 200,
         "response": {
