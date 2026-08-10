@@ -29,11 +29,6 @@
       "enabled": false
     },
     {
-      "description": "limit node-fetch for commonjs",
-      "matchPackageNames": ["node-fetch"],
-      "allowedVersions": "< 3.0.0"
-    },
-    {
       "description": "limit nock until it works",
       "matchPackageNames": ["nock"],
       "allowedVersions": "< 14.0.0"

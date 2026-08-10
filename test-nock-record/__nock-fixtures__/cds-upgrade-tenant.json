@@ -1809,7 +1809,7 @@
     {
         "scope": "https://skyfin-dev-afc-mtx.cfapps.sap.hana.ondemand.com:443",
         "method": "GET",
-        "path": "/-/cds/jobs/pollJob(ID=%27f85421d0-3aca-4750-8d8a-a18bee8269e1%27)",
+        "path": "/-/cds/jobs/pollJob(ID='f85421d0-3aca-4750-8d8a-a18bee8269e1')",
         "body": "",
         "status": 200,
         "response": {
