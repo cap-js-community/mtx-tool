@@ -1,6 +1,6 @@
 "use strict";
 
-const fetchlib = require("node-fetch");
+const { default: fetchlib } = require("node-fetch");
 const crypto = require("crypto");
 
 const { sleep } = require("./static");

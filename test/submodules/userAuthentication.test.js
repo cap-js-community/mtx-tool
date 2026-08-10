@@ -2,7 +2,7 @@
 
 jest.mock("crypto", () => require("../__mocks/shared/crypto"));
 jest.mock("../../src/shared/logger", () => require("../__mocks/shared/logger"));
-const fetchMock = require("node-fetch");
+const { default: fetchMock } = require("node-fetch");
 jest.mock("node-fetch");
 const sharedStaticMock = require("../../src/shared/static");
 jest.mock("../../src/shared/static", () => require("../__mocks/shared/static"));

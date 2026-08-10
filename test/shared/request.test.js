@@ -1,8 +1,8 @@
 "use strict";
 
 jest.mock("crypto", () => require("../__mocks/shared/crypto"));
-const mockFetchLib = require("node-fetch");
-jest.mock("node-fetch", () => jest.fn());
+const { default: mockFetchLib } = require("node-fetch");
+jest.mock("node-fetch", () => ({ default: jest.fn() }));
 
 const { Logger: MockLogger } = require("../../src/shared/logger");
 const mockLogger = MockLogger.getInstance();
