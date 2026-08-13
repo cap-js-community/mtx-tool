@@ -886,10 +886,10 @@ describe("svm tests", () => {
     const testInstanceName = "svm-instance-name";
     const makeRestartContext = (apps) => {
       const cfRollingRestart = jest.fn(async () => ({}));
-      const getCfServiceBindingApps = jest.fn(async () => apps);
+      const getCfBoundApps = jest.fn(async () => apps);
       return {
         cfRollingRestart,
-        getCfServiceBindingApps,
+        getCfBoundApps,
         getHdiInfo() {
           return { cfBinding: { instanceId: testInstanceId, instanceName: testInstanceName } };
         },
@@ -897,17 +897,17 @@ describe("svm tests", () => {
     };
 
     test("restarts all running bound apps", async () => {
+      const startedApp0 = { guid: "app-guid-0", name: "app-name-0", state: "STARTED" };
+      const startedApp1 = { guid: "app-guid-1", name: "app-name-1", state: "STARTED" };
       const context = makeRestartContext([
-        { guid: "app-guid-0", name: "app-name-0" },
-        { guid: "app-guid-1", name: "app-name-1" },
+        startedApp0,
+        startedApp1,
+        { guid: "app-guid-2", name: "app-name-2", state: "STOPPED" },
       ]);
 
       expect(await svm.serviceManagerRestart(context)).toBeUndefined();
-      expect(context.getCfServiceBindingApps).toHaveBeenCalledWith(testInstanceId);
-      expect(context.cfRollingRestart.mock.calls).toEqual([
-        ["app-guid-0", "app-name-0"],
-        ["app-guid-1", "app-name-1"],
-      ]);
+      expect(context.getCfBoundApps).toHaveBeenCalledWith(testInstanceId);
+      expect(context.cfRollingRestart.mock.calls).toEqual([[startedApp0], [startedApp1]]);
       expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
         "rolling restart of 2 apps bound to service instance "svm-instance-name"
         rolling restart of 2 apps completed"
@@ -919,7 +919,19 @@ describe("svm tests", () => {
       const context = makeRestartContext([]);
 
       expect(await svm.serviceManagerRestart(context)).toBeUndefined();
-      expect(context.getCfServiceBindingApps).toHaveBeenCalledWith(testInstanceId);
+      expect(context.getCfBoundApps).toHaveBeenCalledWith(testInstanceId);
+      expect(context.cfRollingRestart).toHaveBeenCalledTimes(0);
+      expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(
+        `"found no running apps bound to service instance "svm-instance-name", nothing to restart"`
+      );
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
+    });
+
+    test("only stopped bound apps is a no-op", async () => {
+      const context = makeRestartContext([{ guid: "app-guid-0", name: "app-name-0", state: "STOPPED" }]);
+
+      expect(await svm.serviceManagerRestart(context)).toBeUndefined();
+      expect(context.getCfBoundApps).toHaveBeenCalledWith(testInstanceId);
       expect(context.cfRollingRestart).toHaveBeenCalledTimes(0);
       expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(
         `"found no running apps bound to service instance "svm-instance-name", nothing to restart"`

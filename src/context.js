@@ -12,6 +12,7 @@ const {
   safeUnshift,
   escapeRegExp,
   indexByKey,
+  sleep,
 } = require("./shared/static");
 const { makeOneTime } = require("./shared/execution-control");
 const { assert, fail } = require("./shared/error");
@@ -47,6 +48,11 @@ const CACHE_GAP = 14400000; // 4 hours in milliseconds
 const UAA_TOKEN_CACHE_EXPIRY_GAP = 60000; // 1 minute
 const CF_API_CONCURRENCY = 6;
 
+const CF_DEPLOYMENT_POLL_FREQUENCY = 5000; // 5 seconds
+const CF_DEPLOYMENT_POLL_TIMEOUT = 600000; // 10 minutes per app
+const CF_DEPLOYMENT_STATE_FINALIZED = "FINALIZED";
+const CF_DEPLOYMENT_REASON_DEPLOYED = "DEPLOYED";
+
 const logger = Logger.getInstance();
 
 const _run = async (command, ...args) => {
@@ -71,15 +77,18 @@ const _cfAuthToken = async () => {
   }
 };
 
-const _cfRequest = async (cfInfo, urlOrPath) => {
+const _cfRequest = async (cfInfo, urlOrPath, { method, body, headers } = {}) => {
   let url;
   try {
     url = urlOrPath.startsWith("/v3") ? cfInfo.config.Target + urlOrPath : urlOrPath;
     const response = await request({
       url,
+      ...(method && { method }),
+      ...(body && { body }),
       headers: {
         Accept: "application/json",
         Authorization: cfInfo.token,
+        ...headers,
       },
       logged: false,
     });
@@ -534,6 +543,41 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     return cfEnv;
   };
 
+  const getCfBoundApps = async (instanceId) => {
+    const [{ resources: cfBindings }, cfApps] = await Promise.all([
+      _cfRequestPaged(cfInfo, `/v3/service_credential_bindings?service_instance_guids=${instanceId}&type=app`),
+      _getCfApps(),
+    ]);
+    const boundAppGuids = new Set(cfBindings.map((binding) => binding.relationships.app.data.guid));
+    return cfApps.filter((cfApp) => boundAppGuids.has(cfApp.guid));
+  };
+
+  const cfRollingRestart = async (cfApp) => {
+    const deployment = await _cfRequest(cfInfo, `/v3/deployments`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        relationships: { app: { data: { guid: cfApp.guid } } },
+        strategy: "rolling",
+      }),
+    });
+    const deadline = Date.now() + CF_DEPLOYMENT_POLL_TIMEOUT;
+    let current = deployment;
+    while (current.status?.value !== CF_DEPLOYMENT_STATE_FINALIZED) {
+      assert(Date.now() < deadline, 'rolling restart of app "%s" timed out', cfApp.name);
+      await sleep(CF_DEPLOYMENT_POLL_FREQUENCY);
+      current = await _cfRequest(cfInfo, `/v3/deployments/${deployment.guid}`);
+    }
+    assert(
+      current.status?.reason === CF_DEPLOYMENT_REASON_DEPLOYED,
+      'rolling restart of app "%s" finished with reason %s',
+      cfApp.name,
+      current.status?.reason
+    );
+    logger.info('rolling restart of app "%s" completed', cfApp.name);
+    return current;
+  };
+
   return {
     runtimeConfig,
     getUaaInfo,
@@ -545,6 +589,8 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     getHdiInfo,
     getSrvInfo,
     getCfEnv,
+    getCfBoundApps,
+    cfRollingRestart,
     getCachedUaaTokenFromCredentials,
     getCachedIasTokenFromCredentials,
     getAppNameInfoCached,

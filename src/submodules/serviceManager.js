@@ -33,6 +33,8 @@ const SERVICE_MANAGER_REQUEST_CONCURRENCY_FALLBACK = 6;
 const SERVICE_PLAN_ALL_IDENTIFIER = "all-services";
 const TENANT_ID_ALL_IDENTIFIER = "all-tenants";
 
+const CF_APP_STATE_STARTED = "STARTED";
+
 // NOTE: old versions of cap java relied on managing_client_lib label for hana containers
 const HANA_CONTAINER_OFFERING_PLAN_NAME = "hana:hdi-shared";
 const HANA_CONTAINER_LABELS = { managing_client_lib: ["instance-manager-client-lib"] };
@@ -391,7 +393,8 @@ const serviceManagerRestart = async (context) => {
   const {
     cfBinding: { instanceId, instanceName },
   } = await context.getHdiInfo();
-  const apps = await context.getCfServiceBindingApps(instanceId);
+  const boundApps = await context.getCfBoundApps(instanceId);
+  const apps = boundApps.filter((app) => app.state === CF_APP_STATE_STARTED);
   if (apps.length === 0) {
     logger.info('found no running apps bound to service instance "%s", nothing to restart', instanceName);
     return;
@@ -402,7 +405,7 @@ const serviceManagerRestart = async (context) => {
     apps.length === 1 ? "" : "s",
     instanceName
   );
-  await limiter(svmRequestConcurrency, apps, async (app) => await context.cfRollingRestart(app.guid, app.name));
+  await limiter(svmRequestConcurrency, apps, async (app) => await context.cfRollingRestart(app));
   logger.info("rolling restart of %i app%s completed", apps.length, apps.length === 1 ? "" : "s");
 };
 
