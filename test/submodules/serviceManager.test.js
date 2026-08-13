@@ -880,4 +880,51 @@ describe("svm tests", () => {
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
   });
+
+  describe("svm restart", () => {
+    const testInstanceId = "svm-instance-id";
+    const testInstanceName = "svm-instance-name";
+    const makeRestartContext = (apps) => {
+      const cfRollingRestart = jest.fn(async () => ({}));
+      const getCfServiceBindingApps = jest.fn(async () => apps);
+      return {
+        cfRollingRestart,
+        getCfServiceBindingApps,
+        getHdiInfo() {
+          return { cfBinding: { instanceId: testInstanceId, instanceName: testInstanceName } };
+        },
+      };
+    };
+
+    test("restarts all running bound apps", async () => {
+      const context = makeRestartContext([
+        { guid: "app-guid-0", name: "app-name-0" },
+        { guid: "app-guid-1", name: "app-name-1" },
+      ]);
+
+      expect(await svm.serviceManagerRestart(context)).toBeUndefined();
+      expect(context.getCfServiceBindingApps).toHaveBeenCalledWith(testInstanceId);
+      expect(context.cfRollingRestart.mock.calls).toEqual([
+        ["app-guid-0", "app-name-0"],
+        ["app-guid-1", "app-name-1"],
+      ]);
+      expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
+        "rolling restart of 2 apps bound to service instance "svm-instance-name"
+        rolling restart of 2 apps completed"
+      `);
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
+    });
+
+    test("no bound apps is a no-op", async () => {
+      const context = makeRestartContext([]);
+
+      expect(await svm.serviceManagerRestart(context)).toBeUndefined();
+      expect(context.getCfServiceBindingApps).toHaveBeenCalledWith(testInstanceId);
+      expect(context.cfRollingRestart).toHaveBeenCalledTimes(0);
+      expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(
+        `"found no running apps bound to service instance "svm-instance-name", nothing to restart"`
+      );
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
+    });
+  });
 });

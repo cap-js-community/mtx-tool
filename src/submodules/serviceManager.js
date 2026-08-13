@@ -387,6 +387,25 @@ const serviceManagerFreshBindingsDeprecated = async (context, [planFullName, ten
   });
 };
 
+const serviceManagerRestart = async (context) => {
+  const {
+    cfBinding: { instanceId, instanceName },
+  } = await context.getHdiInfo();
+  const apps = await context.getCfServiceBindingApps(instanceId);
+  if (apps.length === 0) {
+    logger.info('found no running apps bound to service instance "%s", nothing to restart', instanceName);
+    return;
+  }
+  logger.info(
+    'rolling restart of %i app%s bound to service instance "%s"',
+    apps.length,
+    apps.length === 1 ? "" : "s",
+    instanceName
+  );
+  await limiter(svmRequestConcurrency, apps, async (app) => await context.cfRollingRestart(app.guid, app.name));
+  logger.info("rolling restart of %i app%s completed", apps.length, apps.length === 1 ? "" : "s");
+};
+
 module.exports = {
   serviceManagerList,
   serviceManagerLongList,
@@ -394,6 +413,7 @@ module.exports = {
   serviceManagerMakeBindingsDouble,
   serviceManagerDeleteBindings,
   serviceManagerDeleteInstancesAndBindings,
+  serviceManagerRestart,
   serviceManagerRepairBindingsDeprecated,
   serviceManagerFreshBindingsDeprecated,
   serviceManagerRefreshBindingsDeprecated,

@@ -112,6 +112,7 @@ MTX Tool is organized into contextual sections, each with several commands.
 ~  svmll  --svm-long-list [TENANT_ID]                                 long list all service instances and bindings
           --svm-make-bindings-single SERVICE_PLAN TENANT_ID [PARAMS]  make service bindings 1-to-1
           --svm-make-bindings-double SERVICE_PLAN TENANT_ID [PARAMS]  make service bindings 1-to-2
+          --svm-restart                                               rolling restart for svm bound apps
 *         --svm-delete-bindings SERVICE_PLAN TENANT_ID                delete service bindings
 *         --svm-delete SERVICE_PLAN TENANT_ID                         delete service instances and bindings
           ...    SERVICE_PLAN                                         filter for service plan with "offering:plan"

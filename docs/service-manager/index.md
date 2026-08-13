@@ -32,6 +32,7 @@ Commands for this area are:
 ~  svmll  --svm-long-list [TENANT_ID]                                 long list all service instances and bindings
           --svm-make-bindings-single SERVICE_PLAN TENANT_ID [PARAMS]  make service bindings 1-to-1
           --svm-make-bindings-double SERVICE_PLAN TENANT_ID [PARAMS]  make service bindings 1-to-2
+          --svm-restart                                               rolling restart for svm bound apps
 *         --svm-delete-bindings SERVICE_PLAN TENANT_ID                delete service bindings
 *         --svm-delete SERVICE_PLAN TENANT_ID                         delete service instances and bindings
           ...    SERVICE_PLAN                                         filter for service plan with "offering:plan"
@@ -140,18 +141,28 @@ to clean up both bindings and instances.
 In most cases, the BTP cockpit's subaccount _unsubscribe_ functionality, or even
 [Offboard Tenant]({{ site.baseurl }}/cap-multitenancy/#offboard-tenant), should be used instead.
 
+## Rolling Restart
+
+```
+mtx --svm-restart
+```
+
+triggers a zero-downtime _rolling restart_ for every running app bound to the service-manager instance. It looks up
+the CF service instance behind the configured service-manager app, finds all apps in the targeted space bound to that
+same instance, and restarts the ones that are currently started. Stopped apps are left stopped.
+
 ## Zero Downtime Credential Rotation
 
 In productive environments credentials must rotate without downtime. Rotation is a _five-step choreography_ of the two
 idempotent make-bindings commands, so any step can be retried safely if it fails.
 
-1.  _Rolling restart_ — converge all apps onto the most-recent binding.
+1.  `mtx --svm-restart` — _rolling restart_ to converge all apps onto the most-recent binding.
 
 2.  `mtx --svm-make-bindings-single SERVICE_PLAN TENANT_ID` — prune to one binding per instance.
 
 3.  `mtx --svm-make-bindings-double SERVICE_PLAN TENANT_ID` — add the new binding. In-memory credentials stay valid.
 
-4.  _Rolling restart_ — apps switch to the new binding.
+4.  `mtx --svm-restart` — _rolling restart_ so apps switch to the new binding.
 
 5.  `mtx --svm-make-bindings-single SERVICE_PLAN TENANT_ID` — prune the old binding. Rotation is complete.
 
