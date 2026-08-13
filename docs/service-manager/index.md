@@ -151,6 +151,13 @@ triggers a zero-downtime _rolling restart_ for every running app bound to the se
 the CF service instance behind the configured service-manager app, finds all apps in the targeted space bound to that
 same instance, and restarts the ones that are currently started. Stopped apps are left stopped.
 
+{: .warn}
+Rolling restarts are only possible for applications with more than one instance. For single-instance applications a
+regular restart with downtime is performed.
+
+{: .info}
+An app in state `started` with 0 instances is still restarted, but this is a no-op.
+
 ## Zero Downtime Credential Rotation
 
 In productive environments credentials must rotate without downtime. Rotation is a _five-step choreography_ of the two
