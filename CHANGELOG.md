@@ -9,8 +9,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## v0.14.0 - tbd
 
-- dependencies: update node-fetch to v3 with `require(esm)`
+### CHANGED
+
+- dependencies: update node-fetch to v3 with `require(esm)`.
   node v20 can do this by default now: https://nodejs.org/en/blog/release/v20.19.0/#requireesm-is-now-enabled-by-default:#requireesm-is-now-enabled-by-default
+
+### FIXED
+
+- svm: retry-after logic expected the standard header, but svm uses `X-RateLimit-Retry-After` instead.
 
 ## v0.13.0 - 2026-07-22
 
