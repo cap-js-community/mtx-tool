@@ -13,7 +13,7 @@ const HTTP_TOO_MANY_REQUESTS = 429;
 //   the final attempt is always stopped and does not add the associated sleep time.
 const RETRY_SLEEP_BASE = 6000;
 const RETRY_MAX_ATTEMPTS = 5;
-const RETRY_AFTER_HEADER = "Retry-After";
+const RETRY_AFTER_HEADERS = ["Retry-After", "X-RateLimit-Retry-After"];
 // NOTE: cap Retry-After to keep a misbehaving server from stalling us indefinitely
 const RETRY_AFTER_MAX_MS = 5 * 60 * 1000;
 
@@ -90,7 +90,10 @@ const _parseRetryAfter = (headerValue, nowMs = Date.now()) => {
   return Math.min(waitMs, RETRY_AFTER_MAX_MS);
 };
 
-const _getRetryHeaderSleepTime = (response) => _parseRetryAfter(response.headers?.get?.(RETRY_AFTER_HEADER));
+const _getRetryHeaderSleepTime = (response) => {
+  const retryAfterFromHeader = RETRY_AFTER_HEADERS.reduce((value, name) => value ?? response.headers.get?.(name), null);
+  return _parseRetryAfter(retryAfterFromHeader);
+};
 
 class LogRequestId {
   static #id = 0;
@@ -205,7 +208,7 @@ const _request = async ({
       const doLogAttempt = attempt > 0 || !doStopRetry;
       const correlationHeader = CORRELATION_HEADERS_RECEIVER_PRECEDENCE.find((header) => response.headers.has(header));
       logRequestId ??= doLogAttempt && LogRequestId.next();
-      const retryLogPart = doStopRetry ? [] : [`retrying in ${sleepTime / 1000}sec`];
+      const retryLogPart = doStopRetry ? [] : [`retrying in ${Math.round(sleepTime / 1000)}sec`];
       const statusText = response.statusText || STATUS_CODES[response.status];
       const logParts = [
         ...(doLogAttempt ? [`[req-${logRequestId} ${attempt + 1}/${RETRY_MAX_ATTEMPTS}]`] : []),
