@@ -41,10 +41,7 @@ const HANA_CONTAINER_LABELS = { managing_client_lib: ["instance-manager-client-l
 
 const logger = Logger.getInstance();
 
-const svmConcurrency = parseIntWithFallback(
-  process.env[ENV.SVM_CONCURRENCY],
-  SERVICE_MANAGER_CONCURRENCY_FALLBACK
-);
+const svmConcurrency = parseIntWithFallback(process.env[ENV.SVM_CONCURRENCY], SERVICE_MANAGER_CONCURRENCY_FALLBACK);
 
 // NOTE: the tenant ids for service manager are not necessarily uuids, this is a much broader validator
 const isValidTenantId = (input) => input && /^[0-9a-z-_/]+$/i.test(input);
