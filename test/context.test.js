@@ -6,11 +6,13 @@ jest.mock("../src/shared/logger", () => require("./__mocks/shared/logger"));
 
 const mockStatic = require("../src/shared/static");
 jest.mock("../src/shared/static", () => {
-  const { safeUnshift, escapeRegExp, indexByKey } = jest.requireActual("../src/shared/static");
+  const { safeUnshift, escapeRegExp, indexByKey, parseIntWithFallback } = jest.requireActual("../src/shared/static");
   return {
     safeUnshift,
     escapeRegExp,
     indexByKey,
+    parseIntWithFallback,
+    sleep: jest.fn(),
     tryAccessSync: jest.fn(),
     tryReadJsonSync: jest.fn(),
     writeJsonSync: jest.fn(),
@@ -240,5 +242,116 @@ describe("context tests", () => {
 
     expect(context.hasRegInfo).toBe(true);
     expect(context.hasSmsInfo).toBe(false);
+  });
+
+  describe("getCfBoundApps", () => {
+    const newTestContext = async () => {
+      mockStatic.spawnAsync.mockReturnValueOnce(["oauth-token"]);
+      mockStatic.tryReadJsonSync.mockReturnValueOnce(mockCfConfig);
+      mockStatic.tryAccessSync.mockReturnValueOnce(true);
+      mockStatic.tryReadJsonSync.mockReturnValueOnce(mockRuntimeConfig);
+      return await newContext();
+    };
+
+    test("resolves bound apps against _getCfApps and dedupes by guid", async () => {
+      const context = await newTestContext();
+      // NOTE: bindings only carry app guids. two reference the same app (dedupe), one references an app absent from
+      //   _getCfApps (filtered out). state filtering is left to the caller, so both states are returned here.
+      mockRequest.mockReturnValueOnce({
+        json: () => ({
+          resources: [
+            { guid: "binding-0", relationships: { app: { data: { guid: "app-started" } } } },
+            { guid: "binding-1", relationships: { app: { data: { guid: "app-started" } } } },
+            { guid: "binding-2", relationships: { app: { data: { guid: "app-stopped" } } } },
+            { guid: "binding-3", relationships: { app: { data: { guid: "app-unknown" } } } },
+          ],
+        }),
+      });
+      mockRequest.mockReturnValueOnce({
+        json: () => ({
+          resources: [
+            { guid: "app-started", name: "app-started-name", state: "STARTED" },
+            { guid: "app-stopped", name: "app-stopped-name", state: "STOPPED" },
+            { guid: "app-unbound", name: "app-unbound-name", state: "STARTED" },
+          ],
+        }),
+      });
+
+      const apps = await context.getCfBoundApps("svm-instance-id");
+      expect(apps).toEqual([
+        { guid: "app-started", name: "app-started-name", state: "STARTED" },
+        { guid: "app-stopped", name: "app-stopped-name", state: "STOPPED" },
+      ]);
+      expect(mockRequest).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({
+          url: "https://api.cf.sap.hana.ondemand.com/v3/service_credential_bindings?service_instance_guids=svm-instance-id&type=app",
+        })
+      );
+    });
+
+    test("returns empty when no apps are bound", async () => {
+      const context = await newTestContext();
+      mockRequest.mockReturnValueOnce({ json: () => ({ resources: [] }) });
+      mockRequest.mockReturnValueOnce({
+        json: () => ({ resources: [{ guid: "app-unbound", name: "app-unbound-name", state: "STARTED" }] }),
+      });
+
+      const apps = await context.getCfBoundApps("svm-instance-id");
+      expect(apps).toEqual([]);
+    });
+  });
+
+  describe("cfRollingRestart", () => {
+    const newTestContext = async () => {
+      mockStatic.spawnAsync.mockReturnValueOnce(["oauth-token"]);
+      mockStatic.tryReadJsonSync.mockReturnValueOnce(mockCfConfig);
+      mockStatic.tryAccessSync.mockReturnValueOnce(true);
+      mockStatic.tryReadJsonSync.mockReturnValueOnce(mockRuntimeConfig);
+      return await newContext();
+    };
+
+    test("creates a rolling deployment and polls until finalized/deployed", async () => {
+      const context = await newTestContext();
+      mockRequest.mockReturnValueOnce({
+        json: () => ({ guid: "deployment-0", status: { value: "ACTIVE", reason: "DEPLOYING" } }),
+      });
+      mockRequest.mockReturnValueOnce({
+        json: () => ({ guid: "deployment-0", status: { value: "ACTIVE", reason: "DEPLOYING" } }),
+      });
+      mockRequest.mockReturnValueOnce({
+        json: () => ({ guid: "deployment-0", status: { value: "FINALIZED", reason: "DEPLOYED" } }),
+      });
+
+      const result = await context.cfRollingRestart({ guid: "app-guid-0", name: "app-name-0" });
+      expect(result.status).toEqual({ value: "FINALIZED", reason: "DEPLOYED" });
+      expect(mockRequest).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({
+          url: "https://api.cf.sap.hana.ondemand.com/v3/deployments",
+          method: "POST",
+          body: JSON.stringify({
+            relationships: { app: { data: { guid: "app-guid-0" } } },
+            strategy: "rolling",
+          }),
+        })
+      );
+      expect(mockRequest).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          url: "https://api.cf.sap.hana.ondemand.com/v3/deployments/deployment-0",
+        })
+      );
+    });
+
+    test("throws when the deployment finalizes with a non-deployed reason", async () => {
+      const context = await newTestContext();
+      mockRequest.mockReturnValueOnce({
+        json: () => ({ guid: "deployment-0", status: { value: "FINALIZED", reason: "CANCELED" } }),
+      });
+
+      await expect(context.cfRollingRestart({ guid: "app-guid-0", name: "app-name-0" })).rejects.toMatchInlineSnapshot(
+        `[Error: rolling restart of app "app-name-0" finished with reason CANCELED]`
+      );
+    });
   });
 });

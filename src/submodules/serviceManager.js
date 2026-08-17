@@ -29,9 +29,11 @@ const ENV = Object.freeze({
   SVM_CONCURRENCY: "MTX_SVM_CONCURRENCY",
 });
 
-const SERVICE_MANAGER_REQUEST_CONCURRENCY_FALLBACK = 6;
+const SERVICE_MANAGER_CONCURRENCY_FALLBACK = 6;
 const SERVICE_PLAN_ALL_IDENTIFIER = "all-services";
 const TENANT_ID_ALL_IDENTIFIER = "all-tenants";
+
+const CF_APP_STATE_STARTED = "STARTED";
 
 // NOTE: old versions of cap java relied on managing_client_lib label for hana containers
 const HANA_CONTAINER_OFFERING_PLAN_NAME = "hana:hdi-shared";
@@ -39,10 +41,7 @@ const HANA_CONTAINER_LABELS = { managing_client_lib: ["instance-manager-client-l
 
 const logger = Logger.getInstance();
 
-const svmRequestConcurrency = parseIntWithFallback(
-  process.env[ENV.SVM_CONCURRENCY],
-  SERVICE_MANAGER_REQUEST_CONCURRENCY_FALLBACK
-);
+const svmConcurrency = parseIntWithFallback(process.env[ENV.SVM_CONCURRENCY], SERVICE_MANAGER_CONCURRENCY_FALLBACK);
 
 // NOTE: the tenant ids for service manager are not necessarily uuids, this is a much broader validator
 const isValidTenantId = (input) => input && /^[0-9a-z-_/]+$/i.test(input);
@@ -191,7 +190,7 @@ const _serviceManagerNormalizeBindings = async (
   instances.sort(compareInstancesForTenantId);
   bindings.sort(compareBindingsForUpdatedAtDesc);
   const bindingsByInstance = clusterByKey(bindings, "service_instance_id");
-  const changeQueue = new FunnelQueue(svmRequestConcurrency);
+  const changeQueue = new FunnelQueue(svmConcurrency);
 
   for (const instance of instances) {
     const tenantId = instance.labels.tenant_id[0];
@@ -322,12 +321,12 @@ const _serviceManagerDelete = async (
   if (doDeleteBindings) {
     const instanceById = indexByKey(instances, "id");
     const filteredBindings = bindings.filter((binding) => instanceById[binding.service_instance_id]);
-    await limiter(svmRequestConcurrency, filteredBindings, async (binding) => await svm.deleteBinding(binding.id));
+    await limiter(svmConcurrency, filteredBindings, async (binding) => await svm.deleteBinding(binding.id));
     logger.info("deleted %i binding%s", filteredBindings.length, filteredBindings.length === 1 ? "" : "s");
   }
 
   if (doDeleteInstances) {
-    await limiter(svmRequestConcurrency, instances, async (instance) => await svm.deleteInstance(instance.id));
+    await limiter(svmConcurrency, instances, async (instance) => await svm.deleteInstance(instance.id));
     logger.info("deleted %i instance%s", instances.length, instances.length === 1 ? "" : "s");
   }
 };
@@ -387,6 +386,26 @@ const serviceManagerFreshBindingsDeprecated = async (context, [planFullName, ten
   });
 };
 
+const serviceManagerRestart = async (context) => {
+  const {
+    cfBinding: { instanceId, instanceName },
+  } = await context.getHdiInfo();
+  const boundApps = await context.getCfBoundApps(instanceId);
+  const apps = boundApps.filter((app) => app.state === CF_APP_STATE_STARTED);
+  if (apps.length === 0) {
+    logger.info('found no running apps bound to service instance "%s", nothing to restart', instanceName);
+    return;
+  }
+  logger.info(
+    'rolling restart of %i app%s bound to service instance "%s"',
+    apps.length,
+    apps.length === 1 ? "" : "s",
+    instanceName
+  );
+  await limiter(svmConcurrency, apps, async (app) => await context.cfRollingRestart(app));
+  logger.info("rolling restart of %i app%s completed", apps.length, apps.length === 1 ? "" : "s");
+};
+
 module.exports = {
   serviceManagerList,
   serviceManagerLongList,
@@ -394,6 +413,7 @@ module.exports = {
   serviceManagerMakeBindingsDouble,
   serviceManagerDeleteBindings,
   serviceManagerDeleteInstancesAndBindings,
+  serviceManagerRestart,
   serviceManagerRepairBindingsDeprecated,
   serviceManagerFreshBindingsDeprecated,
   serviceManagerRefreshBindingsDeprecated,

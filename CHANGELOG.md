@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - dependencies: update node-fetch to v3 with `require(esm)`.
   node v20 can do this by default now: https://nodejs.org/en/blog/release/v20.19.0/#requireesm-is-now-enabled-by-default:#requireesm-is-now-enabled-by-default
 
+### ADDED
+
+- svm: new `--svm-restart` command that triggers a zero-downtime rolling restart for all running apps bound to the
+  service-manager instance.
+
 ### FIXED
 
 - svm: retry-after logic expected the standard header, but svm uses `X-RateLimit-Retry-After` instead.
