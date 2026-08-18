@@ -5,12 +5,7 @@ const pathlib = require("path");
 const os = require("os");
 const { version } = require("../package.json");
 
-const {
-  tryReadJsonSync,
-  tryAccessSync,
-  writeJsonSync,
-  indexByKey,
-} = require("./shared/static");
+const { tryReadJsonSync, tryAccessSync, writeJsonSync, indexByKey } = require("./shared/static");
 const { makeOneTime } = require("./shared/execution-control");
 const { assert, fail } = require("./shared/error");
 const oauth = require("./shared/oauth");
