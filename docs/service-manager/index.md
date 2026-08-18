@@ -33,11 +33,13 @@ Commands for this area are:
           --svm-make-bindings-single SERVICE_PLAN TENANT_ID [PARAMS]  make service bindings 1-to-1
           --svm-make-bindings-double SERVICE_PLAN TENANT_ID [PARAMS]  make service bindings 1-to-2
           --svm-restart                                               rolling restart for svm bound apps
+          --svm-restart-skip SKIP_APPS                                rolling restart skipping apps
 *         --svm-delete-bindings SERVICE_PLAN TENANT_ID                delete service bindings
 *         --svm-delete SERVICE_PLAN TENANT_ID                         delete service instances and bindings
           ...    SERVICE_PLAN                                         filter for service plan with "offering:plan"
                                                                         or "all-services" for all
           ...    TENANT_ID                                            filter for tenant id or "all-tenants" for all
+          ...    SKIP_APPS                                            comma-separated app names to skip
           ...    [PARAMS]                                             create binding with custom parameters
           ...    --json                                               list in json
           ...    --time                                               list includes timestamps
@@ -153,6 +155,13 @@ same instance, and restarts the ones that are currently started. Stopped apps ar
 
 {: .info}
 An app in state `started` with 0 instances is still restarted, but this is a no-op.
+
+The `--svm-restart-skip` variant takes a required comma-separated `SKIP_APPS` argument that excludes apps by name from
+the restart:
+
+```
+mtx --svm-restart-skip app-name-0,app-name-1
+```
 
 ## Zero Downtime Credential Rotation
 

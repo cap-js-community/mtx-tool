@@ -122,11 +122,13 @@ commands:
           --svm-make-bindings-single SERVICE_PLAN TENANT_ID [PARAMS]  make service bindings 1-to-1
           --svm-make-bindings-double SERVICE_PLAN TENANT_ID [PARAMS]  make service bindings 1-to-2
           --svm-restart                                               rolling restart for svm bound apps
+          --svm-restart-skip SKIP_APPS                                rolling restart skipping apps
 *         --svm-delete-bindings SERVICE_PLAN TENANT_ID                delete service bindings
 *         --svm-delete SERVICE_PLAN TENANT_ID                         delete service instances and bindings
           ...    SERVICE_PLAN                                         filter for service plan with "offering:plan"
                                                                         or "all-services" for all
           ...    TENANT_ID                                            filter for tenant id or "all-tenants" for all
+          ...    SKIP_APPS                                            comma-separated app names to skip
           ...    [PARAMS]                                             create binding with custom parameters
           ...    --json                                               list in json
           ...    --time                                               list includes timestamps
@@ -388,6 +390,12 @@ const APP_COMMAND_INFOS = Object.freeze({
   SVM_RESTART: {
     commandVariants: ["--svm-restart"],
     callback: svm.serviceManagerRestart,
+    useCache: false,
+  },
+  SVM_RESTART_SKIP: {
+    commandVariants: ["--svm-restart-skip"],
+    requiredPassArgs: [PASS_ARG.SKIP_APPS],
+    callback: svm.serviceManagerRestartSkip,
     useCache: false,
   },
   SVM_REPAIR_BINDINGS: {

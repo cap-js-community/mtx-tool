@@ -386,12 +386,20 @@ const serviceManagerFreshBindingsDeprecated = async (context, [planFullName, ten
   });
 };
 
-const serviceManagerRestart = async (context) => {
+const _serviceManagerRestart = async (context, { skipApps } = {}) => {
+  const skipAppNames = new Set(
+    skipApps
+      ? skipApps
+          .split(",")
+          .map((name) => name.trim())
+          .filter(Boolean)
+      : []
+  );
   const {
     cfBinding: { instanceId, instanceName },
   } = await context.getHdiInfo();
   const boundApps = await context.getCfBoundApps(instanceId);
-  const apps = boundApps.filter((app) => app.state === CF_APP_STATE_STARTED);
+  const apps = boundApps.filter((app) => app.state === CF_APP_STATE_STARTED && !skipAppNames.has(app.name));
   if (apps.length === 0) {
     logger.info('found no running apps bound to service instance "%s", nothing to restart', instanceName);
     return;
@@ -406,6 +414,14 @@ const serviceManagerRestart = async (context) => {
   logger.info("rolling restart of %i app%s completed", apps.length, apps.length === 1 ? "" : "s");
 };
 
+const serviceManagerRestart = async (context) => {
+  return await _serviceManagerRestart(context);
+};
+
+const serviceManagerRestartSkip = async (context, [skipApps]) => {
+  return await _serviceManagerRestart(context, { skipApps });
+};
+
 module.exports = {
   serviceManagerList,
   serviceManagerLongList,
@@ -414,6 +430,7 @@ module.exports = {
   serviceManagerDeleteBindings,
   serviceManagerDeleteInstancesAndBindings,
   serviceManagerRestart,
+  serviceManagerRestartSkip,
   serviceManagerRepairBindingsDeprecated,
   serviceManagerFreshBindingsDeprecated,
   serviceManagerRefreshBindingsDeprecated,

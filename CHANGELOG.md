@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### ADDED
 
-- svm: new `--svm-restart` command that triggers a zero-downtime rolling restart for all running apps bound to the
+- svm: new `--svm-restart`, `--svm-restart-skip` commands that triggers a zero-downtime rolling restart for all running apps bound to the
   service-manager instance.
 
 ### FIXED

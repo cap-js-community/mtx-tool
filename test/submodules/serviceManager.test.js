@@ -915,6 +915,22 @@ describe("svm tests", () => {
       expect(mockLogger.error).toHaveBeenCalledTimes(0);
     });
 
+    test("svm-restart-skip skips apps listed in SKIP_APPS", async () => {
+      const startedApp0 = { guid: "app-guid-0", name: "app-name-0", state: "STARTED" };
+      const startedApp1 = { guid: "app-guid-1", name: "app-name-1", state: "STARTED" };
+      const startedApp2 = { guid: "app-guid-2", name: "app-name-2", state: "STARTED" };
+      const context = makeRestartContext([startedApp0, startedApp1, startedApp2]);
+
+      expect(await svm.serviceManagerRestartSkip(context, ["app-name-1,app-name-2"])).toBeUndefined();
+      expect(context.getCfBoundApps).toHaveBeenCalledWith(testInstanceId);
+      expect(context.cfRollingRestart.mock.calls).toEqual([[startedApp0]]);
+      expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
+        "rolling restart of 1 app bound to service instance "svm-instance-name"
+        rolling restart of 1 app completed"
+      `);
+      expect(mockLogger.error).toHaveBeenCalledTimes(0);
+    });
+
     test("no bound apps is a no-op", async () => {
       const context = makeRestartContext([]);
 
