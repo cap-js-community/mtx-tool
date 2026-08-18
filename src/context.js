@@ -2,6 +2,7 @@
 
 const urllib = require("url");
 const pathlib = require("path");
+const os = require("os");
 const { version } = require("../package.json");
 
 const {
@@ -24,7 +25,6 @@ const ENV = Object.freeze({
 });
 
 const EXTRA_APP_SUFFIXES = process.env[ENV.APP_SUFFIX] ? [process.env[ENV.APP_SUFFIX]] : [];
-const HOME = process.env.HOME || process.env.USERPROFILE;
 
 const LOCATION = Object.freeze({
   LOCAL: "LOCAL",
@@ -42,15 +42,16 @@ const CF_API_CONCURRENCY = 6;
 const logger = Logger.getInstance();
 
 const _resolveDir = (filename) => {
+  const home = os.homedir();
   let subdirs = process.cwd().split(pathlib.sep);
   while (true) {
-    const dir = subdirs.length === 0 ? HOME : subdirs.join(pathlib.sep);
+    const dir = subdirs.length === 0 ? home : subdirs.join(pathlib.sep);
     const filepath = dir + pathlib.sep + filename;
     if (tryAccessSync(filepath)) {
       return {
         dir,
         filepath,
-        location: dir === HOME ? LOCATION.GLOBAL : LOCATION.LOCAL,
+        location: dir === home ? LOCATION.GLOBAL : LOCATION.LOCAL,
       };
     }
     if (subdirs.length === 0) {

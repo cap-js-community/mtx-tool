@@ -17,9 +17,12 @@ jest.mock("../../src/context", () => ({
   readRuntimeConfig: jest.fn(),
 }));
 
+const os = require("os");
+
 const { CONFIG_INFOS } = require("../../src/config");
 
 const processCwdSpy = jest.spyOn(process, "cwd");
+const osHomedirSpy = jest.spyOn(os, "homedir");
 
 const { outputFromLogger } = require("../test-util/static");
 
@@ -37,7 +40,7 @@ let set;
 describe("set tests", () => {
   beforeEach(() => {
     jest.isolateModules(() => {
-      process.env.HOME = "/root/home-dir";
+      osHomedirSpy.mockReturnValueOnce("/root/home-dir");
       processCwdSpy.mockReturnValueOnce("/root/local-dir");
       set = require("../../src/submodules/setup");
     });

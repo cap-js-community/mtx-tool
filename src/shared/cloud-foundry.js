@@ -6,6 +6,7 @@
 "use strict";
 
 const pathlib = require("path");
+const os = require("os");
 
 const { tryReadJsonSync, spawnAsync, sleep, safeUnshift, escapeRegExp } = require("./static");
 const { makeOneTime } = require("./execution-control");
@@ -14,12 +15,8 @@ const { request } = require("./request");
 const { Logger } = require("./logger");
 const { LazyCache } = require("./cache");
 
-const CF = Object.freeze({
-  EXEC: "cf",
-});
-
-const HOME = process.env.HOME || process.env.USERPROFILE;
-const CF_HOME = process.env.CF_HOME || HOME;
+const CF_CLI_BIN = "cf";
+const CF_HOME = process.env.CF_HOME || os.homedir();
 
 const APP_SUFFIXES = ["", "-{UUID}", "-blue", "-green"];
 const APP_SUFFIX_READONLY = "-live";
@@ -32,6 +29,8 @@ const CF_DEPLOYMENT_REASON_DEPLOYED = "DEPLOYED";
 const logger = Logger.getInstance();
 
 class CloudFoundry {
+  static #singleton;
+
   #config;
   #extraAppSuffixes;
   #appByNameCache = new LazyCache();
@@ -43,19 +42,14 @@ class CloudFoundry {
   }
 
   static getSingleton({ extraAppSuffixes } = {}) {
-    if (!CloudFoundry.__singleton) {
-      CloudFoundry.__singleton = new CloudFoundry(CloudFoundry.#readCfConfig(), { extraAppSuffixes });
+    if (!CloudFoundry.#singleton) {
+      CloudFoundry.#singleton = new CloudFoundry(CloudFoundry.#readCfConfig(), { extraAppSuffixes });
     }
-    return CloudFoundry.__singleton;
+    return CloudFoundry.#singleton;
   }
 
-  // NOTE: only used in tests to force a fresh config read between cases
   static resetSingleton() {
-    Reflect.deleteProperty(CloudFoundry, "__singleton");
-  }
-
-  get config() {
-    return this.#config;
+    CloudFoundry.#singleton = undefined;
   }
 
   // NOTE: the cf config carries a ready-to-use "bearer ..." AccessToken that the cf CLI keeps fresh on disk, so we use
@@ -153,7 +147,7 @@ class CloudFoundry {
   }
 
   async ssh(appName, { logged, localPort, remotePort, remoteHostname, appInstance, command } = {}) {
-    const args = [CF.EXEC, "ssh", appName];
+    const args = [CF_CLI_BIN, "ssh", appName];
     if (localPort !== undefined && localPort !== null && remotePort !== undefined && remotePort !== null) {
       args.push(
         "-L",

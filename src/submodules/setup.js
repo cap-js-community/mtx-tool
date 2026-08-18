@@ -1,6 +1,7 @@
 "use strict";
 
 const pathlib = require("path");
+const os = require("os");
 
 const { question, tryAccessSync, writeJsonSync, deleteFileSync } = require("../shared/static");
 const { fail } = require("../shared/error");
@@ -9,7 +10,7 @@ const { CONFIG_INFOS } = require("../config");
 const { readRuntimeConfig } = require("../context");
 
 const PROCESS_CWD = process.cwd();
-const HOME = process.env.HOME || process.env.USERPROFILE;
+const HOME = os.homedir();
 
 const LOCATION = Object.freeze({
   LOCAL: "LOCAL",
