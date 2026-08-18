@@ -5,6 +5,7 @@ const nock = require("nock");
 
 const { resetMakeOneTime } = require("../../src/shared/execution-control");
 const { newContext } = require("../../src/context");
+const { CloudFoundry } = require("../../src/shared/cloud-foundry");
 const svm = require("../../src/submodules/serviceManager");
 const { outputFromLoggerPartitionFetch, anonymizeListTimestamps, collectRequestCount } = require("../test-util/static");
 
@@ -30,6 +31,7 @@ const freshContext = async () => await newContext({ usePersistedCache: false, is
 describe("svm nock tests", () => {
   afterEach(() => {
     LogRequestId.reset();
+    CloudFoundry.resetSingleton();
     resetMakeOneTime(svm._._getServiceManager);
     // eslint-disable-next-line jest/no-standalone-expect
     expect(nock.pendingMocks()).toEqual([]);

@@ -4,6 +4,7 @@ const pathlib = require("path");
 const nock = require("nock");
 
 const { newContext } = require("../../src/context");
+const { CloudFoundry } = require("../../src/shared/cloud-foundry");
 const reg = require("../../src/submodules/tenantRegistry");
 const { outputFromLoggerPartitionFetch, anonymizeListTimestamps, collectRequestCount } = require("../test-util/static");
 
@@ -29,6 +30,7 @@ const freshContext = async () => await newContext({ usePersistedCache: false, is
 describe("reg nock tests", () => {
   afterEach(() => {
     LogRequestId.reset();
+    CloudFoundry.resetSingleton();
     // eslint-disable-next-line jest/no-standalone-expect
     expect(nock.pendingMocks()).toEqual([]);
     nock.cleanAll();

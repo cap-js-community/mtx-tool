@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`context tests _getCfApps follows pagination and merges all pages 1`] = `
+exports[`context tests CloudFoundry.getApps follows pagination and merges all pages 1`] = `
 [
   [
     {
       "headers": {
         "Accept": "application/json",
-        "Authorization": "oauth-token",
+        "Authorization": "bearer mock-access-token",
       },
       "logged": false,
       "url": "https://api.cf.sap.hana.ondemand.com/v3/apps?space_guids=0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
@@ -16,7 +16,7 @@ exports[`context tests _getCfApps follows pagination and merges all pages 1`] = 
     {
       "headers": {
         "Accept": "application/json",
-        "Authorization": "oauth-token",
+        "Authorization": "bearer mock-access-token",
       },
       "logged": false,
       "url": "https://api.cf.sap.hana.ondemand.com/v3/apps?page=2&per_page=50&space_guids=0215304c-3d6f-4f02-ae4f-a9bd6a9d46e9",
