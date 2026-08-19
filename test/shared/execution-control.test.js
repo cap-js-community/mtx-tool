@@ -181,4 +181,82 @@ describe("executionControl", () => {
       ]
     `);
   });
+
+  test("makeOneTime with target memoizes with state on the target", async () => {
+    const target = {};
+    const oneTimeRunner = makeOneTime(runner, target);
+
+    const resultsPrimary = await Promise.all(Array.from({ length: n }, (_, i) => oneTimeRunner(i + 1)));
+    const resultsSecondary = await Promise.all(Array.from({ length: m }, (_, i) => oneTimeRunner(n + i + 1)));
+
+    expect(resultsPrimary).toMatchInlineSnapshot(`
+      [
+        "result 1",
+        "result 1",
+        "result 1",
+      ]
+    `);
+    expect(resultsSecondary).toMatchInlineSnapshot(`
+      [
+        "result 1",
+        "result 1",
+      ]
+    `);
+    expect(executionLog).toMatchInlineSnapshot(`
+      [
+        "started 1",
+        "finished 1",
+      ]
+    `);
+  });
+
+  test("makeOneTime with target keeps separate targets independent", async () => {
+    const targetA = {};
+    const targetB = {};
+    const runnerA = makeOneTime(runner, targetA);
+    const runnerB = makeOneTime(runner, targetB);
+
+    const resultA = await runnerA(1);
+    const resultB = await runnerB(2);
+
+    expect(resultA).toBe("result 1");
+    expect(resultB).toBe("result 2");
+  });
+
+  test("makeOneTime with target retries on error", async () => {
+    let callCount = 0;
+    const failOnceRunner = async () => {
+      callCount++;
+      if (callCount === 1) {
+        throw new Error("first call fails");
+      }
+      return format("result %d", callCount);
+    };
+    const oneTimeRunner = makeOneTime(failOnceRunner, {});
+
+    await expect(oneTimeRunner()).rejects.toThrow("first call fails");
+    const result = await oneTimeRunner();
+    expect(result).toBe("result 2");
+    expect(callCount).toBe(2);
+  });
+
+  test("resetMakeOneTime on a target", async () => {
+    const target = {};
+    const oneTimeRunner = makeOneTime(runner, target);
+
+    const firstResult = await oneTimeRunner(1);
+    expect(firstResult).toBe("result 1");
+
+    resetMakeOneTime(target);
+    const secondResult = await oneTimeRunner(2);
+    expect(secondResult).toBe("result 2");
+    expect(executionLog).toMatchInlineSnapshot(`
+      [
+        "started 1",
+        "finished 1",
+        "started 2",
+        "finished 2",
+      ]
+    `);
+  });
 });

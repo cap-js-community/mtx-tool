@@ -1,5 +1,9 @@
 "use strict";
 
+const RESULT = Symbol("result");
+const RUNNING_PROMISE = Symbol("runningPromise");
+const CHAIN = Symbol("chain");
+
 /**
  * Wraps an async function so that it is invoked only once. The first call executes
  * the callback and caches the resulting promise; all subsequent calls return the
@@ -7,34 +11,43 @@
  * that the next invocation retries. Use this for one-time initialization such as
  * creating a shared client or reading a config file.
  *
- * Call `resetMakeOneTime(wrappedFn)` to clear the cached result so the next
- * invocation re-executes the callback.
+ * By default, the cached result is stashed on the wrapped function itself. Pass a
+ * `target` object to stash it there instead — useful to keep the one-time state
+ * off the callback, or to memoize against a stable object (for example `this` in a
+ * class) when the wrapped function is recreated.
+ *
+ * Call `resetMakeOneTime(wrappedFn)` — or `resetMakeOneTime(target)` when a target
+ * was given — to clear the cached result so the next invocation re-executes.
  *
  * @param {Function} cb - Async function to wrap.
+ * @param {object} [target] - Object that holds the cached result; defaults to the wrapped function.
  * @returns {Function} Wrapped function that executes `cb` at most once.
  */
-const makeOneTime = (cb) => {
+const makeOneTime = (cb, target) => {
   const oneTimeCb = async (...args) => {
-    if (!Object.prototype.hasOwnProperty.call(oneTimeCb, "__result")) {
-      oneTimeCb.__result = Promise.resolve(cb(...args)).catch((err) => {
-        Reflect.deleteProperty(oneTimeCb, "__result");
+    const store = target ?? oneTimeCb;
+    if (!Object.prototype.hasOwnProperty.call(store, RESULT)) {
+      store[RESULT] = Promise.resolve(cb(...args)).catch((err) => {
+        Reflect.deleteProperty(store, RESULT);
         throw err;
       });
     }
-    return await oneTimeCb.__result;
+    return await store[RESULT];
   };
   return oneTimeCb;
 };
 
 /**
- * Resets a `makeOneTime`-wrapped function so that the next call re-executes the
- * original callback. Intended for use in tests to restore a clean state between
- * test cases.
+ * Resets a `makeOneTime`-wrapped function, or the target it was given, so that the
+ * next call re-executes the original callback. Works on either since both stash
+ * the cached result under the same symbol. Intended for use in tests to restore a
+ * clean state between test cases.
  *
- * @param {Function} oneTimeFn - A function previously returned by `makeOneTime`.
+ * @param {Function|object} oneTimeTarget - A `makeOneTime` wrapped function, or the
+ *   `target` passed to `makeOneTime`.
  */
-const resetMakeOneTime = (oneTimeFn) => {
-  Reflect.deleteProperty(oneTimeFn, "__result");
+const resetMakeOneTime = (oneTimeTarget) => {
+  Reflect.deleteProperty(oneTimeTarget, RESULT);
 };
 
 /**
@@ -52,12 +65,12 @@ const resetMakeOneTime = (oneTimeFn) => {
  */
 const makeExclusiveCoalescing = (cb) => {
   const coalescingCb = async (...args) => {
-    if (!Object.prototype.hasOwnProperty.call(coalescingCb, "__runningPromise")) {
-      coalescingCb.__runningPromise = Promise.resolve(cb(...args)).finally(() => {
-        Reflect.deleteProperty(coalescingCb, "__runningPromise");
+    if (!Object.prototype.hasOwnProperty.call(coalescingCb, RUNNING_PROMISE)) {
+      coalescingCb[RUNNING_PROMISE] = Promise.resolve(cb(...args)).finally(() => {
+        Reflect.deleteProperty(coalescingCb, RUNNING_PROMISE);
       });
     }
-    return await coalescingCb.__runningPromise;
+    return await coalescingCb[RUNNING_PROMISE];
   };
   return coalescingCb;
 };
@@ -77,9 +90,9 @@ const makeExclusiveCoalescing = (cb) => {
  */
 const makeExclusiveQueueing = (cb) => {
   const queueingCb = async (...args) => {
-    const chain = queueingCb.__chain ?? Promise.resolve();
+    const chain = queueingCb[CHAIN] ?? Promise.resolve();
     const currentPromise = chain.then(() => cb(...args));
-    queueingCb.__chain = currentPromise.catch(() => {});
+    queueingCb[CHAIN] = currentPromise.catch(() => {});
     return await currentPromise;
   };
   return queueingCb;
