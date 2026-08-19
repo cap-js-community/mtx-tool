@@ -13,7 +13,6 @@ const mockCfConfig = {
     Name: "dev",
   },
   Target: "https://api.cf.sap.hana.ondemand.com",
-  AccessToken: "bearer xxx",
 };
 
 const mockRuntimeConfig = {
