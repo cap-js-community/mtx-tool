@@ -11,43 +11,39 @@ const CHAIN = Symbol("chain");
  * that the next invocation retries. Use this for one-time initialization such as
  * creating a shared client or reading a config file.
  *
- * By default, the cached result is stashed on the wrapped function itself. Pass a
- * `target` object to stash it there instead — useful to keep the one-time state
- * off the callback, or to memoize against a stable object (for example `this` in a
- * class) when the wrapped function is recreated.
+ * The cached result is stashed on the wrapped function itself. Each call to
+ * makeOneTime returns its own wrapper, so distinct callbacks never collide — and a
+ * per-instance class field (`getX = makeOneTime(...)`) yields a fresh wrapper per
+ * instance, giving each instance its own one-time result.
  *
- * Call `resetMakeOneTime(wrappedFn)` — or `resetMakeOneTime(target)` when a target
- * was given — to clear the cached result so the next invocation re-executes.
+ * Call `resetMakeOneTime(wrappedFn)` to clear the cached result so the next
+ * invocation re-executes the callback.
  *
  * @param {Function} cb - Async function to wrap.
- * @param {object} [target] - Object that holds the cached result; defaults to the wrapped function.
  * @returns {Function} Wrapped function that executes `cb` at most once.
  */
-const makeOneTime = (cb, target) => {
+const makeOneTime = (cb) => {
   const oneTimeCb = async (...args) => {
-    const store = target ?? oneTimeCb;
-    if (!Object.prototype.hasOwnProperty.call(store, RESULT)) {
-      store[RESULT] = Promise.resolve(cb(...args)).catch((err) => {
-        Reflect.deleteProperty(store, RESULT);
+    if (!Object.prototype.hasOwnProperty.call(oneTimeCb, RESULT)) {
+      oneTimeCb[RESULT] = Promise.resolve(cb(...args)).catch((err) => {
+        Reflect.deleteProperty(oneTimeCb, RESULT);
         throw err;
       });
     }
-    return await store[RESULT];
+    return await oneTimeCb[RESULT];
   };
   return oneTimeCb;
 };
 
 /**
- * Resets a `makeOneTime`-wrapped function, or the target it was given, so that the
- * next call re-executes the original callback. Works on either since both stash
- * the cached result under the same symbol. Intended for use in tests to restore a
- * clean state between test cases.
+ * Resets a `makeOneTime`-wrapped function so that the next call re-executes the
+ * original callback. Intended for use in tests to restore a clean state between
+ * test cases.
  *
- * @param {Function|object} oneTimeTarget - A `makeOneTime` wrapped function, or the
- *   `target` passed to `makeOneTime`.
+ * @param {Function} oneTimeFn - A function previously returned by `makeOneTime`.
  */
-const resetMakeOneTime = (oneTimeTarget) => {
-  Reflect.deleteProperty(oneTimeTarget, RESULT);
+const resetMakeOneTime = (oneTimeFn) => {
+  Reflect.deleteProperty(oneTimeFn, RESULT);
 };
 
 /**
