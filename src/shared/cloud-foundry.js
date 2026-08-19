@@ -167,7 +167,7 @@ class CloudFoundry {
   getApps = makeOneTime(async () => {
     const { resources: cfApps } = await this.requestPaged(`/v3/apps?space_guids=${this.target.spaceGuid}`);
     return cfApps;
-  });
+  }, this);
 
   // NOTE: builds the ordered app-name candidates for a configured app, expanding the {UUID} template and the blue/green
   //   (and, for readonly commands, live) suffixes. Any extra suffixes from the tool context are mixed in front.
