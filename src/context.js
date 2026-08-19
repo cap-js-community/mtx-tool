@@ -109,6 +109,7 @@ const _cfMergeBuckets = (buckets, key) => buckets.reduce((acc, bucket) => ((acc 
 
 const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false } = {}) => {
   const cf = CloudFoundry.getSingleton({ extraAppSuffixes: EXTRA_APP_SUFFIXES });
+  const cfTarget = cf.target;
   const { filepath: configPath, dir, location } = _resolveDir(FILENAME.CONFIG) || {};
   const runtimeConfig = readRuntimeConfig(configPath);
   const cachePath = pathlib.join(dir, FILENAME.CACHE);
@@ -200,13 +201,13 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     return await rawAppMemoryCache.getSetCb(appName, async () => {
       // check persisted cache
       let rawAppPersistedCache = usePersistedCache
-        ? _readRawAppPersistedCache(location, cachePath, cf.orgGuid, cf.spaceGuid, appName)
+        ? _readRawAppPersistedCache(location, cachePath, cfTarget.orgGuid, cfTarget.spaceGuid, appName)
         : null;
       if (!rawAppPersistedCache) {
         // get fresh data
         rawAppPersistedCache = await getRawAppInfo(appName);
         // update persisted cache
-        _writeRawAppPersistedCache(rawAppPersistedCache, cachePath, cf.orgGuid, cf.spaceGuid, appName);
+        _writeRawAppPersistedCache(rawAppPersistedCache, cachePath, cfTarget.orgGuid, cfTarget.spaceGuid, appName);
       }
       return rawAppPersistedCache;
     });
@@ -234,13 +235,11 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
       cfRouteDomain &&
       urllib.format({
         protocol: "https",
-        host: `${cfRoute.host === "*" ? cf.orgName : cfRoute.host}.${cfRouteDomain.name}`,
+        host: `${cfRoute.host === "*" ? cfTarget.orgName : cfRoute.host}.${cfRouteDomain.name}`,
       });
     if (requireRoute) {
       assert(cfRouteUrl, `could not obtain required route url for app "${appName}"`);
     }
-
-    const cfSsh = async (options) => await cf.ssh(cfApp.name, options);
 
     return {
       cfAppName: cfApp.name,
@@ -250,7 +249,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
       cfBinding,
       cfBindings,
       cfRouteUrl,
-      cfSsh,
+      cfSsh: async (options) => await cf.ssh(cfApp.name, options),
     };
   };
 

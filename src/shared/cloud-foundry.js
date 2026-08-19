@@ -31,47 +31,35 @@ const logger = Logger.getInstance();
 class CloudFoundry {
   static #singleton;
 
-  #config;
+  target;
+
+  #token;
   #extraAppSuffixes;
   #appByNameCache = new LazyCache();
 
-  constructor(config, { extraAppSuffixes = [] } = {}) {
-    assert(config, "CloudFoundry requires a cf config");
-    this.#config = config;
+  constructor({ extraAppSuffixes = [] } = {}) {
+    const cfConfig = CloudFoundry.#readCfConfig();
+    this.#token = cfConfig.AccessToken;
     this.#extraAppSuffixes = extraAppSuffixes;
+
+    this.target = Object.freeze({
+      api: cfConfig.Target,
+      orgName: cfConfig.OrganizationFields.Name,
+      orgGuid: cfConfig.OrganizationFields.GUID,
+      spaceName: cfConfig.SpaceFields.Name,
+      spaceGuid: cfConfig.SpaceFields.GUID,
+    });
   }
 
   static getSingleton({ extraAppSuffixes } = {}) {
     if (!CloudFoundry.#singleton) {
-      CloudFoundry.#singleton = new CloudFoundry(CloudFoundry.#readCfConfig(), { extraAppSuffixes });
+      CloudFoundry.#singleton = new CloudFoundry({ extraAppSuffixes });
     }
     return CloudFoundry.#singleton;
   }
 
   static resetSingleton() {
     CloudFoundry.#singleton = undefined;
-  }
-
-  // NOTE: the cf config carries a ready-to-use "bearer ..." AccessToken that the cf CLI keeps fresh on disk, so we use
-  //   it directly as the Authorization header instead of shelling out to `cf oauth-token`.
-  get token() {
-    return this.#config.AccessToken;
-  }
-
-  get orgGuid() {
-    return this.#config.OrganizationFields.GUID;
-  }
-
-  get orgName() {
-    return this.#config.OrganizationFields.Name;
-  }
-
-  get spaceGuid() {
-    return this.#config.SpaceFields.GUID;
-  }
-
-  get target() {
-    return this.#config.Target;
   }
 
   static async #run(command, ...args) {
@@ -108,14 +96,14 @@ class CloudFoundry {
   async request(urlOrPath, { method, body, headers } = {}) {
     let url;
     try {
-      url = urlOrPath.startsWith("/v3") ? this.#config.Target + urlOrPath : urlOrPath;
+      url = urlOrPath.startsWith("/v3") ? this.target.api + urlOrPath : urlOrPath;
       const response = await request({
         url,
         ...(method && { method }),
         ...(body && { body }),
         headers: {
           Accept: "application/json",
-          Authorization: this.#config.AccessToken,
+          Authorization: this.#token,
           ...headers,
         },
         logged: false,
@@ -177,7 +165,7 @@ class CloudFoundry {
   }
 
   getApps = makeOneTime(async () => {
-    const { resources: cfApps } = await this.requestPaged(`/v3/apps?space_guids=${this.spaceGuid}`);
+    const { resources: cfApps } = await this.requestPaged(`/v3/apps?space_guids=${this.target.spaceGuid}`);
     return cfApps;
   });
 
