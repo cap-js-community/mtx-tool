@@ -95,8 +95,13 @@ class CloudFoundry {
 
   async request(urlOrPath, { method, body, headers } = {}) {
     let url;
+    if (urlOrPath.startsWith("/")) {
+      assert(urlOrPath.startsWith("/v3"), "refusing cf request for non-v3 path %s", urlOrPath);
+      url = this.target.api + urlOrPath;
+    } else {
+      url = urlOrPath;
+    }
     try {
-      url = urlOrPath.startsWith("/v3") ? this.target.api + urlOrPath : urlOrPath;
       const response = await request({
         url,
         ...(method && { method }),
@@ -172,7 +177,7 @@ class CloudFoundry {
   // NOTE: builds the ordered app-name candidates for a configured app, expanding the {UUID} template and the blue/green
   //   (and, for readonly commands, live) suffixes. Any extra suffixes from the tool context are mixed in front.
   //   The candidate order takes precedence over the cf apps order.
-  getAppNameCandidates(appName, { isReadonlyCommand = false } = {}) {
+  #getAppNameCandidates(appName, { isReadonlyCommand = false } = {}) {
     const appSuffixes = safeUnshift(
       isReadonlyCommand ? [...APP_SUFFIXES, APP_SUFFIX_READONLY] : [...APP_SUFFIXES],
       ...this.#extraAppSuffixes
@@ -199,9 +204,11 @@ class CloudFoundry {
   }
 
   async getAppByName(appName, { isReadonlyCommand = false } = {}) {
+    // NOTE: cache keyed by appName only. The resolved app also depends on isReadonlyCommand, but the tool runs exactly
+    //   one command per process, so the flag is constant for this singleton's lifetime and the cache cannot be poisoned.
     return await this.#appByNameCache.getSetCb(appName, async () => {
       const cfApps = await this.getApps();
-      const appNameCandidates = this.getAppNameCandidates(appName, { isReadonlyCommand });
+      const appNameCandidates = this.#getAppNameCandidates(appName, { isReadonlyCommand });
       let cfApp;
       let cfAppSuffix;
       for (const { suffix, label, regexp } of appNameCandidates) {
