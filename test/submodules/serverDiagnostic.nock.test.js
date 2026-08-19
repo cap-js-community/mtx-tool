@@ -4,6 +4,7 @@ const pathlib = require("path");
 const nock = require("nock");
 
 const { newContext } = require("../../src/context");
+const { CloudFoundry } = require("../../src/shared/cloud-foundry");
 const srv = require("../../src/submodules/serverDiagnostic");
 const { collectRequestCount } = require("../test-util/static");
 
@@ -23,6 +24,7 @@ const freshContext = async () => await newContext({ usePersistedCache: false, is
 
 describe("srv nock tests", () => {
   afterEach(() => {
+    CloudFoundry.resetSingleton();
     // eslint-disable-next-line jest/no-standalone-expect
     expect(nock.pendingMocks()).toEqual([]);
     nock.cleanAll();

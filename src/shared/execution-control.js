@@ -1,11 +1,20 @@
 "use strict";
 
+const RESULT = Symbol("result");
+const RUNNING_PROMISE = Symbol("runningPromise");
+const CHAIN = Symbol("chain");
+
 /**
  * Wraps an async function so that it is invoked only once. The first call executes
  * the callback and caches the resulting promise; all subsequent calls return the
  * same cached result. If the callback rejects, the cached result is cleared so
  * that the next invocation retries. Use this for one-time initialization such as
  * creating a shared client or reading a config file.
+ *
+ * The cached result is stashed on the wrapped function itself. Each call to
+ * makeOneTime returns its own wrapper, so distinct callbacks never collide — and a
+ * per-instance class field (`getX = makeOneTime(...)`) yields a fresh wrapper per
+ * instance, giving each instance its own one-time result.
  *
  * Call `resetMakeOneTime(wrappedFn)` to clear the cached result so the next
  * invocation re-executes the callback.
@@ -15,13 +24,13 @@
  */
 const makeOneTime = (cb) => {
   const oneTimeCb = async (...args) => {
-    if (!Object.prototype.hasOwnProperty.call(oneTimeCb, "__result")) {
-      oneTimeCb.__result = Promise.resolve(cb(...args)).catch((err) => {
-        Reflect.deleteProperty(oneTimeCb, "__result");
+    if (!Object.prototype.hasOwnProperty.call(oneTimeCb, RESULT)) {
+      oneTimeCb[RESULT] = Promise.resolve(cb(...args)).catch((err) => {
+        Reflect.deleteProperty(oneTimeCb, RESULT);
         throw err;
       });
     }
-    return await oneTimeCb.__result;
+    return await oneTimeCb[RESULT];
   };
   return oneTimeCb;
 };
@@ -34,7 +43,7 @@ const makeOneTime = (cb) => {
  * @param {Function} oneTimeFn - A function previously returned by `makeOneTime`.
  */
 const resetMakeOneTime = (oneTimeFn) => {
-  Reflect.deleteProperty(oneTimeFn, "__result");
+  Reflect.deleteProperty(oneTimeFn, RESULT);
 };
 
 /**
@@ -52,12 +61,12 @@ const resetMakeOneTime = (oneTimeFn) => {
  */
 const makeExclusiveCoalescing = (cb) => {
   const coalescingCb = async (...args) => {
-    if (!Object.prototype.hasOwnProperty.call(coalescingCb, "__runningPromise")) {
-      coalescingCb.__runningPromise = Promise.resolve(cb(...args)).finally(() => {
-        Reflect.deleteProperty(coalescingCb, "__runningPromise");
+    if (!Object.prototype.hasOwnProperty.call(coalescingCb, RUNNING_PROMISE)) {
+      coalescingCb[RUNNING_PROMISE] = Promise.resolve(cb(...args)).finally(() => {
+        Reflect.deleteProperty(coalescingCb, RUNNING_PROMISE);
       });
     }
-    return await coalescingCb.__runningPromise;
+    return await coalescingCb[RUNNING_PROMISE];
   };
   return coalescingCb;
 };
@@ -77,9 +86,9 @@ const makeExclusiveCoalescing = (cb) => {
  */
 const makeExclusiveQueueing = (cb) => {
   const queueingCb = async (...args) => {
-    const chain = queueingCb.__chain ?? Promise.resolve();
+    const chain = queueingCb[CHAIN] ?? Promise.resolve();
     const currentPromise = chain.then(() => cb(...args));
-    queueingCb.__chain = currentPromise.catch(() => {});
+    queueingCb[CHAIN] = currentPromise.catch(() => {});
     return await currentPromise;
   };
   return queueingCb;

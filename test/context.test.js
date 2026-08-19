@@ -29,6 +29,8 @@ jest.mock("../src/shared/request", () => {
 
 const mockCfConfig = require("./__mock-data__/mockCfConfig.json");
 
+const { CloudFoundry } = require("../src/shared/cloud-foundry");
+
 const mockCfApps = require("./__mock-data__/mockCfApps.json");
 const mockCfAppsPages = require("./__mock-data__/mockCfAppsPages.json");
 const mockCfProcess = require("./__mock-data__/mockCfProcess.json");
@@ -77,6 +79,10 @@ const mockRawAppInfoRequests = ({
 };
 
 describe("context tests", () => {
+  beforeEach(() => {
+    CloudFoundry.resetSingleton();
+  });
+
   test("fail with an error when bindings are empty", async () => {
     mockStatic.spawnAsync.mockReturnValueOnce(["oauth-token"]);
     mockStatic.tryReadJsonSync.mockReturnValueOnce(mockCfConfig);
@@ -208,13 +214,12 @@ describe("context tests", () => {
     };
     mockRequest.mockReturnValueOnce({ json: () => cfAppEnvWithFilePath });
 
-    const sshCallsBefore = mockStatic.spawnAsync.mock.calls.length;
     const err = await context.getCfEnv("uaa-app").catch((e) => e);
     expect(err.message).toMatch(/refusing to read VCAP_SERVICES_FILE_PATH/);
-    expect(mockStatic.spawnAsync.mock.calls.length).toBe(sshCallsBefore);
+    expect(mockStatic.spawnAsync).toHaveBeenLastCalledWith("cf", ["oauth-token"], expect.any(Object));
   });
 
-  test("_getCfApps follows pagination and merges all pages", async () => {
+  test("CloudFoundry.getApps follows pagination and merges all pages", async () => {
     mockStatic.spawnAsync.mockReturnValueOnce(["oauth-token"]);
     mockStatic.tryReadJsonSync.mockReturnValueOnce(mockCfConfig);
     mockStatic.tryAccessSync.mockReturnValueOnce(true);
@@ -227,7 +232,7 @@ describe("context tests", () => {
       mockRequest.mockReturnValueOnce({ json: () => mockCfAppsPage });
     }
 
-    const cfApps = await context._._getCfApps();
+    const cfApps = await CloudFoundry.getSingleton().getApps();
     expect(cfApps.map(({ name }) => name)).toEqual(["uaa-app-1", "uaa-app-2"]);
     expect(mockRequest.mock.calls).toMatchSnapshot();
   });
@@ -253,10 +258,10 @@ describe("context tests", () => {
       return await newContext();
     };
 
-    test("resolves bound apps against _getCfApps and dedupes by guid", async () => {
+    test("resolves bound apps against getApps and dedupes by guid", async () => {
       const context = await newTestContext();
       // NOTE: bindings only carry app guids. two reference the same app (dedupe), one references an app absent from
-      //   _getCfApps (filtered out). state filtering is left to the caller, so both states are returned here.
+      //   getApps (filtered out). state filtering is left to the caller, so both states are returned here.
       mockRequest.mockReturnValueOnce({
         json: () => ({
           resources: [
