@@ -105,11 +105,8 @@ const _writeRawAppPersistedCache = (newRuntimeCache, filepath, orgGuid, spaceGui
   }
 };
 
-const _cfMergeBuckets = (buckets, key) => buckets.reduce((acc, bucket) => ((acc = acc.concat(bucket[key])), acc), []);
-
 const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false } = {}) => {
   const cf = CloudFoundry.getSingleton({ extraAppSuffixes: EXTRA_APP_SUFFIXES });
-  const cfTarget = cf.target;
   const { filepath: configPath, dir, location } = _resolveDir(FILENAME.CONFIG) || {};
   const runtimeConfig = readRuntimeConfig(configPath);
   const cachePath = pathlib.join(dir, FILENAME.CACHE);
@@ -118,12 +115,11 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const rawAppMemoryCache = new LazyCache();
 
   const _cfServiceInfoMaps = makeOneTime(async () => {
-    const { resources: cfServicePlans, included: cfServiceOfferingBuckets } = await cf.requestPaged(
+    const { resources: cfServicePlans, included: cfServiceIncluded } = await cf.requestPaged(
       `/v3/service_plans?include=service_offering`
     );
-    const cfServiceOfferings = _cfMergeBuckets(cfServiceOfferingBuckets, "service_offerings");
     return {
-      cfServiceOfferingsById: indexByKey(cfServiceOfferings, "guid"),
+      cfServiceOfferingsById: indexByKey(cfServiceIncluded.service_offerings, "guid"),
       cfServicePlansById: indexByKey(cfServicePlans, "guid"),
     };
   });
@@ -134,8 +130,8 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     const [
       { cfServiceOfferingsById, cfServicePlansById },
       { resources: cfProcesses },
-      { resources: cfRoutes, included: cfRouteDomainBuckets },
-      { resources: cfBindingStubsRaw, included: cfServiceInstancesBuckets },
+      { resources: cfRoutes, included: cfRouteIncluded },
+      { resources: cfBindingStubsRaw, included: cfBindingIncluded },
     ] = await Promise.all([
       _cfServiceInfoMaps(),
       cf.requestPaged(`/v3/apps/${cfApp.guid}/processes`),
@@ -143,10 +139,8 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
       cf.requestPaged(`/v3/service_credential_bindings?app_guids=${cfApp.guid}&include=service_instance`),
     ]);
 
-    const cfRouteDomains = _cfMergeBuckets(cfRouteDomainBuckets, "domains");
-    const cfRouteDomainsById = indexByKey(cfRouteDomains, "guid");
-    const cfServiceInstances = _cfMergeBuckets(cfServiceInstancesBuckets, "service_instances");
-    const cfServiceInstancesById = indexByKey(cfServiceInstances, "guid");
+    const cfRouteDomainsById = indexByKey(cfRouteIncluded.domains, "guid");
+    const cfServiceInstancesById = indexByKey(cfBindingIncluded.service_instances, "guid");
     const cfBindingStubs = cfBindingStubsRaw.filter((stub) =>
       Object.prototype.hasOwnProperty.call(cfServiceInstancesById, stub.relationships.service_instance.data.guid)
     );
@@ -201,13 +195,13 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     return await rawAppMemoryCache.getSetCb(appName, async () => {
       // check persisted cache
       let rawAppPersistedCache = usePersistedCache
-        ? _readRawAppPersistedCache(location, cachePath, cfTarget.orgGuid, cfTarget.spaceGuid, appName)
+        ? _readRawAppPersistedCache(location, cachePath, cf.target.orgGuid, cf.target.spaceGuid, appName)
         : null;
       if (!rawAppPersistedCache) {
         // get fresh data
         rawAppPersistedCache = await getRawAppInfo(appName);
         // update persisted cache
-        _writeRawAppPersistedCache(rawAppPersistedCache, cachePath, cfTarget.orgGuid, cfTarget.spaceGuid, appName);
+        _writeRawAppPersistedCache(rawAppPersistedCache, cachePath, cf.target.orgGuid, cf.target.spaceGuid, appName);
       }
       return rawAppPersistedCache;
     });
@@ -235,7 +229,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
       cfRouteDomain &&
       urllib.format({
         protocol: "https",
-        host: `${cfRoute.host === "*" ? cfTarget.orgName : cfRoute.host}.${cfRouteDomain.name}`,
+        host: `${cfRoute.host === "*" ? cf.target.orgName : cfRoute.host}.${cfRouteDomain.name}`,
       });
     if (requireRoute) {
       assert(cfRouteUrl, `could not obtain required route url for app "${appName}"`);

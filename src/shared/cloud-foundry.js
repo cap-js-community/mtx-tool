@@ -121,14 +121,19 @@ class CloudFoundry {
 
   async requestPaged(urlOrPath) {
     const resourcePages = [];
-    const includedPages = [];
+    const includedPagesByType = {};
     while (true) {
       const { pagination, resources, included } = await this.request(urlOrPath);
       if (resources) {
         resourcePages.push(resources);
       }
       if (included) {
-        includedPages.push(included);
+        for (const [type, includedPage] of Object.entries(included)) {
+          if (!includedPagesByType[type]) {
+            includedPagesByType[type] = [];
+          }
+          includedPagesByType[type].push(includedPage);
+        }
       }
       if (pagination && pagination.next && pagination.next.href) {
         urlOrPath = pagination.next.href;
@@ -136,7 +141,10 @@ class CloudFoundry {
         break;
       }
     }
-    return { resources: resourcePages.flat(), included: includedPages.flat() };
+    for (const type of Object.keys(includedPagesByType)) {
+      includedPagesByType[type] = includedPagesByType[type].flat();
+    }
+    return { resources: resourcePages.flat(), included: includedPagesByType };
   }
 
   async ssh(appName, { logged, localPort, remotePort, remoteHostname, appInstance, command } = {}) {
