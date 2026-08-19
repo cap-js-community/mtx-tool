@@ -16,7 +16,11 @@ jest.mock("../src/shared/static", () => {
     tryAccessSync: jest.fn(),
     tryReadJsonSync: jest.fn(),
     writeJsonSync: jest.fn(),
-    spawnAsync: jest.fn(),
+    spawnAsync: jest.fn(async (command, args) => {
+      if (command === "cf" && args[0] === "oauth-token") {
+        return ["bearer xxx", ""];
+      }
+    }),
   };
 });
 

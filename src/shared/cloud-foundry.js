@@ -1,6 +1,6 @@
 /**
  * This encapsulates Cloud Foundry authentication and API access.
- * - authentication reuses the AccessToken from the `cf` CLI config file (.cf/config.json)
+ * - authentication uses cf oauth-token
  * - API access targets the CF v3 API: https://v3-apidocs.cloudfoundry.org/
  */
 "use strict";
@@ -33,13 +33,11 @@ class CloudFoundry {
 
   target;
 
-  #token;
   #extraAppSuffixes;
   #appByNameCache = new LazyCache();
 
   constructor({ extraAppSuffixes = [] } = {}) {
     const cfConfig = CloudFoundry.#readCfConfig();
-    this.#token = cfConfig.AccessToken;
     this.#extraAppSuffixes = extraAppSuffixes;
 
     this.target = Object.freeze({
@@ -75,7 +73,7 @@ class CloudFoundry {
     const cfConfigPath = pathlib.join(CF_HOME, ".cf", "config.json");
     const cfConfig = tryReadJsonSync(cfConfigPath);
     assert(cfConfig, "could not open cf config in location", cfConfigPath);
-    const { OrganizationFields, SpaceFields, Target, AccessToken } = cfConfig || {};
+    const { OrganizationFields, SpaceFields, Target } = cfConfig || {};
     if (
       !cfConfig ||
       !OrganizationFields ||
@@ -84,14 +82,28 @@ class CloudFoundry {
       !SpaceFields ||
       !SpaceFields.GUID ||
       !SpaceFields.Name ||
-      !Target ||
-      !AccessToken
+      !Target
     ) {
       return fail("no cf org/space targeted");
     }
     logger.info(`targeting cf api ${Target} / org "${OrganizationFields.Name}" / space "${SpaceFields.Name}"`);
     return cfConfig;
   }
+
+  // NOTE: fetch the token via `cf oauth-token` rather than reading config.AccessToken directly. The stored access token
+  //   is short-lived and often stale; `cf oauth-token` transparently refreshes it via the CLI's refresh token.
+  #getToken = makeOneTime(async () => {
+    try {
+      const [stdout, stderr] = await CloudFoundry.#run(CF_CLI_BIN, "oauth-token");
+      assert(!stderr, "got stderr output from cf oauth-token\n%s", stderr);
+      return stdout.trim();
+    } catch (err) {
+      return fail(
+        "caught error during cf oauth-token\n%s",
+        [err.message, err.stdout, err.stderr].filter((s) => s && s.length).join("\n")
+      );
+    }
+  }, this);
 
   async request(urlOrPath, { method, body, headers } = {}) {
     let url;
@@ -108,7 +120,7 @@ class CloudFoundry {
         ...(body && { body }),
         headers: {
           Accept: "application/json",
-          Authorization: this.#token,
+          Authorization: await this.#getToken(),
           ...headers,
         },
         logged: false,
