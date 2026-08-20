@@ -19,8 +19,9 @@ const CHAIN = Symbol("chain");
  * Call `resetMakeOneTime(wrappedFn)` to clear the cached result so the next
  * invocation re-executes the callback.
  *
- * @param {Function} cb - Async function to wrap.
- * @returns {Function} Wrapped function that executes `cb` at most once.
+ * @template {Function} F
+ * @param {F} cb - Async function to wrap.
+ * @returns {F} Wrapped function that executes `cb` at most once.
  */
 const makeOneTime = (cb) => {
   const oneTimeCb = async (...args) => {
@@ -56,8 +57,9 @@ const resetMakeOneTime = (oneTimeFn) => {
  * Use this to guard periodic or event-driven work where overlapping runs would
  * be wasteful or harmful, for example a polling handler that should not stack up.
  *
- * @param {Function} cb - Async function to wrap.
- * @returns {Function} Wrapped function that coalesces concurrent invocations.
+ * @template {Function} F
+ * @param {F} cb - Async function to wrap.
+ * @returns {F} Wrapped function that coalesces concurrent invocations.
  */
 const makeExclusiveCoalescing = (cb) => {
   const coalescingCb = async (...args) => {
@@ -81,8 +83,9 @@ const makeExclusiveCoalescing = (cb) => {
  * Use this when each call must run but concurrent execution would cause conflicts,
  * for example sequential writes to a shared resource.
  *
- * @param {Function} cb - Async function to wrap.
- * @returns {Function} Wrapped function that queues concurrent invocations.
+ * @template {Function} F
+ * @param {F} cb - Async function to wrap.
+ * @returns {F} Wrapped function that queues concurrent invocations.
  */
 const makeExclusiveQueueing = (cb) => {
   const queueingCb = async (...args) => {
