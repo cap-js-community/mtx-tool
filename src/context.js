@@ -114,16 +114,6 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const settingTypeToAppNameCache = new LazyCache();
   const rawAppMemoryCache = new LazyCache();
 
-  const _cfServiceInfoMaps = makeOneTime(async () => {
-    const { resources: cfServicePlans, included: cfServiceIncluded } = await cf.requestPaged(
-      `/v3/service_plans?include=service_offering`
-    );
-    return {
-      cfServiceOfferingsById: indexByKey(cfServiceIncluded.service_offerings, "guid"),
-      cfServicePlansById: indexByKey(cfServicePlans, "guid"),
-    };
-  });
-
   const getRawAppInfo = async (appName) => {
     const cfApp = await cf.getAppByName(appName, { isReadonlyCommand });
     const cfBuildpack = cfApp.lifecycle?.data?.buildpacks?.[0];
@@ -133,7 +123,7 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
       { resources: cfRoutes, included: cfRouteIncluded },
       { resources: cfBindingStubsRaw, included: cfBindingIncluded },
     ] = await Promise.all([
-      _cfServiceInfoMaps(),
+      cf.getServiceInfoMaps(),
       cf.requestPaged(`/v3/apps/${cfApp.guid}/processes`),
       cf.requestPaged(`/v3/routes?app_guids=${cfApp.guid}&include=domain`),
       cf.requestPaged(`/v3/service_credential_bindings?app_guids=${cfApp.guid}&include=service_instance`),

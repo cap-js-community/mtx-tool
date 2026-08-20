@@ -8,7 +8,7 @@
 const pathlib = require("path");
 const os = require("os");
 
-const { tryReadJsonSync, spawnAsync, sleep, safeUnshift, escapeRegExp } = require("./static");
+const { tryReadJsonSync, spawnAsync, sleep, safeUnshift, escapeRegExp, indexByKey } = require("./static");
 const { makeOneTime } = require("./execution-control");
 const { assert, fail } = require("./error");
 const { request } = require("./request");
@@ -192,6 +192,16 @@ class CloudFoundry {
   getApps = makeOneTime(async () => {
     const { resources: cfApps } = await this.requestPaged(`/v3/apps?space_guids=${this.target.spaceGuid}`);
     return cfApps;
+  });
+
+  getServiceInfoMaps = makeOneTime(async () => {
+    const { resources: cfServicePlans, included: cfServiceIncluded } = await this.requestPaged(
+      `/v3/service_plans?include=service_offering`
+    );
+    return {
+      cfServiceOfferingsById: indexByKey(cfServiceIncluded.service_offerings, "guid"),
+      cfServicePlansById: indexByKey(cfServicePlans, "guid"),
+    };
   });
 
   // NOTE: builds the ordered app-name candidates for a configured app, expanding the {UUID} template and the blue/green
