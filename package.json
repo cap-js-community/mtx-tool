@@ -11,9 +11,10 @@
   ],
   "scripts": {
     "patch": "npx patch-package",
+    "patch:create": "npm_config_allow_remote=all npx patch-package jest-snapshot",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand --coverageReporters=html --coverageReporters=text-summary",
-    "test:remove-file-snapshots": "npx shx rm '**/__snapshots__/*.snap'",
+    "test:remove-file-snapshots": "rm '**/__snapshots__/*.snap'",
     "test:remove-inline-snapshots": "npx replace '\\.toMatchInlineSnapshot\\(\\s*`[\\s\\S]*?`\\s*\\);' '.toMatchInlineSnapshot();' test -r --include='*.test.js'",
     "test:resnap": "npm run patch && npm run test:remove-inline-snapshots && npm run test:remove-file-snapshots && npm t -- -u && npm run lint:fix",
     "test:record": "npm run test:record:reg && npm run test:record:cds && npm run test:record:hdi && npm run test:record:svm && npm run test:record:srv",
@@ -33,9 +34,9 @@
     "prettier:fix": "npm run prettier -- --log-level error --write",
     "pack": "npm pack",
     "docs": "cd docs && bundle exec jekyll serve",
-    "docs:install": "cd docs && npx shx rm -rf vendor Gemfile.lock && bundle install",
+    "docs:install": "cd docs && rm -rf vendor Gemfile.lock && bundle install",
     "cloc": "npx cloc --vcs=git src",
-    "upgrade-lock": "npm i && npm run patch"
+    "upgrade-lock": "rm -rf node_modules package-lock.json && npm i && npm run patch"
   },
   "engines": {
     "node": ">=20.0.0"
@@ -50,16 +51,17 @@
     "@eslint/js": "^10.0.1",
     "eslint": "^10.9.1",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-jest": "^29.16.1",
-    "globals": "^17.11.0",
-    "jest": "^30.4.2",
+    "eslint-plugin-jest": "^29.16.6",
+    "globals": "^17.12.0",
+    "jest": "^30.5.1",
     "nock": "^13.5.6",
     "prettier": "^3.9.6",
     "typescript": "^7.0.2"
   },
   "allowScripts": {
     "fsevents": true,
-    "unrs-resolver": true
+    "unrs-resolver": true,
+    "@parcel/watcher": true
   },
   "homepage": "https://cap-js-community.github.io/mtx-tool/",
   "repository": {
