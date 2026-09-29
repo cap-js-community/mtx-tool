@@ -143,6 +143,46 @@ const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJs
 const serviceManagerList = async (context, [tenantId], [doTimestamps, doJsonOutput]) =>
   await _serviceManagerList(context, { filterTenantId: tenantId, doTimestamps, doJsonOutput });
 
+const _serviceManagerParams = async (context, { filterPlanFullName, filterTenantId, doJsonOutput }) => {
+  const svm = await _getServiceManager(context);
+  const filterPlanId = filterPlanFullName ? (await _getPlanInfoFromFullName(context, filterPlanFullName)).planId : undefined;
+  const [offerings, plans, instances] = await Promise.all([
+    svm.getOfferings(),
+    svm.getPlans(),
+    svm.getInstances({ filterTenantId, filterPlanId, doEnsureTenantLabel: true }),
+  ]);
+  const planFullNameById = _indexPlanFullNameById(offerings, plans);
+  instances.sort(compareInstancesForTenantId);
+  // NOTE: the parameters endpoint fails for unusable instances, so we skip the request and mark them instead
+  const parametersList = await limiter(svmConcurrency, instances, async (instance) =>
+    instance.usable ? await svm.getInstanceParameters(instance.id) : undefined
+  );
+
+  if (doJsonOutput) {
+    return {
+      instances: instances.map((instance, i) => ({ ...instance, parameters: parametersList[i] })),
+    };
+  }
+
+  const table = [["tenant_id", "service_plan", "instance_id", "parameters"]];
+  for (const [i, instance] of instances.entries()) {
+    table.push([
+      instance.labels.tenant_id[0],
+      planFullNameById[instance.service_plan_id],
+      instance.id,
+      instance.usable ? JSON.stringify(parametersList[i] ?? {}) : "*** unusable ***",
+    ]);
+  }
+  return tableList(table, { sortCol: null, withRowNumber: !filterTenantId });
+};
+
+const serviceManagerParams = async (context, [servicePlan, tenantId], [doJsonOutput]) =>
+  await _serviceManagerParams(context, {
+    filterPlanFullName: servicePlan && servicePlan !== SERVICE_PLAN_ALL_IDENTIFIER ? servicePlan : undefined,
+    filterTenantId: tenantId,
+    doJsonOutput,
+  });
+
 const _serviceManagerLongList = async (context, { filterTenantId, doJsonOutput, doReveal } = {}) => {
   const svm = await _getServiceManager(context);
   const [instances, bindings] = await Promise.all([
@@ -424,6 +464,7 @@ const serviceManagerRestartSkip = async (context, [skipApps]) => {
 
 module.exports = {
   serviceManagerList,
+  serviceManagerParams,
   serviceManagerLongList,
   serviceManagerMakeBindingsSingle,
   serviceManagerMakeBindingsDouble,

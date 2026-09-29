@@ -190,6 +190,16 @@ class ServiceManager {
     return instances;
   }
 
+  async getInstanceParameters(instanceId) {
+    assert(instanceId, "getInstanceParameters requires instanceId");
+    // NOTE: the parameters endpoint only exists under v1
+    const response = await this.#requestBase({
+      pathname: `/v1/service_instances/${instanceId}/parameters`,
+      logged: false,
+    });
+    return await response.json();
+  }
+
   static #hideSensitiveDataInBinding(binding) {
     const fields = binding?.credentials ? Object.keys(binding.credentials) : [];
     for (const field of fields) {
