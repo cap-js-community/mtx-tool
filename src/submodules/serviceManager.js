@@ -35,6 +35,8 @@ const TENANT_ID_ALL_IDENTIFIER = "all-tenants";
 
 const UNUSABLE_INSTANCE_SENTINEL = Symbol("unusable-instance");
 const UNUSABLE_INSTANCE_TEXT = "*** unusable instance ***";
+const FAILED_PARAMETERS_SENTINEL = Symbol("failed-parameters");
+const FAILED_PARAMETERS_TEXT = "*** failed to retrieve parameters ***";
 
 const CF_APP_STATE_STARTED = "STARTED";
 
@@ -146,40 +148,59 @@ const _serviceManagerList = async (context, { filterTenantId, doTimestamps, doJs
 const serviceManagerList = async (context, [tenantId], [doTimestamps, doJsonOutput]) =>
   await _serviceManagerList(context, { filterTenantId: tenantId, doTimestamps, doJsonOutput });
 
+const _formatInstanceParameters = (value, { doStringify = false } = {}) => {
+  switch (value) {
+    case UNUSABLE_INSTANCE_SENTINEL:
+      return UNUSABLE_INSTANCE_TEXT;
+    case FAILED_PARAMETERS_SENTINEL:
+      return FAILED_PARAMETERS_TEXT;
+    default:
+      return doStringify ? JSON.stringify(value ?? {}) : (value ?? {});
+  }
+};
+
 const _serviceManagerParams = async (context, { filterPlanFullName, filterTenantId, doJsonOutput }) => {
   const svm = await _getServiceManager(context);
-  const filterPlanId = filterPlanFullName
-    ? (await _getPlanInfoFromFullName(context, filterPlanFullName)).planId
-    : undefined;
+  const planInfo = filterPlanFullName ? await _getPlanInfoFromFullName(context, filterPlanFullName) : undefined;
+  const filterPlanId = planInfo?.planId;
   const [offerings, plans, instances] = await Promise.all([
-    svm.getOfferings(),
-    svm.getPlans(),
+    planInfo ? undefined : svm.getOfferings(),
+    planInfo ? undefined : svm.getPlans(),
     svm.getInstances({ filterTenantId, filterPlanId, doEnsureTenantLabel: true }),
   ]);
-  const planFullNameById = _indexPlanFullNameById(offerings, plans);
+  const planFullNameById = planInfo
+    ? _indexPlanFullNameByIdFromPlanInfo(planInfo)
+    : _indexPlanFullNameById(offerings, plans);
   instances.sort(compareInstancesForTenantId);
-  // NOTE: the parameters endpoint fails for unusable instances, so we skip the request and mark them
-  const parametersList = await limiter(svmConcurrency, instances, async (instance) =>
-    instance.usable ? await svm.getInstanceParameters(instance.id) : UNUSABLE_INSTANCE_SENTINEL
-  );
+  // NOTE: the parameters endpoint fails for unusable instances, so we skip the request and mark them.
+  const parametersList = await limiter(svmConcurrency, instances, async (instance) => {
+    if (!instance.usable) {
+      return UNUSABLE_INSTANCE_SENTINEL;
+    }
+    try {
+      return await svm.getInstanceParameters(instance.id);
+    } catch (err) {
+      logger.error("failed to retrieve parameters for instance %s: %s", instance.id, err.message);
+      return FAILED_PARAMETERS_SENTINEL;
+    }
+  });
 
   if (doJsonOutput) {
     return {
       instances: instances.map((instance, i) => ({
         ...instance,
-        parameters: parametersList[i] === UNUSABLE_INSTANCE_SENTINEL ? UNUSABLE_INSTANCE_TEXT : parametersList[i],
+        parameters: _formatInstanceParameters(parametersList[i]),
       })),
     };
   }
 
   const table = [["tenant_id", "service_plan", "instance_id", "parameters"]];
   for (const [i, instance] of instances.entries()) {
-    const parameters = parametersList[i];
     table.push([
       instance.labels.tenant_id[0],
       planFullNameById[instance.service_plan_id],
       instance.id,
-      parameters === UNUSABLE_INSTANCE_SENTINEL ? UNUSABLE_INSTANCE_TEXT : JSON.stringify(parameters ?? {}),
+      _formatInstanceParameters(parametersList[i], { doStringify: true }),
     ]);
   }
   return tableList(table, { sortCol: null, withRowNumber: !filterTenantId });
