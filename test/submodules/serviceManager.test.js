@@ -209,11 +209,10 @@ describe("svm tests", () => {
     });
 
     test("filtered by service plan", async () => {
-      // NOTE: the plan filter resolves the "offering:plan" name via filtered offerings + plans first
+      // NOTE: the plan filter resolves the "offering:plan" name via filtered offerings + plans first, and that
+      //   resolved plan info is reused to build the plan-name index, so no full offerings/plans fetch is needed
       mockRequest.request.mockReturnValueOnce(mockFilteredOfferingResponse);
       mockRequest.request.mockReturnValueOnce(mockFilteredPlanResponse);
-      mockRequest.request.mockReturnValueOnce(mockOfferingResponse);
-      mockRequest.request.mockReturnValueOnce(mockPlanResponse);
       mockRequest.request.mockReturnValueOnce(mockInstanceResponse(4, { isPlanFiltered: true }));
       mockRequest.request.mockReturnValueOnce({ headers: new Headers(), json: () => ({ foo: "bar-0" }) });
       mockRequest.request.mockReturnValueOnce({ headers: new Headers(), json: () => ({ foo: "bar-2" }) });
@@ -223,8 +222,6 @@ describe("svm tests", () => {
         [
           "GET service-manager-url /v2/service_offerings { name: 'myOffering' }",
           "GET service-manager-url /v2/service_plans { service_offering_id: 'offering-id-0', name: 'myPlan' }",
-          "GET service-manager-url /v2/service_offerings",
-          "GET service-manager-url /v2/service_plans",
           "GET service-manager-url /v2/service_instances { service_plan_id: 'plan-id-0' }",
           "GET service-manager-url /v1/service_instances/instance-id-0/parameters",
           "GET service-manager-url /v1/service_instances/instance-id-2/parameters",
@@ -278,6 +275,26 @@ describe("svm tests", () => {
           },
           "*** unusable instance ***",
         ]
+      `);
+    });
+
+    test("a usable instance whose parameters fetch fails is marked, not fatal", async () => {
+      mockRequest.request.mockReturnValueOnce(mockOfferingResponse);
+      mockRequest.request.mockReturnValueOnce(mockPlanResponse);
+      mockRequest.request.mockReturnValueOnce(
+        mockItemsResponse([mockInstanceFactory(0), mockInstanceFactory(1)])
+      );
+      // NOTE: first instance's /parameters request throws (e.g. mid-provisioning); the second still succeeds
+      mockRequest.request.mockImplementationOnce(() => {
+        throw new Error("boom");
+      });
+      mockRequest.request.mockReturnValueOnce({ headers: new Headers(), json: () => ({ foo: "bar-1" }) });
+
+      const result = await svm.serviceManagerParams(mockContext, [], [false]);
+      expect(result).toMatchInlineSnapshot(`
+        "#  tenant_id    service_plan             instance_id    parameters                           
+        1  tenant-id-0  myOffering:myPlan        instance-id-0  *** failed to retrieve parameters ***
+        2  tenant-id-0  otherOffering:otherPlan  instance-id-1  {"foo":"bar-1"}                      "
       `);
     });
   });
