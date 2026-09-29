@@ -281,9 +281,7 @@ describe("svm tests", () => {
     test("a usable instance whose parameters fetch fails is marked, not fatal", async () => {
       mockRequest.request.mockReturnValueOnce(mockOfferingResponse);
       mockRequest.request.mockReturnValueOnce(mockPlanResponse);
-      mockRequest.request.mockReturnValueOnce(
-        mockItemsResponse([mockInstanceFactory(0), mockInstanceFactory(1)])
-      );
+      mockRequest.request.mockReturnValueOnce(mockItemsResponse([mockInstanceFactory(0), mockInstanceFactory(1)]));
       // NOTE: first instance's /parameters request throws (e.g. mid-provisioning); the second still succeeds
       mockRequest.request.mockImplementationOnce(() => {
         throw new Error("boom");
