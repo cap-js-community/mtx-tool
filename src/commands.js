@@ -119,7 +119,7 @@ commands:
    === service manager (svm) ===
 ~  svml   --svm-list [TENANT_ID]                                      list all service instances and bindings
 ~  svmll  --svm-long-list [TENANT_ID]                                 long list all service instances and bindings
-~  svmp   --svm-params [SERVICE_PLAN] [TENANT_ID]                     list all service instances with parameters
+~  svmp   --svm-params [SERVICE_PLAN] [TENANT_ID]                     list service instances provisioning parameters
           --svm-make-bindings-single SERVICE_PLAN TENANT_ID [PARAMS]  make service bindings 1-to-1
           --svm-make-bindings-double SERVICE_PLAN TENANT_ID [PARAMS]  make service bindings 1-to-2
           --svm-restart                                               rolling restart for svm bound apps
