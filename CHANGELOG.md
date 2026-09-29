@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## v0.14.1 - tbd
 
+### ADDED
+
+- svm: new `svmp` / `--svm-params` command that lists service instances with their provisioning parameters.
+
 ## v0.14.0 - 2026-09-03
 
 ### CHANGED

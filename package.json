@@ -14,7 +14,7 @@
     "patch:create": "npm_config_allow_remote=all npx patch-package jest-snapshot",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand --coverageReporters=html --coverageReporters=text-summary",
-    "test:remove-file-snapshots": "rm '**/__snapshots__/*.snap'",
+    "test:remove-file-snapshots": "find test -path '*/__snapshots__/*.snap' -delete",
     "test:remove-inline-snapshots": "npx replace '\\.toMatchInlineSnapshot\\(\\s*`[\\s\\S]*?`\\s*\\);' '.toMatchInlineSnapshot();' test -r --include='*.test.js'",
     "test:resnap": "npm run patch && npm run test:remove-inline-snapshots && npm run test:remove-file-snapshots && npm t -- -u && npm run lint:fix",
     "test:record": "npm run test:record:reg && npm run test:record:cds && npm run test:record:hdi && npm run test:record:svm && npm run test:record:srv",

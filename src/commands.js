@@ -119,6 +119,7 @@ commands:
    === service manager (svm) ===
 ~  svml   --svm-list [TENANT_ID]                                      list all service instances and bindings
 ~  svmll  --svm-long-list [TENANT_ID]                                 long list all service instances and bindings
+~  svmp   --svm-params [SERVICE_PLAN] [TENANT_ID]                     list service instances provisioning parameters
           --svm-make-bindings-single SERVICE_PLAN TENANT_ID [PARAMS]  make service bindings 1-to-1
           --svm-make-bindings-double SERVICE_PLAN TENANT_ID [PARAMS]  make service bindings 1-to-2
           --svm-restart                                               rolling restart for svm bound apps
@@ -357,6 +358,13 @@ const APP_COMMAND_INFOS = Object.freeze({
     optionalPassArgs: [PASS_ARG.TENANT_ID],
     optionalFlagArgs: [FLAG_ARG.JSON_OUTPUT, FLAG_ARG.REVEAL],
     callback: svm.serviceManagerLongList,
+    readonly: true,
+  },
+  SVM_PARAMS: {
+    commandVariants: ["svmp", "--svm-params"],
+    optionalPassArgs: [PASS_ARG.SERVICE_PLAN, PASS_ARG.TENANT_ID],
+    optionalFlagArgs: [FLAG_ARG.JSON_OUTPUT],
+    callback: svm.serviceManagerParams,
     readonly: true,
   },
   SVM_MAKE_BINDINGS_SINGLE: {
