@@ -33,6 +33,9 @@ const SERVICE_MANAGER_CONCURRENCY_FALLBACK = 6;
 const SERVICE_PLAN_ALL_IDENTIFIER = "all-services";
 const TENANT_ID_ALL_IDENTIFIER = "all-tenants";
 
+const UNUSABLE_INSTANCE_SENTINEL = Symbol("unusable-instance");
+const UNUSABLE_INSTANCE_TEXT = "*** unusable instance ***";
+
 const CF_APP_STATE_STARTED = "STARTED";
 
 // NOTE: old versions of cap java relied on managing_client_lib label for hana containers
@@ -145,7 +148,9 @@ const serviceManagerList = async (context, [tenantId], [doTimestamps, doJsonOutp
 
 const _serviceManagerParams = async (context, { filterPlanFullName, filterTenantId, doJsonOutput }) => {
   const svm = await _getServiceManager(context);
-  const filterPlanId = filterPlanFullName ? (await _getPlanInfoFromFullName(context, filterPlanFullName)).planId : undefined;
+  const filterPlanId = filterPlanFullName
+    ? (await _getPlanInfoFromFullName(context, filterPlanFullName)).planId
+    : undefined;
   const [offerings, plans, instances] = await Promise.all([
     svm.getOfferings(),
     svm.getPlans(),
@@ -153,24 +158,28 @@ const _serviceManagerParams = async (context, { filterPlanFullName, filterTenant
   ]);
   const planFullNameById = _indexPlanFullNameById(offerings, plans);
   instances.sort(compareInstancesForTenantId);
-  // NOTE: the parameters endpoint fails for unusable instances, so we skip the request and mark them instead
+  // NOTE: the parameters endpoint fails for unusable instances, so we skip the request and mark them
   const parametersList = await limiter(svmConcurrency, instances, async (instance) =>
-    instance.usable ? await svm.getInstanceParameters(instance.id) : undefined
+    instance.usable ? await svm.getInstanceParameters(instance.id) : UNUSABLE_INSTANCE_SENTINEL
   );
 
   if (doJsonOutput) {
     return {
-      instances: instances.map((instance, i) => ({ ...instance, parameters: parametersList[i] })),
+      instances: instances.map((instance, i) => ({
+        ...instance,
+        parameters: parametersList[i] === UNUSABLE_INSTANCE_SENTINEL ? UNUSABLE_INSTANCE_TEXT : parametersList[i],
+      })),
     };
   }
 
   const table = [["tenant_id", "service_plan", "instance_id", "parameters"]];
   for (const [i, instance] of instances.entries()) {
+    const parameters = parametersList[i];
     table.push([
       instance.labels.tenant_id[0],
       planFullNameById[instance.service_plan_id],
       instance.id,
-      instance.usable ? JSON.stringify(parametersList[i] ?? {}) : "*** unusable ***",
+      parameters === UNUSABLE_INSTANCE_SENTINEL ? UNUSABLE_INSTANCE_TEXT : JSON.stringify(parameters ?? {}),
     ]);
   }
   return tableList(table, { sortCol: null, withRowNumber: !filterTenantId });
