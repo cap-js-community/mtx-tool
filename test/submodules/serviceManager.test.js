@@ -168,23 +168,23 @@ describe("svm tests", () => {
 
       const result = await svm.serviceManagerParams(mockContext, [], [false]);
       expect(collectRequestMockCallsStable(mockRequest.request)).toMatchInlineSnapshot(`
-[
-  "GET service-manager-url /v2/service_offerings",
-  "GET service-manager-url /v2/service_plans",
-  "GET service-manager-url /v2/service_instances",
-  "GET service-manager-url /v1/service_instances/instance-id-0/parameters",
-  "GET service-manager-url /v1/service_instances/instance-id-1/parameters",
-  "GET service-manager-url /v1/service_instances/instance-id-2/parameters",
-  "GET service-manager-url /v1/service_instances/instance-id-3/parameters",
-]
-`);
+        [
+          "GET service-manager-url /v2/service_offerings",
+          "GET service-manager-url /v2/service_plans",
+          "GET service-manager-url /v2/service_instances",
+          "GET service-manager-url /v1/service_instances/instance-id-0/parameters",
+          "GET service-manager-url /v1/service_instances/instance-id-1/parameters",
+          "GET service-manager-url /v1/service_instances/instance-id-2/parameters",
+          "GET service-manager-url /v1/service_instances/instance-id-3/parameters",
+        ]
+      `);
       expect(result).toMatchInlineSnapshot(`
-"#  tenant_id    service_plan             instance_id    parameters     
-1  tenant-id-0  myOffering:myPlan        instance-id-0  {"foo":"bar-0"}
-2  tenant-id-0  otherOffering:otherPlan  instance-id-1  {"foo":"bar-1"}
-3  tenant-id-1  myOffering:myPlan        instance-id-2  {"foo":"bar-2"}
-4  tenant-id-1  otherOffering:otherPlan  instance-id-3  {}             "
-`);
+        "#  tenant_id    service_plan             instance_id    parameters     
+        1  tenant-id-0  myOffering:myPlan        instance-id-0  {"foo":"bar-0"}
+        2  tenant-id-0  otherOffering:otherPlan  instance-id-1  {"foo":"bar-1"}
+        3  tenant-id-1  myOffering:myPlan        instance-id-2  {"foo":"bar-2"}
+        4  tenant-id-1  otherOffering:otherPlan  instance-id-3  {}             "
+      `);
     });
 
     test("filtered by tenant with --json", async () => {
@@ -197,15 +197,15 @@ describe("svm tests", () => {
       const result = await svm.serviceManagerParams(mockContext, [undefined, testTenantId], [true]);
       expect(result.instances).toHaveLength(2);
       expect(result.instances.map((instance) => instance.parameters)).toMatchInlineSnapshot(`
-[
-  {
-    "foo": "bar",
-  },
-  {
-    "foo": "baz",
-  },
-]
-`);
+        [
+          {
+            "foo": "bar",
+          },
+          {
+            "foo": "baz",
+          },
+        ]
+      `);
     });
 
     test("filtered by service plan", async () => {
@@ -220,21 +220,21 @@ describe("svm tests", () => {
 
       const result = await svm.serviceManagerParams(mockContext, [testServicePlanName], [false]);
       expect(collectRequestMockCallsStable(mockRequest.request)).toMatchInlineSnapshot(`
-[
-  "GET service-manager-url /v2/service_offerings { name: 'myOffering' }",
-  "GET service-manager-url /v2/service_plans { service_offering_id: 'offering-id-0', name: 'myPlan' }",
-  "GET service-manager-url /v2/service_offerings",
-  "GET service-manager-url /v2/service_plans",
-  "GET service-manager-url /v2/service_instances { service_plan_id: 'plan-id-0' }",
-  "GET service-manager-url /v1/service_instances/instance-id-0/parameters",
-  "GET service-manager-url /v1/service_instances/instance-id-2/parameters",
-]
-`);
+        [
+          "GET service-manager-url /v2/service_offerings { name: 'myOffering' }",
+          "GET service-manager-url /v2/service_plans { service_offering_id: 'offering-id-0', name: 'myPlan' }",
+          "GET service-manager-url /v2/service_offerings",
+          "GET service-manager-url /v2/service_plans",
+          "GET service-manager-url /v2/service_instances { service_plan_id: 'plan-id-0' }",
+          "GET service-manager-url /v1/service_instances/instance-id-0/parameters",
+          "GET service-manager-url /v1/service_instances/instance-id-2/parameters",
+        ]
+      `);
       expect(result).toMatchInlineSnapshot(`
-"#  tenant_id    service_plan       instance_id    parameters     
-1  tenant-id-0  myOffering:myPlan  instance-id-0  {"foo":"bar-0"}
-2  tenant-id-1  myOffering:myPlan  instance-id-2  {"foo":"bar-2"}"
-`);
+        "#  tenant_id    service_plan       instance_id    parameters     
+        1  tenant-id-0  myOffering:myPlan  instance-id-0  {"foo":"bar-0"}
+        2  tenant-id-1  myOffering:myPlan  instance-id-2  {"foo":"bar-2"}"
+      `);
     });
 
     test("unusable instance is not fetched", async () => {
@@ -248,18 +248,37 @@ describe("svm tests", () => {
 
       const result = await svm.serviceManagerParams(mockContext, [], [false]);
       expect(collectRequestMockCallsStable(mockRequest.request)).toMatchInlineSnapshot(`
-[
-  "GET service-manager-url /v2/service_offerings",
-  "GET service-manager-url /v2/service_plans",
-  "GET service-manager-url /v2/service_instances",
-  "GET service-manager-url /v1/service_instances/instance-id-0/parameters",
-]
-`);
+        [
+          "GET service-manager-url /v2/service_offerings",
+          "GET service-manager-url /v2/service_plans",
+          "GET service-manager-url /v2/service_instances",
+          "GET service-manager-url /v1/service_instances/instance-id-0/parameters",
+        ]
+      `);
       expect(result).toMatchInlineSnapshot(`
-"#  tenant_id    service_plan             instance_id    parameters      
-1  tenant-id-0  myOffering:myPlan        instance-id-0  {"foo":"bar-0"} 
-2  tenant-id-0  otherOffering:otherPlan  instance-id-1  *** unusable ***"
-`);
+        "#  tenant_id    service_plan             instance_id    parameters               
+        1  tenant-id-0  myOffering:myPlan        instance-id-0  {"foo":"bar-0"}          
+        2  tenant-id-0  otherOffering:otherPlan  instance-id-1  *** unusable instance ***"
+      `);
+    });
+
+    test("unusable instance is marked in --json", async () => {
+      mockRequest.request.mockReturnValueOnce(mockOfferingResponse);
+      mockRequest.request.mockReturnValueOnce(mockPlanResponse);
+      mockRequest.request.mockReturnValueOnce(
+        mockItemsResponse([mockInstanceFactory(0), { ...mockInstanceFactory(1), usable: false }])
+      );
+      mockRequest.request.mockReturnValueOnce({ headers: new Headers(), json: () => ({ foo: "bar-0" }) });
+
+      const result = await svm.serviceManagerParams(mockContext, [], [true]);
+      expect(result.instances.map((instance) => instance.parameters)).toMatchInlineSnapshot(`
+        [
+          {
+            "foo": "bar-0",
+          },
+          "*** unusable instance ***",
+        ]
+      `);
     });
   });
 
