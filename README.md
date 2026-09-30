@@ -126,6 +126,22 @@ MTX Tool is organized into contextual sections, each with several commands.
           ...    --time                                               list includes timestamps
           ...    --reveal                                             show sensitive information
 
+   === hana multitenancy (tms) ===
+~  tmsl   --tms-list [TENANT_ID]                            list all service instances and bindings
+~  tmsll  --tms-long-list [TENANT_ID]                       long list all service instances and bindings
+          --tms-make-bindings-single TENANT_ID [PARAMS]     make service bindings 1-to-1
+          --tms-make-bindings-double TENANT_ID [PARAMS]     make service bindings 1-to-2
+          --tms-restart                                     rolling restart for tms bound apps
+          --tms-restart-skip SKIP_APPS                      rolling restart skipping apps
+*         --tms-delete-bindings TENANT_ID                   delete service bindings
+*         --tms-delete TENANT_ID                            delete service instances and bindings
+          ...    TENANT_ID                                  filter for tenant id or "all-tenants" for all
+          ...    SKIP_APPS                                  comma-separated app names to skip
+          ...    [PARAMS]                                   create binding with custom parameters
+          ...    --json                                     list in json
+          ...    --time                                     list includes timestamps
+          ...    --reveal                                   show sensitive information
+
    === server diagnostic (srv) ===
 ~  srvenv  --server-env [APP_NAME]                            dump system environment
 ~  srvcrt  --server-certificates [APP_NAME] [APP_INSTANCE]    dump instance certificates

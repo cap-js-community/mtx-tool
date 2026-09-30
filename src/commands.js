@@ -9,6 +9,7 @@ const reg = require("./submodules/tenantRegistry");
 const cds = require("./submodules/capMultitenancy");
 const hdi = require("./submodules/hanaManagement");
 const svm = require("./submodules/serviceManager");
+const tms = require("./submodules/hanaMultitenancy");
 const srv = require("./submodules/serverDiagnostic");
 
 const { name: NAME } = pathlib.parse(process.argv[1]);
@@ -134,6 +135,22 @@ commands:
           ...    --json                                               list in json
           ...    --time                                               list includes timestamps
           ...    --reveal                                             show sensitive information
+
+   === hana multitenancy (tms) ===
+~  tmsl   --tms-list [TENANT_ID]                            list all service instances and bindings
+~  tmsll  --tms-long-list [TENANT_ID]                       long list all service instances and bindings
+          --tms-make-bindings-single TENANT_ID [PARAMS]     make service bindings 1-to-1
+          --tms-make-bindings-double TENANT_ID [PARAMS]     make service bindings 1-to-2
+          --tms-restart                                     rolling restart for tms bound apps
+          --tms-restart-skip SKIP_APPS                      rolling restart skipping apps
+*         --tms-delete-bindings TENANT_ID                   delete service bindings
+*         --tms-delete TENANT_ID                            delete service instances and bindings
+          ...    TENANT_ID                                  filter for tenant id or "all-tenants" for all
+          ...    SKIP_APPS                                  comma-separated app names to skip
+          ...    [PARAMS]                                   create binding with custom parameters
+          ...    --json                                     list in json
+          ...    --time                                     list includes timestamps
+          ...    --reveal                                   show sensitive information
 
    === server diagnostic (srv) ===
 ~  srvenv  --server-env [APP_NAME]                            dump system environment
@@ -428,6 +445,60 @@ const APP_COMMAND_INFOS = Object.freeze({
     requiredPassArgs: [PASS_ARG.SERVICE_PLAN, PASS_ARG.TENANT_ID],
     optionalPassArgs: [PASS_ARG.PARAMS],
     callback: svm.serviceManagerRefreshBindingsDeprecated,
+    useCache: false,
+  },
+
+  TMS_LIST: {
+    commandVariants: ["tmsl", "--tms-list"],
+    optionalPassArgs: [PASS_ARG.TENANT_ID],
+    optionalFlagArgs: [FLAG_ARG.TIMESTAMPS, FLAG_ARG.JSON_OUTPUT],
+    callback: tms.tmsList,
+    readonly: true,
+  },
+  TMS_LONG_LIST: {
+    commandVariants: ["tmsll", "--tms-long-list"],
+    optionalPassArgs: [PASS_ARG.TENANT_ID],
+    optionalFlagArgs: [FLAG_ARG.JSON_OUTPUT, FLAG_ARG.REVEAL],
+    callback: tms.tmsLongList,
+    readonly: true,
+  },
+  TMS_MAKE_BINDINGS_SINGLE: {
+    commandVariants: ["--tms-make-bindings-single"],
+    requiredPassArgs: [PASS_ARG.TENANT_ID],
+    optionalPassArgs: [PASS_ARG.PARAMS],
+    callback: tms.tmsMakeBindingsSingle,
+    useCache: false,
+  },
+  TMS_MAKE_BINDINGS_DOUBLE: {
+    commandVariants: ["--tms-make-bindings-double"],
+    requiredPassArgs: [PASS_ARG.TENANT_ID],
+    optionalPassArgs: [PASS_ARG.PARAMS],
+    callback: tms.tmsMakeBindingsDouble,
+    useCache: false,
+  },
+  TMS_DELETE_BINDINGS: {
+    commandVariants: ["--tms-delete-bindings"],
+    requiredPassArgs: [PASS_ARG.TENANT_ID],
+    callback: tms.tmsDeleteBindings,
+    useCache: false,
+    danger: true,
+  },
+  TMS_DELETE: {
+    commandVariants: ["--tms-delete"],
+    requiredPassArgs: [PASS_ARG.TENANT_ID],
+    callback: tms.tmsDeleteInstancesAndBindings,
+    useCache: false,
+    danger: true,
+  },
+  TMS_RESTART: {
+    commandVariants: ["--tms-restart"],
+    callback: tms.tmsRestart,
+    useCache: false,
+  },
+  TMS_RESTART_SKIP: {
+    commandVariants: ["--tms-restart-skip"],
+    requiredPassArgs: [PASS_ARG.SKIP_APPS],
+    callback: tms.tmsRestartSkip,
     useCache: false,
   },
 

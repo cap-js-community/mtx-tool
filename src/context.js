@@ -280,6 +280,8 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
   const hasSmsInfo = Object.prototype.hasOwnProperty.call(runtimeConfig, CONFIG_INFOS[CONFIG_TYPE.SMS_APP].config);
   const getCdsInfo = makeOneTime(getAppInfoCached(CONFIG_TYPE.CDS_APP));
   const getHdiInfo = makeOneTime(getAppInfoCached(CONFIG_TYPE.HDI_APP));
+  const getTmsInfo = makeOneTime(getAppInfoCached(CONFIG_TYPE.TMS_APP));
+  const hasTmsInfo = Object.prototype.hasOwnProperty.call(runtimeConfig, CONFIG_INFOS[CONFIG_TYPE.TMS_APP].config);
   const getSrvInfo = makeOneTime(getAppInfoCached(CONFIG_TYPE.SERVER_APP));
 
   const getCachedUaaTokenFromCredentials = async (credentials, options) =>
@@ -311,6 +313,8 @@ const newContext = async ({ usePersistedCache = true, isReadonlyCommand = false 
     hasSmsInfo,
     getCdsInfo,
     getHdiInfo,
+    getTmsInfo,
+    hasTmsInfo,
     getSrvInfo,
     getCfEnv: (appName) => cf.getAppEnv(appName, { isReadonlyCommand }),
     getCfBoundApps: (instanceId) => cf.getBoundApps(instanceId),
