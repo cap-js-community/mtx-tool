@@ -15,3 +15,6 @@ coverage/
 
 # diagnostic dumps from sharedFixtures.collapseSharedRefs on mismatch
 test-nock-record/__nock-fixtures__/shared/*.fresh.json
+
+# mcp
+.mcp.json
