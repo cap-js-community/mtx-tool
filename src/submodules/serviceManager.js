@@ -40,7 +40,8 @@ const FAILED_PARAMETERS_TEXT = "*** failed to retrieve parameters ***";
 
 const CF_APP_STATE_STARTED = "STARTED";
 
-// NOTE: old versions of cap java relied on managing_client_lib label for hana containers
+// NOTE: this label is expected by Service Manager's Java Client
+//   https://mvnrepository.com/artifact/com.sap.cloud.servicemanager/client
 const HANA_CONTAINER_OFFERING_PLAN_NAME = "hana:hdi-shared";
 const HANA_CONTAINER_LABELS = { managing_client_lib: ["instance-manager-client-lib"] };
 
