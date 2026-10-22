@@ -161,7 +161,7 @@ const _formatInstanceParameters = (value, { doStringify = false } = {}) => {
 
 const _serviceManagerParams = async (context, { filterPlanFullName, filterTenantId, doJsonOutput }) => {
   const svm = await _getServiceManager(context);
-  const planInfo = filterPlanFullName ? await _getPlanInfoFromFullName(context, filterPlanFullName) : undefined;
+  const planInfo = filterPlanFullName ? await svm.getPlanInfoFromFullName(filterPlanFullName) : undefined;
   const filterPlanId = planInfo?.planId;
   const [offerings, plans, instances] = await Promise.all([
     planInfo ? undefined : svm.getOfferings(),
@@ -338,20 +338,10 @@ const _serviceManagerNormalizeBindings = async (
   }
 };
 
-const _getPlanInfoFromFullName = async (context, planFullName) => {
-  const match = /^(\S+):(\S+)$/i.exec(planFullName);
-  assert(
-    match !== null,
-    `could not detect form "offering:plan" or "${SERVICE_PLAN_ALL_IDENTIFIER}" in "${planFullName}"`
-  );
-  const [, offeringName, planName] = match;
-  const svm = await _getServiceManager(context);
-  return await svm.getPlanInfo(offeringName, planName);
-};
-
 async function _resolveBindingsOptions(context, planFullName, tenantId, rawParameters) {
+  const svm = await _getServiceManager(context);
   const doFilterPlanId = planFullName !== SERVICE_PLAN_ALL_IDENTIFIER;
-  const planInfo = doFilterPlanId ? await _getPlanInfoFromFullName(context, planFullName) : undefined;
+  const planInfo = doFilterPlanId ? await svm.getPlanInfoFromFullName(planFullName) : undefined;
   const doFilterTenantId = tenantId !== TENANT_ID_ALL_IDENTIFIER;
   const filterTenantId = doFilterTenantId && tenantId;
   assert(!doFilterTenantId || isValidTenantId(filterTenantId), `argument "${tenantId}" is not a valid tenant id`);
@@ -402,8 +392,9 @@ const _serviceManagerDelete = async (
 };
 
 const serviceManagerDeleteBindings = async (context, [planFullName, tenantId]) => {
+  const svm = await _getServiceManager(context);
   const doFilterPlanId = planFullName !== SERVICE_PLAN_ALL_IDENTIFIER;
-  const filterPlanId = doFilterPlanId && (await _getPlanInfoFromFullName(context, planFullName)).planId;
+  const filterPlanId = doFilterPlanId && (await svm.getPlanInfoFromFullName(planFullName)).planId;
   const doFilterTenantId = tenantId !== TENANT_ID_ALL_IDENTIFIER;
   const filterTenantId = doFilterTenantId && tenantId;
   assert(!doFilterTenantId || isValidTenantId(filterTenantId), `argument "${tenantId}" is not a valid tenant id`);
@@ -415,8 +406,9 @@ const serviceManagerDeleteBindings = async (context, [planFullName, tenantId]) =
 };
 
 const serviceManagerDeleteInstancesAndBindings = async (context, [planFullName, tenantId]) => {
+  const svm = await _getServiceManager(context);
   const doFilterPlanId = planFullName !== SERVICE_PLAN_ALL_IDENTIFIER;
-  const filterPlanId = doFilterPlanId && (await _getPlanInfoFromFullName(context, planFullName)).planId;
+  const filterPlanId = doFilterPlanId && (await svm.getPlanInfoFromFullName(planFullName)).planId;
   const doFilterTenantId = tenantId !== TENANT_ID_ALL_IDENTIFIER;
   const filterTenantId = doFilterTenantId && tenantId;
   assert(!doFilterTenantId || isValidTenantId(filterTenantId), `argument "${tenantId}" is not a valid tenant id`);

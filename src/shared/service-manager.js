@@ -171,6 +171,13 @@ class ServiceManager {
     return { offeringId: offering.id, offeringName, planId: plan.id, planName };
   }
 
+  async getPlanInfoFromFullName(planFullName) {
+    const match = /^(\S+):(\S+)$/i.exec(planFullName);
+    assert(match !== null, `could not detect form "offering:plan" in "${planFullName}"`);
+    const [, offeringName, planName] = match;
+    return await this.getPlanInfo(offeringName, planName);
+  }
+
   async getInstances({ filterTenantId, filterPlanId, doEnsureUsable = false, doEnsureTenantLabel = false } = {}) {
     let instances = await this.#requestPaginatedGet({
       pathname: "/v2/service_instances",
