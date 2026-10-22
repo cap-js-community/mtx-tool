@@ -96,6 +96,32 @@ class HanaMultitenancy {
     return data?.data ?? [];
   }
 
+  static fromSvmLabels(labels) {
+    return labels
+      ? Object.entries(labels).reduce((acc, [key, values]) => {
+          if (!["container_id", "subaccount_id"].includes(key)) {
+            acc.push(`${key}=${values.join(",")}`);
+          }
+          return acc;
+        }, [])
+      : labels;
+  }
+
+  async updateContainer(tenantId, containerId, { labels } = {}) {
+    assert(tenantId, "updateContainer requires tenantId");
+    assert(containerId, "updateContainer requires containerId");
+    const response = await this.#requestBase({
+      method: "PUT",
+      pathname: `${URL_BASE_PATH}/${tenantId}/containers/${containerId}`,
+      body: JSON.stringify({
+        type: "hdi",
+        ...(labels && { labels }),
+      }),
+    });
+    const data = await response.text();
+    return data;
+  }
+
   static #hideSensitiveDataInCredential(credential) {
     for (const field of Object.keys(credential)) {
       if (
