@@ -23,7 +23,7 @@ const { makeOneTime } = require("../shared/execution-control");
 const { assert } = require("../shared/error");
 const { Logger } = require("../shared/logger");
 const { limiter, FunnelQueue } = require("../shared/funnel");
-const { ServiceManager, OPERATION_STATE } = require("../shared/service-manager");
+const { ServiceManager, OPERATION_STATE, HANA_CONTAINER_OFFERING_PLAN_NAME } = require("../shared/service-manager");
 
 const ENV = Object.freeze({
   SVM_CONCURRENCY: "MTX_SVM_CONCURRENCY",
@@ -41,7 +41,6 @@ const FAILED_PARAMETERS_TEXT = "*** failed to retrieve parameters ***";
 const CF_APP_STATE_STARTED = "STARTED";
 
 // NOTE: old versions of cap java relied on managing_client_lib label for hana containers
-const HANA_CONTAINER_OFFERING_PLAN_NAME = "hana:hdi-shared";
 const HANA_CONTAINER_LABELS = { managing_client_lib: ["instance-manager-client-lib"] };
 
 const logger = Logger.getInstance();

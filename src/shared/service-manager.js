@@ -14,6 +14,8 @@ const HTTP_ACCEPTED = 202;
 
 const SERVICE_MANAGER_POLL_FREQUENCY_FALLBACK = 6000;
 
+const HANA_CONTAINER_OFFERING_PLAN_NAME = "hana:hdi-shared";
+
 const SENSITIVE_FIELD_NAMES = ["uri"];
 const SENSITIVE_FIELD_MARKERS = ["password", "key"];
 const SENSITIVE_FIELD_HIDDEN_TEXT = "*** show with --reveal ***";
@@ -316,5 +318,6 @@ class ServiceManager {
 
 module.exports = {
   OPERATION_STATE,
+  HANA_CONTAINER_OFFERING_PLAN_NAME,
   ServiceManager,
 };
