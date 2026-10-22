@@ -462,6 +462,12 @@ const APP_COMMAND_INFOS = Object.freeze({
     callback: tms.tmsLongList,
     readonly: true,
   },
+  TMS_MIGRATE: {
+    commandVariants: ["--tms-migrate"],
+    requiredPassArgs: [PASS_ARG.TENANT_ID],
+    callback: tms.tmsMigrateFromSvm,
+    useCache: false,
+  },
   TMS_MAKE_BINDINGS_SINGLE: {
     commandVariants: ["--tms-make-bindings-single"],
     requiredPassArgs: [PASS_ARG.TENANT_ID],
