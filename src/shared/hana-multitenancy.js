@@ -7,6 +7,7 @@ const SENSITIVE_FIELD_NAMES = ["url", "certificate"];
 const SENSITIVE_FIELD_MARKERS = ["password", "key"];
 const SENSITIVE_FIELD_HIDDEN_TEXT = "*** show with --reveal ***";
 
+// TODO: no, that's not how it works
 // NOTE: hana-multitenancy (Tenant Management Service v2) reports async operation progress via the operation's
 //   status.state, which differs from the service-manager succeeded/failed states. Exported for the create/update/
 //   delete helpers (and their polling) that will build on this module in a later step.
@@ -111,15 +112,23 @@ class HanaMultitenancy {
     assert(tenantId, "updateContainer requires tenantId");
     assert(containerId, "updateContainer requires containerId");
     const response = await this.#requestBase({
-      method: "PUT",
+      method: "PATCH",
       pathname: `${URL_BASE_PATH}/${tenantId}/containers/${containerId}`,
       body: JSON.stringify({
-        type: "hdi",
         ...(labels && { labels }),
       }),
     });
-    const data = await response.text();
-    return data;
+    let result;
+    switch (response.status) {
+      case 200: {
+        result = await response.json();
+        break;
+      }
+      default: {
+        result = await response.text();
+      }
+    }
+    return result;
   }
 
   static #hideSensitiveDataInCredential(credential) {
