@@ -102,7 +102,7 @@ const _tmsList = async (context, { filterTenantId, doTimestamps, doJsonOutput } 
   const headerRow = [
     "tenant_id",
     "db_tenant_id",
-    "hana_could_id",
+    "hana_id",
     "schema",
     "ready",
     ...(doTimestamps ? ["created_on", "updated_on"] : []),

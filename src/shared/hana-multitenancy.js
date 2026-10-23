@@ -63,13 +63,8 @@ class HanaMultitenancy {
     return pages.flat();
   }
 
-  static #buildExpand(components) {
-    const expand = components.filter(({ predicate }) => predicate).map(({ value }) => value);
-    return expand.length > 0 ? { $expand: expand.join(",") } : undefined;
-  }
-
   async getTenants({
-    filterHanaCloudId: filterServiceInstanceId,
+    filterServiceInstanceId,
     filterContainerTenantId,
     doExpandContainers = false,
     doExpandCredentials = false,
@@ -79,30 +74,19 @@ class HanaMultitenancy {
       ...(filterContainerTenantId && {
         containerFilter: `hassubset(labels, ["tenant_id=${filterContainerTenantId}"])`,
       }),
-      ...HanaMultitenancy.#buildExpand([
-        { predicate: doExpandContainers, value: "containers" },
-        // NOTE: the containers/credentials expand is only accepted when the query is scoped by serviceInstanceID.
-        { predicate: doExpandContainers && doExpandCredentials, value: "containers/credentials" },
-      ]),
+      ...(doExpandContainers &&
+        !doExpandCredentials && {
+          $expand: "containers",
+        }),
+      ...(doExpandContainers &&
+        doExpandCredentials && {
+          $expand: "containers/credentials",
+        }),
     };
     return await this.#requestPaginatedGet({
       pathname: URL_BASE_PATH,
       ...(Object.keys(query).length > 0 && { query }),
     });
-  }
-
-  async getContainers(tenantId, { filterQuery, doExpandCredentials = false } = {}) {
-    assert(tenantId, "getContainers requires tenantId");
-    const query = {
-      ...(filterQuery && { $filter: filterQuery }),
-      ...HanaMultitenancy.#buildExpand([{ predicate: doExpandCredentials, value: "credentials" }]),
-    };
-    const response = await this.#requestBase({
-      pathname: `${URL_BASE_PATH}/${tenantId}/containers/`,
-      ...(Object.keys(query).length > 0 && { query }),
-    });
-    const data = await response.json();
-    return data?.data ?? [];
   }
 
   static fromSvmLabels(labels) {
