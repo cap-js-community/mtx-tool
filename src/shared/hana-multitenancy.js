@@ -68,11 +68,22 @@ class HanaMultitenancy {
     return expand.length > 0 ? { $expand: expand.join(",") } : undefined;
   }
 
-  async getTenants({ filterServiceInstanceId, filterQuery, doExpandContainers = false } = {}) {
+  async getTenants({
+    filterHanaCloudId: filterServiceInstanceId,
+    filterContainerTenantId,
+    doExpandContainers = false,
+    doExpandCredentials = false,
+  } = {}) {
     const query = {
       ...(filterServiceInstanceId && { serviceInstanceID: filterServiceInstanceId }),
-      ...(filterQuery && { $filter: filterQuery }),
-      ...HanaMultitenancy.#buildExpand([{ predicate: doExpandContainers, value: "containers" }]),
+      ...(filterContainerTenantId && {
+        containerFilter: `hassubset(labels, ["tenant_id=${filterContainerTenantId}"])`,
+      }),
+      ...HanaMultitenancy.#buildExpand([
+        { predicate: doExpandContainers, value: "containers" },
+        // NOTE: the containers/credentials expand is only accepted when the query is scoped by serviceInstanceID.
+        { predicate: doExpandContainers && doExpandCredentials, value: "containers/credentials" },
+      ]),
     };
     return await this.#requestPaginatedGet({
       pathname: URL_BASE_PATH,

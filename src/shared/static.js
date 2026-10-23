@@ -363,6 +363,17 @@ const parseIntWithFallback = (input, fallback) => {
   return isNaN(result) ? fallback : result;
 };
 
+const collectValuesForKey = (dataObjects, key) =>
+  Object.keys(
+    dataObjects.reduce((result, dataObject) => {
+      const identifier = dataObject[key];
+      if (!Object.prototype.hasOwnProperty.call(result, identifier)) {
+        result[identifier] = 1;
+      }
+      return result;
+    }, {})
+  );
+
 const indexByKey = (dataObjects, key) =>
   dataObjects.reduce((result, dataObject) => {
     const identifier = dataObject[key];
@@ -417,4 +428,5 @@ module.exports = {
   parseIntWithFallback,
   indexByKey,
   clusterByKey,
+  collectValuesForKey,
 };

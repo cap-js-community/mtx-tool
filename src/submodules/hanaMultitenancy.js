@@ -1,6 +1,11 @@
 "use strict";
 
-const { tableList, formatTimestampsWithRelativeDays, parseIntWithFallback } = require("../shared/static");
+const {
+  tableList,
+  formatTimestampsWithRelativeDays,
+  parseIntWithFallback,
+  collectValuesForKey,
+} = require("../shared/static");
 const { makeOneTime } = require("../shared/execution-control");
 const { assert, fail } = require("../shared/error");
 const { limiter } = require("../shared/funnel");
@@ -76,21 +81,32 @@ const _labelValue = (labels, key) => {
 
 const _tmsList = async (context, { filterTenantId, doTimestamps, doJsonOutput } = {}) => {
   const tms = await _getHanaMultitenancy(context);
-  const tenants = await tms.getTenants({ doExpandContainers: true });
-  const tenantsWithContainers = tenants.filter((tenant) => tenant.containers?.length);
-
-  const enrichedTenants = await limiter(tmsConcurrency, tenantsWithContainers, async (tenant) => {
-    for (const container of tenant.containers) {
-      container.credentials = await tms.getCredentials(tenant.id, container.id);
-    }
-    return tenant;
-  });
+  const tenants = await tms.getTenants();
+  const hanaIds = collectValuesForKey(tenants, "serviceInstanceID");
+  const perInstance = await limiter(
+    tmsConcurrency,
+    hanaIds,
+    async (hanaId) =>
+      await tms.getTenants({
+        filterServiceInstanceId: hanaId,
+        doExpandContainers: true,
+        doExpandCredentials: true,
+      })
+  );
+  const enrichedTenants = perInstance.flat().filter((tenant) => tenant.containers?.length);
 
   if (doJsonOutput) {
     return { tenants: enrichedTenants };
   }
 
-  const headerRow = ["tenant_id", "host", "schema", "ready", ...(doTimestamps ? ["created_on", "updated_on"] : [])];
+  const headerRow = [
+    "tenant_id",
+    "db_tenant_id",
+    "hana_could_id",
+    "schema",
+    "ready",
+    ...(doTimestamps ? ["created_on", "updated_on"] : []),
+  ];
 
   const nowDate = new Date();
   const table = [headerRow];
@@ -101,12 +117,13 @@ const _tmsList = async (context, { filterTenantId, doTimestamps, doJsonOutput } 
       const credential = container.credentials[0];
       table.push([
         tenantId,
-        `${credential.host}:${credential.port}`,
+        tenant.id,
+        tenant.serviceInstanceID,
         credential.schema,
         container.status?.ready,
         ...(doTimestamps
           ? formatTimestampsWithRelativeDays(
-              [container.createTimestamp, tenant.status.lastTransitionTimestamp],
+              [container.createTimestamp, container.status.lastTransitionTimestamp ?? container.createTimestamp],
               nowDate
             )
           : []),
