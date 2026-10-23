@@ -72,7 +72,7 @@ class HanaMultitenancy {
     const query = {
       ...(filterServiceInstanceId && { serviceInstanceID: filterServiceInstanceId }),
       ...(filterContainerTenantId && {
-        containerFilter: `hassubset(labels, ["tenant_id=${filterContainerTenantId}"])`,
+        containerFilter: `hassubset(labels,["tenant_id=${filterContainerTenantId}"])`,
       }),
       ...(doExpandContainers &&
         !doExpandCredentials && {

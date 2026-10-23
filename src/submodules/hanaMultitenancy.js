@@ -104,7 +104,7 @@ const _getEnrichedTenants = async (context, { filterTenantId } = {}) => {
 };
 
 const _tmsList = async (context, { filterTenantId, doTimestamps, doJsonOutput } = {}) => {
-  const tenants = _getEnrichedTenants(context, { filterTenantId });
+  const tenants = await _getEnrichedTenants(context, { filterTenantId });
 
   if (doJsonOutput) {
     return { tenants };
