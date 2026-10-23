@@ -25,6 +25,16 @@ const _getServiceManager = makeOneTime(async (context) => {
 });
 
 const _getHanaMultitenancy = makeOneTime(async (context) => {
+  const {
+    cfBinding: { credentials },
+  } = await context.getTmsInfo();
+  return new HanaMultitenancy({
+    credentials,
+    getToken: (credentials) => context.getCachedUaaTokenFromCredentials(credentials),
+  });
+});
+
+const _getHanaMultitenancyAdmin = makeOneTime(async (context) => {
   const credentials = {
     // TODO
   };
@@ -35,20 +45,29 @@ const _getHanaMultitenancy = makeOneTime(async (context) => {
 });
 
 const tmsMigrateFromSvm = async (context, [tenantId]) => {
+  // TODO: tbd if this works with non-admin service binding
   const svm = await _getServiceManager(context);
-  const tms = await _getHanaMultitenancy(context);
+  const tmsAdmin = await _getHanaMultitenancyAdmin(context);
   const { planId } = await svm.getPlanInfoFromFullName(HANA_CONTAINER_OFFERING_PLAN_NAME);
   const [instance] = await svm.getInstances({ filterPlanId: planId, filterTenantId: tenantId });
   assert(instance, "could not find svm instance for tenantId");
-  await svm.updateInstance(instance.id, { parameters: { action: "migrateToMTv2" } });
-  const [container] = await tms.getContainers(instance.id);
+  // await svm.updateInstance(instance.id, { parameters: { action: "migrateToMTv2" } });
+  const [container] = await tmsAdmin.getContainers(instance.id);
   assert(container, "could not migrate to tms container for tenantId");
   const labels = HanaMultitenancy.fromSvmLabels(instance.labels);
-  await tms.updateContainer(instance.id, container.id, { labels });
+  const {
+    cfBinding: { instanceId: tmsInstanceId },
+  } = await context.getTmsInfo();
+  await tmsAdmin.updateContainer(instance.id, container.id, { labels, tmsInstanceId });
 };
 
 // eslint-disable-next-line no-unused-vars
-const tmsList = async (context, [tenantId], [doTimestamps, doJsonOutput]) => fail(NOT_IMPLEMENTED);
+const tmsList = async (context, [tenantId], [doTimestamps, doJsonOutput]) => {
+  const tms = await _getHanaMultitenancy(context);
+  const tenants = await tms.getTenants({ doExpandContainers: true });
+  const tenantsWithContainers = tenants.filter((t) => t.containers);
+  debugger;
+};
 
 // eslint-disable-next-line no-unused-vars
 const tmsLongList = async (context, [tenantId], [doJsonOutput, doReveal]) => fail(NOT_IMPLEMENTED);

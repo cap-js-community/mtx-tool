@@ -72,10 +72,7 @@ class HanaMultitenancy {
     const query = {
       ...(filterServiceInstanceId && { serviceInstanceID: filterServiceInstanceId }),
       ...(filterQuery && { $filter: filterQuery }),
-      ...HanaMultitenancy.#buildExpand([
-        { predicate: doExpandContainers, value: "containers" },
-        { predicate: doExpandContainers, value: "containers/credentials" },
-      ]),
+      ...HanaMultitenancy.#buildExpand([{ predicate: doExpandContainers, value: "containers" }]),
     };
     return await this.#requestPaginatedGet({
       pathname: URL_BASE_PATH,
@@ -108,7 +105,7 @@ class HanaMultitenancy {
       : labels;
   }
 
-  async updateContainer(tenantId, containerId, { labels } = {}) {
+  async updateContainer(tenantId, containerId, { labels, tmsInstanceId } = {}) {
     assert(tenantId, "updateContainer requires tenantId");
     assert(containerId, "updateContainer requires containerId");
     const response = await this.#requestBase({
@@ -116,6 +113,7 @@ class HanaMultitenancy {
       pathname: `${URL_BASE_PATH}/${tenantId}/containers/${containerId}`,
       body: JSON.stringify({
         ...(labels && { labels }),
+        ...(tmsInstanceId && { multitenancyInstanceID: tmsInstanceId }),
       }),
     });
     let result;
