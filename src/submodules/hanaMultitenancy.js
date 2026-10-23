@@ -79,11 +79,18 @@ const _labelValue = (labels, key) => {
   return entry?.slice(prefix.length);
 };
 
-const _tmsList = async (context, { filterTenantId, doTimestamps, doJsonOutput } = {}) => {
+const _getEnrichedTenants = async (context, { filterTenantId } = {}) => {
   const tms = await _getHanaMultitenancy(context);
-  const tenants = await tms.getTenants();
-  const hanaIds = collectValuesForKey(tenants, "serviceInstanceID");
-  const perInstance = await limiter(
+  if (filterTenantId) {
+    return await tms.getTenants({
+      filterContainerTenantId: filterTenantId,
+      doExpandContainers: true,
+      doExpandCredentials: true,
+    });
+  }
+  const tenantStubs = await tms.getTenants();
+  const hanaIds = collectValuesForKey(tenantStubs, "serviceInstanceID");
+  const perHanaTenants = await limiter(
     tmsConcurrency,
     hanaIds,
     async (hanaId) =>
@@ -93,10 +100,14 @@ const _tmsList = async (context, { filterTenantId, doTimestamps, doJsonOutput } 
         doExpandCredentials: true,
       })
   );
-  const enrichedTenants = perInstance.flat().filter((tenant) => tenant.containers?.length);
+  return perHanaTenants.flat().filter((tenant) => tenant.containers?.length);
+};
+
+const _tmsList = async (context, { filterTenantId, doTimestamps, doJsonOutput } = {}) => {
+  const tenants = _getEnrichedTenants(context, { filterTenantId });
 
   if (doJsonOutput) {
-    return { tenants: enrichedTenants };
+    return { tenants };
   }
 
   const headerRow = [
@@ -110,7 +121,7 @@ const _tmsList = async (context, { filterTenantId, doTimestamps, doJsonOutput } 
 
   const nowDate = new Date();
   const table = [headerRow];
-  for (const tenant of enrichedTenants) {
+  for (const tenant of tenants) {
     for (const container of tenant.containers) {
       const tenantId = _labelValue(container.labels, "tenant_id");
       // TODO how to handle multiple credentials???
