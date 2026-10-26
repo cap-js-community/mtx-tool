@@ -5,6 +5,7 @@ const {
   formatTimestampsWithRelativeDays,
   parseIntWithFallback,
   collectValuesForKey,
+  tryJsonParse,
 } = require("../shared/static");
 const { makeOneTime } = require("../shared/execution-control");
 const { assert, fail } = require("../shared/error");
@@ -12,17 +13,14 @@ const { limiter } = require("../shared/funnel");
 const { ServiceManager, HANA_CONTAINER_OFFERING_PLAN_NAME } = require("../shared/service-manager");
 const { HanaMultitenancy } = require("../shared/hana-multitenancy");
 
-// NOTE: scaffold for the hana-multitenancy (Tenant Management Service, TMS v2) backed commands. These mirror the
-//   service-manager commands (src/submodules/serviceManager.js) but drop the service_plan argument, since TMS
-//   addresses containers under a tenant directly. Implementations land in a follow-up step; for now each command
-//   fails explicitly so the wiring (config, context, cli) can be reviewed in isolation.
-
 const ENV = Object.freeze({
   TMS_CONCURRENCY: "MTX_TMS_CONCURRENCY",
+  TMS_ADMIN_CREDENTIALS: "MTX_TMS_ADMIN_CRENTIALS",
 });
 
 const TMS_CONCURRENCY_FALLBACK = 6;
 
+// TODO: implement it step by step
 const NOT_IMPLEMENTED = "tenant-management-service command is not implemented yet";
 
 const tmsConcurrency = parseIntWithFallback(process.env[ENV.TMS_CONCURRENCY], TMS_CONCURRENCY_FALLBACK);
@@ -48,9 +46,11 @@ const _getHanaMultitenancy = makeOneTime(async (context) => {
 });
 
 const _getHanaMultitenancyAdmin = makeOneTime(async (context) => {
-  const credentials = {
-    // TODO
-  };
+  const credentials = tryJsonParse(process.env[ENV.TMS_ADMIN_CREDENTIALS]);
+  assert(
+    credentials?.uaa?.clientid,
+    `could not read hana-multitenancy-admin credentials from env ${ENV.TMS_ADMIN_CREDENTIALS}`
+  );
   return new HanaMultitenancy({
     credentials,
     getToken: (credentials) => context.getCachedUaaTokenFromCredentials(credentials),
