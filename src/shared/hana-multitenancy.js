@@ -3,7 +3,7 @@
 const { assert } = require("./error");
 const { request } = require("./request");
 
-const SENSITIVE_FIELD_NAMES = ["url", "certificate"];
+const SENSITIVE_FIELD_NAMES = [];
 const SENSITIVE_FIELD_MARKERS = ["password", "key"];
 const SENSITIVE_FIELD_HIDDEN_TEXT = "*** show with --reveal ***";
 
@@ -50,11 +50,23 @@ class HanaMultitenancy {
     return pages.flat();
   }
 
+  static #hideSensitiveDataInCredential(credential) {
+    for (const field of Object.keys(credential)) {
+      if (
+        SENSITIVE_FIELD_MARKERS.some((marker) => field.toLowerCase().includes(marker)) ||
+        SENSITIVE_FIELD_NAMES.includes(field)
+      ) {
+        credential[field] = SENSITIVE_FIELD_HIDDEN_TEXT;
+      }
+    }
+  }
+
   async getTenants({
     filterServiceInstanceId,
     filterContainerTenantId,
     doExpandContainers = false,
     doExpandCredentials = false,
+    doReveal = false,
   } = {}) {
     const query = {
       ...(filterServiceInstanceId && { serviceInstanceID: filterServiceInstanceId }),
@@ -70,10 +82,21 @@ class HanaMultitenancy {
           $expand: "containers/credentials",
         }),
     };
-    return await this.#requestPaginatedGet({
+    const tenants = await this.#requestPaginatedGet({
       pathname: URL_BASE_PATH,
       ...(Object.keys(query).length > 0 && { query }),
     });
+
+    if (doExpandCredentials && !doReveal) {
+      for (const tenant of tenants) {
+        for (const container of tenant.containers ?? []) {
+          for (const credential of container.credentials ?? [])
+            HanaMultitenancy.#hideSensitiveDataInCredential(credential);
+        }
+      }
+    }
+
+    return tenants;
   }
 
   static fromSvmLabels(labels) {
@@ -109,31 +132,6 @@ class HanaMultitenancy {
       }
     }
     return result;
-  }
-
-  static #hideSensitiveDataInCredential(credential) {
-    for (const field of Object.keys(credential)) {
-      if (
-        SENSITIVE_FIELD_MARKERS.some((marker) => field.toLowerCase().includes(marker)) ||
-        SENSITIVE_FIELD_NAMES.includes(field)
-      ) {
-        credential[field] = SENSITIVE_FIELD_HIDDEN_TEXT;
-      }
-    }
-  }
-
-  async getCredentials(tenantId, containerId, { doReveal = false } = {}) {
-    assert(tenantId, "getCredentials requires tenantId");
-    assert(containerId, "getCredentials requires containerId");
-    const response = await this.#requestBase({
-      pathname: `${URL_BASE_PATH}/${tenantId}/containers/${containerId}/credentials`,
-    });
-    const data = await response.json();
-    const credentials = data?.data ?? [];
-    if (!doReveal) {
-      credentials.forEach(HanaMultitenancy.#hideSensitiveDataInCredential);
-    }
-    return credentials;
   }
 }
 
