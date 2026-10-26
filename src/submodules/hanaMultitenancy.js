@@ -86,6 +86,7 @@ const _getEnrichedTenants = async (context, { filterTenantId, doEnsureTenantLabe
       filterContainerTenantId: filterTenantId,
       doExpandContainers: true,
       doExpandCredentials: true,
+      doEnsureContainer: true,
       doEnsureTenantLabel,
       doReveal,
     });
@@ -100,11 +101,12 @@ const _getEnrichedTenants = async (context, { filterTenantId, doEnsureTenantLabe
         filterServiceInstanceId: hanaId,
         doExpandContainers: true,
         doExpandCredentials: true,
+        doEnsureContainer: true,
         doEnsureTenantLabel,
         doReveal,
       })
   );
-  return perHanaTenants.flat().filter((tenant) => tenant.containers?.length);
+  return perHanaTenants.flat();
 };
 
 const _tmsList = async (context, { filterTenantId, doTimestamps, doJsonOutput } = {}) => {

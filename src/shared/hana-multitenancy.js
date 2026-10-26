@@ -68,6 +68,7 @@ class HanaMultitenancy {
     filterContainerTenantId,
     doExpandContainers = false,
     doExpandCredentials = false,
+    doEnsureContainer = false,
     doEnsureTenantLabel = false,
     doReveal = false,
   } = {}) {
@@ -90,12 +91,17 @@ class HanaMultitenancy {
       ...(Object.keys(query).length > 0 && { query }),
     });
 
-    if (doEnsureTenantLabel) {
+    if (doEnsureContainer) {
       tenants = tenants.filter((tenant) => tenant.containers?.length > 0);
+    }
+
+    if (doEnsureTenantLabel) {
       for (const tenant of tenants) {
-        tenant.containers = tenant.containers.filter((container) =>
-          container.labels?.some((label) => label.startsWith(`${TENANT_LABEL_KEY}=`))
-        );
+        if (tenant.containers?.length > 0) {
+          tenant.containers = tenant.containers.filter((container) =>
+            container.labels?.some((label) => label.startsWith(`${TENANT_LABEL_KEY}=`))
+          );
+        }
       }
     }
 
