@@ -73,6 +73,14 @@ const tmsMigrateFromSvm = async (context, [tenantId]) => {
   await tmsAdmin.updateContainer(instance.id, container.id, { labels, tmsInstanceId });
 };
 
+const tmsRollbackToSvm = async (context, [tenantId]) => {
+  const svm = await _getServiceManager(context);
+  const { planId } = await svm.getPlanInfoFromFullName(HANA_CONTAINER_OFFERING_PLAN_NAME);
+  const [instance] = await svm.getInstances({ filterPlanId: planId, filterTenantId: tenantId });
+  assert(instance, "could not find svm instance for tenantId");
+  await svm.updateInstance(instance.id, { parameters: { action: "rollbackToMTv1" } });
+};
+
 const _labelValue = (labels, key) => {
   const prefix = `${key}=`;
   const entry = labels?.find((label) => label.startsWith(prefix));
@@ -195,6 +203,7 @@ module.exports = {
   tmsList,
   tmsLongList,
   tmsMigrateFromSvm,
+  tmsRollbackToSvm,
   tmsMakeBindingsSingle,
   tmsMakeBindingsDouble,
   tmsDeleteBindings,

@@ -468,6 +468,12 @@ const APP_COMMAND_INFOS = Object.freeze({
     callback: tms.tmsMigrateFromSvm,
     useCache: false,
   },
+  TMS_ROLLBACK: {
+    commandVariants: ["--tms-rollback"],
+    requiredPassArgs: [PASS_ARG.TENANT_ID],
+    callback: tms.tmsRollbackToSvm,
+    useCache: false,
+  },
   TMS_MAKE_BINDINGS_SINGLE: {
     commandVariants: ["--tms-make-bindings-single"],
     requiredPassArgs: [PASS_ARG.TENANT_ID],
