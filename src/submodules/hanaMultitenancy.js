@@ -79,13 +79,15 @@ const _labelValue = (labels, key) => {
   return entry?.slice(prefix.length);
 };
 
-const _getEnrichedTenants = async (context, { filterTenantId } = {}) => {
+const _getEnrichedTenants = async (context, { filterTenantId, doEnsureTenantLabel, doReveal } = {}) => {
   const tms = await _getHanaMultitenancy(context);
   if (filterTenantId) {
     return await tms.getTenants({
       filterContainerTenantId: filterTenantId,
       doExpandContainers: true,
       doExpandCredentials: true,
+      doEnsureTenantLabel,
+      doReveal,
     });
   }
   const tenantStubs = await tms.getTenants();
@@ -98,13 +100,15 @@ const _getEnrichedTenants = async (context, { filterTenantId } = {}) => {
         filterServiceInstanceId: hanaId,
         doExpandContainers: true,
         doExpandCredentials: true,
+        doEnsureTenantLabel,
+        doReveal,
       })
   );
   return perHanaTenants.flat().filter((tenant) => tenant.containers?.length);
 };
 
 const _tmsList = async (context, { filterTenantId, doTimestamps, doJsonOutput } = {}) => {
-  const tenants = await _getEnrichedTenants(context, { filterTenantId });
+  const tenants = await _getEnrichedTenants(context, { filterTenantId, doEnsureTenantLabel: true });
 
   if (doJsonOutput) {
     return { tenants };
@@ -147,8 +151,24 @@ const _tmsList = async (context, { filterTenantId, doTimestamps, doJsonOutput } 
 const tmsList = async (context, [tenantId], [doTimestamps, doJsonOutput]) =>
   await _tmsList(context, { filterTenantId: tenantId, doTimestamps, doJsonOutput });
 
-// eslint-disable-next-line no-unused-vars
-const tmsLongList = async (context, [tenantId], [doJsonOutput, doReveal]) => fail(NOT_IMPLEMENTED);
+const _formatOutput = (output) =>
+  JSON.stringify(Array.isArray(output) && output.length === 1 ? output[0] : output, null, 2);
+
+const _tmsLongList = async (context, { filterTenantId, doJsonOutput, doReveal } = {}) => {
+  const tenants = await _getEnrichedTenants(context, { filterTenantId, doReveal });
+
+  if (doJsonOutput) {
+    return { tenants };
+  }
+  return `
+=== ${tenants.length} tenant${tenants.length === 1 ? "" : "s"} ===
+
+${_formatOutput(tenants)}
+`;
+};
+
+const tmsLongList = async (context, [tenantId], [doJsonOutput, doReveal]) =>
+  await _tmsLongList(context, { filterTenantId: tenantId, doJsonOutput, doReveal });
 
 // eslint-disable-next-line no-unused-vars
 const tmsMakeBindingsSingle = async (context, [tenantId], [rawParameters]) => fail(NOT_IMPLEMENTED);

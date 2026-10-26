@@ -7,6 +7,8 @@ const SENSITIVE_FIELD_NAMES = [];
 const SENSITIVE_FIELD_MARKERS = ["password", "key"];
 const SENSITIVE_FIELD_HIDDEN_TEXT = "*** show with --reveal ***";
 
+const TENANT_LABEL_KEY = "tenant_id";
+
 const URL_BASE_PATH = "/tenants/v2/tenants";
 
 class HanaMultitenancy {
@@ -66,12 +68,13 @@ class HanaMultitenancy {
     filterContainerTenantId,
     doExpandContainers = false,
     doExpandCredentials = false,
+    doEnsureTenantLabel = false,
     doReveal = false,
   } = {}) {
     const query = {
       ...(filterServiceInstanceId && { serviceInstanceID: filterServiceInstanceId }),
       ...(filterContainerTenantId && {
-        containerFilter: `hassubset(labels,["tenant_id=${filterContainerTenantId}"])`,
+        containerFilter: `hassubset(labels,["${TENANT_LABEL_KEY}=${filterContainerTenantId}"])`,
       }),
       ...(doExpandContainers &&
         !doExpandCredentials && {
@@ -82,10 +85,19 @@ class HanaMultitenancy {
           $expand: "containers/credentials",
         }),
     };
-    const tenants = await this.#requestPaginatedGet({
+    let tenants = await this.#requestPaginatedGet({
       pathname: URL_BASE_PATH,
       ...(Object.keys(query).length > 0 && { query }),
     });
+
+    if (doEnsureTenantLabel) {
+      tenants = tenants.filter((tenant) => tenant.containers?.length > 0);
+      for (const tenant of tenants) {
+        tenant.containers = tenant.containers.filter((container) =>
+          container.labels?.some((label) => label.startsWith(`${TENANT_LABEL_KEY}=`))
+        );
+      }
+    }
 
     if (doExpandCredentials && !doReveal) {
       for (const tenant of tenants) {
