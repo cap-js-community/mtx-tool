@@ -11,7 +11,7 @@ const { makeOneTime } = require("../shared/execution-control");
 const { assert, fail } = require("../shared/error");
 const { limiter } = require("../shared/funnel");
 const { ServiceManager, HANA_CONTAINER_OFFERING_PLAN_NAME } = require("../shared/service-manager");
-const { HanaMultitenancy } = require("../shared/hana-multitenancy");
+const { HanaMultitenancy, TENANT_LABEL_KEY } = require("../shared/hana-multitenancy");
 
 const ENV = Object.freeze({
   TMS_CONCURRENCY: "MTX_TMS_CONCURRENCY",
@@ -129,8 +129,9 @@ const _tmsList = async (context, { filterTenantId, doTimestamps, doJsonOutput } 
   const table = [headerRow];
   for (const tenant of tenants) {
     for (const container of tenant.containers) {
-      const tenantId = _labelValue(container.labels, "tenant_id");
+      const tenantId = _labelValue(container.labels, TENANT_LABEL_KEY);
       // TODO how to handle multiple credentials???
+      // fixed preference order?
       const credential = container.credentials[0];
       table.push([
         tenantId,

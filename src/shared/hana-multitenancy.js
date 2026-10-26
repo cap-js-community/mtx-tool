@@ -154,5 +154,6 @@ class HanaMultitenancy {
 }
 
 module.exports = {
+  TENANT_LABEL_KEY,
   HanaMultitenancy,
 };
