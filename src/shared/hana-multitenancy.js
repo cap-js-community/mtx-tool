@@ -7,19 +7,6 @@ const SENSITIVE_FIELD_NAMES = ["url", "certificate"];
 const SENSITIVE_FIELD_MARKERS = ["password", "key"];
 const SENSITIVE_FIELD_HIDDEN_TEXT = "*** show with --reveal ***";
 
-// TODO: no, that's not how it works
-// NOTE: hana-multitenancy (Tenant Management Service v2) reports async operation progress via the operation's
-//   status.state, which differs from the service-manager succeeded/failed states. Exported for the create/update/
-//   delete helpers (and their polling) that will build on this module in a later step.
-const OPERATION_STATE = Object.freeze({
-  STARTING: "STARTING",
-  IN_PROGRESS: "IN_PROGRESS",
-  COMPLETED: "COMPLETED",
-  FAILED: "FAILED",
-  WAIT_FOR_USER_INPUT: "WAIT_FOR_USER_INPUT",
-  DELETED: "DELETED",
-});
-
 const URL_BASE_PATH = "/tenants/v2/tenants";
 
 class HanaMultitenancy {
@@ -151,6 +138,5 @@ class HanaMultitenancy {
 }
 
 module.exports = {
-  OPERATION_STATE,
   HanaMultitenancy,
 };
