@@ -64,7 +64,8 @@ const tmsMigrateFromSvm = async (context, [tenantId]) => {
   const [instance] = await svm.getInstances({ filterPlanId: planId, filterTenantId: tenantId });
   assert(instance, "could not find svm instance for tenantId");
   await svm.updateInstance(instance.id, { parameters: { action: "migrateToMTv2" } });
-  const [container] = await tmsAdmin.getContainers(instance.id);
+  const tenant = await tmsAdmin.getTenant(instance.id);
+  const [container] = tenant.containers ?? [];
   assert(container, "could not migrate to tms container for tenantId");
   const labels = HanaMultitenancy.fromSvmLabels(instance.labels);
   const {

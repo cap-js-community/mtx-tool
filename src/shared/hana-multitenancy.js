@@ -63,6 +63,34 @@ class HanaMultitenancy {
     }
   }
 
+  async getTenant(tenantId, { doExpandContainers = true, doExpandCredentials = true, doReveal = false } = {}) {
+    assert(tenantId, "getTenant requires tenantId");
+    const query = {
+      ...(doExpandContainers &&
+        !doExpandCredentials && {
+          $expand: "containers",
+        }),
+      ...(doExpandContainers &&
+        doExpandCredentials && {
+          $expand: "containers/credentials",
+        }),
+    };
+    const response = await this.#requestBase({
+      pathname: `${URL_BASE_PATH}/${tenantId}`,
+      ...(Object.keys(query).length > 0 && { query }),
+    });
+    const tenant = await response.json();
+
+    if (doExpandCredentials && !doReveal) {
+      for (const container of tenant.containers ?? []) {
+        for (const credential of container.credentials ?? [])
+          HanaMultitenancy.#hideSensitiveDataInCredential(credential);
+      }
+    }
+
+    return tenant;
+  }
+
   async getTenants({
     filterServiceInstanceId,
     filterContainerTenantId,
