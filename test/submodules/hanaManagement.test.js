@@ -180,7 +180,9 @@ describe("hdi tms (v2) tests", () => {
     mockRequest.request.mockImplementation(async () => ({
       headers: new Headers(),
       async json() {
-        return { data: [mockTmsTenant] };
+        // NOTE: deep-clone — getTenants hides sensitive fields by mutating the tenant tree in place,
+        //   and mockTmsTenant is shared across tests, so a direct reference leaks redaction into later tests
+        return { data: [JSON.parse(JSON.stringify(mockTmsTenant))] };
       },
     }));
 
@@ -229,7 +231,7 @@ describe("hdi tms (v2) tests", () => {
     mockRequest.request.mockImplementation(async () => ({
       headers: new Headers(),
       async json() {
-        return { data: [mockTmsTenant] };
+        return { data: [JSON.parse(JSON.stringify(mockTmsTenant))] };
       },
     }));
     mockStatic.isPortFree.mockReturnValueOnce(true);
@@ -255,6 +257,54 @@ user       hdi-user
 password   *** show with --reveal ***
 "
 `);
+    expect(mockLogger.error).toHaveBeenCalledTimes(0);
+  });
+
+  // NOTE: the --json output is a stable contract consumed by downstream tooling that predates tms v2
+  //   and expects the service-manager shape { instances, bindings } with credentials.hdi_user/hdi_password.
+  //   The tms v2 tenants tree is mapped back onto that shape; this test locks it.
+  test("hdi tms long list json maps onto legacy { instances, bindings } shape", async () => {
+    mockRequest.request.mockImplementation(async () => ({
+      headers: new Headers(),
+      async json() {
+        // NOTE: deep-clone — getTenants mutates the tenant tree in place when hiding sensitive fields,
+        //   and other tests share mockTmsTenant, so a direct reference would leak redaction across tests
+        return { data: [JSON.parse(JSON.stringify(mockTmsTenant))] };
+      },
+    }));
+
+    const result = await hdi.hdiLongList(mockTmsContext, [testTenantId], [true, true]);
+
+    expect(Object.keys(result).sort()).toEqual(["bindings", "instances"]);
+    expect(result).toEqual({
+      instances: [
+        {
+          id: "hana-instance-id",
+          labels: { tenant_id: [testTenantId] },
+          usable: true,
+          created_at: undefined,
+        },
+      ],
+      bindings: [
+        {
+          id: "credential-id",
+          service_instance_id: "hana-instance-id",
+          labels: { tenant_id: [testTenantId] },
+          credentials: {
+            id: "credential-id",
+            host: "host",
+            port: "port",
+            url: "jdbc:sap://host:port",
+            user: "user",
+            password: "password",
+            schema: "schema",
+            hdi_user: "hdi-user",
+            hdi_password: "hdi-password",
+            tenantId: testTenantId,
+          },
+        },
+      ],
+    });
     expect(mockLogger.error).toHaveBeenCalledTimes(0);
   });
 });

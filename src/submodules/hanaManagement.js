@@ -229,13 +229,54 @@ const TMS_CREDENTIAL_PLACEHOLDER = "*";
 const TMS_CREDENTIAL_PLACEHOLDER_HINT =
   "* the HANA TMS v2 api only returns host/schema when scoped to one tenant, filter for a tenant id to see them";
 
+// NOTE: the --json output of hdil/hdill is a stable contract consumed by downstream tooling that
+//   predates tms v2 and expects the service-manager shape { instances, bindings }. The tms v2 api
+//   returns a { tenants: [{ containers: [{ credentials: [...] }] }] } tree instead, so we map it back
+//   onto the legacy shape here: one binding per container, credentials flattened from the single-element
+//   array to an object, camelCase hdiUser/hdiPassword normalized back to snake_case hdi_user/hdi_password,
+//   and labels rendered as the { tenant_id: ["<id>"] } object form. Human (non-json) output keeps the
+//   richer tenants tree.
+const _tmsTenantsToLegacyJson = (tenants) => {
+  const instances = [];
+  const bindings = [];
+  for (const tenant of tenants ?? []) {
+    for (const container of tenant.containers ?? []) {
+      // NOTE: cds-mtxs tags the container (not the tenant) with the BTP tenant_id label
+      const tenantId = _tenantIdFromLabels(container.labels) ?? tenant.id;
+      const serviceInstanceId = container.serviceInstanceID ?? tenant.serviceInstanceID;
+      const labels = { tenant_id: [tenantId] };
+      instances.push({
+        id: serviceInstanceId,
+        labels,
+        usable: container.status?.ready ?? false,
+        created_at: container.createTimestamp,
+      });
+      for (const credential of container.credentials ?? []) {
+        const { hdiUser, hdiPassword, ...rest } = credential;
+        bindings.push({
+          id: credential.id,
+          service_instance_id: serviceInstanceId,
+          labels,
+          credentials: {
+            ...rest,
+            hdi_user: hdiUser,
+            hdi_password: hdiPassword,
+            tenantId,
+          },
+        });
+      }
+    }
+  }
+  return { instances, bindings };
+};
+
 const _hdiTmsList = async (context, { filterTenantId, doTimestamps, doJsonOutput } = {}) => {
   const tms = await _getTenantManagement(context);
   const withCredentials = Boolean(filterTenantId);
   const tenants = await tms.getTenants({ filterTenantId, withCredentials });
 
   if (doJsonOutput) {
-    return { tenants };
+    return _tmsTenantsToLegacyJson(tenants);
   }
 
   const rows = [];
@@ -280,7 +321,7 @@ const _hdiTmsLongList = async (context, { filterTenantId, doJsonOutput, doReveal
   const tenants = await tms.getTenants({ filterTenantId, withCredentials: Boolean(filterTenantId), doReveal });
 
   if (doJsonOutput) {
-    return { tenants };
+    return _tmsTenantsToLegacyJson(tenants);
   }
   return `
 === tenant${tenants.length === 1 ? "" : "s"} ===
