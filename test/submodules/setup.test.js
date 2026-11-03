@@ -51,13 +51,14 @@ describe("set tests", () => {
     mockContextModule.readRuntimeConfig.mockReturnValueOnce(mockRuntimeConfig);
 
     expect(set.setupList()).toMatchInlineSnapshot(`
-      "1/6 | cf app bound to xsuaa service (optional)? mock-uaa-app
-      2/6 | cf app bound to saas-registry service (optional)? mock-reg-app
-      3/6 | cf app bound to subscription manager service (optional)? mock-sms-app
-      4/6 | cf app running @sap/cds-mtxs bound to an auth service (optional)? mock-cds-app
-      5/6 | cf app bound to service-manager (optional)? mock-hdi-app
-      6/6 | cf app with server (optional)? mock-srv-app"
-    `);
+"1/7 | cf app bound to xsuaa service (optional)? mock-uaa-app
+2/7 | cf app bound to saas-registry service (optional)? mock-reg-app
+3/7 | cf app bound to subscription manager service (optional)? mock-sms-app
+4/7 | cf app running @sap/cds-mtxs bound to an auth service (optional)? mock-cds-app
+5/7 | cf app bound to service-manager (optional)? mock-hdi-app
+6/7 | cf app bound to hana-cloud tenant management service v2 (optional)? <empty>
+7/7 | cf app with server (optional)? mock-srv-app"
+`);
     expect(mockStatic.tryAccessSync).toHaveBeenCalledTimes(1);
     expect(mockContextModule.readRuntimeConfig).toHaveBeenCalledTimes(1);
     expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`""`);
@@ -75,18 +76,19 @@ describe("set tests", () => {
     expect(mockContextModule.readRuntimeConfig).toHaveBeenCalledTimes(1);
     expect(mockStatic.writeJsonSync).toHaveBeenCalledTimes(1);
     expect(mockStatic.writeJsonSync.mock.calls[0]).toMatchInlineSnapshot(`
-      [
-        "/root/home-dir/.mtxrc.json",
-        {
-          "cdsAppName": "answer for cdsAppName",
-          "hdiAppName": "answer for hdiAppName",
-          "regAppName": "answer for regAppName",
-          "smsAppName": "answer for smsAppName",
-          "srvAppName": "answer for srvAppName",
-          "uaaAppName": "answer for uaaAppName",
-        },
-      ]
-    `);
+[
+  "/root/home-dir/.mtxrc.json",
+  {
+    "cdsAppName": "answer for cdsAppName",
+    "hdiAppName": "answer for hdiAppName",
+    "hdiTmsAppName": "answer for hdiTmsAppName",
+    "regAppName": "answer for regAppName",
+    "smsAppName": "answer for smsAppName",
+    "srvAppName": "answer for srvAppName",
+    "uaaAppName": "answer for uaaAppName",
+  },
+]
+`);
     expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "hit enter to skip a question. re-using the same app for multiple questions is possible.
       wrote runtime config"
@@ -137,18 +139,19 @@ describe("set tests", () => {
     expect(mockContextModule.readRuntimeConfig).toHaveBeenCalledTimes(1);
     expect(mockStatic.writeJsonSync).toHaveBeenCalledTimes(1);
     expect(mockStatic.writeJsonSync.mock.calls[0]).toMatchInlineSnapshot(`
-      [
-        "/root/local-dir/.mtxrc.json",
-        {
-          "cdsAppName": "answer for cdsAppName",
-          "hdiAppName": "answer for hdiAppName",
-          "regAppName": "answer for regAppName",
-          "smsAppName": "answer for smsAppName",
-          "srvAppName": "answer for srvAppName",
-          "uaaAppName": "answer for uaaAppName",
-        },
-      ]
-    `);
+[
+  "/root/local-dir/.mtxrc.json",
+  {
+    "cdsAppName": "answer for cdsAppName",
+    "hdiAppName": "answer for hdiAppName",
+    "hdiTmsAppName": "answer for hdiTmsAppName",
+    "regAppName": "answer for regAppName",
+    "smsAppName": "answer for smsAppName",
+    "srvAppName": "answer for srvAppName",
+    "uaaAppName": "answer for uaaAppName",
+  },
+]
+`);
     expect(outputFromLogger(mockLogger.info.mock.calls)).toMatchInlineSnapshot(`
       "hit enter to skip a question. re-using the same app for multiple questions is possible.
       wrote runtime config"

@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### ADDED
 
 - svm: new `svmp` / `--svm-params` command that lists service instances with their provisioning parameters.
+- hdi: `hdil`/`hdill`/`hditt` now support SAP HANA TMS v2. Configure an app bound to `hana-cloud` plan `hana-multitenancy` via `hdiTmsAppName` (or `MTX_HDI_TMS_APP`) and container credentials are retrieved from the HANA Cloud Multi-Tenancy REST API instead of service-manager.
 
 ## v0.14.0 - 2026-09-03
 

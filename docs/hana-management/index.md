@@ -34,6 +34,23 @@ For details and background information, please consult the official documentatio
 - HANA Service [https://help.sap.com/docs/HANA_SERVICE](https://help.sap.com/docs/HANA_SERVICE)
 - HANA Cloud [https://help.sap.com/docs/SAP_S4HANA_CLOUD](https://help.sap.com/docs/SAP_S4HANA_CLOUD)
 
+### SAP HANA TMS v2
+
+For applications that have migrated their tenant databases to
+[SAP HANA TMS v2](https://cap.cloud.sap/docs/guides/multitenancy/#sap-hana-tms-v2), the HDI container
+credentials are no longer stored in Service Manager. Instead they are retrieved from the
+[HANA Cloud Multi-Tenancy REST API](https://api.sap.com/api/TenantAPI/overview).
+
+Configure an app bound to the `hana-cloud` service with plan `hana-multitenancy` (or
+`hana-multitenancy-admin`) via `hdiTmsAppName` (or the `MTX_HDI_TMS_APP` environment variable). When this
+is configured, the same `hdil`/`hdill`/`hditt` commands transparently use the TMS v2 API instead of
+Service Manager. Tenants are matched to the BTP tenant id through the `tenant_id` label that cds-mtxs
+tags onto tenant containers.
+
+Note: the TMS v2 tenant search API can only return full container credentials (host, schema, user, …)
+when the request is scoped to a single tenant. The unfiltered `hdil` therefore shows `host` and
+`schema` as `*`; filter for a specific tenant to see connection details, or open a tunnel.
+
 Commands for this area are:
 
 ```
@@ -54,6 +71,7 @@ Commands for this area are:
 | environment variable  | effect                                                    |
 | :-------------------- | :-------------------------------------------------------- |
 | `MTX_HDI_APP`         | override configured app for `service-manager` accesses    |
+| `MTX_HDI_TMS_APP`     | override configured app for HANA TMS v2 accesses          |
 | `MTX_HDI_CONCURRENCY` | change concurrency used for service calls (default is 10) |
 
 ## List and Long List

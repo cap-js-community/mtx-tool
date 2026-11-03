@@ -10,6 +10,8 @@ const ENV = Object.freeze({
   CDS_APP: "MTX_CDS_APP",
   HDI_APP: "MTX_HDI_APP",
   HDI_KEY: "MTX_HDI_KEY",
+  HDI_TMS_APP: "MTX_HDI_TMS_APP",
+  HDI_TMS_KEY: "MTX_HDI_TMS_KEY",
   SVM_APP: "MTX_SVM_APP",
   SVM_KEY: "MTX_SVM_KEY",
   SERVER_APP: "MTX_SRV_APP",
@@ -25,6 +27,8 @@ const CONFIG_TYPE = {
   CDS_APP: "CDS_APP",
   HDI_APP: "HDI_APP",
   HDI_KEY: "HDI_KEY",
+  HDI_TMS_APP: "HDI_TMS_APP",
+  HDI_TMS_KEY: "HDI_TMS_KEY",
   SVM_APP: "SVM_APP",
   SVM_KEY: "SVM_KEY",
   SERVER_APP: "SERVER_APP",
@@ -113,6 +117,24 @@ const CONFIG_INFOS = {
       {
         label: "service-manager",
         plan: "container",
+      },
+    ],
+  },
+
+  [CONFIG_TYPE.HDI_TMS_APP]: {
+    config: "hdiTmsAppName",
+    name: "hana tms app",
+    envVariable: ENV.HDI_TMS_APP,
+    question: "cf app bound to hana-cloud tenant management service v2 (optional)?",
+    failMessage: "option requires configured app bound to service label:hana-cloud plan:hana-multitenancy",
+    requireServices: [
+      {
+        label: "hana-cloud",
+        plan: "hana-multitenancy",
+      },
+      {
+        label: "hana-cloud",
+        plan: "hana-multitenancy-admin",
       },
     ],
   },
