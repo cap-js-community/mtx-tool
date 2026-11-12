@@ -149,16 +149,16 @@ const _tmsList = async (context, { filterTenantId, doTimestamps, doJsonOutput } 
   for (const container of containers) {
     // TODO how to handle multiple credentials???
     // fixed preference order?
-    const credential = container.credentials[0];
+    const credential = container.credentials?.[0];
     table.push([
       container[LABEL_TENANT_ID],
       container.tenant.id,
       container.tenant.serviceInstanceID,
-      credential.schema,
+      credential ? credential.schema : "missing credentials",
       container.status?.ready,
       ...(doTimestamps
         ? formatTimestampsWithRelativeDays(
-            [container.createTimestamp, container.status.lastTransitionTimestamp ?? container.createTimestamp],
+            [container.createTimestamp, container.status?.lastTransitionTimestamp ?? container.createTimestamp],
             nowDate
           )
         : []),
