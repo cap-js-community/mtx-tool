@@ -139,6 +139,8 @@ commands:
    === hana multitenancy (tms) ===
 ~  tmsl   --tms-list [TENANT_ID]                            list all service instances and bindings
 ~  tmsll  --tms-long-list [TENANT_ID]                       long list all service instances and bindings
+          --tms-migrate TENANT_ID                           migrate tenant container from service manager
+          --tms-rollback TENANT_ID                          roll back tenant container to service manager
           --tms-make-bindings-single TENANT_ID [PARAMS]     make service bindings 1-to-1
           --tms-make-bindings-double TENANT_ID [PARAMS]     make service bindings 1-to-2
           --tms-restart                                     rolling restart for tms bound apps
