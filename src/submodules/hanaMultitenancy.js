@@ -16,7 +16,7 @@ const { HanaMultitenancy, TENANT_LABEL_KEY } = require("../shared/hana-multitena
 
 const ENV = Object.freeze({
   TMS_CONCURRENCY: "MTX_TMS_CONCURRENCY",
-  TMS_ADMIN_CREDENTIALS: "MTX_TMS_ADMIN_CRENTIALS",
+  TMS_ADMIN_CREDENTIALS: "MTX_TMS_ADMIN_CREDENTIALS",
 });
 
 const TMS_CONCURRENCY_FALLBACK = 6;
