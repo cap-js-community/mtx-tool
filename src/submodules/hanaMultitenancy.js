@@ -4,6 +4,7 @@ const {
   tableList,
   formatTimestampsWithRelativeDays,
   parseIntWithFallback,
+  compareFor,
   collectValuesForKey,
   tryJsonParse,
 } = require("../shared/static");
@@ -19,11 +20,14 @@ const ENV = Object.freeze({
 });
 
 const TMS_CONCURRENCY_FALLBACK = 6;
+const LABEL_TENANT_ID = Symbol("labelTenantId");
 
 // TODO: implement it step by step
 const NOT_IMPLEMENTED = "tenant-management-service command is not implemented yet";
 
 const tmsConcurrency = parseIntWithFallback(process.env[ENV.TMS_CONCURRENCY], TMS_CONCURRENCY_FALLBACK);
+
+const compareForTenantId = compareFor((container) => container[LABEL_TENANT_ID]);
 
 const _getServiceManager = makeOneTime(async (context) => {
   const {
@@ -88,41 +92,47 @@ const _labelValue = (labels, key) => {
   return entry?.slice(prefix.length);
 };
 
-const _getEnrichedTenants = async (context, { filterTenantId, doEnsureTenantLabel, doReveal } = {}) => {
+const _getEnrichedContainers = async (context, { filterTenantId, doEnsureTenantLabel, doReveal } = {}) => {
   const tms = await _getHanaMultitenancy(context);
+  const options = {
+    doExpandContainers: true,
+    doExpandCredentials: true,
+    doEnsureContainer: true,
+    doEnsureTenantLabel,
+    doReveal,
+  };
+  let tenants;
   if (filterTenantId) {
-    return await tms.getTenants({
+    tenants = await tms.getTenants({
+      ...options,
       filterContainerTenantId: filterTenantId,
-      doExpandContainers: true,
-      doExpandCredentials: true,
-      doEnsureContainer: true,
-      doEnsureTenantLabel,
-      doReveal,
     });
+  } else {
+    const tenantStubs = await tms.getTenants();
+    const hanaIds = collectValuesForKey(tenantStubs, "serviceInstanceID");
+    const perHanaTenants = await limiter(
+      tmsConcurrency,
+      hanaIds,
+      async (hanaId) => await tms.getTenants({ ...options, filterServiceInstanceId: hanaId })
+    );
+    tenants = perHanaTenants.flat();
   }
-  const tenantStubs = await tms.getTenants();
-  const hanaIds = collectValuesForKey(tenantStubs, "serviceInstanceID");
-  const perHanaTenants = await limiter(
-    tmsConcurrency,
-    hanaIds,
-    async (hanaId) =>
-      await tms.getTenants({
-        filterServiceInstanceId: hanaId,
-        doExpandContainers: true,
-        doExpandCredentials: true,
-        doEnsureContainer: true,
-        doEnsureTenantLabel,
-        doReveal,
-      })
-  );
-  return perHanaTenants.flat();
+  return tenants
+    .flatMap((tenant) =>
+      tenant.containers.map((container) => ({
+        ...container,
+        tenant: { ...tenant, containers: undefined },
+        [LABEL_TENANT_ID]: _labelValue(container.labels, TENANT_LABEL_KEY),
+      }))
+    )
+    .sort(compareForTenantId);
 };
 
 const _tmsList = async (context, { filterTenantId, doTimestamps, doJsonOutput } = {}) => {
-  const tenants = await _getEnrichedTenants(context, { filterTenantId, doEnsureTenantLabel: true });
+  const containers = await _getEnrichedContainers(context, { filterTenantId, doEnsureTenantLabel: true });
 
   if (doJsonOutput) {
-    return { tenants };
+    return { containers };
   }
 
   const headerRow = [
@@ -136,26 +146,23 @@ const _tmsList = async (context, { filterTenantId, doTimestamps, doJsonOutput } 
 
   const nowDate = new Date();
   const table = [headerRow];
-  for (const tenant of tenants) {
-    for (const container of tenant.containers) {
-      const tenantId = _labelValue(container.labels, TENANT_LABEL_KEY);
-      // TODO how to handle multiple credentials???
-      // fixed preference order?
-      const credential = container.credentials[0];
-      table.push([
-        tenantId,
-        tenant.id,
-        tenant.serviceInstanceID,
-        credential.schema,
-        container.status?.ready,
-        ...(doTimestamps
-          ? formatTimestampsWithRelativeDays(
-              [container.createTimestamp, container.status.lastTransitionTimestamp ?? container.createTimestamp],
-              nowDate
-            )
-          : []),
-      ]);
-    }
+  for (const container of containers) {
+    // TODO how to handle multiple credentials???
+    // fixed preference order?
+    const credential = container.credentials[0];
+    table.push([
+      container[LABEL_TENANT_ID],
+      container.tenant.id,
+      container.tenant.serviceInstanceID,
+      credential.schema,
+      container.status?.ready,
+      ...(doTimestamps
+        ? formatTimestampsWithRelativeDays(
+            [container.createTimestamp, container.status.lastTransitionTimestamp ?? container.createTimestamp],
+            nowDate
+          )
+        : []),
+    ]);
   }
   return tableList(table, { sortCol: null, withRowNumber: !filterTenantId });
 };
@@ -167,15 +174,15 @@ const _formatOutput = (output) =>
   JSON.stringify(Array.isArray(output) && output.length === 1 ? output[0] : output, null, 2);
 
 const _tmsLongList = async (context, { filterTenantId, doJsonOutput, doReveal } = {}) => {
-  const tenants = await _getEnrichedTenants(context, { filterTenantId, doReveal });
+  const containers = await _getEnrichedContainers(context, { filterTenantId, doReveal });
 
   if (doJsonOutput) {
-    return { tenants };
+    return { containers };
   }
   return `
-=== ${tenants.length} tenant${tenants.length === 1 ? "" : "s"} ===
+=== ${containers.length} container${containers.length === 1 ? "" : "s"} ===
 
-${_formatOutput(tenants)}
+${_formatOutput(containers)}
 `;
 };
 
