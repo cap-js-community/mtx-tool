@@ -68,9 +68,9 @@ class HanaMultitenancy {
     const response = await this.#requestBase({
       pathname: `${URL_BASE_PATH}/${tenantId}`,
       checkStatus: false,
-      logged: false,
     });
-    if (response.status === 404) {
+    // NOTE: the service responds with 403, when it should be 404
+    if (response.status >= 400 && response.status < 500) {
       return false;
     }
     assert(response.ok, "could not check hana-multitenancy tenant %s: got response %i", tenantId, response.status);
