@@ -147,8 +147,6 @@ const _tmsList = async (context, { filterTenantId, doTimestamps, doJsonOutput } 
   const nowDate = new Date();
   const table = [headerRow];
   for (const container of containers) {
-    // TODO how to handle multiple credentials???
-    // fixed preference order?
     const credential = container.credentials?.[0];
     table.push([
       container[LABEL_TENANT_ID],
