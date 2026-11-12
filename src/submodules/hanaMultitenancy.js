@@ -20,6 +20,7 @@ const ENV = Object.freeze({
 });
 
 const TMS_CONCURRENCY_FALLBACK = 6;
+const TENANT_ID_ALL_IDENTIFIER = "all-tenants";
 const LABEL_TENANT_ID = Symbol("labelTenantId");
 
 // TODO: implement it step by step
@@ -65,18 +66,36 @@ const tmsMigrateFromSvm = async (context, [tenantId]) => {
   const svm = await _getServiceManager(context);
   const tmsAdmin = await _getHanaMultitenancyAdmin(context);
   const { planId } = await svm.getPlanInfoFromFullName(HANA_CONTAINER_OFFERING_PLAN_NAME);
-  const [instance] = await svm.getInstances({ filterPlanId: planId, filterTenantId: tenantId });
-  assert(instance, "could not find svm instance for tenantId");
-  assert(!(await tmsAdmin.hasTenant(instance.id)), "tenant %s is already migrated to hana multitenancy", tenantId);
-  await svm.updateInstance(instance.id, { parameters: { action: "migrateToMTv2" } });
-  const tenant = await tmsAdmin.getTenant(instance.id);
-  const [container] = tenant.containers ?? [];
-  assert(container, "could not migrate to tms container for tenantId");
-  const labels = HanaMultitenancy.fromSvmLabels(instance.labels);
+  const doAllTenants = tenantId === TENANT_ID_ALL_IDENTIFIER;
+  let instances = await svm.getInstances({
+    filterPlanId: planId,
+    ...(doAllTenants ? { doEnsureTenantLabel: true } : { filterTenantId: tenantId }),
+  });
+  assert(doAllTenants || instances.length > 0, "could not find svm instance for tenantId");
+  // TODO: remove this cap after impl
+  if (doAllTenants) {
+    instances = instances.slice(0, 5);
+  }
+  if (instances.length === 0) {
+    return;
+  }
   const {
     cfBinding: { instanceId: tmsInstanceId },
   } = await context.getTmsInfo();
-  await tmsAdmin.updateContainer(instance.id, container.id, { labels, tmsInstanceId });
+  for (const instance of instances) {
+    const instanceTenantId = doAllTenants ? instance.labels.tenant_id[0] : tenantId;
+    assert(
+      !(await tmsAdmin.hasTenant(instance.id)),
+      "tenant %s is already migrated to hana multitenancy",
+      instanceTenantId
+    );
+    await svm.updateInstance(instance.id, { parameters: { action: "migrateToMTv2" } });
+    const tenant = await tmsAdmin.getTenant(instance.id);
+    const [container] = tenant.containers ?? [];
+    assert(container, "could not migrate to tms container for tenantId %s", instanceTenantId);
+    const labels = HanaMultitenancy.fromSvmLabels(instance.labels);
+    await tmsAdmin.updateContainer(instance.id, container.id, { labels, tmsInstanceId });
+  }
 };
 
 const tmsRollbackToSvm = async (context, [tenantId]) => {
