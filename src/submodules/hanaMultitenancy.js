@@ -67,6 +67,7 @@ const tmsMigrateFromSvm = async (context, [tenantId]) => {
   const { planId } = await svm.getPlanInfoFromFullName(HANA_CONTAINER_OFFERING_PLAN_NAME);
   const [instance] = await svm.getInstances({ filterPlanId: planId, filterTenantId: tenantId });
   assert(instance, "could not find svm instance for tenantId");
+  assert(!(await tmsAdmin.hasTenant(instance.id)), "tenant %s is already migrated to hana multitenancy", tenantId);
   await svm.updateInstance(instance.id, { parameters: { action: "migrateToMTv2" } });
   const tenant = await tmsAdmin.getTenant(instance.id);
   const [container] = tenant.containers ?? [];
@@ -80,9 +81,11 @@ const tmsMigrateFromSvm = async (context, [tenantId]) => {
 
 const tmsRollbackToSvm = async (context, [tenantId]) => {
   const svm = await _getServiceManager(context);
+  const tmsAdmin = await _getHanaMultitenancyAdmin(context);
   const { planId } = await svm.getPlanInfoFromFullName(HANA_CONTAINER_OFFERING_PLAN_NAME);
   const [instance] = await svm.getInstances({ filterPlanId: planId, filterTenantId: tenantId });
   assert(instance, "could not find svm instance for tenantId");
+  assert(await tmsAdmin.hasTenant(instance.id), "tenant %s was not migrated to hana multitenancy", tenantId);
   await svm.updateInstance(instance.id, { parameters: { action: "rollbackToMTv1" } });
 };
 

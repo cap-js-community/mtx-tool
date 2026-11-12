@@ -63,6 +63,20 @@ class HanaMultitenancy {
     }
   }
 
+  async hasTenant(tenantId) {
+    assert(tenantId, "hasTenant requires tenantId");
+    const response = await this.#requestBase({
+      pathname: `${URL_BASE_PATH}/${tenantId}`,
+      checkStatus: false,
+      logged: false,
+    });
+    if (response.status === 404) {
+      return false;
+    }
+    assert(response.ok, "could not check hana-multitenancy tenant %s: got response %i", tenantId, response.status);
+    return true;
+  }
+
   async getTenant(tenantId, { doExpandContainers = true, doExpandCredentials = true, doReveal = false } = {}) {
     assert(tenantId, "getTenant requires tenantId");
     const query = {
