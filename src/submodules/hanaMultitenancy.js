@@ -74,7 +74,7 @@ const tmsMigrateFromSvm = async (context, [tenantId]) => {
       filterPlanId: planId,
       ...(doAllTenants ? { doEnsureTenantLabel: true } : { filterTenantId: tenantId }),
     }),
-    doAllTenants && tmsAdmin.getTenants(),
+    tmsAdmin.getTenants(),
   ]);
   assert(doAllTenants || instances.length > 0, "could not find svm instance for tenantId");
   const migratedTenantIds = new Set(tenants.map((tenant) => tenant.id));
@@ -87,6 +87,9 @@ const tmsMigrateFromSvm = async (context, [tenantId]) => {
     );
   }
   if (missingInstances.length === 0) {
+    if (!doAllTenants) {
+      logger.info("tenant %s already migrated to hana multitenancy", tenantId);
+    }
     return;
   }
   const {
