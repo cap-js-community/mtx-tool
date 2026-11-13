@@ -70,13 +70,10 @@ const tmsMigrateFromSvm = async (context, [tenantId]) => {
   const { planId } = await svm.getPlanInfoFromFullName(HANA_CONTAINER_OFFERING_PLAN_NAME);
   const doAllTenants = tenantId === TENANT_ID_ALL_IDENTIFIER;
   const [instances, tenants] = await Promise.all([
-    svm
-      .getInstances({
-        filterPlanId: planId,
-        ...(doAllTenants ? { doEnsureTenantLabel: true } : { filterTenantId: tenantId }),
-      })
-      // TODO: remove this cap after impl
-      .then((instances) => instances.slice(0, 5)),
+    svm.getInstances({
+      filterPlanId: planId,
+      ...(doAllTenants ? { doEnsureTenantLabel: true } : { filterTenantId: tenantId }),
+    }),
     doAllTenants && tmsAdmin.getTenants(),
   ]);
   assert(doAllTenants || instances.length > 0, "could not find svm instance for tenantId");
