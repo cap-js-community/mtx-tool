@@ -64,32 +64,34 @@ const _getHanaMultitenancyAdmin = makeOneTime(async (context) => {
   });
 });
 
-const tmsMigrateFromSvm = async (context, [tenantId]) => {
+const _tmsMigrateInstanceFromSvm = async (svm, tmsAdmin, instance, { tmsInstanceId, tenantId }) => {
+  await svm.updateInstance(instance.id, { parameters: { action: "migrateToMTv2" } });
+  const tenant = await tmsAdmin.getTenant(instance.id);
+  const [container] = tenant.containers ?? [];
+  assert(container, "could not migrate to tms container for tenantId %s", tenantId);
+  const labels = HanaMultitenancy.fromSvmLabels(instance.labels);
+  await tmsAdmin.updateContainer(instance.id, container.id, { labels, tmsInstanceId });
+};
+
+const _tmsMigrateAllFromSvm = async (context) => {
   const svm = await _getServiceManager(context);
   const tmsAdmin = await _getHanaMultitenancyAdmin(context);
   const { planId } = await svm.getPlanInfoFromFullName(HANA_CONTAINER_OFFERING_PLAN_NAME);
-  const doAllTenants = tenantId === TENANT_ID_ALL_IDENTIFIER;
   const [instances, tenants] = await Promise.all([
     svm.getInstances({
       filterPlanId: planId,
-      ...(doAllTenants ? { doEnsureTenantLabel: true } : { filterTenantId: tenantId }),
+      doEnsureTenantLabel: true,
     }),
     tmsAdmin.getTenants(),
   ]);
-  assert(doAllTenants || instances.length > 0, "could not find svm instance for tenantId");
   const migratedTenantIds = new Set(tenants.map((tenant) => tenant.id));
   const missingInstances = instances.filter((instance) => !migratedTenantIds.has(instance.id));
-  if (doAllTenants) {
-    logger.info(
-      "%i of %i tenants are already migrated to hana multitenancy",
-      instances.length - missingInstances.length,
-      instances.length
-    );
-  }
+  logger.info(
+    "%i of %i tenants are already migrated to hana multitenancy",
+    instances.length - missingInstances.length,
+    instances.length
+  );
   if (missingInstances.length === 0) {
-    if (!doAllTenants) {
-      logger.info("tenant %s already migrated to hana multitenancy", tenantId);
-    }
     return;
   }
   const {
@@ -97,15 +99,34 @@ const tmsMigrateFromSvm = async (context, [tenantId]) => {
   } = await context.getTmsInfo();
   logger.info("migrating %i tenants", missingInstances.length);
   for (const instance of missingInstances) {
-    const instanceTenantId = doAllTenants ? instance.labels.tenant_id[0] : tenantId;
-    await svm.updateInstance(instance.id, { parameters: { action: "migrateToMTv2" } });
-    const tenant = await tmsAdmin.getTenant(instance.id);
-    const [container] = tenant.containers ?? [];
-    assert(container, "could not migrate to tms container for tenantId %s", instanceTenantId);
-    const labels = HanaMultitenancy.fromSvmLabels(instance.labels);
-    await tmsAdmin.updateContainer(instance.id, container.id, { labels, tmsInstanceId });
+    await _tmsMigrateInstanceFromSvm(svm, tmsAdmin, instance, {
+      tmsInstanceId,
+      tenantId: instance.labels.tenant_id[0],
+    });
   }
 };
+
+const _tmsMigrateTenantFromSvm = async (context, tenantId) => {
+  const svm = await _getServiceManager(context);
+  const tmsAdmin = await _getHanaMultitenancyAdmin(context);
+  const { planId } = await svm.getPlanInfoFromFullName(HANA_CONTAINER_OFFERING_PLAN_NAME);
+  const [instance] = await svm.getInstances({ filterPlanId: planId, filterTenantId: tenantId });
+  assert(instance, "could not find svm instance for tenantId");
+  if (await tmsAdmin.hasTenant(instance.id)) {
+    logger.info("tenant %s already migrated to hana multitenancy", tenantId);
+    return;
+  }
+  const {
+    cfBinding: { instanceId: tmsInstanceId },
+  } = await context.getTmsInfo();
+  logger.info("migrating tenant %s", tenantId);
+  await _tmsMigrateInstanceFromSvm(svm, tmsAdmin, instance, { tmsInstanceId, tenantId });
+};
+
+const tmsMigrateFromSvm = async (context, [tenantId]) =>
+  tenantId === TENANT_ID_ALL_IDENTIFIER
+    ? await _tmsMigrateAllFromSvm(context)
+    : await _tmsMigrateTenantFromSvm(context, tenantId);
 
 const tmsRollbackToSvm = async (context, [tenantId]) => {
   const svm = await _getServiceManager(context);
