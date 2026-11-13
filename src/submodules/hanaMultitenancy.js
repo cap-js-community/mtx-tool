@@ -10,6 +10,7 @@ const {
 } = require("../shared/static");
 const { makeOneTime } = require("../shared/execution-control");
 const { assert, fail } = require("../shared/error");
+const { Logger } = require("../shared/logger");
 const { limiter } = require("../shared/funnel");
 const { ServiceManager, HANA_CONTAINER_OFFERING_PLAN_NAME } = require("../shared/service-manager");
 const { HanaMultitenancy, TENANT_LABEL_KEY } = require("../shared/hana-multitenancy");
@@ -26,6 +27,7 @@ const LABEL_TENANT_ID = Symbol("labelTenantId");
 // TODO: implement it step by step
 const NOT_IMPLEMENTED = "tenant-management-service command is not implemented yet";
 
+const logger = Logger.getInstance();
 const tmsConcurrency = parseIntWithFallback(process.env[ENV.TMS_CONCURRENCY], TMS_CONCURRENCY_FALLBACK);
 
 const compareForTenantId = compareFor((container) => container[LABEL_TENANT_ID]);
@@ -67,28 +69,35 @@ const tmsMigrateFromSvm = async (context, [tenantId]) => {
   const tmsAdmin = await _getHanaMultitenancyAdmin(context);
   const { planId } = await svm.getPlanInfoFromFullName(HANA_CONTAINER_OFFERING_PLAN_NAME);
   const doAllTenants = tenantId === TENANT_ID_ALL_IDENTIFIER;
-  let instances = await svm.getInstances({
-    filterPlanId: planId,
-    ...(doAllTenants ? { doEnsureTenantLabel: true } : { filterTenantId: tenantId }),
-  });
+  const [instances, tenants] = await Promise.all([
+    svm
+      .getInstances({
+        filterPlanId: planId,
+        ...(doAllTenants ? { doEnsureTenantLabel: true } : { filterTenantId: tenantId }),
+      })
+      // TODO: remove this cap after impl
+      .then((instances) => instances.slice(0, 5)),
+    doAllTenants && tmsAdmin.getTenants(),
+  ]);
   assert(doAllTenants || instances.length > 0, "could not find svm instance for tenantId");
-  // TODO: remove this cap after impl
+  const migratedTenantIds = new Set(tenants.map((tenant) => tenant.id));
+  const missingInstances = instances.filter((instance) => !migratedTenantIds.has(instance.id));
   if (doAllTenants) {
-    instances = instances.slice(0, 5);
+    logger.info(
+      "%i of %i tenants are already migrated to hana multitenancy",
+      instances.length - missingInstances.length,
+      instances.length
+    );
   }
-  if (instances.length === 0) {
+  if (missingInstances.length === 0) {
     return;
   }
   const {
     cfBinding: { instanceId: tmsInstanceId },
   } = await context.getTmsInfo();
-  for (const instance of instances) {
+  logger.info("migrating %i tenant%s", missingInstances.length, missingInstances.length === 1 ? "" : "s");
+  for (const instance of missingInstances) {
     const instanceTenantId = doAllTenants ? instance.labels.tenant_id[0] : tenantId;
-    assert(
-      !(await tmsAdmin.hasTenant(instance.id)),
-      "tenant %s is already migrated to hana multitenancy",
-      instanceTenantId
-    );
     await svm.updateInstance(instance.id, { parameters: { action: "migrateToMTv2" } });
     const tenant = await tmsAdmin.getTenant(instance.id);
     const [container] = tenant.containers ?? [];
