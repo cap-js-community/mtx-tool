@@ -95,7 +95,7 @@ const tmsMigrateFromSvm = async (context, [tenantId]) => {
   const {
     cfBinding: { instanceId: tmsInstanceId },
   } = await context.getTmsInfo();
-  logger.info("migrating %i tenant%s", missingInstances.length, missingInstances.length === 1 ? "" : "s");
+  logger.info("migrating %i tenants", missingInstances.length);
   for (const instance of missingInstances) {
     const instanceTenantId = doAllTenants ? instance.labels.tenant_id[0] : tenantId;
     await svm.updateInstance(instance.id, { parameters: { action: "migrateToMTv2" } });
