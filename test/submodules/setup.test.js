@@ -32,6 +32,7 @@ const mockRuntimeConfig = {
   smsAppName: "mock-sms-app",
   cdsAppName: "mock-cds-app",
   hdiAppName: "mock-hdi-app",
+  tmsAppName: "mock-tms-app",
   srvAppName: "mock-srv-app",
 };
 
@@ -51,12 +52,13 @@ describe("set tests", () => {
     mockContextModule.readRuntimeConfig.mockReturnValueOnce(mockRuntimeConfig);
 
     expect(set.setupList()).toMatchInlineSnapshot(`
-      "1/6 | cf app bound to xsuaa service (optional)? mock-uaa-app
-      2/6 | cf app bound to saas-registry service (optional)? mock-reg-app
-      3/6 | cf app bound to subscription manager service (optional)? mock-sms-app
-      4/6 | cf app running @sap/cds-mtxs bound to an auth service (optional)? mock-cds-app
-      5/6 | cf app bound to service-manager (optional)? mock-hdi-app
-      6/6 | cf app with server (optional)? mock-srv-app"
+      "1/7 | cf app bound to xsuaa service (optional)? mock-uaa-app
+      2/7 | cf app bound to saas-registry service (optional)? mock-reg-app
+      3/7 | cf app bound to subscription manager service (optional)? mock-sms-app
+      4/7 | cf app running @sap/cds-mtxs bound to an auth service (optional)? mock-cds-app
+      5/7 | cf app bound to service-manager (optional)? mock-hdi-app
+      6/7 | cf app bound to hana-multitenancy service (optional)? mock-tms-app
+      7/7 | cf app with server (optional)? mock-srv-app"
     `);
     expect(mockStatic.tryAccessSync).toHaveBeenCalledTimes(1);
     expect(mockContextModule.readRuntimeConfig).toHaveBeenCalledTimes(1);
@@ -83,6 +85,7 @@ describe("set tests", () => {
           "regAppName": "answer for regAppName",
           "smsAppName": "answer for smsAppName",
           "srvAppName": "answer for srvAppName",
+          "tmsAppName": "answer for tmsAppName",
           "uaaAppName": "answer for uaaAppName",
         },
       ]
@@ -145,6 +148,7 @@ describe("set tests", () => {
           "regAppName": "answer for regAppName",
           "smsAppName": "answer for smsAppName",
           "srvAppName": "answer for srvAppName",
+          "tmsAppName": "answer for tmsAppName",
           "uaaAppName": "answer for uaaAppName",
         },
       ]
